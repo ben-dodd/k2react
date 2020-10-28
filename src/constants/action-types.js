@@ -5,6 +5,7 @@ export const GET_FIRESTORE_COLLECTION = "GET_FIRESTORE_COLLECTION";
 // Local
 export const ADD_DOCUMENT = "ADD_DOCUMENT";
 export const AUTH_USER = "AUTH_USER";
+export const AUTHORISE_WFM = "AUTHORISE_WFM";
 export const CAT_CHANGE = "CAT_CHANGE";
 export const EDIT_USER = "EDIT_USER";
 export const GET_DOCUMENTS = "GET_DOCUMENTS";

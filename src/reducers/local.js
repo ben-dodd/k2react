@@ -29,7 +29,8 @@ import {
   UPDATE_STAFF,
   GET_VEHICLES,
   GRAB_JOB_DATA,
-  GRAB_LAB_DATA
+  GRAB_LAB_DATA,
+  AUTHORISE_WFM,
 } from "../constants/action-types";
 
 import { stateRef } from "../config/firebase";
@@ -64,7 +65,9 @@ const localInit = {
   user: {},
   userRef: null,
   userRefName: null,
-  vehicles: []
+  vehicles: [],
+  wfmToken: null,
+  wfmRefreshToken: null,
 };
 
 // Properties related to local data retrieved from firebase
@@ -75,17 +78,17 @@ export default function localReducer(state = localInit, action) {
         stateRef.doc(action.statePath).set({ payload: action.payload });
       return {
         ...state,
-        [action.statePath]: action.payload
+        [action.statePath]: action.payload,
       };
     case GRAB_JOB_DATA:
       return {
         ...state,
-        jobData: action.payload
+        jobData: action.payload,
       };
     case GRAB_LAB_DATA:
       return {
         ...state,
-        labData: action.payload
+        labData: action.payload,
       };
     case GET_DOCUMENTS:
       if (action.update)
@@ -94,15 +97,21 @@ export default function localReducer(state = localInit, action) {
     case GET_HELP:
       return {
         ...state,
-        helps: action.payload
+        helps: action.payload,
       };
     case GET_ME:
       return {
         ...state,
         me: {
           ...state.me,
-          ...action.payload
-        }
+          ...action.payload,
+        },
+      };
+    case AUTHORISE_WFM:
+      return {
+        ...state,
+        wfmToken: action.payload.access_token,
+        wfmRefreshToken: action.payload.refresh_token,
       };
     case GET_ASSETS:
       if (action.update) {
@@ -115,44 +124,44 @@ export default function localReducer(state = localInit, action) {
           6: [],
           7: [],
           8: [],
-          9: []
+          9: [],
         };
-        action.payload.forEach(asset => {
+        action.payload.forEach((asset) => {
           assets[asset.id.charAt(0)].push(asset);
         });
         stateRef.doc("assets").set(assets);
       }
       return {
         ...state,
-        assets: action.payload
+        assets: action.payload,
       };
     case GET_METHODLOG:
       return {
         ...state,
         me: {
           ...state.me,
-          methodLog: action.payload
-        }
+          methodLog: action.payload,
+        },
       };
     case GET_METHODS:
       if (action.update)
         stateRef.doc("methods").set({ payload: action.payload });
       return {
         ...state,
-        methods: action.payload
+        methods: action.payload,
       };
     case GET_NOTICES:
       if (action.update)
         stateRef.doc("notices").set({ payload: action.payload });
       return {
         ...state,
-        notices: action.payload
+        notices: action.payload,
       };
     case GET_NOTICE_READS:
       if (action.update) {
         let users = {};
         let notices = {};
-        action.payload.forEach(noticeRead => {
+        action.payload.forEach((noticeRead) => {
           if (notices[noticeRead.noticeUid])
             notices[noticeRead.noticeUid].push(noticeRead.staffUid);
           else notices[noticeRead.noticeUid] = [noticeRead.staffUid];
@@ -160,14 +169,14 @@ export default function localReducer(state = localInit, action) {
             users[noticeRead.staffUid].push(noticeRead.noticeUid);
           else users[noticeRead.staffUid] = [noticeRead.noticeUid];
         });
-        Object.keys(users).forEach(user => {
+        Object.keys(users).forEach((user) => {
           stateRef
             .doc("noticereads")
             .collection("users")
             .doc(user)
             .set({ payload: users[user] });
         });
-        Object.keys(notices).forEach(notice => {
+        Object.keys(notices).forEach((notice) => {
           stateRef
             .doc("noticereads")
             .collection("notices")
@@ -177,54 +186,54 @@ export default function localReducer(state = localInit, action) {
       }
       return {
         ...state,
-        noticeReads: action.payload
+        noticeReads: action.payload,
       };
     case GET_INCIDENTS:
       if (action.update)
         stateRef.doc("incidents").set({ payload: action.payload });
       return {
         ...state,
-        incidents: action.payload
+        incidents: action.payload,
       };
     case GET_QUESTIONS:
       if (action.update)
         stateRef.doc("questions").set({ payload: action.payload });
       return {
         ...state,
-        questions: action.payload
+        questions: action.payload,
       };
     case GET_QUIZLOG:
       return {
         ...state,
         me: {
           ...state.me,
-          quizLog: action.payload
-        }
+          quizLog: action.payload,
+        },
       };
     case GET_LOGS:
       return {
         ...state,
-        logs: action.payload
+        logs: action.payload,
       };
     case CLEAR_LOG:
       return {
         ...state,
-        logs: []
+        logs: [],
       };
     case GET_QUIZZES:
       if (action.update)
         stateRef.doc("quizzes").set({ payload: action.payload });
       return {
         ...state,
-        quizzes: action.payload
+        quizzes: action.payload,
       };
     case GET_READINGLOG:
       return {
         ...state,
         me: {
           ...state.me,
-          readingLog: action.payload
-        }
+          readingLog: action.payload,
+        },
       };
     case GET_STAFF:
       if (action.update) stateRef.doc("staff").set(action.payload);
@@ -234,55 +243,55 @@ export default function localReducer(state = localInit, action) {
         ...state,
         editstaff: {
           ...state.editstaff,
-          ...action.payload
-        }
+          ...action.payload,
+        },
       };
     case CLEAR_EDIT_STAFF:
       return {
         ...state,
-        editstaff: {}
+        editstaff: {},
       };
     case GET_TOOLS:
       if (action.update) stateRef.doc("tools").set({ payload: action.payload });
       return {
         ...state,
-        tools: action.payload
+        tools: action.payload,
       };
     case GET_TRAININGS:
       if (action.update)
         stateRef.doc("trainings").set({ payload: action.payload });
       return {
         ...state,
-        trainingpaths: action.payload
+        trainingpaths: action.payload,
       };
     case GET_UPDATES:
       return {
         ...state,
-        updates: action.payload
+        updates: action.payload,
       };
     case GET_USER:
       return {
         ...state,
-        user: action.payload
+        user: action.payload,
       };
     case GET_VEHICLES:
       if (action.update)
         stateRef.doc("vehicles").set({ payload: action.payload });
       return {
         ...state,
-        vehicles: action.payload
+        vehicles: action.payload,
       };
     case CAT_CHANGE:
       return {
         ...state,
-        category: action.payload
+        category: action.payload,
       };
     case RESET_LOCAL:
       return localInit;
     case SEARCH_CHANGE:
       return {
         ...state,
-        search: action.payload
+        search: action.payload,
       };
     case UPDATE_STAFF:
       return {
@@ -291,14 +300,14 @@ export default function localReducer(state = localInit, action) {
           ...state.staff,
           [action.userPath]: {
             ...state.staff[action.userPath],
-            ...action.payload
-          }
-        }
+            ...action.payload,
+          },
+        },
       };
     case SET_STEPPER:
       return {
         ...state,
-        stepper: action.payload
+        stepper: action.payload,
       };
     default:
       return state;
