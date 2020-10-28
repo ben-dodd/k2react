@@ -28,6 +28,8 @@ import {
   RESET_LOCAL,
   UPDATE_STAFF,
   GET_VEHICLES,
+  GRAB_JOB_DATA,
+  GRAB_LAB_DATA
 } from "../constants/action-types";
 
 import { stateRef } from "../config/firebase";
@@ -44,6 +46,8 @@ const localInit = {
   helps: [],
   logs: [],
   me: {},
+  jobData: [],
+  labData: [],
   methodLog: [],
   methods: [],
   notices: [],
@@ -60,7 +64,7 @@ const localInit = {
   user: {},
   userRef: null,
   userRefName: null,
-  vehicles: [],
+  vehicles: []
 };
 
 // Properties related to local data retrieved from firebase
@@ -71,8 +75,18 @@ export default function localReducer(state = localInit, action) {
         stateRef.doc(action.statePath).set({ payload: action.payload });
       return {
         ...state,
-        [action.statePath]: action.payload,
-      }
+        [action.statePath]: action.payload
+      };
+    case GRAB_JOB_DATA:
+      return {
+        ...state,
+        jobData: action.payload
+      };
+    case GRAB_LAB_DATA:
+      return {
+        ...state,
+        labData: action.payload
+      };
     case GET_DOCUMENTS:
       if (action.update)
         stateRef.doc("documents").set({ payload: action.payload });
@@ -92,7 +106,17 @@ export default function localReducer(state = localInit, action) {
       };
     case GET_ASSETS:
       if (action.update) {
-        let assets = {1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []};
+        let assets = {
+          1: [],
+          2: [],
+          3: [],
+          4: [],
+          5: [],
+          6: [],
+          7: [],
+          8: [],
+          9: []
+        };
         action.payload.forEach(asset => {
           assets[asset.id.charAt(0)].push(asset);
         });
@@ -100,8 +124,8 @@ export default function localReducer(state = localInit, action) {
       }
       return {
         ...state,
-        assets: action.payload,
-      }
+        assets: action.payload
+      };
     case GET_METHODLOG:
       return {
         ...state,
@@ -129,16 +153,26 @@ export default function localReducer(state = localInit, action) {
         let users = {};
         let notices = {};
         action.payload.forEach(noticeRead => {
-          if (notices[noticeRead.noticeUid]) notices[noticeRead.noticeUid].push(noticeRead.staffUid);
-            else notices[noticeRead.noticeUid] = [noticeRead.staffUid];
-          if (users[noticeRead.staffUid]) users[noticeRead.staffUid].push(noticeRead.noticeUid);
-            else users[noticeRead.staffUid] = [noticeRead.noticeUid];
+          if (notices[noticeRead.noticeUid])
+            notices[noticeRead.noticeUid].push(noticeRead.staffUid);
+          else notices[noticeRead.noticeUid] = [noticeRead.staffUid];
+          if (users[noticeRead.staffUid])
+            users[noticeRead.staffUid].push(noticeRead.noticeUid);
+          else users[noticeRead.staffUid] = [noticeRead.noticeUid];
         });
         Object.keys(users).forEach(user => {
-          stateRef.doc("noticereads").collection("users").doc(user).set({ payload: users[user] });
+          stateRef
+            .doc("noticereads")
+            .collection("users")
+            .doc(user)
+            .set({ payload: users[user] });
         });
         Object.keys(notices).forEach(notice => {
-          stateRef.doc("noticereads").collection("notices").doc(notice).set({ payload: notices[notice] });
+          stateRef
+            .doc("noticereads")
+            .collection("notices")
+            .doc(notice)
+            .set({ payload: notices[notice] });
         });
       }
       return {
@@ -170,12 +204,12 @@ export default function localReducer(state = localInit, action) {
     case GET_LOGS:
       return {
         ...state,
-        logs: action.payload,
+        logs: action.payload
       };
     case CLEAR_LOG:
       return {
         ...state,
-        logs: [],
+        logs: []
       };
     case GET_QUIZZES:
       if (action.update)
@@ -200,13 +234,13 @@ export default function localReducer(state = localInit, action) {
         ...state,
         editstaff: {
           ...state.editstaff,
-          ...action.payload,
+          ...action.payload
         }
       };
     case CLEAR_EDIT_STAFF:
       return {
         ...state,
-        editstaff: {},
+        editstaff: {}
       };
     case GET_TOOLS:
       if (action.update) stateRef.doc("tools").set({ payload: action.payload });

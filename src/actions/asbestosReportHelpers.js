@@ -539,7 +539,7 @@ export const issueDocument = ({
       });
       versionHistory.push({
         no: index + 1,
-        changes: v.changes,
+        changes: v.changes || "",
         date: moment(dateOf(v.date)).format("DD/MM/YYYY"),
         writer: andList(authors.writer.map(e => e.name)),
         checker: andList(authors.checker.map(e => e.name)),

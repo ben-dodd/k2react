@@ -13,6 +13,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogActions from "@material-ui/core/DialogActions";
+import { CSVLink } from "react-csv";
 
 import {
   fetchDocuments,
@@ -25,18 +26,17 @@ import {
   fetchTrainingPaths,
   fetchVehicles
 } from "../../actions/local";
-import {
-  analyseJobHistory,
-} from "../../actions/jobs";
-import {
-  fetchCocs,
-} from "../../actions/asbestosLab";
+import { analyseJobHistory } from "../../actions/jobs";
+import { grabJobData } from "../../actions/temp";
+import { fetchCocs } from "../../actions/asbestosLab";
 import { hideModal } from "../../actions/modal";
 
 const mapStateToProps = state => {
   return {
     modalType: state.modal.modalType,
-    doc: state.modal.modalProps.doc
+    doc: state.modal.modalProps.doc,
+    jobData: state.local.jobData,
+    labData: state.local.labData
   };
 };
 
@@ -53,11 +53,17 @@ const mapDispatchToProps = dispatch => {
     fetchTrainingPaths: () => dispatch(fetchTrainingPaths(true)),
     fetchVehicles: () => dispatch(fetchVehicles(true)),
     hideModal: modal => dispatch(hideModal(modal)),
+    grabJobData: () => dispatch(grabJobData()),
+    grabLabData: () => dispatch(grabLabData())
   };
 };
 
 class UpdateData extends React.Component {
   render() {
+    // if (this.props.jobData.length === 0) this.props.grabJobData();
+    // else console.log(this.props.jobData);
+    if (this.props.labData.length === 0) this.props.grabLabData();
+    else console.log(this.props.labData);
     const updateTypes = [
       {
         event: this.props.fetchCocs,
@@ -102,7 +108,7 @@ class UpdateData extends React.Component {
       {
         event: analyseJobHistory,
         title: "Jobs"
-      },
+      }
     ];
     return (
       <Dialog
@@ -123,6 +129,13 @@ class UpdateData extends React.Component {
               </Button>
             </span>
           ))}
+
+          <CSVLink
+            data={this.props.jobData || []}
+            filename={`wfm_jobs_data.csv`}
+          >
+            Download Jobs Data as CSV
+          </CSVLink>
         </DialogContent>
         <DialogActions>
           <Button
