@@ -83,9 +83,6 @@ export const resetJobs = () => (dispatch) => {
 };
 
 export const authoriseWFM = (code) => async (dispatch) => {
-  // const POPUP_WIDTH = 400;
-  // const POPUP_HEIGHT = 600;
-  console.log(code);
   let path = `${process.env.REACT_APP_WFM_TOKEN_ENDPOINT}`;
   let params = {
     method: "POST",
@@ -100,19 +97,81 @@ export const authoriseWFM = (code) => async (dispatch) => {
   console.log(params);
   fetch(path, params)
     .then((results) => {
-      console.log(results);
       return results.text();
     })
     .then((data) => {
-      console.log(data);
+      let dataObj = JSON.parse(data);
+      usersRef
+        .doc(auth.currentUser.uid)
+        .update({ wfmRefreshToken: dataObj.refresh_token });
       dispatch({
         type: AUTHORISE_WFM,
-        payload: data,
+        payload: dataObj.access_token,
       });
+      // path = `${process.env.REACT_APP_WFM_CONNECTIONS}`;
+      // params = {
+      //   mode: "no-cors",
+      //   headers: {
+      //     Authorization: `Bearer ${dataObj.access_token}`,
+      //     "Content-Type": "application/json",
+      //   },
+      // };
+      // fetch(path, params)
+      //   .then((results) => results.text())
+      //   .then((data) => {
+      //     console.log(data);
+      //   });
+      // window.location.assign(process.env.REACT_APP_WFM_REDIRECT_URI);
     });
 };
 
-export const fetchWFMJobs = () => async (dispatch) => {
+export const refreshWFMToken = (token) => async (dispatch) => {
+  if (token) {
+    let path = `${process.env.REACT_APP_WFM_TOKEN_ENDPOINT}`;
+    let params = {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${Buffer.from(
+          `${process.env.REACT_APP_WFM_CLIENT_ID}:${process.env.REACT_APP_WFM_CLIENT_SECRET}`
+        ).toString("base64")}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: `grant_type=refresh_token&refresh_token=${token}`,
+    };
+    console.log(params);
+    fetch(path, params)
+      .then((results) => {
+        return results.text();
+      })
+      .then((data) => {
+        let dataObj = JSON.parse(data);
+        console.log(dataObj);
+        usersRef
+          .doc(auth.currentUser.uid)
+          .update({ wfmRefreshToken: dataObj.refresh_token });
+        dispatch({
+          type: AUTHORISE_WFM,
+          payload: dataObj.access_token,
+        });
+        // path = `${process.env.REACT_APP_WFM_CONNECTIONS}`;
+        // params = {
+        //   mode: "no-cors",
+        //   headers: {
+        //     Authorization: `Bearer ${dataObj.access_token}`,
+        //     "Content-Type": "application/json",
+        //   },
+        // };
+        // console.log(params);
+        // fetch(path, params)
+        //   .then((results) => results.text())
+        //   .then((data) => {
+        //     console.log(data);
+        //   });
+      });
+  }
+};
+
+export const fetchWFMJobs = (accessToken, refreshToken) => async (dispatch) => {
   // dispatch(authoriseWFM());
   sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMJobs`);
   // let path = apiRoot + 'wfm/job.php?apiKey=' + apiKey;
@@ -127,11 +186,11 @@ export const fetchWFMJobs = () => async (dispatch) => {
       let jobs = [];
       // Map WFM jobs to a single level job object we can use
       json.Response.Jobs.Job.forEach((wfmJob) => {
-        // console.log(wfmJob);
+        console.log(wfmJob);
         let job = {};
-        job.jobNumber = wfmJob.ID ? wfmJob.ID : null;
-        job.wfmID = wfmJob.InternalID;
-        job.address = wfmJob.Name ? wfmJob.Name : null;
+        job.jobNumber = wfmJob.ID || null;
+        job.wfmID = wfmJob.UUID;
+        job.address = wfmJob.Name || null;
         let i = job.address.length;
         if (i < len) {
           len = i;
@@ -139,46 +198,46 @@ export const fetchWFMJobs = () => async (dispatch) => {
           //console.log(`${str} (${len})`);
         }
 
-        job.description = wfmJob.Description ? wfmJob.Description : null;
+        job.description = wfmJob.Description || null;
         if (wfmJob.Client) {
           // console.log(wfmJob.Client);
-          job.client = wfmJob.Client.Name ? wfmJob.Client.Name : null;
-          job.clientID = wfmJob.Client.ID ? wfmJob.Client.ID : null;
+          job.client = wfmJob.Client.Name || null;
+          job.clientID = wfmJob.Client.UUID || null;
         }
         job.clientOrderNumber = wfmJob.ClientOrderNumber
           ? wfmJob.ClientOrderNumber
           : null;
         if (wfmJob.Contact) {
-          job.contact = wfmJob.Contact.Name ? wfmJob.Contact.Name : null;
-          job.contactID = wfmJob.Contact.ID ? wfmJob.Contact.ID : null;
+          job.contact = wfmJob.Contact.Name || null;
+          job.contactID = wfmJob.Contact.UUID || null;
         }
         if (wfmJob.Manager) {
-          job.manager = wfmJob.Manager.Name ? wfmJob.Manager.Name : null;
-          job.managerID = wfmJob.Manager.ID ? wfmJob.Manager.ID : null;
+          job.manager = wfmJob.Manager.Name || null;
+          job.managerID = wfmJob.Manager.UUID || null;
         }
         if (wfmJob.Assigned.Staff) {
           job.assigned = [];
           if (Array.isArray(wfmJob.Assigned.Staff)) {
             wfmJob.Assigned.Staff.forEach((wfmAssigned) => {
               let staff = {};
-              staff.id = wfmAssigned.ID;
+              staff.id = wfmAssigned.UUID;
               staff.name = wfmAssigned.Name;
               job.assigned.push(staff);
             });
           } else {
             job.assigned = [
               {
-                id: wfmJob.Assigned.Staff.ID,
+                id: wfmJob.Assigned.Staff.UUID,
                 name: wfmJob.Assigned.Staff.Name,
               },
             ];
           }
           // console.log(job.assigned);
         }
-        job.dueDate = wfmJob.DueDate ? wfmJob.DueDate : null;
-        job.startDate = wfmJob.StartDate ? wfmJob.StartDate : null;
-        job.wfmState = wfmJob.State ? wfmJob.State : null;
-        job.wfmType = wfmJob.Type ? wfmJob.Type : "Other";
+        job.dueDate = wfmJob.DueDate || null;
+        job.startDate = wfmJob.StartDate || null;
+        job.wfmState = wfmJob.State || null;
+        job.wfmType = wfmJob.Type || "Other";
         jobs.push(job);
       });
       dispatch({
@@ -188,7 +247,9 @@ export const fetchWFMJobs = () => async (dispatch) => {
     });
 };
 
-export const fetchWFMLeads = () => async (dispatch) => {
+export const fetchWFMLeads = (accessToken, refreshToken) => async (
+  dispatch
+) => {
   sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMLeads`);
   // let path = apiRoot + 'wfm/job.php?apiKey=' + apiKey;
   let path = `${process.env.REACT_APP_WFM_ROOT}lead.api/current?detailed=true&apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`;
@@ -202,25 +263,25 @@ export const fetchWFMLeads = () => async (dispatch) => {
       // Map WFM jobs to a single level job object we can use
       json.Response.Leads.Lead.forEach((wfmLead) => {
         let lead = {};
-        lead.wfmID = wfmLead.ID;
-        lead.name = wfmLead.Name ? wfmLead.Name : null;
-        lead.description = wfmLead.Description ? wfmLead.Description : null;
-        lead.value = wfmLead.EstimatedValue ? wfmLead.EstimatedValue : 0;
+        lead.wfmID = wfmLead.UUID;
+        lead.name = wfmLead.Name || null;
+        lead.description = wfmLead.Description || null;
+        lead.value = wfmLead.EstimatedValue || 0;
         if (wfmLead.Client) {
-          lead.client = wfmLead.Client.Name ? wfmLead.Client.Name : null;
-          lead.clientID = wfmLead.Client.ID ? wfmLead.Client.ID : null;
+          lead.client = wfmLead.Client.Name || null;
+          lead.clientID = wfmLead.Client.UUID || null;
         }
         if (wfmLead.Contact) {
-          lead.contact = wfmLead.Contact.Name ? wfmLead.Contact.Name : null;
-          lead.contactID = wfmLead.Contact.ID ? wfmLead.Contact.ID : null;
+          lead.contact = wfmLead.Contact.Name || null;
+          lead.contactID = wfmLead.Contact.UUID || null;
         }
         if (wfmLead.Owner) {
-          lead.owner = wfmLead.Owner.Name ? wfmLead.Owner.Name : null;
-          lead.ownerID = wfmLead.Owner.ID ? wfmLead.Owner.ID : null;
+          lead.owner = wfmLead.Owner.Name || null;
+          lead.ownerID = wfmLead.Owner.UUID || null;
         }
         let assigned = { [lead.ownerID]: true };
-        lead.date = wfmLead.Date ? wfmLead.Date : null;
-        lead.dateWonLost = wfmLead.DateWonLost ? wfmLead.DateWonLost : null;
+        lead.date = wfmLead.Date || null;
+        lead.dateWonLost = wfmLead.DateWonLost || null;
         lead.category =
           typeof wfmLead.Category !== "object" ? wfmLead.Category : "Other";
         if (wfmLead.Activities.Activity) {
@@ -233,7 +294,7 @@ export const fetchWFMLeads = () => async (dispatch) => {
               activity.completed = wfmActivity.Completed;
               if (wfmActivity.Responsible) {
                 activity.responsible = wfmActivity.Responsible.Name;
-                activity.responsibleID = wfmActivity.Responsible.ID;
+                activity.responsibleID = wfmActivity.Responsible.UUID;
                 assigned[activity.responsibleID] = true;
               } else {
                 activity.responsible = null;
@@ -243,7 +304,7 @@ export const fetchWFMLeads = () => async (dispatch) => {
             });
           } else {
             if (wfmLead.Activities.Activity.Responsible)
-              assigned[wfmLead.Activities.Activity.Responsible.ID] = true;
+              assigned[wfmLead.Activities.Activity.Responsible.UUID] = true;
             lead.activities = [
               {
                 date: wfmLead.Activities.Activity.Date,
@@ -253,7 +314,7 @@ export const fetchWFMLeads = () => async (dispatch) => {
                   ? wfmLead.Activities.Activity.Responsible.Name
                   : null,
                 responsibleID: wfmLead.Activities.Activity.Responsible
-                  ? wfmLead.Activities.Activity.Responsible.ID
+                  ? wfmLead.Activities.Activity.Responsible.UUID
                   : null,
               },
             ];
@@ -299,17 +360,31 @@ export const fetchWFMLeads = () => async (dispatch) => {
     });
 };
 
-export const fetchWFMClients = () => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMClients`);
+export const fetchWFMClients = (accessToken, refreshToken) => async (
+  dispatch
+) => {
+  // sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMClients`);
   // let path = apiRoot + 'wfm/job.php?apiKey=' + apiKey;
-  let path = `${process.env.REACT_APP_WFM_ROOT}client.api/list?apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`;
+  let path = `${process.env.REACT_APP_WFM_ROOT}client.api/list`;
+  console.log(path);
+  let params = {
+    method: "GET",
+    mode: "no-cors",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+      Accept: "application/json",
+    },
+  };
+  console.log(params);
   let len = 100;
   let str = "";
-  fetch(path)
+  fetch(path, params)
     .then((results) => results.text())
     .then((data) => {
       var xmlDOM = new DOMParser().parseFromString(data, "text/xml");
       var json = xmlToJson(xmlDOM);
+      console.log(json);
       let clients = [];
       // Map WFM jobs to a single level job object we can use
       json.Response.Clients.Client.forEach((wfmClient) => {
@@ -320,7 +395,7 @@ export const fetchWFMClients = () => async (dispatch) => {
           str = wfmClient.Name;
         }
         let client = {};
-        client.wfmID = wfmClient.ID;
+        client.wfmID = wfmClient.UUID;
         client.name = wfmClient.Name;
         client.email = wfmClient.Email;
         client.address =
@@ -422,25 +497,20 @@ export const getDetailedWFMJob = ({
         let job = {
           isJob: true,
         };
-        //console.log(wfmJob);
-        job.jobDescription = jobDescription
-          ? jobDescription
-          : wfmJob.ID
-          ? wfmJob.ID
-          : "Job";
-        job.jobNumber = wfmJob.ID ? wfmJob.ID : null;
-        job.address = wfmJob.Name ? wfmJob.Name : null;
-        job.wfmID = wfmJob.InternalID;
-        job.description = wfmJob.Description ? wfmJob.Description : null;
+        // console.log(wfmJob);
+        job.jobDescription = jobDescription || wfmJob.ID || "Job";
+        job.jobNumber = wfmJob.ID || null;
+        job.address = wfmJob.Name || null;
+        job.wfmID = wfmJob.UUID;
+        job.description = wfmJob.Description || null;
         job.dueDate = dateOf(wfmJob.DueDate);
         job.startDate = dateOf(wfmJob.StartDate);
-        job.wfmState = wfmJob.State ? wfmJob.State : "Unknown state";
-        job.category = wfmJob.Type ? wfmJob.Type : "Other";
-        job.wfmID = wfmJob.InternalID;
+        job.wfmState = wfmJob.State || "Unknown state";
+        job.category = wfmJob.Type || "Other";
 
         if (wfmJob.Client) {
-          job.client = wfmJob.Client.Name ? wfmJob.Client.Name : null;
-          job.clientID = wfmJob.Client.ID ? wfmJob.Client.ID : null;
+          job.client = wfmJob.Client.Name || null;
+          job.clientID = wfmJob.Client.UUID || null;
           if (job.clientID) {
             let path = `${process.env.REACT_APP_WFM_ROOT}client.api/get/${job.clientID}?apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`;
             fetch(path);
@@ -458,7 +528,7 @@ export const getDetailedWFMJob = ({
                   let client = json.Response.Client;
                   let wfmClient = {};
                   job.clientDetails = {
-                    wfmID: job.clientID,
+                    wfmID: job.UUID,
                     name:
                       client.Name === Object(client.Phone)
                         ? null
@@ -619,8 +689,8 @@ export const getDetailedWFMJob = ({
           };
         }
         if (wfmJob.Manager) {
-          job.manager = wfmJob.Manager.Name ? wfmJob.Manager.Name : null;
-          job.managerID = wfmJob.Manager.ID ? wfmJob.Manager.ID : null;
+          job.manager = wfmJob.Manager.Name || null;
+          job.managerID = wfmJob.Manager.UUID || null;
         } else {
           job.manager = null;
           job.managerID = null;
@@ -630,7 +700,7 @@ export const getDetailedWFMJob = ({
           if (Array.isArray(wfmJob.Milestones.Milestone)) {
             wfmJob.Milestones.Milestone.forEach((wfmMilestone) => {
               let milestone = {};
-              milestone.id = wfmMilestone.ID;
+              milestone.id = wfmMilestone.UUID;
               milestone.date = wfmMilestone.Date;
               milestone.description = wfmMilestone.Description;
               milestone.folder = wfmMilestone.Folder;
@@ -640,7 +710,7 @@ export const getDetailedWFMJob = ({
           } else {
             job.milestones = [
               {
-                id: wfmJob.Milestones.Milestone.ID,
+                id: wfmJob.Milestones.Milestone.UUID,
                 date: wfmJob.Milestones.Milestone.Date,
                 description: wfmJob.Milestones.Milestone.Description,
                 folder: wfmJob.Milestones.Milestone.Folder,
@@ -654,7 +724,7 @@ export const getDetailedWFMJob = ({
           if (Array.isArray(wfmJob.Notes.Note)) {
             wfmJob.Notes.Note.forEach((wfmNote) => {
               let note = {};
-              note.id = wfmNote.ID;
+              note.id = wfmNote.UUID;
               note.date = wfmNote.Date;
               note.createdBy = wfmNote.CreatedBy;
               note.text = wfmNote.Text;
@@ -666,7 +736,7 @@ export const getDetailedWFMJob = ({
           } else {
             job.notes = [
               {
-                id: wfmJob.Notes.Note.ID,
+                id: wfmJob.Notes.Note.UUID,
                 date: wfmJob.Notes.Note.Date,
                 createdBy: wfmJob.Notes.Note.CreatedBy,
                 text: wfmJob.Notes.Note.Text,
@@ -682,14 +752,14 @@ export const getDetailedWFMJob = ({
           if (Array.isArray(wfmJob.Assigned.Staff)) {
             wfmJob.Assigned.Staff.forEach((wfmAssigned) => {
               let staff = {};
-              staff.id = wfmAssigned.ID;
+              staff.id = wfmAssigned.UUID;
               staff.name = wfmAssigned.Name;
               job.assigned.push(staff);
             });
           } else {
             job.assigned = [
               {
-                id: wfmJob.Assigned.Staff.ID,
+                id: wfmJob.Assigned.Staff.UUID,
                 name: wfmJob.Assigned.Staff.Name,
               },
             ];
@@ -1955,7 +2025,7 @@ export const sendTimeSheetToWFM = (taskData, taskID, that) => {
     timeUrl = `${process.env.REACT_APP_WFM_ROOT}time.api/add?apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`;
 
   // Convert to XML
-  let assignXML = `<Job><ID>${taskData.job}</ID><add id="${taskData.staff}" task="${taskID}" /></Job>`,
+  let assignXML = `<Job><ID>${taskData.job}</ID><add uuid="${taskData.staff}" task-uuid="${taskID}" /></Job>`,
     timeXML = `<Timesheet><Job>${taskData.job}</Job><Task>${taskID}</Task><Staff>${taskData.staff}</Staff><Date>${taskData.day}</Date><Start>${taskData.startTime}</Start><End>${taskData.endTime}</End><Note>${taskData.note}</Note></Timesheet>`;
 
   // console.log(assignXML);
@@ -2022,28 +2092,28 @@ export const getTaskID = (taskData, that) => {
         // Check if task type is in the job. If it is, we will use that ID so the task isn't duplicated.
         let tasks = json.Response.Job.Tasks.Task;
         let taskID = null;
-        // console.log(tasks);
+        console.log(tasks);
         if (tasks !== undefined) {
           if (tasks instanceof Array) {
             // console.log('tasks instance of array');
             tasks.forEach((task) => {
-              // console.log(task);
+              console.log(task);
               if (task.TaskID === taskData.task) {
-                taskID = task.ID;
+                taskID = task.UUID;
                 // console.log(task);
               }
             });
           } else if (tasks instanceof Object) {
             console.log("tasks instance of object");
             if (tasks.TaskID === taskData.task) {
-              taskID = tasks.ID;
+              taskID = tasks.UUID;
               // console.log(tasks);
             }
           } else {
             tasks.forEach((task) => {
               // console.log(task);
               if (task.TaskID === taskData.task) {
-                taskID = task.ID;
+                taskID = task.UUID;
                 // console.log(task);
               }
             });
@@ -2060,7 +2130,7 @@ export const getTaskID = (taskData, that) => {
               );
               if (json.Response.Status === "OK") {
                 // console.log(json.Response);
-                sendTimeSheetToWFM(taskData, json.Response.ID, that);
+                sendTimeSheetToWFM(taskData, json.Response.UUID, that);
               } else {
                 // console.log('Adding task failed.');
                 return {

@@ -24,23 +24,23 @@ import {
   fetchStaff,
   fetchTools,
   fetchTrainingPaths,
-  fetchVehicles
+  fetchVehicles,
 } from "../../actions/local";
 import { analyseJobHistory } from "../../actions/jobs";
-import { grabJobData } from "../../actions/temp";
+import { grabJobData, grabLabData } from "../../actions/temp";
 import { fetchCocs } from "../../actions/asbestosLab";
 import { hideModal } from "../../actions/modal";
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     modalType: state.modal.modalType,
     doc: state.modal.modalProps.doc,
     jobData: state.local.jobData,
-    labData: state.local.labData
+    labData: state.local.labData,
   };
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     fetchCocs: () => dispatch(fetchCocs(true)),
     fetchDocuments: () => dispatch(fetchDocuments(true)),
@@ -52,9 +52,9 @@ const mapDispatchToProps = dispatch => {
     fetchTools: () => dispatch(fetchTools(true)),
     fetchTrainingPaths: () => dispatch(fetchTrainingPaths(true)),
     fetchVehicles: () => dispatch(fetchVehicles(true)),
-    hideModal: modal => dispatch(hideModal(modal)),
+    hideModal: (modal) => dispatch(hideModal(modal)),
     grabJobData: () => dispatch(grabJobData()),
-    grabLabData: () => dispatch(grabLabData())
+    grabLabData: () => dispatch(grabLabData()),
   };
 };
 
@@ -67,48 +67,48 @@ class UpdateData extends React.Component {
     const updateTypes = [
       {
         event: this.props.fetchCocs,
-        title: "Chains of Custody"
+        title: "Chains of Custody",
       },
       {
         event: this.props.fetchDocuments,
-        title: "Documents"
+        title: "Documents",
       },
       {
         event: this.props.fetchMethods,
-        title: "Methods"
+        title: "Methods",
       },
       {
         event: this.props.fetchNotices,
-        title: "Notices"
+        title: "Notices",
       },
       {
         event: this.props.fetchQuestions,
-        title: "Questions"
+        title: "Questions",
       },
       {
         event: this.props.fetchQuizzes,
-        title: "Quizzes"
+        title: "Quizzes",
       },
       {
         event: this.props.fetchStaff,
-        title: "Staff"
+        title: "Staff",
       },
       {
         event: this.props.fetchTools,
-        title: "Tools"
+        title: "Tools",
       },
       {
         event: this.props.fetchTrainingPaths,
-        title: "Training Paths"
+        title: "Training Paths",
       },
       {
         event: this.props.fetchVehicles,
-        title: "Vehicles"
+        title: "Vehicles",
       },
       {
         event: analyseJobHistory,
-        title: "Jobs"
-      }
+        title: "Jobs",
+      },
     ];
     return (
       <Dialog
@@ -117,7 +117,7 @@ class UpdateData extends React.Component {
       >
         <DialogTitle>Update Cached Data</DialogTitle>
         <DialogContent>
-          {updateTypes.map(update => (
+          {updateTypes.map((update) => (
             <span key={update.title}>
               <Button
                 variant="outlined"
@@ -153,8 +153,5 @@ class UpdateData extends React.Component {
 }
 
 export default withStyles(styles)(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(UpdateData)
+  connect(mapStateToProps, mapDispatchToProps)(UpdateData)
 );

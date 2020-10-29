@@ -96,6 +96,7 @@ import {
   analyseJobHistory,
   fetchWFMClients,
   authoriseWFM,
+  refreshWFMToken,
 } from "../actions/jobs";
 import { sendSlackMessage } from "../actions/helpers";
 import { resetModal, showModal } from "../actions/modal";
@@ -173,12 +174,14 @@ const mapDispatchToProps = (dispatch) => {
     resetModal: () => dispatch(resetModal()),
     resetDisplay: () => dispatch(resetDisplay()),
     copyStaff: (oldId, newId) => dispatch(copyStaff(oldId, newId)),
-    fetchWFMClients: () => dispatch(fetchWFMClients()),
+    fetchWFMClients: (accessToken, refreshToken) =>
+      dispatch(fetchWFMClients(accessToken, refreshToken)),
     initConstants: () => dispatch(initConstants()),
     showModal: (modal) => dispatch(showModal(modal)),
     fetchStaff: () => dispatch(fetchStaff()),
     fetchAssets: (update) => dispatch(fetchAssets(update)),
     authoriseWFM: (code) => dispatch(authoriseWFM(code)),
+    refreshWFMToken: (code) => dispatch(refreshWFMToken(code)),
     // fixIds: () => dispatch(fixIds())
   };
 };
@@ -205,8 +208,6 @@ class MainScreen extends React.PureComponent {
   }
 
   UNSAFE_componentWillMount() {
-    if (!this.props.clients || this.props.clients.length === 0)
-      this.props.fetchWFMClients();
     sendSlackMessage(
       `${auth.currentUser.displayName} is triggering MainScreen componentWillMount`
     );
@@ -218,19 +219,6 @@ class MainScreen extends React.PureComponent {
     // splitWFMStates();
     if (this.props.staff && Object.keys(this.props.staff).length === 0)
       this.props.fetchStaff();
-
-    if (!this.props.wfmToken) {
-      let code = qs.parse(this.props.location.search, {
-        ignoreQueryPrefix: true,
-      }).code;
-      console.log(code);
-      if (!code) {
-        let path = `${process.env.REACT_APP_WFM_AUTH_ROOT}${process.env.REACT_APP_WFM_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}&scope=workflowmax offline_access&state=${process.env.REACT_APP_WFM_STATE_KEY}`;
-        window.location.assign(path);
-      } else {
-        this.props.authoriseWFM(code);
-      }
-    }
     // this.props.fixIds();
     // fixNoticeReads();
     // transferNoticeboardReads();
@@ -244,6 +232,8 @@ class MainScreen extends React.PureComponent {
     // fixNoticeReads();
     // renameAnalysisLog();
     // this.props.copyStaff('vpqfRcdsxOZMEoP5Aw6B','yrMXpAUR66Ug0Qb1kDeV8R9IBWq1');
+    if (!this.props.wfmToken) this.checkWFMAuthorised();
+    this.getWFMData();
     setTimeout(
       () =>
         this.setState({
@@ -252,6 +242,48 @@ class MainScreen extends React.PureComponent {
       2000
     );
   }
+
+  getWFMData = () => {
+    if (this.props.wfmToken && this.props.me) {
+      // console.log(this.props.clients);
+      if (!this.props.clients || this.props.clients.length === 0) {
+        console.log(this.props.wfmToken);
+        console.log(this.props.me.wfmRefreshToken);
+        this.props.fetchWFMClients(
+          this.props.wfmToken,
+          this.props.me.wfmRefreshToken
+        );
+      }
+    } else {
+      console.log("token not here yet");
+      setTimeout(this.getWFMData, 500);
+    }
+  };
+
+  checkWFMAuthorised = () => {
+    console.log("CHECK AUTH CALLED");
+    if (this.props.me && this.props.me.uid) {
+      if (this.props.me.wfmRefreshToken) {
+        // Use refresh token to get a new access token
+        this.props.refreshWFMToken(this.props.me.wfmRefreshToken);
+      } else {
+        // Authenticate user and authorize MyK2 to use WFM
+        let code = qs.parse(this.props.location.search, {
+          ignoreQueryPrefix: true,
+        }).code;
+        if (!code) {
+          let path = `${process.env.REACT_APP_WFM_AUTH_ROOT}${process.env.REACT_APP_WFM_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}&scope=workflowmax offline_access openid&state=${process.env.REACT_APP_WFM_STATE_KEY}`;
+          window.location.assign(path);
+        } else {
+          // User has been sent back to MyK2 with the code
+          this.props.authoriseWFM(code);
+        }
+      }
+    } else {
+      console.log("me not here yet");
+      setTimeout(this.checkWFMAuthorised, 500);
+    }
+  };
 
   handleLogOut = () => {
     // sendSlackMessage(`${this.props.state.local.me.name} has logged out.`);
