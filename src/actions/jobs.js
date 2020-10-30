@@ -365,26 +365,36 @@ export const fetchWFMClients = (accessToken, refreshToken) => async (
 ) => {
   // sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMClients`);
   // let path = apiRoot + 'wfm/job.php?apiKey=' + apiKey;
-  let path = `${process.env.REACT_APP_WFM_ROOT}client.api/list`;
+  let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
   console.log(path);
   let params = {
-    method: "GET",
-    mode: "no-cors",
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
-      Accept: "application/json",
-    },
+    method: "POST",
+    // mode: "no-cors",
+    body: JSON.stringify({
+      path: `${process.env.REACT_APP_WFM_ROOT}client.api/list`,
+      params: {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+          Accept: "application/json",
+        },
+      },
+    }),
   };
   console.log(params);
   let len = 100;
   let str = "";
   fetch(path, params)
-    .then((results) => results.text())
+    .then((results) => {
+      console.log(results);
+      return results.text();
+    })
     .then((data) => {
+      console.log(data);
       var xmlDOM = new DOMParser().parseFromString(data, "text/xml");
       var json = xmlToJson(xmlDOM);
-      console.log(json);
+      // console.log(json);
       let clients = [];
       // Map WFM jobs to a single level job object we can use
       json.Response.Clients.Client.forEach((wfmClient) => {
