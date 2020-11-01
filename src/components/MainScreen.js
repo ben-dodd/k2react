@@ -96,7 +96,7 @@ import {
   analyseJobHistory,
   fetchWFMClients,
   authoriseWFM,
-  refreshWFMToken,
+  fetchWFMStaff,
 } from "../actions/jobs";
 import { sendSlackMessage } from "../actions/helpers";
 import { resetModal, showModal } from "../actions/modal";
@@ -176,12 +176,14 @@ const mapDispatchToProps = (dispatch) => {
     copyStaff: (oldId, newId) => dispatch(copyStaff(oldId, newId)),
     fetchWFMClients: (accessToken, refreshToken) =>
       dispatch(fetchWFMClients(accessToken, refreshToken)),
+    fetchWFMStaff: (accessToken, refreshToken) =>
+      dispatch(fetchWFMStaff(accessToken, refreshToken)),
+
     initConstants: () => dispatch(initConstants()),
     showModal: (modal) => dispatch(showModal(modal)),
     fetchStaff: () => dispatch(fetchStaff()),
     fetchAssets: (update) => dispatch(fetchAssets(update)),
-    authoriseWFM: (code) => dispatch(authoriseWFM(code)),
-    refreshWFMToken: (code) => dispatch(refreshWFMToken(code)),
+    authoriseWFM: (params) => dispatch(authoriseWFM(params)),
     // fixIds: () => dispatch(fixIds())
   };
 };
@@ -232,7 +234,11 @@ class MainScreen extends React.PureComponent {
     // fixNoticeReads();
     // renameAnalysisLog();
     // this.props.copyStaff('vpqfRcdsxOZMEoP5Aw6B','yrMXpAUR66Ug0Qb1kDeV8R9IBWq1');
-    if (!this.props.wfmToken) this.checkWFMAuthorised();
+    if (!this.props.wfmToken)
+      this.checkWFMAuthorised({
+        me: this.props.me,
+        location: this.props.location,
+      });
     this.getWFMData();
     setTimeout(
       () =>
@@ -247,13 +253,15 @@ class MainScreen extends React.PureComponent {
     if (this.props.wfmToken && this.props.me) {
       // console.log(this.props.clients);
       if (!this.props.clients || this.props.clients.length === 0) {
-        console.log(this.props.wfmToken);
-        console.log(this.props.me.wfmRefreshToken);
         this.props.fetchWFMClients(
           this.props.wfmToken,
           this.props.me.wfmRefreshToken
         );
       }
+      this.props.fetchWFMStaff(
+        this.props.wfmToken,
+        this.props.me.wfmRefreshToken
+      );
     } else {
       console.log("token not here yet");
       setTimeout(this.getWFMData, 500);
@@ -265,7 +273,10 @@ class MainScreen extends React.PureComponent {
     if (this.props.me && this.props.me.uid) {
       if (this.props.me.wfmRefreshToken) {
         // Use refresh token to get a new access token
-        this.props.refreshWFMToken(this.props.me.wfmRefreshToken);
+        console.log(this.props.me.wfmRefreshToken);
+        this.props.authoriseWFM({
+          refreshToken: this.props.me.wfmRefreshToken,
+        });
       } else {
         // Authenticate user and authorize MyK2 to use WFM
         let code = qs.parse(this.props.location.search, {
@@ -276,7 +287,7 @@ class MainScreen extends React.PureComponent {
           window.location.assign(path);
         } else {
           // User has been sent back to MyK2 with the code
-          this.props.authoriseWFM(code);
+          this.props.authoriseWFM({ code });
         }
       }
     } else {

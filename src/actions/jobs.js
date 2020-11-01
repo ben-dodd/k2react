@@ -45,6 +45,8 @@ import SchoolIcon from "@material-ui/icons/ChildCare";
 import OtherIcon from "@material-ui/icons/LocationCity";
 
 import moment from "moment";
+import qs from "qs";
+
 import {
   firestore,
   auth,
@@ -82,7 +84,8 @@ export const resetJobs = () => (dispatch) => {
   dispatch({ type: RESET_JOBS });
 };
 
-export const authoriseWFM = (code) => async (dispatch) => {
+export const authoriseWFM = ({ code, refreshToken }) => async (dispatch) => {
+  console.log("authoriseWFM called");
   let path = `${process.env.REACT_APP_WFM_TOKEN_ENDPOINT}`;
   let params = {
     method: "POST",
@@ -92,7 +95,9 @@ export const authoriseWFM = (code) => async (dispatch) => {
       ).toString("base64")}`,
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: `grant_type=authorization_code&code=${code}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}`,
+    body: refreshToken
+      ? `grant_type=refresh_token&refresh_token=${refreshToken}`
+      : `grant_type=authorization_code&code=${code}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}`,
   };
   console.log(params);
   fetch(path, params)
@@ -108,138 +113,148 @@ export const authoriseWFM = (code) => async (dispatch) => {
         type: AUTHORISE_WFM,
         payload: dataObj.access_token,
       });
-      // path = `${process.env.REACT_APP_WFM_CONNECTIONS}`;
-      // params = {
-      //   mode: "no-cors",
-      //   headers: {
-      //     Authorization: `Bearer ${dataObj.access_token}`,
-      //     "Content-Type": "application/json",
-      //   },
-      // };
-      // fetch(path, params)
-      //   .then((results) => results.text())
-      //   .then((data) => {
-      //     console.log(data);
-      //   });
-      // window.location.assign(process.env.REACT_APP_WFM_REDIRECT_URI);
     });
 };
 
-export const refreshWFMToken = (token) => async (dispatch) => {
-  if (token) {
-    let path = `${process.env.REACT_APP_WFM_TOKEN_ENDPOINT}`;
-    let params = {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${Buffer.from(
-          `${process.env.REACT_APP_WFM_CLIENT_ID}:${process.env.REACT_APP_WFM_CLIENT_SECRET}`
-        ).toString("base64")}`,
-        "Content-Type": "application/x-www-form-urlencoded",
+export const fetchWFMStaff = (accessToken, refreshToken) => async (
+  dispatch
+) => {
+  // sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMClients`);
+  // let path = apiRoot + 'wfm/job.php?apiKey=' + apiKey;
+  let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
+  let params = {
+    method: "POST",
+    // mode: "no-cors",
+    body: JSON.stringify({
+      path: `${process.env.REACT_APP_WFM_ROOT}staff.api/list`,
+      params: {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+          Accept: "application/json",
+        },
       },
-      body: `grant_type=refresh_token&refresh_token=${token}`,
-    };
-    console.log(params);
-    fetch(path, params)
-      .then((results) => {
-        return results.text();
-      })
-      .then((data) => {
-        let dataObj = JSON.parse(data);
-        console.log(dataObj);
-        usersRef
-          .doc(auth.currentUser.uid)
-          .update({ wfmRefreshToken: dataObj.refresh_token });
-        dispatch({
-          type: AUTHORISE_WFM,
-          payload: dataObj.access_token,
-        });
-        // path = `${process.env.REACT_APP_WFM_CONNECTIONS}`;
-        // params = {
-        //   mode: "no-cors",
-        //   headers: {
-        //     Authorization: `Bearer ${dataObj.access_token}`,
-        //     "Content-Type": "application/json",
-        //   },
-        // };
-        // console.log(params);
-        // fetch(path, params)
-        //   .then((results) => results.text())
-        //   .then((data) => {
-        //     console.log(data);
-        //   });
-      });
-  }
+    }),
+  };
+  fetch(path, params)
+    .then((results) => results.text())
+    .then((data) => {
+      var xmlDOM = new DOMParser().parseFromString(data, "text/xml");
+      var json = xmlToJson(xmlDOM);
+      console.log(json);
+    });
 };
 
 export const fetchWFMJobs = (accessToken, refreshToken) => async (dispatch) => {
   // dispatch(authoriseWFM());
   sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMJobs`);
   // let path = apiRoot + 'wfm/job.php?apiKey=' + apiKey;
-  let path = `${process.env.REACT_APP_WFM_ROOT}job.api/current?apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`;
+  let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
+  let params = {
+    method: "POST",
+    // mode: "no-cors",
+    body: JSON.stringify({
+      path: `${process.env.REACT_APP_WFM_ROOT}job.api/current`,
+      params: {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+          Accept: "application/json",
+        },
+      },
+    }),
+  };
+  // console.log({
+  //   method: "POST",
+  //   // mode: "no-cors",
+  //   body: {
+  //     path: `${process.env.REACT_APP_WFM_ROOT}job.api/current`,
+  //     params: {
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //         "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+  //         Accept: "application/json",
+  //       },
+  //     },
+  //   },
+  // });
+  // let path = `${process.env.REACT_APP_WFM_ROOT}job.api/current?apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`;
   let len = 100;
   let str = "";
-  fetch(path)
-    .then((results) => results.text())
+  fetch(path, params)
+    .then((results) => {
+      // console.log(results);
+      return results.text();
+    })
     .then((data) => {
+      // console.log(data);
       var xmlDOM = new DOMParser().parseFromString(data, "text/xml");
       var json = xmlToJson(xmlDOM);
+      // console.log(json);
       let jobs = [];
       // Map WFM jobs to a single level job object we can use
-      json.Response.Jobs.Job.forEach((wfmJob) => {
-        console.log(wfmJob);
-        let job = {};
-        job.jobNumber = wfmJob.ID || null;
-        job.wfmID = wfmJob.UUID;
-        job.address = wfmJob.Name || null;
-        let i = job.address.length;
-        if (i < len) {
-          len = i;
-          str = job.address;
-          //console.log(`${str} (${len})`);
-        }
-
-        job.description = wfmJob.Description || null;
-        if (wfmJob.Client) {
-          // console.log(wfmJob.Client);
-          job.client = wfmJob.Client.Name || null;
-          job.clientID = wfmJob.Client.UUID || null;
-        }
-        job.clientOrderNumber = wfmJob.ClientOrderNumber
-          ? wfmJob.ClientOrderNumber
-          : null;
-        if (wfmJob.Contact) {
-          job.contact = wfmJob.Contact.Name || null;
-          job.contactID = wfmJob.Contact.UUID || null;
-        }
-        if (wfmJob.Manager) {
-          job.manager = wfmJob.Manager.Name || null;
-          job.managerID = wfmJob.Manager.UUID || null;
-        }
-        if (wfmJob.Assigned.Staff) {
-          job.assigned = [];
-          if (Array.isArray(wfmJob.Assigned.Staff)) {
-            wfmJob.Assigned.Staff.forEach((wfmAssigned) => {
-              let staff = {};
-              staff.id = wfmAssigned.UUID;
-              staff.name = wfmAssigned.Name;
-              job.assigned.push(staff);
-            });
-          } else {
-            job.assigned = [
-              {
-                id: wfmJob.Assigned.Staff.UUID,
-                name: wfmJob.Assigned.Staff.Name,
-              },
-            ];
+      if (json.Response) {
+        json.Response.Jobs.Job.forEach((wfmJob) => {
+          // console.log(wfmJob);
+          let job = {};
+          job.jobNumber = wfmJob.ID || null;
+          job.wfmID = wfmJob.UUID;
+          job.address = wfmJob.Name || null;
+          let i = job.address.length;
+          if (i < len) {
+            len = i;
+            str = job.address;
+            //console.log(`${str} (${len})`);
           }
-          // console.log(job.assigned);
-        }
-        job.dueDate = wfmJob.DueDate || null;
-        job.startDate = wfmJob.StartDate || null;
-        job.wfmState = wfmJob.State || null;
-        job.wfmType = wfmJob.Type || "Other";
-        jobs.push(job);
-      });
+
+          job.description = wfmJob.Description || null;
+          if (wfmJob.Client) {
+            // console.log(wfmJob.Client);
+            job.client = wfmJob.Client.Name || null;
+            job.clientID = wfmJob.Client.UUID || null;
+          }
+          job.clientOrderNumber = wfmJob.ClientOrderNumber
+            ? wfmJob.ClientOrderNumber
+            : null;
+          if (wfmJob.Contact) {
+            job.contact = wfmJob.Contact.Name || null;
+            job.contactID = wfmJob.Contact.UUID || null;
+          }
+          if (wfmJob.Manager) {
+            job.manager = wfmJob.Manager.Name || null;
+            job.managerID = wfmJob.Manager.UUID || null;
+          }
+          if (wfmJob.Assigned.Staff) {
+            job.assigned = [];
+            if (Array.isArray(wfmJob.Assigned.Staff)) {
+              wfmJob.Assigned.Staff.forEach((wfmAssigned) => {
+                let staff = {};
+                staff.id = wfmAssigned.UUID;
+                staff.name = wfmAssigned.Name;
+                job.assigned.push(staff);
+              });
+            } else {
+              job.assigned = [
+                {
+                  id: wfmJob.Assigned.Staff.UUID,
+                  name: wfmJob.Assigned.Staff.Name,
+                },
+              ];
+            }
+            // console.log(job.assigned);
+          }
+          job.dueDate = wfmJob.DueDate || null;
+          job.startDate = wfmJob.StartDate || null;
+          job.wfmState = wfmJob.State || null;
+          job.wfmType = wfmJob.Type || "Other";
+          jobs.push(job);
+        });
+      } else {
+        console.log("Bad response");
+      }
       dispatch({
         type: GET_WFM_JOBS,
         payload: jobs,
@@ -250,10 +265,24 @@ export const fetchWFMJobs = (accessToken, refreshToken) => async (dispatch) => {
 export const fetchWFMLeads = (accessToken, refreshToken) => async (
   dispatch
 ) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMLeads`);
-  // let path = apiRoot + 'wfm/job.php?apiKey=' + apiKey;
-  let path = `${process.env.REACT_APP_WFM_ROOT}lead.api/current?detailed=true&apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`;
-  fetch(path)
+  // sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMLeads`);
+  let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
+  let params = {
+    method: "POST",
+    // mode: "no-cors",
+    body: JSON.stringify({
+      path: `${process.env.REACT_APP_WFM_ROOT}lead.api/current?detailed=true`,
+      params: {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+          Accept: "application/json",
+        },
+      },
+    }),
+  };
+  fetch(path, params)
     .then((results) => results.text())
     .then((data) => {
       // //console.log(data);
@@ -261,98 +290,103 @@ export const fetchWFMLeads = (accessToken, refreshToken) => async (
       var json = xmlToJson(xmlDOM);
       let leads = [];
       // Map WFM jobs to a single level job object we can use
-      json.Response.Leads.Lead.forEach((wfmLead) => {
-        let lead = {};
-        lead.wfmID = wfmLead.UUID;
-        lead.name = wfmLead.Name || null;
-        lead.description = wfmLead.Description || null;
-        lead.value = wfmLead.EstimatedValue || 0;
-        if (wfmLead.Client) {
-          lead.client = wfmLead.Client.Name || null;
-          lead.clientID = wfmLead.Client.UUID || null;
-        }
-        if (wfmLead.Contact) {
-          lead.contact = wfmLead.Contact.Name || null;
-          lead.contactID = wfmLead.Contact.UUID || null;
-        }
-        if (wfmLead.Owner) {
-          lead.owner = wfmLead.Owner.Name || null;
-          lead.ownerID = wfmLead.Owner.UUID || null;
-        }
-        let assigned = { [lead.ownerID]: true };
-        lead.date = wfmLead.Date || null;
-        lead.dateWonLost = wfmLead.DateWonLost || null;
-        lead.category =
-          typeof wfmLead.Category !== "object" ? wfmLead.Category : "Other";
-        if (wfmLead.Activities.Activity) {
-          lead.activities = [];
-          if (Array.isArray(wfmLead.Activities.Activity)) {
-            wfmLead.Activities.Activity.forEach((wfmActivity) => {
-              let activity = {};
-              activity.date = wfmActivity.Date;
-              activity.subject = wfmActivity.Subject;
-              activity.completed = wfmActivity.Completed;
-              if (wfmActivity.Responsible) {
-                activity.responsible = wfmActivity.Responsible.Name;
-                activity.responsibleID = wfmActivity.Responsible.UUID;
-                assigned[activity.responsibleID] = true;
-              } else {
-                activity.responsible = null;
-                activity.responsibleID = null;
-              }
-              lead.activities.push(activity);
-            });
-          } else {
-            if (wfmLead.Activities.Activity.Responsible)
-              assigned[wfmLead.Activities.Activity.Responsible.UUID] = true;
-            lead.activities = [
-              {
-                date: wfmLead.Activities.Activity.Date,
-                subject: wfmLead.Activities.Activity.Subject,
-                complete: wfmLead.Activities.Activity.Completed,
-                responsible: wfmLead.Activities.Activity.Responsible
-                  ? wfmLead.Activities.Activity.Responsible.Name
-                  : null,
-                responsibleID: wfmLead.Activities.Activity.Responsible
-                  ? wfmLead.Activities.Activity.Responsible.UUID
-                  : null,
-              },
-            ];
+      if (json.Response) {
+        json.Response.Leads.Lead.forEach((wfmLead) => {
+          // console.log(wfmLead);
+          let lead = {};
+          lead.wfmID = wfmLead.UUID;
+          lead.name = wfmLead.Name || null;
+          lead.description = wfmLead.Description || null;
+          lead.value = wfmLead.EstimatedValue || 0;
+          if (wfmLead.Client) {
+            lead.client = wfmLead.Client.Name || null;
+            lead.clientID = wfmLead.Client.UUID || null;
           }
-          if (Object.keys(assigned).length > 0)
-            lead.assigned = Object.keys(assigned);
-          // console.log(lead.assigned);
-        } else {
-          lead.activities = [];
-        }
-        if (wfmLead.History.Item) {
-          // console.log(wfmLead.History);
-          lead.history = [];
-          if (Array.isArray(wfmLead.History.Item)) {
-            wfmLead.History.Item.forEach((wfmHistory) => {
-              let item = [];
-              item.detail = wfmHistory.Detail;
-              item.date = wfmHistory.Date;
-              item.staff = wfmHistory.Staff;
-              item.type = wfmHistory.Type;
-              lead.history.push(item);
-            });
-          } else {
-            lead.history = [
-              {
-                detail: wfmLead.History.Item.Detail,
-                date: wfmLead.History.Item.Date,
-                staff: wfmLead.History.Item.Staff,
-                type: wfmLead.History.Item.Type,
-              },
-            ];
+          if (wfmLead.Contact) {
+            lead.contact = wfmLead.Contact.Name || null;
+            lead.contactID = wfmLead.Contact.UUID || null;
           }
-        } else {
-          lead.history = ["No History"];
-        }
-        leads.push(lead);
-      });
-      // //console.log(leads);
+          if (wfmLead.Owner) {
+            lead.owner = wfmLead.Owner.Name || null;
+            lead.ownerID = wfmLead.Owner.UUID || null;
+          }
+          let assigned = { [lead.ownerID]: true };
+          lead.date = wfmLead.Date || null;
+          lead.dateWonLost = wfmLead.DateWonLost || null;
+          lead.category =
+            typeof wfmLead.Category !== "object" ? wfmLead.Category : "Other";
+          if (wfmLead.Activities && wfmLead.Activities.Activity) {
+            lead.activities = [];
+            if (Array.isArray(wfmLead.Activities.Activity)) {
+              wfmLead.Activities.Activity.forEach((wfmActivity) => {
+                let activity = {};
+                activity.date = wfmActivity.Date;
+                activity.subject = wfmActivity.Subject;
+                activity.completed = wfmActivity.Completed;
+                if (wfmActivity.Responsible) {
+                  activity.responsible = wfmActivity.Responsible.Name;
+                  activity.responsibleID = wfmActivity.Responsible.UUID;
+                  assigned[activity.responsibleID] = true;
+                } else {
+                  activity.responsible = null;
+                  activity.responsibleID = null;
+                }
+                lead.activities.push(activity);
+              });
+            } else {
+              if (wfmLead.Activities.Activity.Responsible)
+                assigned[wfmLead.Activities.Activity.Responsible.UUID] = true;
+              lead.activities = [
+                {
+                  date: wfmLead.Activities.Activity.Date,
+                  subject: wfmLead.Activities.Activity.Subject,
+                  complete: wfmLead.Activities.Activity.Completed,
+                  responsible: wfmLead.Activities.Activity.Responsible
+                    ? wfmLead.Activities.Activity.Responsible.Name
+                    : null,
+                  responsibleID: wfmLead.Activities.Activity.Responsible
+                    ? wfmLead.Activities.Activity.Responsible.UUID
+                    : null,
+                },
+              ];
+            }
+            if (Object.keys(assigned).length > 0)
+              lead.assigned = Object.keys(assigned);
+            // console.log(lead.assigned);
+          } else {
+            lead.activities = [];
+          }
+          if (wfmLead.History && wfmLead.History.Item) {
+            // console.log(wfmLead.History);
+            lead.history = [];
+            if (Array.isArray(wfmLead.History.Item)) {
+              wfmLead.History.Item.forEach((wfmHistory) => {
+                let item = [];
+                item.detail = wfmHistory.Detail;
+                item.date = wfmHistory.Date;
+                item.staff = wfmHistory.Staff;
+                item.type = wfmHistory.Type;
+                lead.history.push(item);
+              });
+            } else {
+              lead.history = [
+                {
+                  detail: wfmLead.History.Item.Detail,
+                  date: wfmLead.History.Item.Date,
+                  staff: wfmLead.History.Item.Staff,
+                  type: wfmLead.History.Item.Type,
+                },
+              ];
+            }
+          } else {
+            lead.history = ["No History"];
+          }
+          leads.push(lead);
+        });
+        // //console.log(leads);
+      } else {
+        console.log(data);
+      }
       dispatch({
         type: GET_WFM_LEADS,
         payload: leads,
@@ -366,7 +400,6 @@ export const fetchWFMClients = (accessToken, refreshToken) => async (
   // sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMClients`);
   // let path = apiRoot + 'wfm/job.php?apiKey=' + apiKey;
   let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
-  console.log(path);
   let params = {
     method: "POST",
     // mode: "no-cors",
@@ -382,40 +415,39 @@ export const fetchWFMClients = (accessToken, refreshToken) => async (
       },
     }),
   };
-  console.log(params);
   let len = 100;
   let str = "";
   fetch(path, params)
-    .then((results) => {
-      console.log(results);
-      return results.text();
-    })
+    .then((results) => results.text())
     .then((data) => {
-      console.log(data);
       var xmlDOM = new DOMParser().parseFromString(data, "text/xml");
       var json = xmlToJson(xmlDOM);
       // console.log(json);
       let clients = [];
       // Map WFM jobs to a single level job object we can use
-      json.Response.Clients.Client.forEach((wfmClient) => {
-        // //console.log(wfmClient);
-        let i = wfmClient.Name.length;
-        if (i < len) {
-          len = i;
-          str = wfmClient.Name;
-        }
-        let client = {};
-        client.wfmID = wfmClient.UUID;
-        client.name = wfmClient.Name;
-        client.email = wfmClient.Email;
-        client.address =
-          wfmClient.Address instanceof Object ? "" : wfmClient.Address;
-        client.city = wfmClient.City instanceof Object ? "" : wfmClient.City;
-        // client.postalAddress = wfmClient.postalAddress;
-        clients.push(client);
-      });
-      //console.log(`${str} (${len})`);
-      // //console.log(clients);
+      if (json.Response) {
+        json.Response.Clients.Client.forEach((wfmClient) => {
+          // //console.log(wfmClient);
+          let i = wfmClient.Name.length;
+          if (i < len) {
+            len = i;
+            str = wfmClient.Name;
+          }
+          let client = {};
+          client.wfmID = wfmClient.UUID;
+          client.name = wfmClient.Name;
+          client.email = wfmClient.Email;
+          client.address =
+            wfmClient.Address instanceof Object ? "" : wfmClient.Address;
+          client.city = wfmClient.City instanceof Object ? "" : wfmClient.City;
+          // client.postalAddress = wfmClient.postalAddress;
+          clients.push(client);
+        });
+        //console.log(`${str} (${len})`);
+        // console.log(clients);
+      } else {
+        console.log(data);
+      }
       dispatch({
         type: GET_WFM_CLIENTS,
         payload: clients,
@@ -1791,7 +1823,7 @@ export const collateJobsList = (
         };
       }
     } else {
-      console.log("Making new job: " + job["wfmID"]);
+      // console.log("Making new job: " + job["wfmID"]);
       var newJob = {};
       newJob.wfmID = job.wfmID;
       newJob.client = job.client;
@@ -1812,7 +1844,7 @@ export const collateJobsList = (
         [today]: job.wfmState,
       };
       newJob.isJob = true;
-      console.log(newJob);
+      // console.log(newJob);
       dispatch(
         handleGeocode(
           job.address,
