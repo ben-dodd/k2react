@@ -86,18 +86,24 @@ export const resetJobs = () => (dispatch) => {
 
 export const authoriseWFM = ({ code, refreshToken }) => async (dispatch) => {
   console.log("authoriseWFM called");
-  let path = `${process.env.REACT_APP_WFM_TOKEN_ENDPOINT}`;
+  let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
   let params = {
     method: "POST",
-    headers: {
-      Authorization: `Basic ${Buffer.from(
-        `${process.env.REACT_APP_WFM_CLIENT_ID}:${process.env.REACT_APP_WFM_CLIENT_SECRET}`
-      ).toString("base64")}`,
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: refreshToken
-      ? `grant_type=refresh_token&refresh_token=${refreshToken}`
-      : `grant_type=authorization_code&code=${code}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}`,
+    body: JSON.stringify({
+      path: `${process.env.REACT_APP_WFM_TOKEN_ENDPOINT}`,
+      params: {
+        method: "POST",
+        headers: {
+          Authorization: `Basic ${Buffer.from(
+            `${process.env.REACT_APP_WFM_CLIENT_ID}:${process.env.REACT_APP_WFM_CLIENT_SECRET}`
+          ).toString("base64")}`,
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: refreshToken
+          ? `grant_type=refresh_token&refresh_token=${refreshToken}`
+          : `grant_type=authorization_code&code=${code}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}`,
+      },
+    }),
   };
   console.log(params);
   fetch(path, params)
@@ -166,22 +172,6 @@ export const fetchWFMJobs = (accessToken, refreshToken) => async (dispatch) => {
       },
     }),
   };
-  // console.log({
-  //   method: "POST",
-  //   // mode: "no-cors",
-  //   body: {
-  //     path: `${process.env.REACT_APP_WFM_ROOT}job.api/current`,
-  //     params: {
-  //       method: "GET",
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //         "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
-  //         Accept: "application/json",
-  //       },
-  //     },
-  //   },
-  // });
-  // let path = `${process.env.REACT_APP_WFM_ROOT}job.api/current?apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`;
   let len = 100;
   let str = "";
   fetch(path, params)
@@ -400,6 +390,30 @@ export const fetchWFMClients = (accessToken, refreshToken) => async (
   // sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMClients`);
   // let path = apiRoot + 'wfm/job.php?apiKey=' + apiKey;
   let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
+  // let taskParams = {
+  //   method: "POST",
+  //   // mode: "no-cors",
+  //   body: JSON.stringify({
+  //     path: `${process.env.REACT_APP_WFM_ROOT}job.api/tasks`,
+  //     params: {
+  //       method: "GET",
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //         "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+  //         Accept: "application/json",
+  //       },
+  //     },
+  //   }),
+  // };
+  //
+  // fetch(path, taskParams)
+  //   .then((results) => results.text())
+  //   .then((data) => {
+  //     var xmlDOM = new DOMParser().parseFromString(data, "text/xml");
+  //     var json = xmlToJson(xmlDOM);
+  //     console.log(json);
+  //   });
+
   let params = {
     method: "POST",
     // mode: "no-cors",
@@ -516,206 +530,269 @@ export const getDetailedWFMJob = ({
   geocodes,
   site,
   jobDescription,
+  accessToken,
+  refreshToken,
 }) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran getDetailedWFMJob`);
-  let path = `${
-    process.env.REACT_APP_WFM_ROOT
-  }job.api/get/${jobNumber.trim()}?apiKey=${
-    process.env.REACT_APP_WFM_API
-  }&accountKey=${process.env.REACT_APP_WFM_ACC}`;
-  // console.log(path);
-  fetch(path)
+  let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
+  let params = {
+    method: "POST",
+    body: JSON.stringify({
+      path: `${process.env.REACT_APP_WFM_ROOT}job.api/get/${jobNumber.trim()}`,
+      params: {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+          Accept: "application/json",
+        },
+      },
+    }),
+  };
+  fetch(path, params)
     .then((results) => results.text())
     .then((data) => {
       var xmlDOM = new DOMParser().parseFromString(data, "text/xml");
       var json = xmlToJson(xmlDOM);
-      if (json.Response.Status === "ERROR") {
-        dispatch({
-          type: SET_MODAL_ERROR,
-          payload: json.Response.ErrorDescription,
-        });
-      } else {
-        let wfmJob = json.Response.Job;
-        let job = {
-          isJob: true,
-        };
-        // console.log(wfmJob);
-        job.jobDescription = jobDescription || wfmJob.ID || "Job";
-        job.jobNumber = wfmJob.ID || null;
-        job.address = wfmJob.Name || null;
-        job.wfmID = wfmJob.UUID;
-        job.description = wfmJob.Description || null;
-        job.dueDate = dateOf(wfmJob.DueDate);
-        job.startDate = dateOf(wfmJob.StartDate);
-        job.wfmState = wfmJob.State || "Unknown state";
-        job.category = wfmJob.Type || "Other";
-
-        if (wfmJob.Client) {
-          job.client = wfmJob.Client.Name || null;
-          job.clientID = wfmJob.Client.UUID || null;
-          if (job.clientID) {
-            let path = `${process.env.REACT_APP_WFM_ROOT}client.api/get/${job.clientID}?apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`;
-            fetch(path);
-            fetch(path)
-              .then((results) => results.text())
-              .then((data) => {
-                var xmlDOM = new DOMParser().parseFromString(data, "text/xml");
-                var json = xmlToJson(xmlDOM);
-                if (json.Response.Status === "ERROR") {
-                  dispatch({
-                    type: SET_MODAL_ERROR,
-                    payload: json.Response.ErrorDescription,
-                  });
-                } else {
-                  let client = json.Response.Client;
-                  let wfmClient = {};
-                  job.clientDetails = {
-                    wfmID: job.UUID,
-                    name:
-                      client.Name === Object(client.Phone)
-                        ? null
-                        : titleCase(client.Name.toString().trim()),
-                    email:
-                      client.Email === Object(client.Email)
-                        ? null
-                        : client.Email
-                        ? client.Email.toString().trim().toLowerCase()
-                        : null,
-                    address:
-                      client.Address === Object(client.Address)
-                        ? null
-                        : titleCase(client.Address.toString().trim()),
-                    city:
-                      client.City === Object(client.City)
-                        ? null
-                        : titleCase(client.City.toString().trim()),
-                    region:
-                      client.Region === Object(client.Region)
-                        ? null
-                        : titleCase(client.Region.toString().trim()),
-                    postcode:
-                      client.PostCode === Object(client.PostCode)
-                        ? null
-                        : client.PostCode.toString().trim(),
-                    country:
-                      client.Country === Object(client.Country)
-                        ? null
-                        : titleCase(client.Country.toString().trim()),
-                    postalAddress:
-                      client.PostalAddress === Object(client.PostalAddress)
-                        ? null
-                        : titleCase(client.PostalAddress.toString().trim()),
-                    postalCity:
-                      client.PostalCity === Object(client.PostalCity)
-                        ? null
-                        : titleCase(client.PostalCity.toString().trim()),
-                    postalRegion:
-                      client.PostalRegion === Object(client.PostalRegion)
-                        ? null
-                        : titleCase(client.PostalRegion.toString().trim()),
-                    postalPostCode:
-                      client.PostalPostCode === Object(client.PostalPostCode)
-                        ? null
-                        : client.PostalPostCode.toString().trim(),
-                    postalCountry:
-                      client.PostalCountry === Object(client.PostalCountry)
-                        ? null
-                        : titleCase(client.PostalCountry.toString().trim()),
-                    phone:
-                      client.Phone === Object(client.Phone)
-                        ? null
-                        : client.Phone.toString().replace("-", " ").trim(),
-                  };
-                  // console.log(job.clientDetails);
-                  if (addToJobList)
-                    dispatch(
-                      handleGeocode(
-                        job.address,
-                        getAddressFromClient(job.clientID, wfmClients),
-                        job,
-                        geocodes
-                      )
-                    );
-                  dispatch({
-                    type: GET_WFM_JOB,
-                    payload: job,
-                  });
-                  dispatch({
-                    type: EDIT_MODAL_DOC,
-                    payload: job,
-                  });
-                  if (setUpJob) dispatch(setupSiteJob(job, site));
-                }
-              });
-          }
+      if (json.Response) {
+        if (json.Response.Status === "ERROR") {
+          dispatch({
+            type: SET_MODAL_ERROR,
+            payload: json.Response.ErrorDescription,
+          });
         } else {
-          job.client = null;
-          job.clientID = null;
-        }
-        job.clientOrderNumber =
-          wfmJob.ClientOrderNumber &&
-          typeof wfmJob.ClientOrderNumber !== "object"
-            ? wfmJob.ClientOrderNumber
-            : "";
-        if (wfmJob.Contact) {
-          if (wfmJob.Contact.ID) {
-            let contactID = wfmJob.Contact.ID;
-            let path = `${process.env.REACT_APP_WFM_ROOT}client.api/contact/${contactID}?apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`;
-            //console.log(path);
-            fetch(path)
-              .then((results) => results.text())
-              .then((data) => {
-                var xmlDOM = new DOMParser().parseFromString(data, "text/xml");
-                var json = xmlToJson(xmlDOM);
-                if (json.Response.Status === "ERROR") {
-                  dispatch({
-                    type: SET_MODAL_ERROR,
-                    payload: json.Response.ErrorDescription,
-                  });
-                } else {
-                  let contact = json.Response.Contact;
-                  let wfmContact = {};
-                  // console.log(contact);
-                  job.contact = {
-                    wfmID: contactID,
-                    name: contact.Name ? contact.Name.toString().trim() : "",
-                    position:
-                      contact.Position === Object(contact.Position)
-                        ? ""
-                        : contact.Position.toString().trim(),
-                    mobile:
-                      contact.Mobile === Object(contact.Mobile)
-                        ? ""
-                        : contact.Mobile.toString().replace("-", " ").trim(),
-                    phone:
-                      contact.Phone === Object(contact.Phone)
-                        ? ""
-                        : contact.Phone.toString().replace("-", " ").trim(),
-                    email:
-                      contact.Email === Object(contact.Email)
-                        ? ""
-                        : contact.Email.toString().toLowerCase().trim(),
-                  };
-                  if (addToJobList)
-                    dispatch(
-                      handleGeocode(
-                        job.address,
-                        getAddressFromClient(job.clientID, wfmClients),
-                        job,
-                        geocodes
-                      )
-                    );
-                  dispatch({
-                    type: GET_WFM_JOB,
-                    payload: job,
-                  });
-                  dispatch({
-                    type: EDIT_MODAL_DOC,
-                    payload: job,
-                  });
-                  if (setUpJob) dispatch(setupSiteJob(job, site));
-                }
-              });
+          let wfmJob = json.Response.Job;
+          let job = {
+            isJob: true,
+          };
+          // console.log(wfmJob);
+          job.jobDescription = jobDescription || wfmJob.ID || "Job";
+          job.jobNumber = wfmJob.ID || null;
+          job.address = wfmJob.Name || null;
+          job.wfmID = wfmJob.UUID;
+          job.description = wfmJob.Description || null;
+          job.dueDate = dateOf(wfmJob.DueDate);
+          job.startDate = dateOf(wfmJob.StartDate);
+          job.wfmState = wfmJob.State || "Unknown state";
+          job.category = wfmJob.Type || "Other";
+
+          if (wfmJob.Client) {
+            job.client = wfmJob.Client.Name || null;
+            job.clientID = wfmJob.Client.UUID || null;
+            if (job.clientID) {
+              let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
+              let params = {
+                method: "POST",
+                body: JSON.stringify({
+                  path: `${process.env.REACT_APP_WFM_ROOT}client.api/get/${job.clientID}`,
+                  params: {
+                    method: "GET",
+                    headers: {
+                      Authorization: `Bearer ${accessToken}`,
+                      "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+                      Accept: "application/json",
+                    },
+                  },
+                }),
+              };
+              fetch(path, params)
+                .then((results) => results.text())
+                .then((data) => {
+                  var xmlDOM = new DOMParser().parseFromString(
+                    data,
+                    "text/xml"
+                  );
+                  var json = xmlToJson(xmlDOM);
+                  if (json.Response) {
+                    if (json.Response.Status === "ERROR") {
+                      dispatch({
+                        type: SET_MODAL_ERROR,
+                        payload: json.Response.ErrorDescription,
+                      });
+                    } else {
+                      let client = json.Response.Client;
+                      let wfmClient = {};
+                      job.clientDetails = {
+                        wfmID: job.UUID,
+                        name:
+                          client.Name === Object(client.Phone)
+                            ? null
+                            : titleCase(client.Name.toString().trim()),
+                        email:
+                          client.Email === Object(client.Email)
+                            ? null
+                            : client.Email
+                            ? client.Email.toString().trim().toLowerCase()
+                            : null,
+                        address:
+                          client.Address === Object(client.Address)
+                            ? null
+                            : titleCase(client.Address.toString().trim()),
+                        city:
+                          client.City === Object(client.City)
+                            ? null
+                            : titleCase(client.City.toString().trim()),
+                        region:
+                          client.Region === Object(client.Region)
+                            ? null
+                            : titleCase(client.Region.toString().trim()),
+                        postcode:
+                          client.PostCode === Object(client.PostCode)
+                            ? null
+                            : client.PostCode.toString().trim(),
+                        country:
+                          client.Country === Object(client.Country)
+                            ? null
+                            : titleCase(client.Country.toString().trim()),
+                        postalAddress:
+                          client.PostalAddress === Object(client.PostalAddress)
+                            ? null
+                            : titleCase(client.PostalAddress.toString().trim()),
+                        postalCity:
+                          client.PostalCity === Object(client.PostalCity)
+                            ? null
+                            : titleCase(client.PostalCity.toString().trim()),
+                        postalRegion:
+                          client.PostalRegion === Object(client.PostalRegion)
+                            ? null
+                            : titleCase(client.PostalRegion.toString().trim()),
+                        postalPostCode:
+                          client.PostalPostCode ===
+                          Object(client.PostalPostCode)
+                            ? null
+                            : client.PostalPostCode.toString().trim(),
+                        postalCountry:
+                          client.PostalCountry === Object(client.PostalCountry)
+                            ? null
+                            : titleCase(client.PostalCountry.toString().trim()),
+                        phone:
+                          client.Phone === Object(client.Phone)
+                            ? null
+                            : client.Phone.toString().replace("-", " ").trim(),
+                      };
+                      // console.log(job.clientDetails);
+                      if (addToJobList)
+                        dispatch(
+                          handleGeocode(
+                            job.address,
+                            getAddressFromClient(job.clientID, wfmClients),
+                            job,
+                            geocodes
+                          )
+                        );
+                      dispatch({
+                        type: GET_WFM_JOB,
+                        payload: job,
+                      });
+                      dispatch({
+                        type: EDIT_MODAL_DOC,
+                        payload: job,
+                      });
+                      if (setUpJob) dispatch(setupSiteJob(job, site));
+                    }
+                  } else {
+                    console.log(data);
+                  }
+                });
+            }
+          } else {
+            job.client = null;
+            job.clientID = null;
+          }
+          job.clientOrderNumber =
+            wfmJob.ClientOrderNumber &&
+            typeof wfmJob.ClientOrderNumber !== "object"
+              ? wfmJob.ClientOrderNumber
+              : "";
+          if (wfmJob.Contact) {
+            if (wfmJob.Contact.UUID) {
+              let contactID = wfmJob.Contact.UUID;
+              let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
+              let params = {
+                method: "POST",
+                body: JSON.stringify({
+                  path: `${process.env.REACT_APP_WFM_ROOT}client.api/contact/${contactID}`,
+                  params: {
+                    method: "GET",
+                    headers: {
+                      Authorization: `Bearer ${accessToken}`,
+                      "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+                      Accept: "application/json",
+                    },
+                  },
+                }),
+              };
+              fetch(path, params)
+                .then((results) => results.text())
+                .then((data) => {
+                  var xmlDOM = new DOMParser().parseFromString(
+                    data,
+                    "text/xml"
+                  );
+                  var json = xmlToJson(xmlDOM);
+                  if (json.Response) {
+                    if (json.Response.Status === "ERROR") {
+                      dispatch({
+                        type: SET_MODAL_ERROR,
+                        payload: json.Response.ErrorDescription,
+                      });
+                    } else {
+                      let contact = json.Response.Contact;
+                      let wfmContact = {};
+                      // console.log(contact);
+                      job.contact = {
+                        wfmID: contactID,
+                        name: contact.Name
+                          ? contact.Name.toString().trim()
+                          : "",
+                        position:
+                          contact.Position === Object(contact.Position)
+                            ? ""
+                            : contact.Position.toString().trim(),
+                        mobile:
+                          contact.Mobile === Object(contact.Mobile)
+                            ? ""
+                            : contact.Mobile.toString()
+                                .replace("-", " ")
+                                .trim(),
+                        phone:
+                          contact.Phone === Object(contact.Phone)
+                            ? ""
+                            : contact.Phone.toString().replace("-", " ").trim(),
+                        email:
+                          contact.Email === Object(contact.Email)
+                            ? ""
+                            : contact.Email.toString().toLowerCase().trim(),
+                      };
+                      if (addToJobList)
+                        dispatch(
+                          handleGeocode(
+                            job.address,
+                            getAddressFromClient(job.clientID, wfmClients),
+                            job,
+                            geocodes
+                          )
+                        );
+                      dispatch({
+                        type: GET_WFM_JOB,
+                        payload: job,
+                      });
+                      dispatch({
+                        type: EDIT_MODAL_DOC,
+                        payload: job,
+                      });
+                      if (setUpJob) dispatch(setupSiteJob(job, site));
+                    }
+                  } else {
+                    console.log(data);
+                  }
+                });
+            } else {
+              job.contact = {
+                wfmID: null,
+                name: null,
+                email: null,
+              };
+            }
           } else {
             job.contact = {
               wfmID: null,
@@ -723,119 +800,115 @@ export const getDetailedWFMJob = ({
               email: null,
             };
           }
-        } else {
-          job.contact = {
-            wfmID: null,
-            name: null,
-            email: null,
-          };
-        }
-        if (wfmJob.Manager) {
-          job.manager = wfmJob.Manager.Name || null;
-          job.managerID = wfmJob.Manager.UUID || null;
-        } else {
-          job.manager = null;
-          job.managerID = null;
-        }
-        if (wfmJob.Milestones.Milestone) {
-          job.milestones = [];
-          if (Array.isArray(wfmJob.Milestones.Milestone)) {
-            wfmJob.Milestones.Milestone.forEach((wfmMilestone) => {
-              let milestone = {};
-              milestone.id = wfmMilestone.UUID;
-              milestone.date = wfmMilestone.Date;
-              milestone.description = wfmMilestone.Description;
-              milestone.folder = wfmMilestone.Folder;
-              milestone.completed = wfmMilestone.Completed;
-              job.milestones.push(milestone);
-            });
+          if (wfmJob.Manager) {
+            job.manager = wfmJob.Manager.Name || null;
+            job.managerID = wfmJob.Manager.UUID || null;
           } else {
-            job.milestones = [
-              {
-                id: wfmJob.Milestones.Milestone.UUID,
-                date: wfmJob.Milestones.Milestone.Date,
-                description: wfmJob.Milestones.Milestone.Description,
-                folder: wfmJob.Milestones.Milestone.Folder,
-                complete: wfmJob.Milestones.Milestone.Completed,
-              },
-            ];
+            job.manager = null;
+            job.managerID = null;
           }
-        }
-        if (wfmJob.Notes.Note) {
-          job.notes = [];
-          if (Array.isArray(wfmJob.Notes.Note)) {
-            wfmJob.Notes.Note.forEach((wfmNote) => {
-              let note = {};
-              note.id = wfmNote.UUID;
-              note.date = wfmNote.Date;
-              note.createdBy = wfmNote.CreatedBy;
-              note.text = wfmNote.Text;
-              note.title = wfmNote.Title;
-              note.comments = wfmNote.Comments;
-              note.folder = wfmNote.Folder;
-              job.notes.push(note);
+          if (wfmJob.Milestones.Milestone) {
+            job.milestones = [];
+            if (Array.isArray(wfmJob.Milestones.Milestone)) {
+              wfmJob.Milestones.Milestone.forEach((wfmMilestone) => {
+                let milestone = {};
+                milestone.id = wfmMilestone.UUID;
+                milestone.date = wfmMilestone.Date;
+                milestone.description = wfmMilestone.Description;
+                milestone.folder = wfmMilestone.Folder;
+                milestone.completed = wfmMilestone.Completed;
+                job.milestones.push(milestone);
+              });
+            } else {
+              job.milestones = [
+                {
+                  id: wfmJob.Milestones.Milestone.UUID,
+                  date: wfmJob.Milestones.Milestone.Date,
+                  description: wfmJob.Milestones.Milestone.Description,
+                  folder: wfmJob.Milestones.Milestone.Folder,
+                  complete: wfmJob.Milestones.Milestone.Completed,
+                },
+              ];
+            }
+          }
+          if (wfmJob.Notes.Note) {
+            job.notes = [];
+            if (Array.isArray(wfmJob.Notes.Note)) {
+              wfmJob.Notes.Note.forEach((wfmNote) => {
+                let note = {};
+                note.id = wfmNote.UUID;
+                note.date = wfmNote.Date;
+                note.createdBy = wfmNote.CreatedBy;
+                note.text = wfmNote.Text;
+                note.title = wfmNote.Title;
+                note.comments = wfmNote.Comments;
+                note.folder = wfmNote.Folder;
+                job.notes.push(note);
+              });
+            } else {
+              job.notes = [
+                {
+                  id: wfmJob.Notes.Note.UUID,
+                  date: wfmJob.Notes.Note.Date,
+                  createdBy: wfmJob.Notes.Note.CreatedBy,
+                  text: wfmJob.Notes.Note.Text,
+                  title: wfmJob.Notes.Note.Title,
+                  comments: wfmJob.Notes.Note.Comments,
+                  folder: wfmJob.Notes.Note.Folder,
+                },
+              ];
+            }
+          }
+          if (wfmJob.Assigned.Staff) {
+            job.assigned = [];
+            if (Array.isArray(wfmJob.Assigned.Staff)) {
+              wfmJob.Assigned.Staff.forEach((wfmAssigned) => {
+                let staff = {};
+                staff.id = wfmAssigned.UUID;
+                staff.name = wfmAssigned.Name;
+                job.assigned.push(staff);
+              });
+            } else {
+              job.assigned = [
+                {
+                  id: wfmJob.Assigned.Staff.UUID,
+                  name: wfmJob.Assigned.Staff.Name,
+                },
+              ];
+            }
+          }
+          if (createUid) {
+            let uid = `${job.jobNumber.toUpperCase()}_${job.client.toUpperCase()}_${moment().format(
+              "x"
+            )}`.replace(/[.:/,\s]/g, "_");
+            console.log("New uid" + uid);
+            dispatch({
+              type: EDIT_MODAL_DOC,
+              payload: { uid: uid },
             });
-          } else {
-            job.notes = [
-              {
-                id: wfmJob.Notes.Note.UUID,
-                date: wfmJob.Notes.Note.Date,
-                createdBy: wfmJob.Notes.Note.CreatedBy,
-                text: wfmJob.Notes.Note.Text,
-                title: wfmJob.Notes.Note.Title,
-                comments: wfmJob.Notes.Note.Comments,
-                folder: wfmJob.Notes.Note.Folder,
-              },
-            ];
           }
-        }
-        if (wfmJob.Assigned.Staff) {
-          job.assigned = [];
-          if (Array.isArray(wfmJob.Assigned.Staff)) {
-            wfmJob.Assigned.Staff.forEach((wfmAssigned) => {
-              let staff = {};
-              staff.id = wfmAssigned.UUID;
-              staff.name = wfmAssigned.Name;
-              job.assigned.push(staff);
-            });
-          } else {
-            job.assigned = [
-              {
-                id: wfmJob.Assigned.Staff.UUID,
-                name: wfmJob.Assigned.Staff.Name,
-              },
-            ];
-          }
-        }
-        if (createUid) {
-          let uid = `${job.jobNumber.toUpperCase()}_${job.client.toUpperCase()}_${moment().format(
-            "x"
-          )}`.replace(/[.:/,\s]/g, "_");
-          console.log("New uid" + uid);
+          if (addToJobList)
+            dispatch(
+              handleGeocode(
+                job.address,
+                getAddressFromClient(job.clientID, wfmClients),
+                job,
+                geocodes
+              )
+            );
+          // console.log(job);
+          dispatch({
+            type: GET_WFM_JOB,
+            payload: job,
+          });
           dispatch({
             type: EDIT_MODAL_DOC,
-            payload: { uid: uid },
+            payload: job,
           });
+          if (setUpJob) dispatch(setupSiteJob(job, site));
         }
-        if (addToJobList)
-          dispatch(
-            handleGeocode(
-              job.address,
-              getAddressFromClient(job.clientID, wfmClients),
-              job,
-              geocodes
-            )
-          );
-        // console.log(job);
-        dispatch({
-          type: GET_WFM_JOB,
-          payload: job,
-        });
-        dispatch({
-          type: EDIT_MODAL_DOC,
-          payload: job,
-        });
-        if (setUpJob) dispatch(setupSiteJob(job, site));
+      } else {
+        console.log(data);
       }
     });
 };
@@ -881,7 +954,7 @@ export const updateGeocodes = (geocodes) => (dispatch) => {
 };
 
 export const saveWFMItems = (items) => (dispatch) => {
-  console.log(Object.keys(items).length);
+  // console.log(Object.keys(items).length);
   var date = moment().format("YYYY-MM-DD");
   // //console.log(items);
   // Object.values(items).forEach(job => {
@@ -1015,7 +1088,7 @@ export const fetchSiteAcm = (site) => async (dispatch) => {
         acm.uid = doc.id;
         acms[doc.id] = acm;
       });
-      console.log(acms);
+      // console.log(acms);
       dispatch({
         type: GET_SITE_ACM,
         payload: { acms, site },
@@ -1714,7 +1787,7 @@ export const collateJobsList = (
   // Add option to look up detailed information for each job
   var mappedJobs = {};
   let currentJobStateCopy = { ...currentJobState };
-  console.log(currentJobStateCopy);
+  // console.log(currentJobStateCopy);
   Object.values(currentJobState)
     .filter((job) => job.wfmState === "Completed")
     .forEach((job) => {
@@ -2061,32 +2134,64 @@ export const onWatchLead = (lead, me) => {
 };
 
 export const sendTimeSheetToWFM = (taskData, taskID, that) => {
-  // console.log(taskData);
-  // console.log(taskID);
-  let assignUrl = `${process.env.REACT_APP_WFM_ROOT}job.api/assign?apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`,
-    timeUrl = `${process.env.REACT_APP_WFM_ROOT}time.api/add?apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`;
-
+  console.log(taskData);
+  console.log(taskID);
+  let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
   // Convert to XML
   let assignXML = `<Job><ID>${taskData.job}</ID><add uuid="${taskData.staff}" task-uuid="${taskID}" /></Job>`,
-    timeXML = `<Timesheet><Job>${taskData.job}</Job><Task>${taskID}</Task><Staff>${taskData.staff}</Staff><Date>${taskData.day}</Date><Start>${taskData.startTime}</Start><End>${taskData.endTime}</End><Note>${taskData.note}</Note></Timesheet>`;
+    timeXML = `<Timesheet><Job>${taskData.job}</Job><TaskUUID>${taskID}</TaskUUID><StaffUUID>${taskData.staff}</StaffUUID><Date>${taskData.day}</Date><Start>${taskData.startTime}</Start><End>${taskData.endTime}</End><Note>${taskData.note}</Note></Timesheet>`;
 
-  // console.log(assignXML);
-  // console.log(timeXML);
+  let assignParams = {
+    method: "POST",
+    body: JSON.stringify({
+      path: `${process.env.REACT_APP_WFM_ROOT}job.api/assign`,
+      params: {
+        method: "PUT",
+        body: assignXML,
+        headers: {
+          Authorization: `Bearer ${taskData.accessToken}`,
+          "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+        },
+      },
+    }),
+  };
 
-  fetch(assignUrl, { method: "PUT", body: assignXML })
-    .then((results) => results.text())
+  let timeParams = {
+    method: "POST",
+    body: JSON.stringify({
+      path: `${process.env.REACT_APP_WFM_ROOT}time.api/add`,
+      params: {
+        method: "POST",
+        body: timeXML,
+        headers: {
+          Authorization: `Bearer ${taskData.accessToken}`,
+          "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+        },
+      },
+    }),
+  };
+
+  console.log(assignParams);
+
+  fetch(path, assignParams)
+    .then((results) => {
+      console.log(results);
+      return results.text();
+    })
     .then((data) => {
-      // console.log(data);
-      var json = xmlToJson(new DOMParser().parseFromString(data, "text/xml"));
-      // console.log(json);
-      if (json.Response.Status === "OK") {
-        fetch(timeUrl, { method: "POST", body: timeXML })
+      console.log(data);
+      var xmlDOM = new DOMParser().parseFromString(data, "text/xml");
+      console.log(xmlDOM);
+      var json = xmlToJson(xmlDOM);
+      console.log(json);
+      if (json.Response && json.Response.Status === "OK") {
+        fetch(path, timeParams)
           .then((results) => results.text())
           .then((data) => {
             var json = xmlToJson(
               new DOMParser().parseFromString(data, "text/xml")
             );
-            // console.log(json.Response);
+            console.log(json.Response);
             if (json.Response.Status === "OK") {
               that.setState({
                 status: "Success",
@@ -2106,30 +2211,31 @@ export const sendTimeSheetToWFM = (taskData, taskID, that) => {
 };
 
 export const getTaskID = (taskData, that) => {
+  let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
   // console.log(taskData);
-  let assignUrl = `${process.env.REACT_APP_WFM_ROOT}job.api/assign?apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`,
-    timeUrl = `${process.env.REACT_APP_WFM_ROOT}time.api/add?apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`,
-    jobUrl = `${
-      process.env.REACT_APP_WFM_ROOT
-    }job.api/get/${taskData.job.trim()}?apiKey=${
-      process.env.REACT_APP_WFM_API
-    }&accountKey=${process.env.REACT_APP_WFM_ACC}`,
-    taskUrl = `${process.env.REACT_APP_WFM_ROOT}job.api/task?apiKey=${process.env.REACT_APP_WFM_API}&accountKey=${process.env.REACT_APP_WFM_ACC}`,
-    taskXML = `<Task><Job>${taskData.job}</Job><TaskID>${
-      taskData.task
-    }</TaskID><EstimatedMinutes>${
-      taskData.minutes ? taskData.minutes : 0
-    }</EstimatedMinutes></Task>`;
-
-  // console.log(taskXML);
+  let jobParams = {
+    method: "POST",
+    body: JSON.stringify({
+      path: `${
+        process.env.REACT_APP_WFM_ROOT
+      }job.api/get/${taskData.job.trim()}`,
+      params: {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${taskData.accessToken}`,
+          "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+          Accept: "application/json",
+        },
+      },
+    }),
+  };
 
   // Get information about Job and read tasks list
-  console.log(jobUrl);
-  return fetch(jobUrl)
+  return fetch(path, jobParams)
     .then((results) => results.text())
     .then((data) => {
       var json = xmlToJson(new DOMParser().parseFromString(data, "text/xml"));
-      console.log(json);
+      // console.log(json);
       if (json.Response.Status === "OK") {
         // Check if task type is in the job. If it is, we will use that ID so the task isn't duplicated.
         let tasks = json.Response.Job.Tasks.Task;
@@ -2139,22 +2245,22 @@ export const getTaskID = (taskData, that) => {
           if (tasks instanceof Array) {
             // console.log('tasks instance of array');
             tasks.forEach((task) => {
-              console.log(task);
-              if (task.TaskID === taskData.task) {
+              // console.log(task);
+              if (task.TaskUUID === taskData.task) {
                 taskID = task.UUID;
                 // console.log(task);
               }
             });
           } else if (tasks instanceof Object) {
             console.log("tasks instance of object");
-            if (tasks.TaskID === taskData.task) {
+            if (tasks.TaskUUID === taskData.task) {
               taskID = tasks.UUID;
               // console.log(tasks);
             }
           } else {
             tasks.forEach((task) => {
               // console.log(task);
-              if (task.TaskID === taskData.task) {
+              if (task.TaskUUID === taskData.task) {
                 taskID = task.UUID;
                 // console.log(task);
               }
@@ -2164,14 +2270,36 @@ export const getTaskID = (taskData, that) => {
         if (!taskID) {
           // console.log('Task ID not found');
           // Task type was not found in job, will need to be added first
-          fetch(taskUrl, { method: "POST", body: taskXML })
+          let taskXML = `<Task><Job>${taskData.job}</Job><TaskUUID>${
+            taskData.task
+          }</TaskUUID><EstimatedMinutes>${
+            taskData.minutes ? taskData.minutes : 0
+          }</EstimatedMinutes></Task>`;
+
+          let taskParams = {
+            method: "POST",
+            body: JSON.stringify({
+              path: `${process.env.REACT_APP_WFM_ROOT}job.api/task`,
+              params: {
+                method: "POST",
+                body: taskXML,
+                headers: {
+                  Authorization: `Bearer ${taskData.accessToken}`,
+                  "xero-tenant-id": process.env.REACT_APP_XERO_TENANT_ID,
+                  Accept: "application/json",
+                },
+              },
+            }),
+          };
+
+          fetch(path, taskParams)
             .then((results) => results.text())
             .then((data) => {
               var json = xmlToJson(
                 new DOMParser().parseFromString(data, "text/xml")
               );
               if (json.Response.Status === "OK") {
-                // console.log(json.Response);
+                console.log(json.Response);
                 sendTimeSheetToWFM(taskData, json.Response.UUID, that);
               } else {
                 // console.log('Adding task failed.');

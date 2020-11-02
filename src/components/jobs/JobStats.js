@@ -3,19 +3,6 @@ import { withStyles } from "@material-ui/core/styles";
 import { styles } from "../../config/styles";
 import { connect } from "react-redux";
 
-//Modals
-import { showModal } from "../../actions/modal";
-import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Input from "@material-ui/core/Input";
-import Select from "@material-ui/core/Select";
-import Grid from "@material-ui/core/Grid";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import TextField from "@material-ui/core/TextField";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-
 import {
   fetchWFMJobs,
   fetchWFMLeads,

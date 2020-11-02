@@ -3,15 +3,12 @@ import {
   GET_FIRESTORE_COLLECTION,
   CAT_CHANGE,
   CLEAR_LOG,
-  GET_ASBESTOS_ANALYSIS,
   GET_AIR_ANALYSTS,
   GET_BULK_ANALYSTS,
-  GET_COCS,
   GET_ASSETS,
   GET_DOCUMENTS,
   GET_EDIT_STAFF,
   CLEAR_EDIT_STAFF,
-  GET_GEOCODES,
   GET_HELP,
   GET_INCIDENTS,
   GET_LOGS,
@@ -24,44 +21,31 @@ import {
   GET_QUIZZES,
   GET_QUIZLOG,
   GET_READINGLOG,
-  GET_SAMPLES,
   GET_STAFF,
   GET_TOOLS,
   GET_TRAININGS,
   GET_UPDATES,
   GET_USER,
   GET_VEHICLES,
-  GET_WFM_JOBS,
-  GET_WFM_JOB,
-  GET_WFM_LEADS,
   GET_WFM_CLIENTS,
-  GET_CURRENT_JOB_STATE,
   SAVE_WFM_ITEMS,
   SAVE_WFM_STATS,
   RESET_LOCAL,
   SEARCH_CHANGE,
-  SET_ANALYSIS_MODE,
   SET_ANALYST,
-  SET_MODAL_ERROR,
   SET_STEPPER,
   UPDATE_STAFF,
-  EDIT_MODAL_DOC,
-  GET_WFM_CONTACT,
 } from "../constants/action-types";
 import moment from "moment";
 import {
-  asbestosSamplesRef,
-  asbestosAnalysisLogRef,
   assetsRef,
   auth,
-  cocsRef,
   docsRef,
   helpRef,
   incidentsRef,
   logsRef,
   methodsRef,
   noticesRef,
-  noticeReadsRef,
   questionsRef,
   quizzesRef,
   stateRef,
@@ -73,8 +57,6 @@ import {
   firestore,
 } from "../config/firebase";
 import { sendSlackMessage } from "./helpers";
-import { xmlToJson } from "../config/XmlToJson";
-// import assetData from "./assetData.json";
 
 export const resetLocal = () => (dispatch) => {
   dispatch({ type: RESET_LOCAL });
@@ -576,9 +558,6 @@ export const fetchNotices = (update) => async (dispatch) => {
 };
 
 export const removeNoticeReads = async (notice, reads) => {
-  let noticeArray = [];
-  // let batch = firestore.batch();
-
   stateRef
     .doc("noticereads")
     .collection("notices")

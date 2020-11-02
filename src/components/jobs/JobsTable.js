@@ -4,18 +4,7 @@ import { styles } from "../../config/styles";
 import { connect } from "react-redux";
 
 //Modals
-import { showModal } from "../../actions/modal";
-import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Input from "@material-ui/core/Input";
-import Select from "@material-ui/core/Select";
-import Grid from "@material-ui/core/Grid";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import NotWatchingIcon from "@material-ui/icons/BookmarkBorder";
@@ -44,7 +33,6 @@ import {
   getDaysSinceDate,
   getDaysSinceDateAgo,
   dateOf,
-  convertYYYYMMDD,
 } from "../../actions/helpers";
 
 import { filterMap, filterMapReset } from "../../actions/display";
@@ -55,11 +43,6 @@ import JobMap from "./JobMap";
 
 const mapStateToProps = (state) => {
   return {
-    wfmJobs: state.jobs.wfmJobs,
-    wfmLeads: state.jobs.wfmLeads,
-    wfmClients: state.jobs.wfmClients,
-    currentJobState: state.jobs.currentJobState,
-    geocodes: state.jobs.geocodes,
     wfmItems: state.jobs.wfmItems,
     wfmStats: state.jobs.wfmStats,
     jobList: state.jobs.jobList,
@@ -67,6 +50,7 @@ const mapStateToProps = (state) => {
     me: state.local.me,
     filter: state.display.filterMap,
     otherOptions: state.const.otherOptions,
+    wfmToken: state.local.wfmToken,
   };
 };
 
@@ -111,17 +95,7 @@ class JobsTable extends React.Component {
   };
 
   render() {
-    const {
-      wfmJobs,
-      wfmLeads,
-      wfmClients,
-      classes,
-      currentJobState,
-      jobList,
-      geocodes,
-      that,
-      me,
-    } = this.props;
+    const { classes, jobList, that, me } = this.props;
     const daysSinceLastJobAction =
       this.props.otherOptions &&
       this.props.otherOptions.filter(
@@ -194,6 +168,8 @@ class JobsTable extends React.Component {
                 // console.log(getDetailedWFMJob);
                 this.props.getDetailedWFMJob({
                   jobNumber: rowInfo.original.jobNumber,
+                  accessToken: this.props.wfmToken,
+                  refreshToken: this.props.me.refreshToken,
                 });
                 that.setState({ jobModal: rowInfo.original });
               }

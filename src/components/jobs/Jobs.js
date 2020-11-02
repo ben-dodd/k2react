@@ -48,7 +48,6 @@ import {
   getNextActionType,
   getWfmUrl,
   getLeadHistoryDescription,
-  getDetailedWFMJob,
   setupSiteJob,
 } from "../../actions/jobs";
 
@@ -536,18 +535,6 @@ class Jobs extends React.Component {
         {this.props.modalType === WFM_TIME && <WfmTimeModal />}
         {jobModal}
         <div className={classes.flexRowRightAlign}>
-          {/*<TextField
-            label="Add Job Number"
-            className={classes.columnMedLarge}
-            onChange={e => this.setState({ addJobNumber: e.target.value })}
-          />
-          <Button
-            variant="outlined"
-            className={classes.marginBottomSmall}
-            onClick={() => this.props.getDetailedWFMJob({ jobNumber: this.state.addJobNumber, wfmClients: this.props.wfmClients, geocodes: this.props.geocodes })}
-          >
-            Add
-          </Button>*/}
           <Tooltip title="Log Time in WorkflowMax">
             <IconButton
               onClick={(e) => {
