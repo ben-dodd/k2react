@@ -84,7 +84,7 @@ const mapStateToProps = (state) => {
     modalType: state.modal.modalType,
     modalProps: state.modal.modalProps,
     doc: state.modal.modalProps.doc,
-    wfmToken: state.local.wfmToken,
+    wfmAccessToken: state.local.wfmAccessToken,
   };
 };
 
@@ -121,7 +121,7 @@ class SiteJobModal extends React.Component {
         setUpJob: true,
         site: this.props.doc.site,
         jobDescription,
-        accessToken: this.props.wfmToken,
+        accessToken: this.props.wfmAccessToken,
         refreshToken: this.props.me.refreshToken,
       });
     }

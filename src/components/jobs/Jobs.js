@@ -73,7 +73,7 @@ const mapStateToProps = (state) => {
     filter: state.display.filterMap,
     otherOptions: state.const.otherOptions,
     modalType: state.modal.modalType,
-    wfmToken: state.local.wfmToken,
+    wfmAccessToken: state.local.wfmAccessToken,
   };
 };
 
@@ -178,23 +178,23 @@ class Jobs extends React.Component {
   }
 
   getWFMData = () => {
-    if (this.props.wfmToken && this.props.me) {
+    if (this.props.wfmAccessToken && this.props.me) {
       // console.log(this.props.clients);
       if (!this.props.wfmJobs || this.props.wfmJobs.length === 0) {
         this.props.fetchWFMJobs(
-          this.props.wfmToken,
+          this.props.wfmAccessToken,
           this.props.me.wfmRefreshToken
         );
       }
       if (!this.props.wfmLeads || this.props.wfmLeads.length === 0) {
         this.props.fetchWFMLeads(
-          this.props.wfmToken,
+          this.props.wfmAccessToken,
           this.props.me.wfmRefreshToken
         );
       }
       if (!this.props.wfmClients || this.props.wfmClients.length === 0) {
         this.props.fetchWFMClients(
-          this.props.wfmToken,
+          this.props.wfmAccessToken,
           this.props.me.wfmRefreshToken
         );
       }

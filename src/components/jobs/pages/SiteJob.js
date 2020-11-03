@@ -69,7 +69,7 @@ const mapStateToProps = (state) => {
     filter: state.display.filterMap,
     otherOptions: state.const.otherOptions,
     modalType: state.modal.modalType,
-    wfmToken: state.local.wfmToken,
+    wfmAccessToken: state.local.wfmAccessToken,
   };
 };
 
@@ -200,7 +200,7 @@ class SiteJob extends React.Component {
                         this.props.getDetailedWFMJob({
                           jobNumber: m.jobNumber,
                           setUpJob: true,
-                          accessToken: this.props.wfmToken,
+                          accessToken: this.props.wfmAccessToken,
                           refreshToken: this.props.me.refreshToken,
                         })
                       }

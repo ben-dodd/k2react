@@ -50,6 +50,7 @@ import qs from "qs";
 import {
   firestore,
   auth,
+  authRef,
   stateRef,
   usersRef,
   jobsRef,
@@ -84,6 +85,17 @@ export const resetJobs = () => (dispatch) => {
   dispatch({ type: RESET_JOBS });
 };
 
+export const fetchWFMAuth = () => async (dispatch) => {
+  authRef.get().then((doc) => {
+    if (doc.data()) {
+      dispatch({
+        type: AUTHORISE_WFM,
+        payload: doc.data(),
+      });
+    }
+  });
+};
+
 export const authoriseWFM = ({ code, refreshToken }) => async (dispatch) => {
   console.log("authoriseWFM called");
   let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
@@ -105,19 +117,26 @@ export const authoriseWFM = ({ code, refreshToken }) => async (dispatch) => {
       },
     }),
   };
-  console.log(params);
+  // console.log(params);
   fetch(path, params)
     .then((results) => {
       return results.text();
     })
     .then((data) => {
       let dataObj = JSON.parse(data);
-      usersRef
-        .doc(auth.currentUser.uid)
-        .update({ wfmRefreshToken: dataObj.refresh_token });
+      let expiryDate = moment().add(
+        moment.duration(dataObj.expires_in, "seconds")
+      );
+      // console.log(dataObj);
+      let authObj = {
+        wfmAccessToken: dataObj.access_token,
+        wfmRefreshToken: dataObj.refresh_token,
+        wfmAccessExpiry: expiryDate.toDate(),
+      };
+      authRef.update(authObj);
       dispatch({
         type: AUTHORISE_WFM,
-        payload: dataObj.access_token,
+        payload: authObj,
       });
     });
 };
@@ -148,7 +167,7 @@ export const fetchWFMStaff = (accessToken, refreshToken) => async (
     .then((data) => {
       var xmlDOM = new DOMParser().parseFromString(data, "text/xml");
       var json = xmlToJson(xmlDOM);
-      console.log(json);
+      // console.log(json);
     });
 };
 
@@ -612,7 +631,7 @@ export const getDetailedWFMJob = ({
                       let client = json.Response.Client;
                       let wfmClient = {};
                       job.clientDetails = {
-                        wfmID: job.UUID,
+                        wfmID: client.UUID,
                         name:
                           client.Name === Object(client.Phone)
                             ? null
@@ -881,7 +900,7 @@ export const getDetailedWFMJob = ({
             let uid = `${job.jobNumber.toUpperCase()}_${job.client.toUpperCase()}_${moment().format(
               "x"
             )}`.replace(/[.:/,\s]/g, "_");
-            console.log("New uid" + uid);
+            // console.log("New uid" + uid);
             dispatch({
               type: EDIT_MODAL_DOC,
               payload: { uid: uid },
@@ -2134,8 +2153,8 @@ export const onWatchLead = (lead, me) => {
 };
 
 export const sendTimeSheetToWFM = (taskData, taskID, that) => {
-  console.log(taskData);
-  console.log(taskID);
+  // console.log(taskData);
+  // console.log(taskID);
   let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`;
   // Convert to XML
   let assignXML = `<Job><ID>${taskData.job}</ID><add uuid="${taskData.staff}" task-uuid="${taskID}" /></Job>`,
@@ -2171,19 +2190,19 @@ export const sendTimeSheetToWFM = (taskData, taskID, that) => {
     }),
   };
 
-  console.log(assignParams);
+  // console.log(assignParams);
 
   fetch(path, assignParams)
     .then((results) => {
-      console.log(results);
+      // console.log(results);
       return results.text();
     })
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       var xmlDOM = new DOMParser().parseFromString(data, "text/xml");
-      console.log(xmlDOM);
+      // console.log(xmlDOM);
       var json = xmlToJson(xmlDOM);
-      console.log(json);
+      // console.log(json);
       if (json.Response && json.Response.Status === "OK") {
         fetch(path, timeParams)
           .then((results) => results.text())
@@ -2240,7 +2259,7 @@ export const getTaskID = (taskData, that) => {
         // Check if task type is in the job. If it is, we will use that ID so the task isn't duplicated.
         let tasks = json.Response.Job.Tasks.Task;
         let taskID = null;
-        console.log(tasks);
+        // console.log(tasks);
         if (tasks !== undefined) {
           if (tasks instanceof Array) {
             // console.log('tasks instance of array');
@@ -2252,7 +2271,7 @@ export const getTaskID = (taskData, that) => {
               }
             });
           } else if (tasks instanceof Object) {
-            console.log("tasks instance of object");
+            // console.log("tasks instance of object");
             if (tasks.TaskUUID === taskData.task) {
               taskID = tasks.UUID;
               // console.log(tasks);
@@ -2299,7 +2318,7 @@ export const getTaskID = (taskData, that) => {
                 new DOMParser().parseFromString(data, "text/xml")
               );
               if (json.Response.Status === "OK") {
-                console.log(json.Response);
+                // console.log(json.Response);
                 sendTimeSheetToWFM(taskData, json.Response.UUID, that);
               } else {
                 // console.log('Adding task failed.');

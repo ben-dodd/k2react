@@ -30,7 +30,7 @@ const mapStateToProps = (state) => {
     staff: state.local.staff,
     wfmJobs: state.jobs.wfmJobs,
     lastTimeSaved: state.jobs.lastTimeSaved,
-    wfmToken: state.local.wfmToken,
+    wfmAccessToken: state.local.wfmAccessToken,
   };
 };
 
@@ -98,8 +98,8 @@ const taskIDs = [
     value: process.env.REACT_APP_WFM_TASK_TRAINING,
   },
   {
-    label: "Pre-Site Preperation",
-    value: process.env.REACT_APP_WFM_TASK_PRE_SITE_PREPERATION,
+    label: "Pre-Site Preparation",
+    value: process.env.REACT_APP_WFM_TASK_PRE_SITE_PREPARATION,
   },
   {
     label: "Proposal Writing",
@@ -256,7 +256,7 @@ class WfmTimeModal extends React.Component {
               endTime,
               minutes,
               note: jobNote,
-              accessToken: this.props.wfmToken,
+              accessToken: this.props.wfmAccessToken,
             };
             this.setState({
               status: "Loading",

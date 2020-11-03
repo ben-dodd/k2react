@@ -66,7 +66,8 @@ const localInit = {
   userRef: null,
   userRefName: null,
   vehicles: [],
-  wfmToken: null,
+  wfmAccessToken: null,
+  wfmRefreshToken: null,
 };
 
 // Properties related to local data retrieved from firebase
@@ -109,7 +110,7 @@ export default function localReducer(state = localInit, action) {
     case AUTHORISE_WFM:
       return {
         ...state,
-        wfmToken: action.payload,
+        ...action.payload,
       };
     case GET_ASSETS:
       if (action.update) {

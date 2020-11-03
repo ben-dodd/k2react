@@ -85,7 +85,7 @@ const mapStateToProps = (state) => {
     staff: state.local.staff,
     samples: state.asbestosLab.samples,
     otherOptions: state.const.otherOptions,
-    wfmToken: state.local.wfmToken,
+    wfmAccessToken: state.local.wfmAccessToken,
   };
 };
 
@@ -195,7 +195,7 @@ class CocModal extends React.PureComponent {
       this.props.getDetailedWFMJob({
         jobNumber,
         createUid,
-        accessToken: this.props.wfmToken,
+        accessToken: this.props.wfmAccessToken,
         refreshToken: this.props.me.refreshToken,
       });
       let uid = this.props.doc.uid;

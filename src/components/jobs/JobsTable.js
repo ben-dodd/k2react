@@ -50,7 +50,7 @@ const mapStateToProps = (state) => {
     me: state.local.me,
     filter: state.display.filterMap,
     otherOptions: state.const.otherOptions,
-    wfmToken: state.local.wfmToken,
+    wfmAccessToken: state.local.wfmAccessToken,
   };
 };
 
@@ -144,7 +144,7 @@ class JobsTable extends React.Component {
         })
       : [];
 
-    console.log(jobs);
+    // console.log(jobs);
     return (
       <div className={classes.marginBottomSmall}>
         <ReactTable
@@ -168,7 +168,7 @@ class JobsTable extends React.Component {
                 // console.log(getDetailedWFMJob);
                 this.props.getDetailedWFMJob({
                   jobNumber: rowInfo.original.jobNumber,
-                  accessToken: this.props.wfmToken,
+                  accessToken: this.props.wfmAccessToken,
                   refreshToken: this.props.me.refreshToken,
                 });
                 that.setState({ jobModal: rowInfo.original });

@@ -73,7 +73,7 @@ const mapStateToProps = (state) => {
     expanded: state.display.asbestosLabExpanded,
     asbestosSampleDisplayAdvanced: state.display.asbestosSampleDisplayAdvanced,
     modalType: state.modal.modalType,
-    wfmToken: state.local.wfmToken,
+    wfmAccessToken: state.local.wfmAccessToken,
   };
 };
 
@@ -240,7 +240,7 @@ class AsbestosAirCocCard extends React.Component {
                   onClick={() => {
                     this.props.getDetailedWFMJob({
                       jobNumber: job.jobNumber,
-                      accessToken: this.props.wfmToken,
+                      accessToken: this.props.wfmAccessToken,
                       refreshToken: this.props.me.refreshToken,
                     });
                     this.props.showModal({

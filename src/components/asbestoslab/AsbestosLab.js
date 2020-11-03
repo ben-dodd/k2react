@@ -97,7 +97,7 @@ const mapStateToProps = (state) => {
     jobList: state.jobs.jobList,
     search: state.local.search,
     filter: state.display.filterMap,
-    wfmToken: state.local.wfmToken,
+    wfmAccessToken: state.local.wfmAccessToken,
   };
 };
 
@@ -185,11 +185,11 @@ class AsbestosLab extends React.Component {
   };
 
   getWFMData = () => {
-    if (this.props.wfmToken && this.props.me) {
+    if (this.props.wfmAccessToken && this.props.me) {
       // console.log(this.props.clients);
       if (!this.props.wfmJobs || this.props.wfmJobs.length === 0) {
         this.props.fetchWFMJobs(
-          this.props.wfmToken,
+          this.props.wfmAccessToken,
           this.props.me.wfmRefreshToken
         );
       }

@@ -86,7 +86,7 @@ const mapStateToProps = (state) => {
     modalType: state.modal.modalType,
     siteTypes: state.const.siteTypes,
     assetClassesTrain: state.const.assetClassesTrain,
-    wfmToken: state.local.wfmToken,
+    wfmAccessToken: state.local.wfmAccessToken,
   };
 };
 
@@ -463,7 +463,7 @@ class SiteGeneralInformation extends React.Component {
                               this.props.getDetailedWFMJob({
                                 jobNumber: j.jobNumber,
                                 setUpJob: true,
-                                accessToken: this.props.wfmToken,
+                                accessToken: this.props.wfmAccessToken,
                                 refreshToken: this.props.me.refreshToken,
                               })
                             }
@@ -718,7 +718,7 @@ class SiteGeneralInformation extends React.Component {
                               onClick={() => {
                                 this.props.getDetailedWFMJob({
                                   jobNumber: coc.jobNumber,
-                                  accessToken: this.props.wfmToken,
+                                  accessToken: this.props.wfmAccessToken,
                                   refreshToken: this.props.me.refreshToken,
                                 });
                                 this.props.showModal({
