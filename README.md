@@ -1,6 +1,6 @@
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
-#MyK2 LIMS
+MyK2 LIMS
 
 The main functions of this web app are to:
  - Track samples through full chain of custody process
