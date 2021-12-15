@@ -13,7 +13,7 @@ import {
   SET_ANALYSIS_MODE,
   SET_ANALYST,
   SET_ANALYSIS_SESSION_ID,
-  SET_VIEW_SAMPLE_DETAIL
+  SET_VIEW_SAMPLE_DETAIL,
 } from "../constants/action-types";
 import { DOWNLOAD_LAB_CERTIFICATE } from "../constants/modal-types";
 import { styles } from "../config/styles";
@@ -30,7 +30,7 @@ import {
   andList,
   dateOf,
   milliToDHM,
-  writeMeasurement
+  writeMeasurement,
 } from "./helpers";
 import { getDefaultLetterAddress } from "./jobs";
 import {
@@ -44,14 +44,14 @@ import {
   stateRef,
   firebase,
   firestore,
-  auth
+  auth,
 } from "../config/firebase";
 import React from "react";
 import Button from "@material-ui/core/Button";
 
 const defaultLimit = 19;
 
-export const resetAsbestosLab = () => dispatch => {
+export const resetAsbestosLab = () => (dispatch) => {
   dispatch({ type: RESET_ASBESTOS_LAB });
 };
 
@@ -59,7 +59,7 @@ export const resetAsbestosLab = () => dispatch => {
 // GET DATA
 //
 
-export const fetchCocs = update => async dispatch => {
+export const fetchCocs = (update) => async (dispatch) => {
   //console.log('Fetching COCs');
   // Make all calls update for now
   update = true;
@@ -68,48 +68,42 @@ export const fetchCocs = update => async dispatch => {
       .where("deleted", "==", false)
       .where("versionUpToDate", "==", false)
       // .orderBy("lastModified")
-      .onSnapshot(querySnapshot => {
+      .onSnapshot((querySnapshot) => {
         sendSlackMessage(
           `${auth.currentUser.displayName} ran fetchCocs (${querySnapshot.size} documents)`
         );
         var cocs = {};
-        querySnapshot.forEach(doc => {
+        querySnapshot.forEach((doc) => {
           cocs[doc.id] = doc.data();
         });
         dispatch({
           type: GET_COCS,
           payload: cocs,
-          update: true
+          update: true,
         });
       });
     cocsRef
       .where("deleted", "==", false)
       .where("versionUpToDate", "==", true)
-      .where(
-        "lastModified",
-        ">",
-        moment()
-          .subtract(1, "days")
-          .toDate()
-      )
+      .where("lastModified", ">", moment().subtract(1, "days").toDate())
       // .orderBy("lastModified")
       // .orderBy("dueDate", "desc")
-      .onSnapshot(querySnapshot => {
+      .onSnapshot((querySnapshot) => {
         sendSlackMessage(
           `${auth.currentUser.displayName} ran fetchCocs (${querySnapshot.size} documents)`
         );
         var cocs = {};
-        querySnapshot.forEach(doc => {
+        querySnapshot.forEach((doc) => {
           cocs[doc.id] = doc.data();
         });
         dispatch({
           type: GET_COCS,
           payload: cocs,
-          update: true
+          update: true,
         });
       });
   } else {
-    stateRef.doc("cocs").onSnapshot(doc => {
+    stateRef.doc("cocs").onSnapshot((doc) => {
       sendSlackMessage(
         `${auth.currentUser.displayName} ran fetchCocs from state (1 document)`
       );
@@ -122,40 +116,35 @@ export const fetchCocs = update => async dispatch => {
   }
 };
 
-export const fetchCocsByJobNumber = jobNumber => async dispatch => {
+export const fetchCocsByJobNumber = (jobNumber) => async (dispatch) => {
   cocsRef
     .where("deleted", "==", false)
     .where("jobNumber", "==", jobNumber.toUpperCase())
     .orderBy("lastModified")
     .get()
-    .then(querySnapshot => {
+    .then((querySnapshot) => {
       sendSlackMessage(
         `${auth.currentUser.displayName} ran fetchCocsByJobNumber (${querySnapshot.size} documents)`
       );
       var cocs = {};
-      querySnapshot.forEach(doc => {
+      querySnapshot.forEach((doc) => {
         cocs[doc.id] = doc.data();
       });
       dispatch({
         type: GET_COCS,
         payload: cocs,
-        update: true
+        update: true,
       });
     });
 };
 
-export const fetchCocsBySearch = (
-  client,
-  startDate,
-  endDate
-) => async dispatch => {
+export const fetchCocsBySearch = (client, startDate, endDate) => async (
+  dispatch
+) => {
   //console.log(client);
   //console.log(startDate);
   //console.log(endDate);
-  if (startDate === "")
-    startDate = moment()
-      .subtract(6, "months")
-      .toDate();
+  if (startDate === "") startDate = moment().subtract(6, "months").toDate();
   else startDate = new Date(startDate);
   if (endDate === "") endDate = new Date();
   else endDate = new Date(endDate);
@@ -169,18 +158,18 @@ export const fetchCocsBySearch = (
       .where("lastModified", "<=", endDate)
       .orderBy("lastModified")
       .get()
-      .then(querySnapshot => {
+      .then((querySnapshot) => {
         var cocs = {};
         sendSlackMessage(
           `${auth.currentUser.displayName} ran fetchCocsBySearch with Client (${querySnapshot.size} documents)`
         );
-        querySnapshot.forEach(doc => {
+        querySnapshot.forEach((doc) => {
           cocs[doc.id] = doc.data();
         });
         dispatch({
           type: GET_COCS,
           payload: cocs,
-          update: true
+          update: true,
         });
       });
   } else {
@@ -191,39 +180,36 @@ export const fetchCocsBySearch = (
       .where("lastModified", "<=", endDate)
       .orderBy("lastModified")
       .get()
-      .then(querySnapshot => {
+      .then((querySnapshot) => {
         sendSlackMessage(
           `${auth.currentUser.displayName} ran fetchCocsBySearch (${querySnapshot.size} documents)`
         );
         var cocs = {};
-        querySnapshot.forEach(doc => {
+        querySnapshot.forEach((doc) => {
           cocs[doc.id] = doc.data();
         });
         dispatch({
           type: GET_COCS,
           payload: cocs,
-          update: true
+          update: true,
         });
       });
   }
 };
 
-export const fetchSamples = (
-  cocUid,
-  jobNumber,
-  modal,
-  airSamples
-) => async dispatch => {
+export const fetchSamples = (cocUid, jobNumber, modal, airSamples) => async (
+  dispatch
+) => {
   //console.log('fetching samples');
   asbestosSamplesRef
     .where("jobNumber", "==", jobNumber)
     .where("deleted", "==", false)
-    .onSnapshot(sampleSnapshot => {
+    .onSnapshot((sampleSnapshot) => {
       sendSlackMessage(
         `${auth.currentUser.displayName} ran fetchSamples (${sampleSnapshot.size} documents)`
       );
       let samples = {};
-      sampleSnapshot.forEach(sampleDoc => {
+      sampleSnapshot.forEach((sampleDoc) => {
         let sample = sampleDoc.data();
         sample.uid = sampleDoc.id;
         samples[sample.sampleNumber] = sample;
@@ -257,12 +243,12 @@ export const fetchSamples = (
         dispatch({
           type: GET_SAMPLES,
           cocUid: cocUid,
-          payload: samples
+          payload: samples,
         });
         if (modal) {
           dispatch({
             type: EDIT_MODAL_DOC,
-            payload: { samples: samples }
+            payload: { samples: samples },
           });
         }
         // }
@@ -270,34 +256,32 @@ export const fetchSamples = (
     });
 };
 
-export const resetSampleView = () => async dispatch => {
+export const resetSampleView = () => async (dispatch) => {
   dispatch({
     type: SET_VIEW_SAMPLE_DETAIL,
-    payload: null
+    payload: null,
   });
 };
 
-export const fetchSampleView = (
-  cocUid,
-  sampleUid,
-  jobNumber
-) => async dispatch => {
+export const fetchSampleView = (cocUid, sampleUid, jobNumber) => async (
+  dispatch
+) => {
   asbestosSamplesRef
     .doc(sampleUid)
     .get()
-    .then(sample => {
+    .then((sample) => {
       if (sample.exists) {
         cocsRef
           .doc(cocUid)
           .get()
-          .then(coc => {
+          .then((coc) => {
             if (coc.exists) {
               dispatch({
                 type: SET_VIEW_SAMPLE_DETAIL,
                 payload: {
                   coc: coc.data(),
-                  sample: sample.data()
-                }
+                  sample: sample.data(),
+                },
               });
             }
           });
@@ -305,19 +289,19 @@ export const fetchSampleView = (
     });
 };
 
-export const fetchAsbestosSampleIssueLogs = limit => async dispatch => {
+export const fetchAsbestosSampleIssueLogs = (limit) => async (dispatch) => {
   let lim = limit ? limit : defaultLimit;
   if (true) {
     asbestosSampleIssueLogRef
       .orderBy("issueDate", "desc")
       .limit(lim)
       .get()
-      .then(logSnapshot => {
+      .then((logSnapshot) => {
         let logs = {};
         sendSlackMessage(
           `${auth.currentUser.displayName} ran fetchAsbestosSampleIssueLogs (${logSnapshot.size} documents)`
         );
-        logSnapshot.forEach(logDoc => {
+        logSnapshot.forEach((logDoc) => {
           let log = logDoc.data();
           log.uid = logDoc.id;
           logs[log.uid] = log;
@@ -325,11 +309,11 @@ export const fetchAsbestosSampleIssueLogs = limit => async dispatch => {
         dispatch({
           type: GET_ASBESTOS_SAMPLE_ISSUE_LOGS,
           payload: logs,
-          update: true
+          update: true,
         });
       });
   } else {
-    stateRef.doc("asbestosSampleIssueLogs").onSnapshot(doc => {
+    stateRef.doc("asbestosSampleIssueLogs").onSnapshot((doc) => {
       sendSlackMessage(
         `${auth.currentUser.displayName} ran fetchAsbestosSampleIssueLogs (1 document)`
       );
@@ -342,7 +326,7 @@ export const fetchAsbestosSampleIssueLogs = limit => async dispatch => {
   }
 };
 
-export const fetchAsbestosAnalysisLogs = limit => async dispatch => {
+export const fetchAsbestosAnalysisLogs = (limit) => async (dispatch) => {
   let lim = limit ? limit : defaultLimit;
   if (true) {
     // let startDate = moment().subtract(limit, 'days').toDate();
@@ -351,12 +335,12 @@ export const fetchAsbestosAnalysisLogs = limit => async dispatch => {
       .orderBy("analysisDate", "desc")
       .limit(lim)
       .get()
-      .then(logSnapshot => {
+      .then((logSnapshot) => {
         let logs = {};
         sendSlackMessage(
           `${auth.currentUser.displayName} ran fetchAsbestosAnalysisLogs (${logSnapshot.size} documents)`
         );
-        logSnapshot.forEach(logDoc => {
+        logSnapshot.forEach((logDoc) => {
           let log = logDoc.data();
           log.uid = logDoc.id;
           logs[log.uid] = log;
@@ -364,11 +348,11 @@ export const fetchAsbestosAnalysisLogs = limit => async dispatch => {
         dispatch({
           type: GET_ASBESTOS_ANALYSIS_LOGS,
           payload: logs,
-          update: true
+          update: true,
         });
       });
   } else {
-    stateRef.doc("asbestosAnalysisLogs").onSnapshot(doc => {
+    stateRef.doc("asbestosAnalysisLogs").onSnapshot((doc) => {
       sendSlackMessage(
         `${auth.currentUser.displayName} ran fetchAsbestosAnalysisLogs (1 document)`
       );
@@ -381,7 +365,7 @@ export const fetchAsbestosAnalysisLogs = limit => async dispatch => {
   }
 };
 
-export const fetchAsbestosCheckLogs = limit => async dispatch => {
+export const fetchAsbestosCheckLogs = (limit) => async (dispatch) => {
   let lim = limit ? limit : defaultLimit;
   if (true) {
     // let startDate = moment().subtract(limit, 'days').toDate();
@@ -390,12 +374,12 @@ export const fetchAsbestosCheckLogs = limit => async dispatch => {
       .orderBy("checkDate", "desc")
       .limit(lim)
       .get()
-      .then(logSnapshot => {
+      .then((logSnapshot) => {
         let logs = {};
         sendSlackMessage(
           `${auth.currentUser.displayName} ran fetchAsbestosCheckLogs (${logSnapshot.size} documents)`
         );
-        logSnapshot.forEach(logDoc => {
+        logSnapshot.forEach((logDoc) => {
           let log = logDoc.data();
           log.uid = logDoc.id;
           logs[log.uid] = log;
@@ -403,11 +387,11 @@ export const fetchAsbestosCheckLogs = limit => async dispatch => {
         dispatch({
           type: GET_ASBESTOS_CHECK_LOGS,
           payload: logs,
-          update: true
+          update: true,
         });
       });
   } else {
-    stateRef.doc("asbestosCheckLogs").onSnapshot(doc => {
+    stateRef.doc("asbestosCheckLogs").onSnapshot((doc) => {
       sendSlackMessage(
         `${auth.currentUser.displayName} ran asbestosCheckLogs (1 document)`
       );
@@ -420,11 +404,11 @@ export const fetchAsbestosCheckLogs = limit => async dispatch => {
   }
 };
 
-export const fetchMicroscopeCalibrations = () => async dispatch => {
-  asbestosMicroscopeCalibrationsRef.get().then(querySnapshot => {
+export const fetchMicroscopeCalibrations = () => async (dispatch) => {
+  asbestosMicroscopeCalibrationsRef.get().then((querySnapshot) => {
     dispatch({
       type: GET_ASBESTOS_MICROSCOPE_CALIBRATIONS,
-      payload: querySnapshot.map(doc => doc.data())
+      payload: querySnapshot.map((doc) => doc.data()),
     });
   });
 };
@@ -433,24 +417,24 @@ export const fetchMicroscopeCalibrations = () => async dispatch => {
 // SETTINGS
 //
 
-export const setAnalyst = analyst => dispatch => {
+export const setAnalyst = (analyst) => (dispatch) => {
   dispatch({
     type: SET_ANALYST,
-    payload: analyst
+    payload: analyst,
   });
 };
 
-export const setAnalysisMode = mode => dispatch => {
+export const setAnalysisMode = (mode) => (dispatch) => {
   dispatch({
     type: SET_ANALYSIS_MODE,
-    payload: mode
+    payload: mode,
   });
 };
 
-export const setSessionID = session => dispatch => {
+export const setSessionID = (session) => (dispatch) => {
   dispatch({
     type: SET_ANALYSIS_SESSION_ID,
-    payload: session
+    payload: session,
   });
 };
 
@@ -462,14 +446,14 @@ export const handleCocSubmit = async ({
   doc,
   me,
   originalSamples,
-  sampleType
+  sampleType,
 }) => {
   let sampleList = [],
     sampleCount = 0,
     batch = firestore.batch();
   if (doc.samples) {
     // //console.log(doc.samples);
-    await Object.keys(doc.samples).forEach(sampleNumber => {
+    await Object.keys(doc.samples).forEach((sampleNumber) => {
       let sample = doc.samples[sampleNumber];
       if (sample.cocUid === doc.uid) sampleCount++;
       if (
@@ -495,7 +479,7 @@ export const handleCocSubmit = async ({
                 )}) created.`
               : `Sample ${sampleNumber} (${writeDescription(sample)}) created.`,
             chainOfCustody: doc.uid,
-            sample: uid
+            sample: uid,
           };
           addLog("asbestosLab", log, me, batch);
           sample.uid = uid;
@@ -523,7 +507,7 @@ export const handleCocSubmit = async ({
             sample.receivedDate = doc.receivedDate || null;
             sample.analysisDate = doc.analysisDate || null;
             sample.analyst = doc.analysisBy
-              ? andList(doc.analysisBy.map(e => e.name))
+              ? andList(doc.analysisBy.map((e) => e.name))
               : null;
             sample.issueDate = doc.issueDate || null;
             sample.verified = true;
@@ -536,9 +520,9 @@ export const handleCocSubmit = async ({
               sample.sampleDate = doc.defaultSampleDate;
             sample.sampleDate = dateOf(sample.sampleDate);
             if (!sample.sampledBy && doc.defaultSampledBy.length > 0)
-              sample.sampledBy = doc.defaultSampledBy.map(e => ({
+              sample.sampledBy = doc.defaultSampledBy.map((e) => ({
                 uid: e.value,
-                name: e.label
+                name: e.label,
               }));
           }
           sampleList.push(uid);
@@ -550,7 +534,7 @@ export const handleCocSubmit = async ({
                 sample
               )}) modified.`,
               chainOfCustody: doc.uid,
-              sample: sample.uid
+              sample: sample.uid,
             };
             addLog("asbestosLab", log, me, batch);
             if (!doc.historicalCoc) sample.verified = false;
@@ -572,10 +556,10 @@ export const handleCocSubmit = async ({
       }
       if (
         sampleType === "air" &&
-        (sample.initialFlowRate &&
-          sample.finalFlowRate &&
-          sample.startTime &&
-          (sample.endTime || sample.totalRunTime))
+        sample.initialFlowRate &&
+        sample.finalFlowRate &&
+        sample.startTime &&
+        (sample.endTime || sample.totalRunTime)
       ) {
         // //console.log(sample);
         let calc = getAirSampleData(sample);
@@ -589,12 +573,14 @@ export const handleCocSubmit = async ({
           let log = {
             type: "Create",
             log: doc.historicalCoc
-              ? `Historical sample ${sampleNumber} (${sample.specificLocation ||
-                  "Untitled"}) created.`
-              : `Sample ${sampleNumber} (${sample.specificLocation ||
-                  "Untitled"}) created.`,
+              ? `Historical sample ${sampleNumber} (${
+                  sample.specificLocation || "Untitled"
+                }) created.`
+              : `Sample ${sampleNumber} (${
+                  sample.specificLocation || "Untitled"
+                }) created.`,
             chainOfCustody: doc.uid,
-            sample: uid
+            sample: uid,
           };
           addLog("asbestosLab", log, me, batch);
           sample.uid = uid;
@@ -623,7 +609,7 @@ export const handleCocSubmit = async ({
             sample.receivedDate = doc.receivedDate || null;
             sample.analysisDate = doc.analysisDate || null;
             sample.analyst = doc.analysisBy
-              ? andList(doc.analysisBy.map(e => e.name))
+              ? andList(doc.analysisBy.map((e) => e.name))
               : null;
             sample.issueDate = doc.issueDate || null;
             sample.verified = true;
@@ -632,14 +618,14 @@ export const handleCocSubmit = async ({
             if (doc.defaultSampleDate)
               sample.sampleDate = dateOf(doc.defaultSampleDate);
             if (doc.defaultSampledBy && doc.defaultSampledBy.length > 0)
-              sample.sampledBy = doc.defaultSampledBy.map(e => ({
+              sample.sampledBy = doc.defaultSampledBy.map((e) => ({
                 uid: e.value,
-                name: e.label
+                name: e.label,
               }));
           }
           sample = {
             ...sample,
-            ...calc
+            ...calc,
           };
           sampleList.push(uid);
         } else {
@@ -650,7 +636,7 @@ export const handleCocSubmit = async ({
                 sample.specificLocation ? sample.specificLocation : "Untitled"
               }) modified.`,
               chainOfCustody: doc.uid,
-              sample: sample.uid
+              sample: sample.uid,
             };
             addLog("asbestosLab", log, me, batch);
             sample.verified = false;
@@ -687,7 +673,7 @@ export const togglePriority = (job, me) => {
       job.priority === 1
         ? `Chain of Custody changed to normal priority.`
         : `Chain of Custody marked as high priority.`,
-    chainOfCustody: job.uid
+    chainOfCustody: job.uid,
   };
   addLog("asbestosLab", log, me);
   cocsRef.doc(job.uid).update({ priority: job.priority === 0 ? 1 : 0 });
@@ -699,7 +685,7 @@ export const toggleWAAnalysis = (job, me) => {
     log: job.waAnalysis
       ? `WA analysis request removed.`
       : `Chain of Custody flagged for WA analysis.`,
-    chainOfCustody: job.uid
+    chainOfCustody: job.uid,
   };
   addLog("asbestosLab", log, me);
   cocsRef.doc(job.uid).update({ waAnalysis: job.waAnalysis ? false : true });
@@ -709,14 +695,14 @@ export const toggleWAAnalysis = (job, me) => {
 // SAMPLE EDIT
 //
 
-export const handleSampleChange = (number, changes) => dispatch => {
+export const handleSampleChange = (number, changes) => (dispatch) => {
   console.log(changes);
   dispatch({
     type: EDIT_MODAL_SAMPLE,
     payload: {
       number: number + 1,
-      changes: changes
-    }
+      changes: changes,
+    },
   });
 };
 
@@ -814,13 +800,13 @@ export const logSample = (coc, sample, cocStats, version) => {
     transitTime: transitTime,
     labTime: labTime,
     analysisTime: analysisTime,
-    analysisType: sample.analysisType ? sample.analysisType : "normal"
+    analysisType: sample.analysisType ? sample.analysisType : "normal",
   };
 
   if (sample.waTotals) {
     log = {
       ...log,
-      waTotals: sample.waTotals
+      waTotals: sample.waTotals,
     };
   }
 
@@ -848,8 +834,8 @@ export const overrideResult = (sample, overrideBy) => {
       analysisTime: sample.analysisTime ? sample.analysisTime : null,
       result: sample.result ? sample.result : null,
       overrideDate: new Date(),
-      overrideBy: overrideBy
-    }
+      overrideBy: overrideBy,
+    },
   };
   asbestosSamplesRef.doc(sample.uid).update({ previousResults: update });
 };
@@ -870,7 +856,7 @@ export const holdSample = (sample, job, me) => {
           sample
         )}) analysis put on hold.`,
     sample: sample.uid,
-    chainOfCustody: job.uid
+    chainOfCustody: job.uid,
   };
   addLog("asbestosLab", log, me);
   cocsRef
@@ -934,7 +920,7 @@ export const receiveSample = (
             sample
           )}) unchecked as being received.`,
       sample: sample.uid,
-      chainOfCustody: job.uid
+      chainOfCustody: job.uid,
     };
     addLog("asbestosLab", log, me, batch);
   }
@@ -942,22 +928,22 @@ export const receiveSample = (
     batch.update(asbestosSamplesRef.doc(sample.uid), {
       receivedByLab: true,
       receivedBy: { uid: me.uid, name: me.name },
-      receivedDate: startDate ? startDate : new Date()
+      receivedDate: startDate ? startDate : new Date(),
     });
   } else {
     batch.update(asbestosSamplesRef.doc(sample.uid), {
       receivedByLab: false,
       receivedBy: firebase.firestore.FieldValue.delete(),
-      receivedDate: firebase.firestore.FieldValue.delete()
+      receivedDate: firebase.firestore.FieldValue.delete(),
     });
   }
 };
 
-export const receiveSamples = samples => {
+export const receiveSamples = (samples) => {
   let issues = [];
   let uid = "";
   // Check for issues
-  samples.forEach(sample => {
+  samples.forEach((sample) => {
     if (!sample.now) {
       uid = sample.uid + "NotReceived";
       if (sample.receivedByLab && sample.verified) {
@@ -967,7 +953,7 @@ export const receiveSamples = samples => {
           yes: "Confirm Removal from Lab",
           no: "Do Not Remove",
           sample,
-          uid
+          uid,
         };
       } else if (sample.receivedByLab && sample.result) {
         issues[uid] = {
@@ -976,7 +962,7 @@ export const receiveSamples = samples => {
           yes: "Confirm Removal from Lab",
           no: "Do Not Remove",
           sample,
-          uid
+          uid,
         };
       } else if (sample.original === sample.now) {
         issues[uid] = {
@@ -985,7 +971,7 @@ export const receiveSamples = samples => {
           yes: "This is correct",
           no: "This needs fixing",
           sample,
-          uid
+          uid,
         };
       } else {
         issues[uid] = {
@@ -994,7 +980,7 @@ export const receiveSamples = samples => {
           yes: "Confirm Removal from Lab",
           no: "Do Not Remove",
           sample,
-          uid
+          uid,
         };
       }
     }
@@ -1027,7 +1013,7 @@ export const startAnalysis = (
             sample.sampleNumber
           } (${writeDescription(sample)}).`,
       sample: sample.uid,
-      chainOfCustody: job.uid
+      chainOfCustody: job.uid,
     };
     addLog("asbestosLab", log, me, batch);
   }
@@ -1036,22 +1022,22 @@ export const startAnalysis = (
     batch.update(asbestosSamplesRef.doc(sample.uid), {
       analysisStarted: true,
       analysisStartedBy: { uid: me.uid, name: me.name },
-      analysisStartDate: startDate ? startDate : new Date()
+      analysisStartDate: startDate ? startDate : new Date(),
     });
   } else {
     batch.update(asbestosSamplesRef.doc(sample.uid), {
       analysisStarted: false,
       analysisStartedBy: firebase.firestore.FieldValue.delete(),
-      analysisStartDate: firebase.firestore.FieldValue.delete()
+      analysisStartDate: firebase.firestore.FieldValue.delete(),
     });
   }
 };
 
-export const startAnalyses = samples => {
+export const startAnalyses = (samples) => {
   let issues = [];
   // Check for issues
   let uid = "";
-  samples.forEach(sample => {
+  samples.forEach((sample) => {
     //console.log(sample.now);
     //console.log(sample.original);
     if (!sample.now) {
@@ -1063,7 +1049,7 @@ export const startAnalyses = samples => {
           yes: "Confirm Removal of Analysis Start Date",
           no: "Do not remove",
           sample,
-          uid
+          uid,
         };
       } else if (sample.analysisStarted && sample.result) {
         issues[uid] = {
@@ -1072,7 +1058,7 @@ export const startAnalyses = samples => {
           yes: "Confirm Removal of Analysis Start Date",
           no: "Do not remove",
           sample,
-          uid
+          uid,
         };
       } else if (sample.original === sample.now) {
         // issues[uid] = {
@@ -1090,7 +1076,7 @@ export const startAnalyses = samples => {
           yes: "Confirm Removal of Analysis Start Date",
           no: "Do not remove",
           sample,
-          uid
+          uid,
         };
       }
     }
@@ -1108,7 +1094,7 @@ export const updateResultMap = (result, map) => {
     if (map[result] !== undefined) res = !map[result];
     updatedMap = {
       ...map,
-      [result]: res
+      [result]: res,
     };
     if (
       (result === "ch" ||
@@ -1119,7 +1105,7 @@ export const updateResultMap = (result, map) => {
     )
       updatedMap["no"] = false;
     if (result === "no") {
-      ["ch", "am", "cr", "umf"].forEach(type => {
+      ["ch", "am", "cr", "umf"].forEach((type) => {
         if (map[type] === true) updatedMap[type] = false;
       });
     }
@@ -1154,7 +1140,7 @@ export const recordAnalysis = (
             sample.sampleNumber
           } (${writeDescription(sample)})`,
           sample: sample.uid,
-          chainOfCustody: job.uid
+          chainOfCustody: job.uid,
         };
       } else {
         log = {
@@ -1163,7 +1149,7 @@ export const recordAnalysis = (
             sample.sampleNumber
           } (${writeDescription(sample)}) overridden.`,
           sample: sample.uid,
-          chainOfCustody: job.uid
+          chainOfCustody: job.uid,
         };
       }
     } else {
@@ -1176,7 +1162,7 @@ export const recordAnalysis = (
           sample.noAsbestosResultReason
         ).replace("@~", " ")}`,
         sample: sample.uid,
-        chainOfCustody: job.uid
+        chainOfCustody: job.uid,
       };
     }
     console.log(log);
@@ -1191,7 +1177,7 @@ export const recordAnalysis = (
           sample.sampleNumber
         } (${writeDescription(sample)})`,
         sample: sample.uid,
-        chainOfCustody: job.uid
+        chainOfCustody: job.uid,
       };
     } else if (weightOverridden) {
       log = {
@@ -1200,7 +1186,7 @@ export const recordAnalysis = (
           sample.sampleNumber
         } (${writeDescription(sample)}) overridden`,
         sample: sample.uid,
-        chainOfCustody: job.uid
+        chainOfCustody: job.uid,
       };
     } else {
       log = {
@@ -1209,7 +1195,7 @@ export const recordAnalysis = (
           sample.sampleNumber
         } (${writeDescription(sample)}): ${sample.weightReceived}g`,
         sample: sample.uid,
-        chainOfCustody: job.uid
+        chainOfCustody: job.uid,
       };
     }
     addLog("asbestosLab", log, me, batch);
@@ -1217,13 +1203,13 @@ export const recordAnalysis = (
 
   batch.update(cocsRef.doc(job.uid), {
     versionUpToDate: false,
-    mostRecentIssueSent: false
+    mostRecentIssueSent: false,
   });
 
   // Check for situation where all results are unselected
   let notBlankAnalysis = false;
   sample.result &&
-    Object.values(sample.result).forEach(value => {
+    Object.values(sample.result).forEach((value) => {
       if (value) notBlankAnalysis = true;
     });
   if (sample.weightReceived) notBlankAnalysis = true;
@@ -1250,7 +1236,7 @@ export const recordAnalysis = (
         result: sample.result,
         analysisRecordedBy: {
           name: me.name,
-          uid: me.uid
+          uid: me.uid,
         },
         analysisStartDate: sample.analysisStartDate
           ? sample.analysisStartDate
@@ -1277,7 +1263,7 @@ export const recordAnalysis = (
         waTotals: sample.waTotals ? sample.waTotals : null,
         weightAshed: sample.weightAshed ? sample.weightAshed : null,
         weightDry: sample.weightDry ? sample.weightDry : null,
-        uid: `${sessionID}-${sample.uid}`
+        uid: `${sessionID}-${sample.uid}`,
       });
       console.log(`Updating result with new analyst ${analyst}`);
       batch.update(asbestosSamplesRef.doc(sample.uid), {
@@ -1291,11 +1277,11 @@ export const recordAnalysis = (
           ? moment
               .duration(moment(new Date()).diff(dateOf(sample.receivedDate)))
               .asMilliseconds()
-          : null
+          : null,
       });
     } else if (weightChanged) {
       batch.update(asbestosSamplesRef.doc(sample.uid), {
-        weightReceived: sample.weightReceived ? sample.weightReceived : null
+        weightReceived: sample.weightReceived ? sample.weightReceived : null,
       });
     }
   } else {
@@ -1307,7 +1293,7 @@ export const recordAnalysis = (
       sessionID: firebase.firestore.FieldValue.delete(),
       analysisTime: firebase.firestore.FieldValue.delete(),
       analyst: firebase.firestore.FieldValue.delete(),
-      weightReceived: sample.weightReceived ? sample.weightReceived : null
+      weightReceived: sample.weightReceived ? sample.weightReceived : null,
     });
   }
 };
@@ -1319,20 +1305,20 @@ export const removeResult = (batch, sample, sessionID, me) => {
       sample
     )}) result removed.`,
     sample: sample.uid,
-    chainOfCustody: sample.cocUid
+    chainOfCustody: sample.cocUid,
   };
   addLog("asbestosLab", log, me, batch);
 
   batch.update(cocsRef.doc(sample.cocUid), {
     versionUpToDate: false,
-    mostRecentIssueSent: false
+    mostRecentIssueSent: false,
   });
   batch.delete(asbestosAnalysisLogRef.doc(`${sessionID}-${sample.uid}`));
   batch.update(asbestosSamplesRef.doc(sample.uid), {
     result: firebase.firestore.FieldValue.delete(),
     analysisDate: firebase.firestore.FieldValue.delete(),
     analysisRecordedBy: firebase.firestore.FieldValue.delete(),
-    sessionID: firebase.firestore.FieldValue.delete()
+    sessionID: firebase.firestore.FieldValue.delete(),
   });
 };
 
@@ -1363,14 +1349,14 @@ export const verifySample = (
               sample
             )}) verification removed.`,
         sample: sample.uid,
-        chainOfCustody: job.uid
+        chainOfCustody: job.uid,
       };
       addLog("asbestosLab", log, me, batch);
     }
 
     batch.update(cocsRef.doc(sample.cocUid), {
       versionUpToDate: false,
-      mostRecentIssueSent: false
+      mostRecentIssueSent: false,
     });
     if (!sample.verified) {
       sample.verifyDate = new Date();
@@ -1383,7 +1369,7 @@ export const verifySample = (
           ? moment
               .duration(moment().diff(dateOf(sample.receivedDate)))
               .asMilliseconds()
-          : null
+          : null,
       });
     } else {
       batch.update(asbestosSamplesRef.doc(sample.uid), {
@@ -1391,7 +1377,7 @@ export const verifySample = (
         verified: false,
         verifiedBy: firebase.firestore.FieldValue.delete(),
         verifyDate: firebase.firestore.FieldValue.delete(),
-        turnaroundTime: firebase.firestore.FieldValue.delete()
+        turnaroundTime: firebase.firestore.FieldValue.delete(),
       });
     }
   } else {
@@ -1423,8 +1409,8 @@ export const verifySubsample = (
         batch.update(asbestosSamplesRef.doc(sample.uid), {
           waSoilAnalysis: {
             ...sample.waSoilAnalysis,
-            [sub.uid]: sub
-          }
+            [sub.uid]: sub,
+          },
         });
       } else {
         console.log("Removing verification...");
@@ -1434,8 +1420,8 @@ export const verifySubsample = (
         batch.update(asbestosSamplesRef.doc(sample.uid), {
           waSoilAnalysis: {
             ...sample.waSoilAnalysis,
-            [sub.uid]: sub
-          }
+            [sub.uid]: sub,
+          },
         });
       }
     }
@@ -1456,7 +1442,7 @@ export const verifySamples = (
   let issues = {};
   let uid = "";
   // Check for issues
-  samples.forEach(sample => {
+  samples.forEach((sample) => {
     // console.log(sample);
     let uid = "";
     if (!sample.now && !checkIssues) {
@@ -1479,7 +1465,7 @@ export const verifySamples = (
           yes: "Remove Verification",
           no: "Do not remove",
           sample,
-          uid
+          uid,
         };
       }
     } else if (sample.now !== sample.original) {
@@ -1495,7 +1481,7 @@ export const verifySamples = (
           description: `You cannot verify this sample as you recorded the result. You will need to get someone else to verify it.`,
           no: "OK",
           sample,
-          uid
+          uid,
         };
       }
       // Check sample if is on hold
@@ -1507,7 +1493,7 @@ export const verifySamples = (
           yes: "This is correct",
           no: "This needs fixing",
           sample,
-          uid
+          uid,
         };
       }
 
@@ -1518,7 +1504,7 @@ export const verifySamples = (
           type: "noresult",
           description: `No asbestos result has been recorded. Double check this is correct and select a reason for why this is.`,
           sample,
-          uid
+          uid,
         };
       }
 
@@ -1531,7 +1517,7 @@ export const verifySamples = (
           yes: "This is correct",
           no: "This needs fixing",
           sample,
-          uid
+          uid,
         };
       }
 
@@ -1544,7 +1530,7 @@ export const verifySamples = (
           yes: "This is correct",
           no: "This needs fixing",
           sample,
-          uid
+          uid,
         };
       }
 
@@ -1565,7 +1551,7 @@ export const verifySamples = (
           yes: "This is correct",
           no: "This needs fixing",
           sample,
-          uid
+          uid,
         };
       }
 
@@ -1581,7 +1567,7 @@ export const verifySamples = (
               priority: "high",
               description: `Cumulative results for layer detail have opposing results to the sample result. Check with analyst why this is before clicking Proceed.`,
               sample,
-              uid
+              uid,
             };
           } else if (layersMatch === "differentAsbestos") {
             uid = sample.uid + "LayerResultDifferentAsbestos";
@@ -1590,7 +1576,7 @@ export const verifySamples = (
               priority: "high",
               description: `Cumulative results for layer detail record different asbestos types to the sample result. Check with analyst why this is before clicking Proceed.`,
               sample,
-              uid
+              uid,
             };
           } else if (layersMatch === "differentNonAsbestos") {
             uid = sample.uid + "LayerResultDifferentNonAsbestos";
@@ -1599,7 +1585,7 @@ export const verifySamples = (
               priority: "low",
               description: `Cumulative results for layer detail record different non-asbestos types to the sample result. Check with analyst why this is before clicking Proceed.`,
               sample,
-              uid
+              uid,
             };
           }
         }
@@ -1612,7 +1598,7 @@ export const verifySamples = (
         let confirmDifferentAsbestos = 0;
         let confirmDifferentNonAsbestos = 0;
         let confirmNo = 0;
-        Object.keys(sample.confirm).forEach(key => {
+        Object.keys(sample.confirm).forEach((key) => {
           confirmTotal++;
           let confirmMatch = compareAsbestosResult(sample.confirm[key], sample);
           if (confirmMatch === "yes") {
@@ -1642,7 +1628,7 @@ export const verifySamples = (
                 confirmNo > 1 ? "checkers" : "checker"
               } before clicking Proceed.`,
               sample,
-              uid
+              uid,
             };
           } else if (confirmDifferentAsbestos > 0) {
             uid = sample.uid + "ConfirmResultDifferentAsbestos";
@@ -1657,7 +1643,7 @@ export const verifySamples = (
                 confirmDifferentAsbestos > 1 ? "checkers" : "checker"
               } before clicking Proceed.`,
               sample,
-              uid
+              uid,
             };
           } else if (confirmDifferentNonAsbestos > 0) {
             uid = sample.uid + "ConfirmResultDifferentNonAsbestos";
@@ -1672,7 +1658,7 @@ export const verifySamples = (
                 confirmDifferentNonAsbestos > 1 ? "checkers" : "checker"
               } before clicking Proceed.`,
               sample,
-              uid
+              uid,
             };
           }
         }
@@ -1684,12 +1670,12 @@ export const verifySamples = (
         let subsamples = [];
         let allSubsVerified = true;
         if (sample.waLayerNum) {
-          Object.keys(sample.waLayerNum).forEach(fraction => {
+          Object.keys(sample.waLayerNum).forEach((fraction) => {
             [
               ...Array(
                 sample.waLayerNum[fraction] ? sample.waLayerNum[fraction] : 2
-              ).keys()
-            ].forEach(num => {
+              ).keys(),
+            ].forEach((num) => {
               if (
                 sample.waSoilAnalysis[`subfraction${fraction}-${num + 1}`] !==
                 undefined
@@ -1713,7 +1699,7 @@ export const verifySamples = (
             yes: "This is correct",
             no: "This needs fixing",
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1725,7 +1711,7 @@ export const verifySamples = (
             yes: "This is correct",
             no: "This needs fixing",
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1741,7 +1727,7 @@ export const verifySamples = (
             yes: "This is correct",
             no: "This needs fixing",
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1756,7 +1742,7 @@ export const verifySamples = (
             yes: "This is correct",
             no: "This needs fixing",
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1771,7 +1757,7 @@ export const verifySamples = (
             yes: "This is correct",
             no: "This needs fixing",
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1786,7 +1772,7 @@ export const verifySamples = (
             yes: "This is correct",
             no: "This needs fixing",
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1808,7 +1794,7 @@ export const verifySamples = (
             yes: "This is correct",
             no: "This needs fixing",
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1824,7 +1810,7 @@ export const verifySamples = (
             yes: "This is correct",
             no: "This needs fixing",
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1840,7 +1826,7 @@ export const verifySamples = (
             yes: "This is correct",
             no: "This needs fixing",
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1858,7 +1844,7 @@ export const verifySamples = (
             yes: "This is correct",
             no: "This needs fixing",
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1874,7 +1860,7 @@ export const verifySamples = (
             yes: "This is correct",
             no: "This needs fixing",
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1884,7 +1870,7 @@ export const verifySamples = (
             type: "confirm",
             description: `No subsamples recorded for sample, but sample result is positive. Check with analyst that analysis is complete before clicking Proceed.`,
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1894,7 +1880,7 @@ export const verifySamples = (
             type: "block",
             description: `Not all subsample weights have been verified. Go into the subsample verification screen and check these off first.`,
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1904,7 +1890,7 @@ export const verifySamples = (
             type: "confirm",
             description: `WA Analysis has not been checked by analyst as complete. Check with analyst that analysis is complete before clicking Proceed.`,
             sample,
-            uid
+            uid,
           };
         }
 
@@ -1919,7 +1905,7 @@ export const verifySamples = (
                 priority: "high",
                 description: `Cumulative results for soil fractions have opposing results to the sample result. Check with analyst why this is before clicking Proceed.`,
                 sample,
-                uid
+                uid,
               };
             } else if (soilMatch === "differentAsbestos") {
               uid = sample.uid + "SoilResultDifferentAsbestos";
@@ -1928,7 +1914,7 @@ export const verifySamples = (
                 priority: "high",
                 description: `Cumulative results for soil fractions record different asbestos types to the sample result. Check with analyst why this is before clicking Proceed.`,
                 sample,
-                uid
+                uid,
               };
             } else if (soilMatch === "differentNonAsbestos") {
               uid = sample.uid + "SoilResultDifferentNonAsbestos";
@@ -1937,7 +1923,7 @@ export const verifySamples = (
                 priority: "low",
                 description: `Cumulative results for soil fractions record different non-asbestos types to the sample result. Check with analyst why this is before clicking Proceed.`,
                 sample,
-                uid
+                uid,
               };
             }
           }
@@ -1947,7 +1933,7 @@ export const verifySamples = (
   });
   if (checkIssues) {
     let issueArray = [["Sample Number", "Issue"]];
-    Object.values(issues).forEach(issue => {
+    Object.values(issues).forEach((issue) => {
       let sample = issue.sample
         ? `${issue.sample.jobNumber}-${issue.sample.sampleNumber}`
         : "";
@@ -1969,12 +1955,12 @@ export const verifySubsamples = (subs, job, meUid, duplicateIDs) => {
       description: `More than one subsample is using ID ${duplicateIDs}.`,
       yes: "This is correct",
       no: "This needs fixing",
-      uid
+      uid,
     };
   }
 
   // Check for issues
-  subs.forEach(sub => {
+  subs.forEach((sub) => {
     let uid = "";
     if (!sub.now && sub.original) {
       // if (sub.original === sub.now) {
@@ -1995,7 +1981,7 @@ export const verifySubsamples = (subs, job, meUid, duplicateIDs) => {
         yes: "Remove Verification",
         no: "Do not remove",
         sub,
-        uid
+        uid,
       };
       // }
     } else if (sub.now) {
@@ -2006,7 +1992,7 @@ export const verifySubsamples = (subs, job, meUid, duplicateIDs) => {
           type: "noresult",
           description: `No asbestos result has been recorded.`,
           sub,
-          uid
+          uid,
         };
       }
 
@@ -2020,7 +2006,7 @@ export const verifySubsamples = (subs, job, meUid, duplicateIDs) => {
           yes: "This is correct",
           no: "This needs fixing",
           sub,
-          uid
+          uid,
         };
       }
 
@@ -2033,7 +2019,7 @@ export const verifySubsamples = (subs, job, meUid, duplicateIDs) => {
           yes: "This is correct",
           no: "This needs fixing",
           sub,
-          uid
+          uid,
         };
       }
 
@@ -2046,7 +2032,7 @@ export const verifySubsamples = (subs, job, meUid, duplicateIDs) => {
           yes: "This is correct",
           no: "This needs fixing",
           sub,
-          uid
+          uid,
         };
       }
     }
@@ -2058,7 +2044,7 @@ export const changeActionDetails = (job, samples, field, update, me) => {
   let batch = firestore.batch();
   let change = field === "analysisStarted" ? "Analysis Start" : "Received";
   samples &&
-    Object.values(samples).forEach(sample => {
+    Object.values(samples).forEach((sample) => {
       if (update.date || update.user) {
         let u = {};
         let dateField =
@@ -2071,7 +2057,7 @@ export const changeActionDetails = (job, samples, field, update, me) => {
         let log = {
           type: "Edit",
           log: `${change} details changed.`,
-          sample: sample.uid
+          sample: sample.uid,
         };
         addLog("asbestosLab", log, me, batch);
       }
@@ -2079,7 +2065,7 @@ export const changeActionDetails = (job, samples, field, update, me) => {
   let log = {
     type: "Edit",
     log: `All sample ${change} details changed.`,
-    chainOfCustody: job.uid
+    chainOfCustody: job.uid,
   };
   addLog("asbestosLab", log, me, batch);
   batch.commit();
@@ -2088,12 +2074,12 @@ export const changeActionDetails = (job, samples, field, update, me) => {
 export const undoIssues = (job, samples, me) => {
   let batch = firestore.batch();
   samples &&
-    Object.values(samples).forEach(sample => {
+    Object.values(samples).forEach((sample) => {
       let update = {
         issueDate: firebase.firestore.FieldValue.delete(),
         issuedBy: firebase.firestore.FieldValue.delete(),
         issueVersion: firebase.firestore.FieldValue.delete(),
-        issueDate: firebase.firestore.FieldValue.delete()
+        issueDate: firebase.firestore.FieldValue.delete(),
       };
       batch.update(asbestosSamplesRef.doc(sample.uid), update);
     });
@@ -2101,13 +2087,13 @@ export const undoIssues = (job, samples, me) => {
     lastModified: new Date(),
     currentVersion: firebase.firestore.FieldValue.delete(),
     versionHistory: firebase.firestore.FieldValue.delete(),
-    versionUpToDate: false
+    versionUpToDate: false,
   };
   batch.update(cocsRef.doc(job.uid), cocUpdate);
   let log = {
     type: "Issue",
     log: `Lab Certificate issues reversed.`,
-    chainOfCustody: job.uid
+    chainOfCustody: job.uid,
   };
   addLog("asbestosLab", log, me, batch);
   batch.commit();
@@ -2116,7 +2102,7 @@ export const undoIssues = (job, samples, me) => {
 const fractionMap = {
   gt7: ">7mm",
   to7: "2-7mm",
-  lt2: "<2mm"
+  lt2: "<2mm",
 };
 
 export const getSampleData = (samples, job) => {
@@ -2163,11 +2149,11 @@ export const getSampleData = (samples, job) => {
       "FAAF Concentration",
       "Cumulative Result",
       "Concentration Over Limit",
-      "Number of Subsamples"
+      "Number of Subsamples",
     ];
     let midArray = [];
     if (subSampleMap.subsampleCount > 0) {
-      [...Array(subSampleMap.subsampleCount).keys()].forEach(s => {
+      [...Array(subSampleMap.subsampleCount).keys()].forEach((s) => {
         midArray = midArray.concat([
           "Subsample ID",
           "Fraction",
@@ -2176,14 +2162,14 @@ export const getSampleData = (samples, job) => {
           "Concentration",
           "Asbestos Form",
           "Asbestos Type",
-          "Asbestos Weight"
+          "Asbestos Weight",
         ]);
       });
     }
     let lastArray = ["WA Analysis Complete", "Analysis Time", "Session ID"];
     dataArray.push(firstArray.concat(midArray.concat(lastArray)));
     if (samples) {
-      Object.values(samples).forEach(sample => {
+      Object.values(samples).forEach((sample) => {
         let multiplier = 1;
         if (
           sample.waSoilAnalysis &&
@@ -2196,7 +2182,7 @@ export const getSampleData = (samples, job) => {
         }
         let midArray = [];
         let sampleSubs = subSampleMap.subsamples.filter(
-          sub => sub.sampleNumber === sample.sampleNumber
+          (sub) => sub.sampleNumber === sample.sampleNumber
         );
         let firstArray = [
           sample.jobNumber ? sample.jobNumber : "",
@@ -2210,7 +2196,9 @@ export const getSampleData = (samples, job) => {
           sample.sampleDate
             ? moment(dateOf(sample.sampleDate)).format("YYYY-MMM-DD")
             : "",
-          sample.sampledBy ? sample.sampledBy.map(p => p.name).join(", ") : "",
+          sample.sampledBy
+            ? sample.sampledBy.map((p) => p.name).join(", ")
+            : "",
           sample.createdDate
             ? moment(dateOf(sample.createdDate)).format("YYYY-MMM-DD HH:mm:ss")
             : "",
@@ -2271,10 +2259,10 @@ export const getSampleData = (samples, job) => {
             ? writeShorthandResult(sample.waTotals.result.total)
             : "",
           sample.waTotals && sample.waTotals.waOverLimit ? "TRUE" : "FALSE",
-          sampleSubs.length
+          sampleSubs.length,
         ];
         if (subSampleMap.subsampleCount > 0) {
-          [...Array(subSampleMap.subsampleCount).keys()].forEach(i => {
+          [...Array(subSampleMap.subsampleCount).keys()].forEach((i) => {
             let sub = sampleSubs[i];
             if (sub === undefined) sub = {};
             midArray = midArray.concat([
@@ -2285,14 +2273,14 @@ export const getSampleData = (samples, job) => {
               sub.concentration,
               sub.form ? sub.form.toUpperCase() : "",
               sub.result ? writeShorthandResult(sub.result) : "",
-              sub.containerID ? getAsbestosWeight(sub) : ""
+              sub.containerID ? getAsbestosWeight(sub) : "",
             ]);
           });
         }
         let lastArray = [
           sample.waAnalysisComplete ? "TRUE" : "FALSE",
           sample.analysisTime ? sample.analysisTime : "",
-          sample.sessionID ? sample.sessionID : ""
+          sample.sessionID ? sample.sessionID : "",
         ];
         dataArray.push(firstArray.concat(midArray.concat(lastArray)));
       });
@@ -2324,10 +2312,10 @@ export const getSampleData = (samples, job) => {
       "Subsample Weight",
       "Dry Weight",
       "Ashed Weight",
-      "Moisture"
+      "Moisture",
     ]);
     if (samples) {
-      Object.values(samples).forEach(sample => {
+      Object.values(samples).forEach((sample) => {
         dataArray.push([
           sample.jobNumber ? sample.jobNumber : "",
           sample.sampleNumber ? sample.sampleNumber : "",
@@ -2340,7 +2328,9 @@ export const getSampleData = (samples, job) => {
           sample.sampleDate
             ? moment(dateOf(sample.sampleDate)).format("YYYY-MMM-DD")
             : "",
-          sample.sampledBy ? sample.sampledBy.map(p => p.name).join(", ") : "",
+          sample.sampledBy
+            ? sample.sampledBy.map((p) => p.name).join(", ")
+            : "",
           sample.createdDate
             ? moment(dateOf(sample.createdDate)).format("YYYY-MMM-DD HH:mm:ss")
             : "",
@@ -2370,7 +2360,7 @@ export const getSampleData = (samples, job) => {
           sample.weightAshed ? sample.weightAshed : "",
           sample.weightDry && (sample.weightReceived || sample.weightSubsample)
             ? writeSampleMoisture(sample)
-            : ""
+            : "",
           // then layer data, dimensions etc.
         ]);
       });
@@ -2392,10 +2382,10 @@ export const getSubsampleData = (samples, job) => {
     "Asbestos Types",
     "Gross Weight",
     "Multiplier",
-    "Asbestos Weight"
+    "Asbestos Weight",
   ]);
   if (subSampleMap.subsamples.length > 0) {
-    subSampleMap.subsamples.forEach(sub => {
+    subSampleMap.subsamples.forEach((sub) => {
       dataArray.push([
         sub.containerID,
         sub.sampleNumber,
@@ -2406,14 +2396,14 @@ export const getSubsampleData = (samples, job) => {
         sub.result ? writeShorthandResult(sub.result) : "",
         sub.weight,
         sub.multiplier,
-        sub.containerID ? getAsbestosWeight(sub) : ""
+        sub.containerID ? getAsbestosWeight(sub) : "",
       ]);
     });
   }
   return dataArray;
 };
 
-export const getAsbestosWeight = sub => {
+export const getAsbestosWeight = (sub) => {
   let weight = sub.weight ? parseFloat(sub.weight) : 0;
   if (sub.tareWeight) weight = weight - parseFloat(sub.tareWeight);
   if (weight < 0) weight = 0;
@@ -2425,21 +2415,21 @@ export const getAsbestosWeight = sub => {
   else return weight.toFixed(5);
 };
 
-export const getWASubsampleList = samples => {
+export const getWASubsampleList = (samples) => {
   let subsamples = [];
   let containerIDs = [];
   let duplicateIDs = false;
   let subsampleCount = 1;
   if (samples)
-    Object.values(samples).forEach(sample => {
+    Object.values(samples).forEach((sample) => {
       if (sample.waSoilAnalysis && sample.waLayerNum) {
         let subCount = 0;
-        Object.keys(sample.waLayerNum).forEach(fraction => {
+        Object.keys(sample.waLayerNum).forEach((fraction) => {
           [
             ...Array(
               sample.waLayerNum[fraction] ? sample.waLayerNum[fraction] : 2
-            ).keys()
-          ].forEach(num => {
+            ).keys(),
+          ].forEach((num) => {
             if (
               sample.waSoilAnalysis[`subfraction${fraction}-${num + 1}`] !==
               undefined
@@ -2492,11 +2482,11 @@ export const checkTestCertificateIssue = (
   let filteredSamples = [];
   if (samples) {
     filteredSamples = Object.values(samples)
-      .filter(sample => sample.cocUid === job.uid && !sample.deleted)
-      .map(sample => ({
+      .filter((sample) => sample.cocUid === job.uid && !sample.deleted)
+      .map((sample) => ({
         ...sample,
         now: sample.verified,
-        original: sample.verified
+        original: sample.verified,
       }));
   }
 
@@ -2505,7 +2495,7 @@ export const checkTestCertificateIssue = (
   let samplesVerified = 0,
     samplesNotVerified = 0;
 
-  filteredSamples.forEach(sample => {
+  filteredSamples.forEach((sample) => {
     if (!sample.verified && sample.cocUid === job.uid) samplesNotVerified++;
     else samplesVerified++;
   });
@@ -2519,7 +2509,7 @@ export const checkTestCertificateIssue = (
         "No samples have been verified. This must be done before issuing the test certificate",
       sample: null,
       uid,
-      no: "OK"
+      no: "OK",
     };
   } else {
     if (samplesNotVerified > 0) {
@@ -2531,7 +2521,7 @@ export const checkTestCertificateIssue = (
         sample: null,
         uid,
         yes: "This is correct",
-        no: "This needs fixing"
+        no: "This needs fixing",
       };
     }
 
@@ -2545,7 +2535,7 @@ export const checkTestCertificateIssue = (
         sample: null,
         uid,
         yes: "OK",
-        no: "Cancel"
+        no: "Cancel",
       };
     }
   }
@@ -2583,7 +2573,7 @@ export const printCocBulk = (job, samples, me, staffList) => {
   // console.log(receivedDates);
   if (receivedDates === "N/A") receivedDates = "";
   samples &&
-    Object.values(samples).forEach(sample => {
+    Object.values(samples).forEach((sample) => {
       if (sample.cocUid === job.uid) {
         let sampleMap = {};
         if (sample.disabled) return;
@@ -2614,16 +2604,16 @@ export const printCocBulk = (job, samples, me, staffList) => {
     warning: warning === "" ? false : warning,
     jobManager: job.manager,
     date: writeDates(
-      Object.values(samples).filter(e => e.cocUid === job.uid),
+      Object.values(samples).filter((e) => e.cocUid === job.uid),
       "sampleDate"
     ),
     personnel: getPersonnel(
-      Object.values(samples).filter(s => s.cocUid === job.uid),
+      Object.values(samples).filter((s) => s.cocUid === job.uid),
       "sampledBy",
       null,
       false
-    ).map(p => p.name),
-    samples: sampleList
+    ).map((p) => p.name),
+    samples: sampleList,
   };
   // console.log(report);
   return report;
@@ -2636,16 +2626,16 @@ export const printCocBulk = (job, samples, me, staffList) => {
   // window.open(url);
 };
 
-export const getStaffQuals = staffList => {
+export const getStaffQuals = (staffList) => {
   let staffQualList = {};
   let aaNumbers = {};
   let ip402 = {};
   let tertiary = {};
-  Object.values(staffList).forEach(staff => {
+  Object.values(staffList).forEach((staff) => {
     staffQualList[staff.name] = {
       aaNumber: staff.aanumber ? staff.aanumber : false,
       ip402: staff.ip402 ? staff.ip402 : false,
-      tertiary: staff.tertiary ? staff.tertiary : false
+      tertiary: staff.tertiary ? staff.tertiary : false,
     };
   });
 
@@ -2655,14 +2645,14 @@ export const getStaffQuals = staffList => {
 export const getPersonnel = (samples, field, qualList, onlyShowVerified) => {
   let personnel = {};
   samples &&
-    Object.values(samples).forEach(sample => {
+    Object.values(samples).forEach((sample) => {
       if (
         sample[field] &&
         (!onlyShowVerified || (onlyShowVerified && sample.verified))
       ) {
         let person = sample[field];
         if (person instanceof Array) {
-          person.forEach(p => {
+          person.forEach((p) => {
             if (p === Object(p)) personnel[p.name] = true;
             else personnel[p] = true;
           });
@@ -2674,7 +2664,7 @@ export const getPersonnel = (samples, field, qualList, onlyShowVerified) => {
     });
   // console.log(personnel);
   let list = [];
-  Object.keys(personnel).forEach(p => {
+  Object.keys(personnel).forEach((p) => {
     let tertiary = null;
     let aaNumber = null;
     let ip402 = null;
@@ -2687,22 +2677,22 @@ export const getPersonnel = (samples, field, qualList, onlyShowVerified) => {
       name: p,
       tertiary,
       aaNumber,
-      ip402
+      ip402,
     };
     //console.log(staffMap);
     list.push(staffMap);
   });
   if (list.length === 0)
     return [
-      { name: "Not specified", tertiary: null, aaNumber: null, ip402: null }
+      { name: "Not specified", tertiary: null, aaNumber: null, ip402: null },
     ];
   //console.log(list);
   return list;
 };
 
-export const writePersonnelQualFull = personnel => {
+export const writePersonnelQualFull = (personnel) => {
   //console.log(personnel);
-  return personnel.map(p => {
+  return personnel.map((p) => {
     if (!p.tertiary && !p.aaNumber && !p.ip402) return p.name;
     let quals = [];
     if (p.tertiary) quals.push(p.tertiary);
@@ -2727,7 +2717,7 @@ export const writeVersionJson = (
   console.log(cocStats);
 
   samples &&
-    Object.values(samples).forEach(sample => {
+    Object.values(samples).forEach((sample) => {
       if (sample.verified && sample.cocUid === job.uid) {
         let sampleMap = {};
         if (sample.disabled || sample.onHold) return;
@@ -2836,13 +2826,13 @@ export const writeVersionJson = (
         batch.update(asbestosSamplesRef.doc(sample.uid), {
           issueVersion: version ? version : 1,
           issueDate: new Date(),
-          issuedBy: { uid: me.uid, name: me.name }
+          issuedBy: { uid: me.uid, name: me.name },
         });
         logSample(job, sample, cocStats, version);
       }
     });
   let samplesFiltered = Object.values(samples).filter(
-    s => s.cocUid === job.uid && !s.onHold && s.verified
+    (s) => s.cocUid === job.uid && !s.onHold && s.verified
   );
   let report = {
     jobNumber: job.jobNumber,
@@ -2866,10 +2856,10 @@ export const writeVersionJson = (
     //   return aaNumbers[staff];
     // }),
     analysts: getPersonnel(samplesFiltered, "analyst", null, true).map(
-      e => e.name
+      (e) => e.name
     ),
     version: version ? version : 1,
-    samples: sampleList
+    samples: sampleList,
   };
   console.log(report);
   return report;
@@ -2901,7 +2891,7 @@ export const issueTestCertificate = async (
     log: newVersion
       ? `Version ${version} issued.`
       : `Version ${version} re-issued.`,
-    chainOfCustody: job.uid
+    chainOfCustody: job.uid,
   };
   addLog("asbestosLab", log, me, batch);
   if (!newVersion && versionHistory[version]) {
@@ -2915,7 +2905,7 @@ export const issueTestCertificate = async (
     updates[updateNumber.toString()] = {
       issuedBy: versionHistory[version].issuedBy,
       issueDate: versionHistory[version].issueDate,
-      data: versionHistory[version].data
+      data: versionHistory[version].data,
     };
     versionHistory[version] = {
       ...versionHistory[version],
@@ -2923,14 +2913,14 @@ export const issueTestCertificate = async (
       updateNumber,
       issuedBy: { uid: me.uid, name: me.name },
       issueDate: new Date(),
-      data: json
+      data: json,
     };
   } else {
     versionHistory[version] = {
       issuedBy: { uid: me.uid, name: me.name },
       issueDate: new Date(),
       changes: changes ? changes : "Not specified",
-      data: json
+      data: json,
     };
   }
   //console.log(versionHistory);
@@ -2938,7 +2928,7 @@ export const issueTestCertificate = async (
     currentVersion: version,
     versionHistory: versionHistory,
     versionUpToDate: true,
-    lastModified: new Date()
+    lastModified: new Date(),
   };
   console.log(update);
   // //console.log(job);
@@ -2951,17 +2941,17 @@ export const printLabReport = (job, version, me, showModal) => {
   let log = {
     type: "Document",
     log: `Test Certificate (version ${version}) downloaded.`,
-    chainOfCustody: job.uid
+    chainOfCustody: job.uid,
   };
   addLog("asbestosLab", log, me);
   if (report.version && report.version > 1) {
     let versionHistory = [];
-    [...Array(report.version).keys()].forEach(i => {
+    [...Array(report.version).keys()].forEach((i) => {
       let formatDate = dateOf(job.versionHistory[i + 1].issueDate);
       versionHistory.push({
         version: i + 1,
         issueDate: moment(formatDate).format("D MMMM YYYY"),
-        changes: job.versionHistory[i + 1].changes
+        changes: job.versionHistory[i + 1].changes,
       });
     });
     report = { ...report, versionHistory: versionHistory };
@@ -2972,8 +2962,8 @@ export const printLabReport = (job, version, me, showModal) => {
     modalProps: {
       report: report,
       defaultFileType: "doc",
-      defaultCertificateType: job.waAnalysis ? "wa" : "bulk"
-    }
+      defaultCertificateType: job.waAnalysis ? "wa" : "bulk",
+    },
   });
   // let url =
   //   "http://api.k2.co.nz/v1/doc/scripts/asbestos/issue/labreport_singlepage.php?report=" +
@@ -2984,13 +2974,13 @@ export const printLabReport = (job, version, me, showModal) => {
   // fetch('http://api.k2.co.nz/v1/doc/scripts/asbestos/issue/labreport_singlepage.php?report=' + JSON.stringify(report));
 };
 
-export const deleteCoc = (job, samples, me) => dispatch => {
+export const deleteCoc = (job, samples, me) => (dispatch) => {
   if (
     window.confirm("Are you sure you wish to delete this Chain of Custody?")
   ) {
     let log = {};
     samples &&
-      Object.values(samples).forEach(sample => {
+      Object.values(samples).forEach((sample) => {
         // console.log(sample);
         log = {
           type: "Delete",
@@ -2998,7 +2988,7 @@ export const deleteCoc = (job, samples, me) => dispatch => {
             sample
           )}) deleted.`,
           sample: sample.uid,
-          chainOfCustody: job.uid
+          chainOfCustody: job.uid,
         };
         // console.log(log);
         addLog("asbestosLab", log, me);
@@ -3007,7 +2997,7 @@ export const deleteCoc = (job, samples, me) => dispatch => {
     log = {
       type: "Delete",
       log: "Chain of Custody deleted.",
-      chainOfCustody: job.uid
+      chainOfCustody: job.uid,
     };
     addLog("asbestosLab", log, me);
     cocsRef.doc(job.uid).update({ deleted: true });
@@ -3024,15 +3014,15 @@ export const deleteCoc = (job, samples, me) => dispatch => {
 const highlightGreenStyle = {
   color: "green",
   marginBottom: 12,
-  backgroundColor: "#eee"
+  backgroundColor: "#eee",
 };
 const highlightRedStyle = {
   color: "red",
   marginBottom: 12,
-  backgroundColor: "#eee"
+  backgroundColor: "#eee",
 };
 
-export const analyticalCriteraOK = sample => {
+export const analyticalCriteraOK = (sample) => {
   let color = "black";
   let text = "";
   let compulsory = false;
@@ -3075,9 +3065,9 @@ export const analyticalCriteraOK = sample => {
   );
 };
 
-export const sortSamples = samples => {
+export const sortSamples = (samples) => {
   let sampleMap = {};
-  samples.forEach(sample => {
+  samples.forEach((sample) => {
     if (sampleMap[sample.jobnumber]) {
       sampleMap[sample.jobnumber].push(sample);
     } else {
@@ -3087,7 +3077,7 @@ export const sortSamples = samples => {
   return sampleMap;
 };
 
-export const writeDescription = sample => {
+export const writeDescription = (sample) => {
   var str = "";
   if (sample.sampleType === "air") {
     str = `${sample.specificLocation || "No description"} (Air Sample)`;
@@ -3119,7 +3109,7 @@ export const writeDescription = sample => {
   return str;
 };
 
-export const writeSimpleDescription = sample => {
+export const writeSimpleDescription = (sample) => {
   var str = "";
   if (sample.genericLocation) str = sample.genericLocation;
   if (sample.specificLocation) {
@@ -3136,7 +3126,7 @@ export const writeSimpleDescription = sample => {
   return str;
 };
 
-export const writeReportDescription = sample => {
+export const writeReportDescription = (sample) => {
   let report = sample.report
     ? sample.report
     : { soilDescription: true, layers: true, dimensions: true, weight: true };
@@ -3192,7 +3182,7 @@ export const writeReportDescription = sample => {
     let layerNum = 3;
     if (sample.layerNum) layerNum = sample.layerNum;
     let layArray = [];
-    [...Array(layerNum).keys()].forEach(num => {
+    [...Array(layerNum).keys()].forEach((num) => {
       if (sample.layers[`layer${num + 1}`] !== undefined) {
         let lay = sample.layers[`layer${num + 1}`];
         if (lay.description !== undefined) {
@@ -3229,13 +3219,13 @@ export const writeReportDescription = sample => {
   return lines.join("@~");
 };
 
-export const getSampleCategory = sample => {
+export const getSampleCategory = (sample) => {
   if (sample.category) return sample.category;
   // Could add in some logic here to try find the category against a dictionary of material -> category
   return "Other";
 };
 
-export const writeCocDescription = sample => {
+export const writeCocDescription = (sample) => {
   // let returnStr = '';
   // let genericLocation = sample.genericLocation && sample.genericLocation.length > 0 ? sample.genericLocation.charAt(0).toUpperCase() + sample.genericLocation.slice(1) : '';
   // let specificLocation = sample.specificLocation && sample.specificLocation.length > 0 ? sample.specificLocation.charAt(0).toUpperCase() + sample.specificLocation.slice(1) : '';
@@ -3278,7 +3268,7 @@ export const getResultColor = (state, type, yesColor) => {
   return "Off";
 };
 
-export const getSampleColors = sample => {
+export const getSampleColors = (sample) => {
   if (!sample || !sample.result) {
     return {
       confirm: "",
@@ -3288,7 +3278,7 @@ export const getSampleColors = sample => {
       umf: "Off",
       no: "Off",
       org: "Off",
-      smf: "Off"
+      smf: "Off",
     };
   } else {
     let res = sample.result;
@@ -3314,13 +3304,13 @@ export const getSampleColors = sample => {
       umf: getResultColor(res, "umf", "Bad"),
       no: getResultColor(res, "no", "Ok"),
       org: getResultColor(res, "org", "Benign"),
-      smf: getResultColor(res, "smf", "Benign")
+      smf: getResultColor(res, "smf", "Benign"),
     };
     return returnMap;
   }
 };
 
-export const getConfirmColor = sample => {
+export const getConfirmColor = (sample) => {
   let res = sample.result;
   let confirm = getAllConfirmResult(sample);
   let confirmColor = "Green";
@@ -3344,21 +3334,21 @@ export const getWATotalDetails = (sample, acmLimit) => {
       acm: {},
       fa: {},
       af: {},
-      faaf: {}
+      faaf: {},
     },
     weight: {
       total: 0,
       acm: 0,
       fa: 0,
       af: 0,
-      faaf: 0
+      faaf: 0,
     },
     fractions: {
       total: {},
       acm: {},
       fa: {},
       af: {},
-      faaf: {}
+      faaf: {},
     },
     concentration: {
       total: 0,
@@ -3366,12 +3356,12 @@ export const getWATotalDetails = (sample, acmLimit) => {
       fa: 0,
       af: 0,
       faaf: 0,
-      acmFloat: 0
+      acmFloat: 0,
     },
     allHaveTypes: true,
     allHaveForms: true,
     waOverLimit: false,
-    bold: {}
+    bold: {},
   };
 
   if (sample && sample.waSoilAnalysis) {
@@ -3383,13 +3373,13 @@ export const getWATotalDetails = (sample, acmLimit) => {
         parseFloat(sample.waSoilAnalysis.fractionlt2WeightAshedSubsample);
 
     // Loop through each fraction in the job (gt7, to7, lt2)
-    fractionNames.forEach(fraction => {
+    fractionNames.forEach((fraction) => {
       // Loop through each subsample in the fraction
       [
         ...Array(
           sample.waLayerNum[fraction] ? sample.waLayerNum[fraction] : 3
-        ).keys()
-      ].forEach(num => {
+        ).keys(),
+      ].forEach((num) => {
         let subsample =
           sample.waSoilAnalysis[`subfraction${fraction}-${num + 1}`];
         if (subsample) {
@@ -3530,7 +3520,7 @@ export const getWATotalDetails = (sample, acmLimit) => {
   return totals;
 };
 
-export const getAllConfirmResult = sample => {
+export const getAllConfirmResult = (sample) => {
   if (!sample.confirm) return "none";
   if (!sample.result) return "none";
 
@@ -3538,8 +3528,8 @@ export const getAllConfirmResult = sample => {
 
   {
     [
-      ...Array(sample.confirm.totalNum ? sample.confirm.totalNum : 1).keys()
-    ].map(num => {
+      ...Array(sample.confirm.totalNum ? sample.confirm.totalNum : 1).keys(),
+    ].map((num) => {
       if (sample.confirm[num + 1] && sample.confirm[num + 1].deleted !== true) {
         results.push(compareAsbestosResult(sample.confirm[num + 1], sample));
       }
@@ -3550,7 +3540,7 @@ export const getAllConfirmResult = sample => {
   let differentNonAsbestos = 0;
   let differentAsbestos = 0;
   let falseResults = 0;
-  results.forEach(result => {
+  results.forEach((result) => {
     if (result === "yes") perfectMatches += 1;
     if (result === "differentAsbestos") differentAsbestos += 1;
     if (result === "differentNonAsbestos") differentNonAsbestos += 1;
@@ -3570,7 +3560,7 @@ export const compareAsbestosResult = (confirm, result) => {
   if (basicConfirm !== basicResult) return "no";
   let differentAsbestos = false;
   if (basicResult === "positive") {
-    ["ch", "am", "cr", "umf"].forEach(type => {
+    ["ch", "am", "cr", "umf"].forEach((type) => {
       if (
         (result.result[type] === true && confirm.result[type] !== true) ||
         (confirm.result[type] === true && result.result[type] !== true)
@@ -3580,7 +3570,7 @@ export const compareAsbestosResult = (confirm, result) => {
   }
   if (differentAsbestos) return "differentAsbestos";
   let differentNonAsbestos = false;
-  ["org", "smf"].forEach(type => {
+  ["org", "smf"].forEach((type) => {
     if (
       (result.result[type] === true && confirm.result[type] !== true) ||
       (confirm.result[type] === true && result.result[type] !== true)
@@ -3593,7 +3583,7 @@ export const compareAsbestosResult = (confirm, result) => {
 
 export const mergeAsbestosResult = (original, add) => {
   let merge = original ? original : {};
-  ["ch", "am", "cr", "umf", "org", "smf", "no"].forEach(type => {
+  ["ch", "am", "cr", "umf", "org", "smf", "no"].forEach((type) => {
     if (add[type]) merge[type] = true;
   });
   if (
@@ -3604,10 +3594,10 @@ export const mergeAsbestosResult = (original, add) => {
   return merge;
 };
 
-export const writeChecks = sample => {
+export const writeChecks = (sample) => {
   let checks = [];
   if (sample.confirm) {
-    Object.values(sample.confirm).forEach(confirm => {
+    Object.values(sample.confirm).forEach((confirm) => {
       if (!confirm.deleted) {
         let match = compareAsbestosResult(confirm, sample);
         if (match === "yes" || match === "differentNonAsbestos") {
@@ -3619,18 +3609,18 @@ export const writeChecks = sample => {
   return checks;
 };
 
-export const writeConditionings = sample => {
+export const writeConditionings = (sample) => {
   let conditioningMap = {
     dcm: "Sample prepared in solvent",
     flame: "Sample conditioned with flame",
     furnace: "Sample conditioned at ~400­°C",
     lowHeat: "Sample conditioned at ~105°C",
     mortarAndPestle: "Sample prepared using mortar and pestle",
-    sieved: "Sample prepared using sieving"
+    sieved: "Sample prepared using sieving",
   };
   let conditionings = [];
   if (sample.sampleConditioning) {
-    Object.keys(sample.sampleConditioning).forEach(prep => {
+    Object.keys(sample.sampleConditioning).forEach((prep) => {
       if (sample.sampleConditioning[prep]) {
         conditionings.push(conditioningMap[prep]);
       }
@@ -3639,7 +3629,7 @@ export const writeConditionings = sample => {
   return conditionings;
 };
 
-export const getBasicResult = sample => {
+export const getBasicResult = (sample) => {
   let result = "none";
   if (
     sample.result &&
@@ -3653,7 +3643,7 @@ export const getBasicResult = sample => {
   return result;
 };
 
-export const getSampleStatusCode = sample => {
+export const getSampleStatusCode = (sample) => {
   let status = "inTransit";
   if (sample.verified) status = "verified";
   else if (writeShorthandResult(sample.result) !== "NO RESULT")
@@ -3663,7 +3653,7 @@ export const getSampleStatusCode = sample => {
   return status;
 };
 
-export const traceAnalysisRequired = sample => {
+export const traceAnalysisRequired = (sample) => {
   let text = "Trace Analysis Required";
   if (sample.classification === "homo" && sample.asbestosEvident === true)
     text = "No Trace Analysis Required";
@@ -3678,13 +3668,13 @@ export const writeResult = (result, noAsbestosResultReason, short) => {
         notAnalysed: "Not analysed",
         sampleSizeTooSmall: "Sample size too small",
         sampleNotReceived: "Sample not received by lab",
-        other: "Not analysed"
+        other: "Not analysed",
       };
       return reasonMap[noAsbestosResultReason];
     }
     return "Not analysed";
   }
-  Object.keys(result).forEach(type => {
+  Object.keys(result).forEach((type) => {
     if (result[type]) detected.push(type);
   });
   if (detected.length < 1) return "Not analysed";
@@ -3710,7 +3700,7 @@ export const writeResult = (result, noAsbestosResultReason, short) => {
     var last_element = asbestos.pop();
     str = asbestos.join(", ") + " and " + last_element;
   }
-  detected.forEach(detect => {
+  detected.forEach((detect) => {
     if (detect === "umf") {
       if (asbestos.length > 0) {
         str = str + " and unidentified mineral fibres (UMF)";
@@ -3732,13 +3722,13 @@ export const writeSimpleResult = (result, noAsbestosResultReason) => {
         notAnalysed: "Not Analysed",
         sampleSizeTooSmall: "Sample Size Too Small",
         sampleNotReceived: "Sample Not Received By Lab",
-        other: "Not Analysed"
+        other: "Not Analysed",
       };
       return reasonMap[noAsbestosResultReason];
     }
     return "Not Analysed";
   }
-  Object.keys(result).forEach(type => {
+  Object.keys(result).forEach((type) => {
     if (result[type]) detected.push(type);
   });
   if (detected.length < 1) return "Not Analysed";
@@ -3751,10 +3741,10 @@ export const writeSimpleResult = (result, noAsbestosResultReason) => {
   return asbestos.join(" ");
 };
 
-export const writeShorthandResult = result => {
+export const writeShorthandResult = (result) => {
   let detected = [];
   if (result === undefined) return "NO RESULT";
-  Object.keys(result).forEach(type => {
+  Object.keys(result).forEach((type) => {
     if (result[type]) detected.push(type);
   });
   if (detected.length < 1) return "NO RESULT";
@@ -3774,7 +3764,7 @@ export const writeShorthandResult = result => {
   return str;
 };
 
-export const writeSoilDetails = details => {
+export const writeSoilDetails = (details) => {
   let dictionary = {
     subFractionType: {
       cobbles: "cobbly ",
@@ -3786,7 +3776,7 @@ export const writeSoilDetails = details => {
       "organic clay": "organic clayey ",
       "organic silt": "organic silty ",
       "organic sand": "organic sandy ",
-      peat: "peaty "
+      peat: "peaty ",
     },
     fractionQualifier: {
       fine: "fine",
@@ -3799,13 +3789,13 @@ export const writeSoilDetails = details => {
       spongy: "spongy",
       plastic: "plastic",
       fibrous: "fibrous",
-      amorphous: "amorphous"
+      amorphous: "amorphous",
     },
     plasticity: {
       "low plasticity": "slightly plastic",
       "medium plasticity": "moderately plastic",
-      "high plasticity": "highly plastic"
-    }
+      "high plasticity": "highly plastic",
+    },
   };
   let finalStr = "";
   let sections = [];
@@ -3831,7 +3821,7 @@ export const writeSoilDetails = details => {
     str = str + details.majorFractionType.toUpperCase() + " ";
     if (details.someFractionTypes) {
       let fractionArray = [];
-      Object.keys(details.someFractionTypes).forEach(key => {
+      Object.keys(details.someFractionTypes).forEach((key) => {
         if (details.someFractionTypes[key] === true) fractionArray.push(key);
       });
       if (fractionArray.length > 0)
@@ -3839,7 +3829,7 @@ export const writeSoilDetails = details => {
     }
     if (details.minorFractionTypes) {
       let fractionArray = [];
-      Object.keys(details.minorFractionTypes).forEach(key => {
+      Object.keys(details.minorFractionTypes).forEach((key) => {
         if (details.minorFractionTypes[key] === true) fractionArray.push(key);
       });
       if (fractionArray.length > 0)
@@ -3847,7 +3837,7 @@ export const writeSoilDetails = details => {
     }
     if (details.traceFractionTypes) {
       let fractionArray = [];
-      Object.keys(details.traceFractionTypes).forEach(key => {
+      Object.keys(details.traceFractionTypes).forEach((key) => {
         if (details.traceFractionTypes[key] === true) fractionArray.push(key);
       });
       if (fractionArray.length > 0)
@@ -3884,7 +3874,7 @@ export const writeSoilDetails = details => {
       sections.push(section.join(", "));
     }
 
-    finalStr = sections.map(x => x.trim()).join("; ") + ". ";
+    finalStr = sections.map((x) => x.trim()).join("; ") + ". ";
 
     // SOIL MASS QUALIFICATIONS
     section = [];
@@ -3976,13 +3966,13 @@ export const writeSoilDetails = details => {
     }
     // Add minor fraction
     let fractionArray = [];
-    Object.keys(details.someFractionTypes).forEach(key => {
+    Object.keys(details.someFractionTypes).forEach((key) => {
       if (details.someFractionTypes[key] === true) fractionArray.push(key);
     });
-    Object.keys(details.minorFractionTypes).forEach(key => {
+    Object.keys(details.minorFractionTypes).forEach((key) => {
       if (details.minorFractionTypes[key] === true) fractionArray.push(key);
     });
-    Object.keys(details.traceFractionTypes).forEach(key => {
+    Object.keys(details.traceFractionTypes).forEach((key) => {
       if (details.traceFractionTypes[key] === true) fractionArray.push(key);
     });
 
@@ -4004,7 +3994,7 @@ export const writeSoilDetails = details => {
   return finalStr;
 };
 
-export const getSampleStatus = sample => {
+export const getSampleStatus = (sample) => {
   console.log(sample);
   let status = "In Transit";
   if (sample) {
@@ -4037,7 +4027,7 @@ export const getJobStatus = (samples, job) => {
   let readyForIssue = 0;
 
   if (samples && Object.values(samples).length > 0) {
-    Object.values(samples).forEach(sample => {
+    Object.values(samples).forEach((sample) => {
       if (sample.cocUid === jobID) {
         totalSamples++;
         if (sample.receivedByLab) {
@@ -4083,8 +4073,9 @@ export const getJobStatus = (samples, job) => {
     })`;
   } else if (numberVerified === totalSamples) {
     if (job.waAnalysis && numberWAAnalysisIncomplete > 0)
-      status = `All Samples Verified, WA Analysis Incomplete (${totalSamples -
-        numberWAAnalysisIncomplete}/${totalSamples})`;
+      status = `All Samples Verified, WA Analysis Incomplete (${
+        totalSamples - numberWAAnalysisIncomplete
+      }/${totalSamples})`;
     else {
       if (numberResult === totalSamples) status = "Ready for Issue";
       else
@@ -4094,8 +4085,9 @@ export const getJobStatus = (samples, job) => {
     status = `Analysis Started by ${analysisStartedBy} (${numberAnalysisStarted})`;
   } else if (numberResult === totalSamples && numberVerified === 0) {
     if (job.waAnalysis && numberWAAnalysisIncomplete > 0)
-      status = `Bulk ID Complete, WA Analysis Incomplete (${totalSamples -
-        numberWAAnalysisIncomplete}/${totalSamples})`;
+      status = `Bulk ID Complete, WA Analysis Incomplete (${
+        totalSamples - numberWAAnalysisIncomplete
+      }/${totalSamples})`;
     else if (numberWeight !== totalSamples)
       status = `Asbestos Result Complete, Weights Required (${numberWeight}/${totalSamples})`;
     else
@@ -4137,7 +4129,7 @@ export const getStats = (samples, job) => {
       3: ["08:30:00", "17:00:00"],
       4: ["08:30:00", "17:00:00"],
       5: ["08:30:00", "17:00:00"],
-      6: null
+      6: null,
     },
     holidays: [
       "2019-11-15",
@@ -4153,8 +4145,8 @@ export const getStats = (samples, job) => {
       "2020-10-26",
       "2020-11-13",
       "2020-12-25",
-      "2020-12-26"
-    ]
+      "2020-12-26",
+    ],
   });
 
   let totalSamples = 0;
@@ -4202,7 +4194,7 @@ export const getStats = (samples, job) => {
   let confirmedResultsWrong = 0;
 
   if (samples && Object.values(samples).length > 0) {
-    Object.values(samples).forEach(sample => {
+    Object.values(samples).forEach((sample) => {
       if (sample.cocUid === jobID) {
         totalSamples = totalSamples + 1;
         // if (sample.receivedByLab) numberReceived = numberReceived + 1;
@@ -4308,7 +4300,7 @@ export const getStats = (samples, job) => {
     confirmedResults,
     confirmedResultsOK,
     confirmedResultsConflict,
-    confirmedResultsWrong
+    confirmedResultsWrong,
   };
 
   if (totalSamples !== 0 && job.stats !== stats)
@@ -4316,7 +4308,7 @@ export const getStats = (samples, job) => {
   return stats;
 };
 
-export const getSoilSensitivity = details => {
+export const getSoilSensitivity = (details) => {
   // see page 16 of NZ Geotechnical Society guide
   let dictionary = {
     "very soft": 6,
@@ -4324,7 +4316,7 @@ export const getSoilSensitivity = details => {
     firm: 38,
     stiff: 75,
     "very stiff": 150,
-    hard: 350
+    hard: 350,
   };
   let ratio =
     dictionary[details.strength] / dictionary[details.sensitivityStrength];
@@ -4336,18 +4328,18 @@ export const getSoilSensitivity = details => {
   return sensitivity;
 };
 
-export const writeSampleConditioningList = conditioning => {
+export const writeSampleConditioningList = (conditioning) => {
   let conMap = {
     furnace: "Furnace",
     flame: "Flame",
     lowHeat: "Low Heat/Drying",
     dcm: "Dichloromethane",
     mortarAndPestle: "Mortar and Pestle",
-    sieved: "Sieved"
+    sieved: "Sieved",
   };
   let cons = [];
 
-  Object.keys(conMap).forEach(key => {
+  Object.keys(conMap).forEach((key) => {
     if (conditioning[key]) cons.push(conMap[key]);
   });
 
@@ -4382,7 +4374,7 @@ export const writeSampleMoisture = (sample, total) => {
 
 export const writeSampleDimensions = (sample, total) => {
   let dims = [];
-  ["length", "width", "depth"].forEach(dim => {
+  ["length", "width", "depth"].forEach((dim) => {
     // console.log(dim);
     if (
       sample.dimensions !== undefined &&
@@ -4416,14 +4408,14 @@ export const writeSampleDimensions = (sample, total) => {
     else app = lMM.toPrecision(2) + "mm";
   }
   if (total) return app;
-  else return dims.map(dim => `${dim}mm`).join(" x ") + ` (${app})`;
+  else return dims.map((dim) => `${dim}mm`).join(" x ") + ` (${app})`;
 };
 
-export const collateArrayResults = layers => {
+export const collateArrayResults = (layers) => {
   let results = {};
-  layers.forEach(layer => {
+  layers.forEach((layer) => {
     if (layer.result !== undefined && layer.result.deleted !== true) {
-      Object.keys(layer.result).forEach(k => {
+      Object.keys(layer.result).forEach((k) => {
         if (layer.result[k] === true) results[k] = true;
       });
     }
@@ -4440,14 +4432,14 @@ export const collateArrayResults = layers => {
   return results;
 };
 
-export const collateLayeredResults = layers => {
+export const collateLayeredResults = (layers) => {
   let results = {};
-  Object.keys(layers).forEach(key => {
+  Object.keys(layers).forEach((key) => {
     if (
       layers[key].result !== undefined &&
       layers[key].result.deleted !== true
     ) {
-      Object.keys(layers[key].result).forEach(k => {
+      Object.keys(layers[key].result).forEach((k) => {
         if (layers[key].result[k] === true) results[k] = true;
       });
     }
@@ -4472,7 +4464,7 @@ export const checkVerifyIssues = () => {
 
 // Air Sample Functions
 
-export const getAverageFlowRate = sample => {
+export const getAverageFlowRate = (sample) => {
   if (sample.initialFlowRate && sample.finalFlowRate) {
     let averageFlowRate =
         (parseFloat(sample.initialFlowRate) +
@@ -4496,7 +4488,7 @@ export const getAverageFlowRate = sample => {
       sampleRateLow,
       sampleRateHigh,
       differenceTooHigh,
-      status
+      status,
     };
   } else {
     return {
@@ -4505,12 +4497,12 @@ export const getAverageFlowRate = sample => {
       sampleRateLow: null,
       sampleRateHigh: null,
       differenceTooHigh: null,
-      status: "No Data"
+      status: "No Data",
     };
   }
 };
 
-export const getSampleRunTime = sample => {
+export const getSampleRunTime = (sample) => {
   console.log(sample);
   if (sample.totalRunTime) return sample.totalRunTime;
   else if (sample.startTime && sample.endTime) {
@@ -4534,7 +4526,7 @@ export const getAirSampleData = (sample, fibreResultDefault) => {
     fibreCounts: {},
     graticuleArea: null,
     overLoaded: false,
-    marginsBad: false
+    marginsBad: false,
   };
 
   if (sample.totalRunTime) calcs.runTime = sample.totalRunTime;
@@ -4604,7 +4596,7 @@ export const getAirSampleData = (sample, fibreResultDefault) => {
     analysisDates = writeDates(sample.fibreCounts, "analysisDate");
 
     sample.fibreCounts &&
-      Object.values(sample.fibreCounts).forEach(f => {
+      Object.values(sample.fibreCounts).forEach((f) => {
         if (f.overloaded) {
           // Analyst has stated filter is overloaded, do not count results
           overloadedNumber++;
@@ -4706,7 +4698,7 @@ export const getAirSampleData = (sample, fibreResultDefault) => {
       filtersAnalysedNumber,
       filtersTotalNumber,
       analysisDates,
-      analysts
+      analysts,
     };
   }
 
@@ -4787,7 +4779,7 @@ export const getAirConcentration = (sample, microscope) => {
       areasCounted,
       graticuleArea,
       actualConcentration,
-      reportConcentration
+      reportConcentration,
     };
     console.log(data);
     return data;
