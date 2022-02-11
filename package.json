@@ -33,7 +33,7 @@
     "file-upload-react": "^0.1.2",
     "firebase": "^6.6.2",
     "firestore-export-import": "^0.3.1",
-    "froala-editor": "^2.9.6",
+    "froala-editor": "^4.0.7",
     "fs-es6": "0.0.2",
     "gatsby-plugin-material-ui": "^2.1.6",
     "google-map-react": "^1.1.5",
