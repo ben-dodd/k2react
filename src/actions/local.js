@@ -216,6 +216,17 @@ export const fetchMe = () => async (dispatch) => {
     });
 };
 
+<<<<<<< HEAD
+=======
+// export const staffToSQL => async {
+//   usersRef.get().then((querySnapshot) => {
+//     querySnapshot.forEach((doc) => {
+//
+//     })
+//   })
+// }
+
+>>>>>>> 3a3c69a01708dcdf895281ce0d15ec6f6682241f
 export const fetchStaff = (update) => async (dispatch) => {
   if (update) {
     // //console.log("Running fetch staff to update");
@@ -241,7 +252,7 @@ export const fetchStaff = (update) => async (dispatch) => {
             bulkAnalysts.push({ uid: user.uid, name: user.name });
         }
       });
-      // //console.log(users);
+      console.log(users);
       dispatch({ type: GET_STAFF, payload: users, update: true });
       dispatch({ type: GET_AIR_ANALYSTS, payload: airAnalysts, update: true });
       dispatch({
