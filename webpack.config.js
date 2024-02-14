@@ -8,11 +8,11 @@ module: {
     }
   ]
 }
-plugins: [
-  new webpack.ProvidePlugin({
-    'window.Quill': 'quill'
-  })
-]
+// plugins: [
+//   new webpack.ProvidePlugin({
+//     'window.Quill': 'quill'
+//   })
+// ]
 
 const { paths } = require('react-app-rewired');
 // require normalized overrides
