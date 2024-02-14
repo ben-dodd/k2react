@@ -1,86 +1,69 @@
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../../config/styles";
-import { connect } from "react-redux";
+import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../../config/styles'
+import { connect } from 'react-redux'
 import {
   appSettingsRef,
   sitesRef,
   templateAcmRef,
-} from "../../../config/firebase";
+} from '../../../config/firebase'
 
 //Modals
-import { TEMPLATE_ACM } from "../../../constants/modal-types";
-import { showModal } from "../../../actions/modal";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
-import IconButton from "@material-ui/core/IconButton";
-import Tooltip from "@material-ui/core/Tooltip";
-import WfmTimeModal from "../modals/WfmTimeModal";
-import AddIcon from "@material-ui/icons/AddCircleOutline";
-import EditIcon from "@material-ui/icons/Edit";
-import TimerIcon from "@material-ui/icons/Timer";
-import SelectIcon from "@material-ui/icons/Info";
-import DeleteIcon from "@material-ui/icons/Close";
-import Select from "react-select";
-import SuggestionField from "../../../widgets/SuggestionField";
-import AcmCard from "../components/AcmCard";
-import SearchIcon from "@material-ui/icons/Search";
-import ResultIcon from "@material-ui/icons/Lens";
-import AirResultIcon from "@material-ui/icons/AcUnit";
-import RemovedIcon from "@material-ui/icons/RemoveCircle";
-import CheckWriterIcon from "@material-ui/icons/Done";
-import CheckCheckerIcon from "@material-ui/icons/DoneAll";
-import CheckKTPIcon from "@material-ui/icons/VerifiedUser";
-import NotCheckedIcon from "@material-ui/icons/HourglassEmpty";
+import { TEMPLATE_ACM } from '../../../constants/modal-types'
+import { showModal } from '../../../actions/modal'
+import Grid from '@material-ui/core/Grid'
+import TextField from '@material-ui/core/TextField'
+import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
+import WfmTimeModal from '../modals/WfmTimeModal'
+import AddIcon from '@material-ui/icons/AddCircleOutline'
+import EditIcon from '@material-ui/icons/Edit'
+import TimerIcon from '@material-ui/icons/Timer'
+import SelectIcon from '@material-ui/icons/Info'
+import DeleteIcon from '@material-ui/icons/Close'
+import Select from 'react-select'
+import SuggestionField from '../../../widgets/SuggestionField'
+import AcmCard from '../components/AcmCard'
+import SearchIcon from '@material-ui/icons/Search'
+import ResultIcon from '@material-ui/icons/Lens'
+import AirResultIcon from '@material-ui/icons/AcUnit'
+import RemovedIcon from '@material-ui/icons/RemoveCircle'
+import CheckWriterIcon from '@material-ui/icons/Done'
+import CheckCheckerIcon from '@material-ui/icons/DoneAll'
+import CheckKTPIcon from '@material-ui/icons/VerifiedUser'
+import NotCheckedIcon from '@material-ui/icons/HourglassEmpty'
 
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
-import _ from "lodash";
+import _ from 'lodash'
 
-import classNames from "classnames";
-import Popup from "reactjs-popup";
-import {
-  dateOf,
-  getDaysSinceDate,
-  getDaysSinceDateAgo,
-  andList,
-  personnelConvert,
-} from "../../../actions/helpers";
+import classNames from 'classnames'
 
-import moment from "moment";
+import moment from 'moment'
 
 import {
   fetchWFMJobs,
   fetchWFMLeads,
   fetchWFMClients,
-  saveCurrentJobState,
   clearWfmJob,
   saveWFMItems,
   saveGeocodes,
   fetchGeocodes,
   updateGeocodes,
   saveStats,
-  collateJobsList,
   getJobColor,
-  getStateString,
-  getNextActionType,
-  getNextActionOverdueBy,
   handleSiteChange,
-  getWfmUrl,
-  getLeadHistoryDescription,
-  handleJobChange,
-  loadAcmTemplate,
   getRoomInLayout,
-} from "../../../actions/jobs";
+} from '../../../actions/jobs'
 
 import {
   writeDescription,
   writeSimpleResult,
-} from "../../../actions/asbestosLab";
+} from '../../../actions/asbestosLab'
 
-import { getFirestoreCollection } from "../../../actions/local";
+import { getFirestoreCollection } from '../../../actions/local'
 
-import { filterMap, filterMapReset } from "../../../actions/display";
+import { filterMap, filterMapReset } from '../../../actions/display'
 
 const mapStateToProps = (state) => {
   return {
@@ -105,8 +88,8 @@ const mapStateToProps = (state) => {
     filter: state.display.filterMap,
     otherOptions: state.const.otherOptions,
     modalType: state.modal.modalType,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -130,74 +113,74 @@ const mapDispatchToProps = (dispatch) => {
     fetchAcmTemplates: () =>
       dispatch(
         getFirestoreCollection({
-          pathRef: appSettingsRef.doc("templates").collection("acm"),
-          statePath: "acmTemplates",
+          pathRef: appSettingsRef.doc('templates').collection('acm'),
+          statePath: 'acmTemplates',
           update: true,
           subscribe: true,
         })
       ),
-  };
-};
+  }
+}
 
 const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
+  const result = Array.from(list)
+  const [removed] = result.splice(startIndex, 1)
+  result.splice(endIndex, 0, removed)
 
-  return result;
-};
+  return result
+}
 
 const move = (source, destination, droppableSource, droppableDestination) => {
-  const sourceClone = Array.from(source);
-  const destClone = Array.from(destination);
-  const [removed] = sourceClone.splice(droppableSource.index, 1);
+  const sourceClone = Array.from(source)
+  const destClone = Array.from(destination)
+  const [removed] = sourceClone.splice(droppableSource.index, 1)
 
-  destClone.splice(droppableDestination.index, 0, removed);
+  destClone.splice(droppableDestination.index, 0, removed)
 
-  const result = {};
+  const result = {}
   result[droppableSource.droppableId] =
-    source.droppableId === "templates" ? Array.from(source) : sourceClone;
+    source.droppableId === 'templates' ? Array.from(source) : sourceClone
   result[droppableDestination.droppableId] =
-    destination.droppableId === "templates"
+    destination.droppableId === 'templates'
       ? Array.from(destination)
-      : destClone;
-  return result;
-};
+      : destClone
+  return result
+}
 
 const getItemStyle = (isDragging, draggableStyle) => ({
   borderRadius: 4,
-  userSelect: "none",
+  userSelect: 'none',
   padding: 8,
   margin: 2,
   boxShadow: isDragging
     ? `0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)`
     : `0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19)`,
-  background: isDragging ? "#fafafa" : "white",
+  background: isDragging ? '#fafafa' : 'white',
   ...draggableStyle,
-});
+})
 
 const getListStyle = (isDraggingOver, mode) => ({
   borderRadius: 4,
   background:
-    mode === "blank"
+    mode === 'blank'
       ? isDraggingOver
-        ? "#ddd"
-        : "#fff"
+        ? '#ddd'
+        : '#fff'
       : isDraggingOver
-      ? "#bbb"
-      : "#ddd",
+      ? '#bbb'
+      : '#ddd',
   margin: 4,
   padding: 8,
-});
+})
 
 class SiteAddAcm extends React.Component {
   state = {
-    templateSearch: "",
-  };
+    templateSearch: '',
+  }
 
   UNSAFE_componentWillMount() {
     if (this.props.acmTemplates && this.props.acmTemplates.length === 0) {
-      this.props.fetchAcmTemplates();
+      this.props.fetchAcmTemplates()
     }
     this.props.sites[this.props.site] &&
       this.props.sites[this.props.site].layout &&
@@ -212,10 +195,10 @@ class SiteAddAcm extends React.Component {
                   Object.values(this.props.siteAcm[this.props.site]).filter(
                     (a) => a.room && a.room.uid === room.uid
                   )
-                );
+                )
               if (room.acm) {
-                console.log(room.acm);
-                this.setState({ [room.uid]: room.acm });
+                console.log(room.acm)
+                this.setState({ [room.uid]: room.acm })
               } else
                 this.setState({
                   [room.uid]: this.props.siteAcm[this.props.site]
@@ -223,145 +206,145 @@ class SiteAddAcm extends React.Component {
                         .filter((a) => a.room && a.room.uid === room.uid)
                         .map((e) => e.uid)
                     : [],
-                });
-            });
+                })
+            })
           this.setState({
             generic: this.props.siteAcm[this.props.site]
               ? Object.values(this.props.siteAcm[this.props.site])
-                  .filter((a) => a.room && a.room.uid === "generic")
+                  .filter((a) => a.room && a.room.uid === 'generic')
                   .map((e) => e.uid)
               : [],
-          });
+          })
         }
-      );
+      )
 
     // console.log(this.state);
   }
 
   componentWillUnmount() {
     let layout = this.props.sites[this.props.site].layout,
-      change = false;
+      change = false
     if (layout)
       Object.keys(layout).forEach((k) => {
         if (layout[k].rooms) {
           layout[k].rooms.forEach((r, index) => {
             if (this.state[r.uid] && this.state[r.uid].length > 0) {
-              layout[k].rooms[index].acm = this.state[r.uid];
-              change = true;
+              layout[k].rooms[index].acm = this.state[r.uid]
+              change = true
             }
-          });
+          })
         }
-      });
-    console.log(layout);
-    if (change) sitesRef.doc(this.props.site).update({ layout });
+      })
+    console.log(layout)
+    if (change) sitesRef.doc(this.props.site).update({ layout })
   }
 
   onDragEnd = (result) => {
-    const { source, destination } = result;
+    const { source, destination } = result
     // dropped outside the list
-    if (!result.destination && source.droppableId === "templates") {
-      return;
+    if (!result.destination && source.droppableId === 'templates') {
+      return
     } else if (!result.destination) {
       // Delete ACM
-      let acmKey = this.state[source.droppableId][source.index];
-      let sourceClone = Array.from(this.state[source.droppableId]);
-      sourceClone.splice(source.index, 1);
-      console.log(sourceClone);
+      let acmKey = this.state[source.droppableId][source.index]
+      let sourceClone = Array.from(this.state[source.droppableId])
+      sourceClone.splice(source.index, 1)
+      console.log(sourceClone)
       this.setState({
         [source.droppableId]: sourceClone,
-      });
-      sitesRef.doc(this.props.site).collection("acm").doc(acmKey).delete();
+      })
+      sitesRef.doc(this.props.site).collection('acm').doc(acmKey).delete()
     } else {
       if (source.droppableId === destination.droppableId) {
-        if (source.droppableId === "templates") return;
+        if (source.droppableId === 'templates') return
         const items = reorder(
           this.state[source.droppableId],
           source.index,
           destination.index
-        );
+        )
 
-        this.setState({ [source.droppableId]: items });
+        this.setState({ [source.droppableId]: items })
       } else {
-        if (source.droppableId === "templates") {
+        if (source.droppableId === 'templates') {
           // Create ACM item
-          let acm = this.getAcmTemplates()[source.index];
+          let acm = this.getAcmTemplates()[source.index]
           let room = getRoomInLayout({
             site: this.props.sites[this.props.site],
             searchRoom: destination.droppableId,
-          });
+          })
           let uid = `${acm.description}_${acm.material}_${moment().format(
-            "x"
+            'x'
           )}_${parseInt(
             Math.floor(Math.random() * Math.floor(10000))
-          )}`.replace(/[.:/,\s]/g, "_");
-          acm.uid = uid;
-          acm.idKey = "p"; // Presume by default
-          acm.room = { label: room.label, uid: room.uid };
-          sitesRef.doc(this.props.site).collection("acm").doc(uid).set(acm);
+          )}`.replace(/[.:/,\s]/g, '_')
+          acm.uid = uid
+          acm.idKey = 'p' // Presume by default
+          acm.room = { label: room.label, uid: room.uid }
+          sitesRef.doc(this.props.site).collection('acm').doc(uid).set(acm)
           this.setState({
             [destination.droppableId]: [
               ...this.state[destination.droppableId],
               uid,
             ],
-          });
-        } else if (destination.droppableId === "templates") {
+          })
+        } else if (destination.droppableId === 'templates') {
           // Delete ACM
-          let acmKey = this.state[source.droppableId][source.index];
-          let sourceClone = Array.from(this.state[source.droppableId]);
-          sourceClone.splice(source.index, 1);
+          let acmKey = this.state[source.droppableId][source.index]
+          let sourceClone = Array.from(this.state[source.droppableId])
+          sourceClone.splice(source.index, 1)
           this.setState({
             [source.droppableId]: sourceClone,
-          });
-          sitesRef.doc(this.props.site).collection("acm").doc(acmKey).delete();
+          })
+          sitesRef.doc(this.props.site).collection('acm').doc(acmKey).delete()
         } else {
           const result = move(
             this.state[source.droppableId] || [],
             this.state[destination.droppableId] || [],
             source,
             destination
-          );
+          )
 
-          let acmKey = this.state[source.droppableId][source.index];
+          let acmKey = this.state[source.droppableId][source.index]
           let room = getRoomInLayout({
             site: this.props.sites[this.props.site],
             searchRoom: destination.droppableId,
-          });
-          console.log(room);
+          })
+          console.log(room)
           sitesRef
             .doc(this.props.site)
-            .collection("acm")
+            .collection('acm')
             .doc(acmKey)
-            .update({ room: { label: room.label, uid: room.uid } });
+            .update({ room: { label: room.label, uid: room.uid } })
 
           this.setState({
             ...result,
-          });
+          })
         }
       }
     }
-  };
+  }
 
   getAcmTemplates = () => {
     return this.props.acmTemplates
       ? [
           {
-            uid: "air",
-            templateName: "Air Sample",
-            sampleType: "air",
-            description: "Air Sample",
+            uid: 'air',
+            templateName: 'Air Sample',
+            sampleType: 'air',
+            description: 'Air Sample',
           },
         ].concat(
           this.props.acmTemplates
             .filter((e) => {
-              let res = true;
+              let res = true
               if (
                 this.state.templateSearch &&
                 !`${e.templateName}${e.description}${e.material}`
                   .toLowerCase()
                   .includes(this.state.templateSearch.toLowerCase())
               )
-                res = false;
-              return res;
+                res = false
+              return res
             })
             .sort((a, b) => {
               let aName = a.templateName
@@ -372,7 +355,7 @@ class SiteAddAcm extends React.Component {
                 ? a.description
                 : a.material
                 ? a.material
-                : "";
+                : ''
               let bName = b.templateName
                 ? b.templateName
                 : b.description && b.material
@@ -381,34 +364,32 @@ class SiteAddAcm extends React.Component {
                 ? b.description
                 : b.material
                 ? b.material
-                : "";
-              return aName.localeCompare(bName);
+                : ''
+              return aName.localeCompare(bName)
             })
         )
       : [
           {
-            uid: "air",
-            templateName: "Air Sample",
-            sampleType: "air",
-            description: "Air Sample",
+            uid: 'air',
+            templateName: 'Air Sample',
+            sampleType: 'air',
+            description: 'Air Sample',
           },
-        ];
-  };
+        ]
+  }
 
   render() {
-    const { classes, that, site, wfmClients, geocodes } = this.props;
-    const names = [{ name: "3rd Party", uid: "3rd Party" }].concat(
+    const { classes, that, site, wfmClients, geocodes } = this.props
+    const names = [{ name: '3rd Party', uid: '3rd Party' }].concat(
       Object.values(this.props.staff).sort((a, b) =>
         a.name.localeCompare(b.name)
       )
-    );
+    )
     const m =
-      this.props.sites && this.props.sites[site]
-        ? this.props.sites[site]
-        : null;
-    const acmTemplates = this.getAcmTemplates();
+      this.props.sites && this.props.sites[site] ? this.props.sites[site] : null
+    const acmTemplates = this.getAcmTemplates()
     if (m) {
-      const color = classes[getJobColor(m.primaryJobType)];
+      const color = classes[getJobColor(m.primaryJobType)]
       return (
         <div className={classes.marginTopSmall}>
           <DragDropContext onDragEnd={this.onDragEnd}>
@@ -423,13 +404,13 @@ class SiteAddAcm extends React.Component {
                   <div className={classNames(color, classes.expandHeading)}>
                     ACM Templates
                   </div>
-                  <Tooltip title={"Add ACM Template"}>
+                  <Tooltip title={'Add ACM Template'}>
                     <IconButton
                       onClick={(e) => {
                         this.props.showModal({
                           modalType: TEMPLATE_ACM,
                           modalProps: { doc: null },
-                        });
+                        })
                       }}
                     >
                       <AddIcon className={classes.iconRegular} />
@@ -441,17 +422,17 @@ class SiteAddAcm extends React.Component {
                   <div className={classes.spacerSmall} />
                   <TextField
                     value={this.state.templateSearch}
-                    style={{ width: "100%" }}
+                    style={{ width: '100%' }}
                     onChange={(e) =>
                       this.setState({ templateSearch: e.target.value })
                     }
                   />
                 </div>
-                <Droppable key={"templates"} droppableId={"templates"}>
+                <Droppable key={'templates'} droppableId={'templates'}>
                   {(provided, snapshot) => (
                     <div
                       ref={provided.innerRef}
-                      style={getListStyle(snapshot.isDraggingOver, "blank")}
+                      style={getListStyle(snapshot.isDraggingOver, 'blank')}
                       {...provided.droppableProps}
                     >
                       {acmTemplates.map((item, index) => {
@@ -475,7 +456,7 @@ class SiteAddAcm extends React.Component {
                               </div>
                             )}
                           </Draggable>
-                        );
+                        )
                       })}
                     </div>
                   )}
@@ -493,7 +474,7 @@ class SiteAddAcm extends React.Component {
                 {m.layout &&
                   Object.keys(m.layout).map((k) =>
                     m.layout[k].rooms && m.layout[k].rooms.length > 0
-                      ? k === "default"
+                      ? k === 'default'
                         ? m.layout[k].rooms.map((r) => this.getDroppableRoom(r))
                         : this.getFoldableRoomGroup({
                             roomGroup: m.layout[k],
@@ -518,12 +499,12 @@ class SiteAddAcm extends React.Component {
             </Grid>
           </DragDropContext>
         </div>
-      );
-    } else return <div />;
+      )
+    } else return <div />
   }
 
   getAcmTemplateCard = (item) => {
-    const { classes } = this.props;
+    const { classes } = this.props
     return (
       <div className={classes.flexRowSpread}>
         {item.templateName
@@ -532,7 +513,7 @@ class SiteAddAcm extends React.Component {
         <div className={classes.flexRow}>
           <Tooltip
             title={
-              "Edit Template. This will not affect items already created from this template."
+              'Edit Template. This will not affect items already created from this template.'
             }
           >
             <IconButton
@@ -540,7 +521,7 @@ class SiteAddAcm extends React.Component {
                 this.props.showModal({
                   modalType: TEMPLATE_ACM,
                   modalProps: { doc: item },
-                });
+                })
               }}
             >
               <EditIcon className={classes.iconSmall} />
@@ -549,7 +530,7 @@ class SiteAddAcm extends React.Component {
 
           <Tooltip
             title={
-              "Delete Template. This will not affect items already created from this template."
+              'Delete Template. This will not affect items already created from this template.'
             }
           >
             <IconButton
@@ -559,7 +540,7 @@ class SiteAddAcm extends React.Component {
                     `Are you sure you wish to delete this template (${item.description} ${item.material})?`
                   )
                 )
-                  templateAcmRef.doc(item.uid).delete();
+                  templateAcmRef.doc(item.uid).delete()
               }}
             >
               <DeleteIcon className={classes.iconSmall} />
@@ -567,25 +548,25 @@ class SiteAddAcm extends React.Component {
           </Tooltip>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   getAcmCard = (item) => {
-    const { classes } = this.props;
-    let idKey = item.idKey || null;
-    if (idKey === "i" && item.sample) {
-      let simpleResult = writeSimpleResult(item.sample.result);
-      if (simpleResult === "Not Analysed") idKey = "i";
-      else if (simpleResult === "NO") idKey = "negative";
-      else idKey = "positive";
+    const { classes } = this.props
+    let idKey = item.idKey || null
+    if (idKey === 'i' && item.sample) {
+      let simpleResult = writeSimpleResult(item.sample.result)
+      if (simpleResult === 'Not Analysed') idKey = 'i'
+      else if (simpleResult === 'NO') idKey = 'negative'
+      else idKey = 'positive'
     }
-    if (item.acmRemoved) idKey = "removed";
+    if (item.acmRemoved) idKey = 'removed'
     // console.log(item.sample);
     return (
       <div className={classes.flexRowSpread}>
         <div className={classNames(classes.columnMed, classes.bold)}>
-          {item.sampleType === "air"
-            ? "Air Sample"
+          {item.sampleType === 'air'
+            ? 'Air Sample'
             : `${writeDescription(item)}`}
         </div>
         <div className={classes.columnLarge}>
@@ -605,28 +586,28 @@ class SiteAddAcm extends React.Component {
             )}
           </IconButton>
           <IconButton>
-            {item.sampleType === "air" ? (
+            {item.sampleType === 'air' ? (
               <AirResultIcon
                 className={
                   item.sample &&
                   item.sample.reportConcentration &&
-                  item.sample.reportConcentration.includes("<")
+                  item.sample.reportConcentration.includes('<')
                     ? classes.colorsOk
                     : classes.colorsBad
                 }
               />
-            ) : idKey === "removed" ? (
+            ) : idKey === 'removed' ? (
               <RemovedIcon />
             ) : (
               <ResultIcon
                 className={
-                  idKey === "p"
+                  idKey === 'p'
                     ? classes.colorsWarning
-                    : idKey === "s"
+                    : idKey === 's'
                     ? classes.colorsStrongWarning
-                    : idKey === "i"
+                    : idKey === 'i'
                     ? classes.colorsUnclear
-                    : idKey === "negative"
+                    : idKey === 'negative'
                     ? classes.colorsOk
                     : classes.colorsBad
                 }
@@ -638,11 +619,11 @@ class SiteAddAcm extends React.Component {
           </IconButton>
         </div>
       </div>
-    );
-  };
+    )
+  }
 
   getDroppableRoom = (room) => {
-    const { classes } = this.props;
+    const { classes } = this.props
     return (
       <Droppable key={room.uid} droppableId={room.uid}>
         {(provided, snapshot) => (
@@ -654,7 +635,7 @@ class SiteAddAcm extends React.Component {
             <div className={classes.boldWhite}>{room.label}</div>
             {this.state[room.uid] &&
               this.state[room.uid].map((key, index) => {
-                let item = this.props.siteAcm[this.props.site][key];
+                let item = this.props.siteAcm[this.props.site][key]
                 return (
                   <Draggable key={key} draggableId={key} index={index}>
                     {(provided, snapshot) => (
@@ -671,26 +652,26 @@ class SiteAddAcm extends React.Component {
                       </div>
                     )}
                   </Draggable>
-                );
+                )
               })}
           </div>
         )}
       </Droppable>
-    );
-  };
+    )
+  }
 
   getFoldableRoomGroup = ({ roomGroup, key }) => {
     return (
       <div className={this.props.classes.informationBoxWhiteRounded}>
         <h6>{roomGroup.label}</h6>
         {roomGroup.rooms.map((r) => {
-          this.getDroppableRoom(r);
+          this.getDroppableRoom(r)
         })}
       </div>
-    );
-  };
+    )
+  }
 }
 
 export default withStyles(styles)(
   connect(mapStateToProps, mapDispatchToProps)(SiteAddAcm)
-);
+)

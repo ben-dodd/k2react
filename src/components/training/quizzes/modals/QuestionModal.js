@@ -1,26 +1,26 @@
-import React from "react";
+import React from 'react'
 // import ReactDOM from 'react-dom';
-// import { WithContext as ReactTags } from 'react-tag-input';
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../../../config/styles";
-import { connect } from "react-redux";
-import { WithContext as ReactTags } from "react-tag-input";
-// import store from '../../store';
-import { QUESTION } from "../../../../constants/modal-types";
-import { questionsRef } from "../../../../config/firebase";
-import "../../../../config/tags.css";
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import FormGroup from "@material-ui/core/FormGroup";
-import TextField from "@material-ui/core/TextField";
-import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../../../config/styles'
+import { connect } from 'react-redux'
+import { WithContext as ReactTags } from 'react-tag-input'
+// import store from '../../store';
+import { QUESTION } from '../../../../constants/modal-types'
+import { questionsRef } from '../../../../config/firebase'
+import '../../../../config/tags.css'
+
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogActions from '@material-ui/core/DialogActions'
+import FormGroup from '@material-ui/core/FormGroup'
+import TextField from '@material-ui/core/TextField'
+import FormControl from '@material-ui/core/FormControl'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import Select from '@material-ui/core/Select'
 
 import {
   hideModal,
@@ -28,12 +28,12 @@ import {
   handleModalSubmit,
   onUploadFile,
   handleTagDelete,
-  handleTagAddition
-} from "../../../../actions/modal";
-import { getUserAttrs } from "../../../../actions/local";
-import _ from "lodash";
+  handleTagAddition,
+} from '../../../../actions/modal'
+import { getUserAttrs } from '../../../../actions/local'
+import _ from 'lodash'
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     modalType: state.modal.modalType,
     modalProps: state.modal.modalProps,
@@ -42,26 +42,29 @@ const mapStateToProps = state => {
     tags: state.modal.modalProps.tags,
     tagSuggestions: state.const.quiztags,
     questiontypes: state.const.questiontypes,
-    delimiters: state.const.tagDelimiters
-  };
-};
+    delimiters: state.const.tagDelimiters,
+  }
+}
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     hideModal: () => dispatch(hideModal()),
     onUploadFile: (file, pathRef) => dispatch(onUploadFile(file, pathRef)),
     handleModalChange: _.debounce(
-      target => dispatch(handleModalChange(target)),
+      (target) => dispatch(handleModalChange(target)),
       300
     ),
-    handleSelectChange: target => dispatch(handleModalChange(target)),
+    handleSelectChange: (target) => dispatch(handleModalChange(target)),
     handleModalSubmit: (doc, pathRef) =>
       dispatch(handleModalSubmit(doc, pathRef)),
-    handleTagDelete: tag => dispatch(handleTagDelete(tag)),
-    handleTagAddition: tag => dispatch(handleTagAddition(tag)),
-    getUserAttrs: _.debounce(userPath => dispatch(getUserAttrs(userPath)), 1000)
-  };
-};
+    handleTagDelete: (tag) => dispatch(handleTagDelete(tag)),
+    handleTagAddition: (tag) => dispatch(handleTagAddition(tag)),
+    getUserAttrs: _.debounce(
+      (userPath) => dispatch(getUserAttrs(userPath)),
+      1000
+    ),
+  }
+}
 
 class QuestionModal extends React.Component {
   // deleteImage = (file, uid) => {
@@ -78,14 +81,14 @@ class QuestionModal extends React.Component {
   // }
 
   render() {
-    const { modalProps, doc, classes, questiontypes } = this.props;
+    const { modalProps, doc, classes, questiontypes } = this.props
     return (
       <Dialog
         open={this.props.modalType === QUESTION}
         onClose={() => this.props.hideModal}
       >
         <DialogTitle>
-          {modalProps.title ? modalProps.title : "Add New Question"}
+          {modalProps.title ? modalProps.title : 'Add New Question'}
         </DialogTitle>
         <DialogContent>
           {!questiontypes[doc.type] && (
@@ -97,23 +100,23 @@ class QuestionModal extends React.Component {
                 <FormControl className={classes.dialogField}>
                   <InputLabel shrink>Question Type</InputLabel>
                   <Select
-                    onChange={e => {
+                    onChange={(e) => {
                       this.props.handleSelectChange({
-                        id: "type",
-                        value: e.target.value
-                      });
+                        id: 'type',
+                        value: e.target.value,
+                      })
                     }}
                     value={doc.type}
                     input={<Input name="type" id="type" />}
                   >
                     <option value="" />
                     {questiontypes &&
-                      Object.keys(questiontypes).map(key => {
+                      Object.keys(questiontypes).map((key) => {
                         return (
                           <option key={key} value={key}>
                             {questiontypes[key].name}
                           </option>
-                        );
+                        )
                       })}
                   </Select>
                 </FormControl>
@@ -123,8 +126,8 @@ class QuestionModal extends React.Component {
                   defaultValue={doc && doc.question}
                   multiline
                   className={classes.dialogField}
-                  onChange={e => {
-                    this.props.handleModalChange(e.target);
+                  onChange={(e) => {
+                    this.props.handleModalChange(e.target)
                   }}
                 />
 
@@ -132,21 +135,21 @@ class QuestionModal extends React.Component {
                   <FormControl className={classes.dialogField}>
                     <InputLabel shrink>True or False?</InputLabel>
                     <Select
-                      onChange={e =>
+                      onChange={(e) =>
                         this.props.handleSelectChange({
-                          id: "truefalse",
-                          value: e.target.value
+                          id: 'truefalse',
+                          value: e.target.value,
                         })
                       }
                       value={doc.truefalse}
                       input={<Input name="truefalse" id="truefalse" />}
                     >
-                      {["True", "False"].map(key => {
+                      {['True', 'False'].map((key) => {
                         return (
                           <option key={key} value={key}>
                             {key}
                           </option>
-                        );
+                        )
                       })}
                     </Select>
                   </FormControl>
@@ -159,8 +162,8 @@ class QuestionModal extends React.Component {
                     defaultValue={doc && doc.answer}
                     className={classes.dialogField}
                     helperText="Enter an exact answer or use regular expressions (https://regex101.com/) to add some leeway (e.g. '\b(christchurch|chch|otautahi)\b' will allow either of those three answers, '^(?=.*\bimmunocompromised\b)(?=.*\bcarcinogenic\b).*$' will require both of those words in any order.)"
-                    onChange={e => {
-                      this.props.handleModalChange(e.target);
+                    onChange={(e) => {
+                      this.props.handleModalChange(e.target)
                     }}
                   />
                 )}
@@ -174,27 +177,27 @@ class QuestionModal extends React.Component {
                       doc &&
                       doc.correct &&
                       doc.correct
-                        .map(obj => {
-                          return obj.text;
+                        .map((obj) => {
+                          return obj.text
                         })
-                        .join("\n")
+                        .join('\n')
                     }
                     helperText={
-                      doc.type.includes("single")
-                        ? ""
-                        : "Put each correct option on a new line."
+                      doc.type.includes('single')
+                        ? ''
+                        : 'Put each correct option on a new line.'
                     }
                     className={classes.dialogField}
-                    onChange={e => {
+                    onChange={(e) => {
                       this.props.handleModalChange({
                         id: e.target.id,
                         value: e.target.value
-                          .split("\n")
+                          .split('\n')
                           .filter(Boolean)
-                          .map(option => {
-                            return { text: option };
-                          })
-                      });
+                          .map((option) => {
+                            return { text: option }
+                          }),
+                      })
                     }}
                   />
                 )}
@@ -208,23 +211,23 @@ class QuestionModal extends React.Component {
                       doc &&
                       doc.incorrect &&
                       doc.incorrect
-                        .map(obj => {
-                          return obj.text;
+                        .map((obj) => {
+                          return obj.text
                         })
-                        .join("\n")
+                        .join('\n')
                     }
                     helperText="Put each incorrect option on a new line."
                     className={classes.dialogField}
-                    onChange={e => {
+                    onChange={(e) => {
                       this.props.handleModalChange({
                         id: e.target.id,
                         value: e.target.value
-                          .split("\n")
+                          .split('\n')
                           .filter(Boolean)
-                          .map(option => {
-                            return { text: option };
-                          })
-                      });
+                          .map((option) => {
+                            return { text: option }
+                          }),
+                      })
                     }}
                   />
                 )}
@@ -238,23 +241,23 @@ class QuestionModal extends React.Component {
                       doc &&
                       doc.answers &&
                       doc.answers
-                        .map(obj => {
-                          return obj.text;
+                        .map((obj) => {
+                          return obj.text
                         })
-                        .join("\n")
+                        .join('\n')
                     }
                     helperText="Put each option on a new line in the correct order."
                     className={classes.dialogField}
-                    onChange={e => {
+                    onChange={(e) => {
                       this.props.handleModalChange({
                         id: e.target.id,
                         value: e.target.value
-                          .split("\n")
+                          .split('\n')
                           .filter(Boolean)
-                          .map(option => {
-                            return { text: option };
-                          })
-                      });
+                          .map((option) => {
+                            return { text: option }
+                          }),
+                      })
                     }}
                   />
                 )}
@@ -268,34 +271,34 @@ class QuestionModal extends React.Component {
                       doc &&
                       doc.buckets &&
                       doc.buckets
-                        .map(bucket => {
+                        .map((bucket) => {
                           return [
                             bucket.label,
-                            ...bucket.answers.map(obj => {
-                              return obj.text;
-                            })
-                          ].join("\n");
+                            ...bucket.answers.map((obj) => {
+                              return obj.text
+                            }),
+                          ].join('\n')
                         })
-                        .join("\n\n|")
+                        .join('\n\n|')
                     }
                     helperText="Put the bucket label on the first line. Put each option on a new line below it. Separate each bucket with a pipe (|) symbol."
                     className={classes.dialogField}
-                    onChange={e => {
+                    onChange={(e) => {
                       this.props.handleModalChange({
                         id: e.target.id,
-                        value: e.target.value.split("|").map(bucket => {
-                          let list = bucket.split("\n");
+                        value: e.target.value.split('|').map((bucket) => {
+                          let list = bucket.split('\n')
                           return {
                             label: list[0],
                             answers: list
                               .splice(1)
                               .filter(Boolean)
-                              .map(option => {
-                                return { text: option };
-                              })
-                          };
-                        })
-                      });
+                              .map((option) => {
+                                return { text: option }
+                              }),
+                          }
+                        }),
+                      })
                     }}
                   />
                 )}
@@ -307,14 +310,14 @@ class QuestionModal extends React.Component {
                     InputProps={{
                       inputProps: {
                         min: 1,
-                        max: doc.correct && doc.correct.length
-                      }
+                        max: doc.correct && doc.correct.length,
+                      },
                     }}
                     label="Max Number of Correct Answers to Show"
                     defaultValue={doc && doc.correctmax}
                     className={classes.dialogField}
-                    onChange={e => {
-                      this.props.handleModalChange(e.target);
+                    onChange={(e) => {
+                      this.props.handleModalChange(e.target)
                     }}
                   />
                 )}
@@ -326,14 +329,14 @@ class QuestionModal extends React.Component {
                     InputProps={{
                       inputProps: {
                         min: 1,
-                        max: doc.correct && doc.correct.length
-                      }
+                        max: doc.correct && doc.correct.length,
+                      },
                     }}
                     label="Min Number of Correct Answers to Show"
                     defaultValue={doc && doc.correctmin}
                     className={classes.dialogField}
-                    onChange={e => {
-                      this.props.handleModalChange(e.target);
+                    onChange={(e) => {
+                      this.props.handleModalChange(e.target)
                     }}
                   />
                 )}
@@ -347,14 +350,14 @@ class QuestionModal extends React.Component {
                         min: 2,
                         max:
                           (doc.correct && doc.correct.length) +
-                          (doc.incorrect + doc.incorrect.length)
-                      }
+                          (doc.incorrect + doc.incorrect.length),
+                      },
                     }}
                     label="Total Number of Options to Show"
                     defaultValue={doc && doc.numberofoptions}
                     className={classes.dialogField}
-                    onChange={e => {
-                      this.props.handleModalChange(e.target);
+                    onChange={(e) => {
+                      this.props.handleModalChange(e.target)
                     }}
                   />
                 )}
@@ -366,8 +369,8 @@ class QuestionModal extends React.Component {
                   className={classes.dialogField}
                   multiline
                   helperText="Add a hint that can be viewed when doing the quiz."
-                  onChange={e => {
-                    this.props.handleModalChange(e.target);
+                  onChange={(e) => {
+                    this.props.handleModalChange(e.target)
                   }}
                 />
 
@@ -378,8 +381,8 @@ class QuestionModal extends React.Component {
                   className={classes.dialogField}
                   multiline
                   helperText="Add a note that can be displayed in the quiz results to aid understanding."
-                  onChange={e => {
-                    this.props.handleModalChange(e.target);
+                  onChange={(e) => {
+                    this.props.handleModalChange(e.target)
                   }}
                 />
 
@@ -396,12 +399,12 @@ class QuestionModal extends React.Component {
                         textInputValue,
                         possibleSuggestionsArray
                       ) => {
-                        var lowerCaseQuery = textInputValue.toLowerCase();
-                        return possibleSuggestionsArray.filter(suggestion => {
+                        var lowerCaseQuery = textInputValue.toLowerCase()
+                        return possibleSuggestionsArray.filter((suggestion) => {
                           return suggestion.text
                             .toLowerCase()
-                            .includes(lowerCaseQuery);
-                        });
+                            .includes(lowerCaseQuery)
+                        })
                       }}
                       minQueryLength={1}
                       inline={true}
@@ -449,7 +452,7 @@ class QuestionModal extends React.Component {
         <DialogActions>
           <Button
             onClick={() => {
-              this.props.hideModal();
+              this.props.hideModal()
             }}
             color="secondary"
           >
@@ -464,8 +467,8 @@ class QuestionModal extends React.Component {
               onClick={() => {
                 this.props.handleModalSubmit({
                   doc: doc,
-                  pathRef: questionsRef
-                });
+                  pathRef: questionsRef,
+                })
               }}
               color="primary"
             >
@@ -474,13 +477,10 @@ class QuestionModal extends React.Component {
           )}
         </DialogActions>
       </Dialog>
-    );
+    )
   }
 }
 
 export default withStyles(styles)(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(QuestionModal)
-);
+  connect(mapStateToProps, mapDispatchToProps)(QuestionModal)
+)

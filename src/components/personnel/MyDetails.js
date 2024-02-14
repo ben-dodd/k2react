@@ -1,47 +1,47 @@
-import React, { useRef } from "react";
-import { connect } from "react-redux";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../config/styles";
-import classNames from "classnames";
+import React, { useRef } from 'react'
+import { connect } from 'react-redux'
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../config/styles'
+import classNames from 'classnames'
 
-import Grid from "@material-ui/core/Grid";
-import ListItem from "@material-ui/core/ListItem";
+import Grid from '@material-ui/core/Grid'
+import ListItem from '@material-ui/core/ListItem'
 // import Paper from '@material-ui/core/Paper';
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "react-select";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Checkbox from "@material-ui/core/Checkbox";
-import Parser from "html-react-parser";
+import Tab from '@material-ui/core/Tab'
+import Tabs from '@material-ui/core/Tabs'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import Select from 'react-select'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import Checkbox from '@material-ui/core/Checkbox'
+// import Parser from "html-react-parser";
 // import IconButton from '@material-ui/core/IconButton';
 
-import { auth, usersRef } from "../../config/firebase";
+import { auth, usersRef } from '../../config/firebase'
 
-import Error from "@material-ui/icons/Error";
-import CheckCircleOutline from "@material-ui/icons/CheckCircleOutline";
+import Error from '@material-ui/icons/Error'
+import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline'
 
-import AttrModal from "./modals/AttrModal";
-import AttrList from "./components/MyDetailsAttrListItem";
-import { USER_ATTR, EDITSTAFF } from "../../constants/modal-types";
-import { showModal } from "../../actions/modal";
+import AttrModal from './modals/AttrModal'
+import AttrList from './components/MyDetailsAttrListItem'
+import { USER_ATTR, EDITSTAFF } from '../../constants/modal-types'
+import { showModal } from '../../actions/modal'
 import {
   getUserAttrs,
   getEditStaff,
   fetchStaff,
   getEmailSignature,
   clearEditStaff,
-} from "../../actions/local";
-import { displayTimeDifference } from "../../actions/helpers";
-import { tabMyDetails } from "../../actions/display";
-import _ from "lodash";
+} from '../../actions/local'
+import { displayTimeDifference } from '../../actions/helpers'
+import { tabMyDetails } from '../../actions/display'
+import _ from 'lodash'
 
 const mapStateToProps = (state) => {
   return {
@@ -51,8 +51,8 @@ const mapStateToProps = (state) => {
     jobDescriptions: state.const.jobDescriptions,
     permissions: state.const.permissions,
     tab: state.display.tabMyDetails,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -62,83 +62,83 @@ const mapDispatchToProps = (dispatch) => {
     fetchStaff: (update) => dispatch(fetchStaff(update)),
     getUserAttrs: (userPath) => dispatch(getUserAttrs(userPath)),
     tabMyDetails: (tab) => dispatch(tabMyDetails(tab)),
-  };
-};
+  }
+}
 
 class UserDetails extends React.Component {
   constructor(props) {
-    super(props);
-    var userPath = auth.currentUser.uid;
-    if (props.match.params.user) userPath = props.match.params.user;
+    super(props)
+    var userPath = auth.currentUser.uid
+    if (props.match.params.user) userPath = props.match.params.user
     this.state = {
       userPath: userPath,
       isLoading: true,
       edited: false,
-    };
+    }
     // this.onEditUser = _.debounce(this.onEditUser, 300);
   }
 
   handleTabChange = (event, value) => {
-    this.props.tabMyDetails(value);
-  };
+    this.props.tabMyDetails(value)
+  }
 
   UNSAFE_componentWillMount() {
     if (
       this.props.match.params.user &&
       this.props.me.auth &&
-      this.props.me.auth["Admin"]
+      this.props.me.auth['Admin']
     ) {
-      this.props.getEditStaff(this.props.match.params.user);
+      this.props.getEditStaff(this.props.match.params.user)
     } else if (!this.props.match.params.user && !this.props.me.attrs) {
-      this.props.getUserAttrs(auth.currentUser.uid);
+      this.props.getUserAttrs(auth.currentUser.uid)
     }
   }
 
   componentWillUnmount() {
-    if (this.state.edited) this.props.fetchStaff(true);
-    this.props.clearEditStaff();
+    if (this.state.edited) this.props.fetchStaff(true)
+    this.props.clearEditStaff()
   }
 
   onEditUser = (target, select) => {
-    let change = {};
-    change[target.id] = target.value;
+    let change = {}
+    change[target.id] = target.value
     if (select) {
       this.setState({
         user: {
           ...this.state.user,
           ...change,
         },
-      });
+      })
     }
-    usersRef.doc(this.state.userPath).update(change);
-    if (!this.state.edited) this.setState({ edited: true });
-  };
+    usersRef.doc(this.state.userPath).update(change)
+    if (!this.state.edited) this.setState({ edited: true })
+  }
 
   onEditAuth = (target, auth) => {
-    if (this.props.me.auth && this.props.me.auth["Admin"]) {
-      let change = {};
-      if (auth) change = auth;
-      change[target.id] = target.value;
+    if (this.props.me.auth && this.props.me.auth['Admin']) {
+      let change = {}
+      if (auth) change = auth
+      change[target.id] = target.value
       this.setState({
         user: {
           ...this.state.user,
           auth: change,
         },
-      });
-      usersRef.doc(this.state.userPath).update({ auth: change });
-      if (!this.state.edited) this.setState({ edited: true });
+      })
+      usersRef.doc(this.state.userPath).update({ auth: change })
+      if (!this.state.edited) this.setState({ edited: true })
     }
-  };
+  }
 
   displayTimeAtK2 = () => {
-    var user = {};
+    var user = {}
     if (this.props.match.params.user) {
-      user = this.props.editstaff;
+      user = this.props.editstaff
     } else {
-      user = this.props.me;
+      user = this.props.me
     }
     if (user.startdate) {
-      return displayTimeDifference(user.startdate);
+      return displayTimeDifference(user.startdate)
       // var timeAtK2 = new Date() - new Date(user.startdate);
       // var divideBy = {
       //   d: 86400000,
@@ -158,35 +158,35 @@ class UserDetails extends React.Component {
       // if (days === 1) d = " day";
       // return years + y + months + m + days + d;
     } else {
-      return "No start date set";
+      return 'No start date set'
     }
-  };
+  }
 
   render() {
-    const { classes, tab } = this.props;
+    const { classes, tab } = this.props
 
     if (
       this.state.isLoading &&
       ((this.props.match.params.user && this.props.editstaff != undefined) ||
         (!this.props.match.params.user && this.props.me != undefined))
     )
-      this.setState({ isLoading: false });
+      this.setState({ isLoading: false })
 
     // User variable is assigned at this stage so that attributes are immediately updated when changed.
-    var user = {};
+    var user = {}
     if (this.props.match.params.user) {
-      user = this.props.editstaff;
+      user = this.props.editstaff
     } else {
-      user = this.props.me;
+      user = this.props.me
     }
 
-    if (!user.maskfitsize) user.maskfitsize = "";
+    if (!user.maskfitsize) user.maskfitsize = ''
 
-    let sixmonths = new Date();
-    sixmonths = sixmonths.setMonth(sixmonths.getMonth() - 6);
+    let sixmonths = new Date()
+    sixmonths = sixmonths.setMonth(sixmonths.getMonth() - 6)
 
-    let admin = false;
-    if (this.props.me.auth && this.props.me.auth["Admin"]) admin = true;
+    let admin = false
+    if (this.props.me.auth && this.props.me.auth['Admin']) admin = true
     return (
       <div style={{ marginTop: 80 }}>
         <AttrModal />
@@ -206,7 +206,7 @@ class UserDetails extends React.Component {
             <Tab label="Permissions" />
           </Tabs>
         </div>
-        <div style={{ display: "flex", justifyContent: "center" }}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
           {tab === 0 && (
             <div>
               {this.state.isLoading ? (
@@ -222,7 +222,7 @@ class UserDetails extends React.Component {
                         id="name"
                         helperText="This is the name that will be displayed on reports and test certificates."
                         className={classes.textField}
-                        value={user.name ? user.name : ""}
+                        value={user.name ? user.name : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
@@ -240,7 +240,7 @@ class UserDetails extends React.Component {
                                 label: user.jobdescription,
                                 id: user.jobdescription,
                               }
-                            : { label: "", id: "" }
+                            : { label: '', id: '' }
                         }
                         options={this.props.jobDescriptions.map((e) => ({
                           value: e,
@@ -248,7 +248,7 @@ class UserDetails extends React.Component {
                         }))}
                         onChange={(e) =>
                           this.onEditUser(
-                            { id: "jobdescription", value: e ? e.value : e },
+                            { id: 'jobdescription', value: e ? e.value : e },
                             true
                           )
                         }
@@ -264,7 +264,7 @@ class UserDetails extends React.Component {
                         value={
                           user.office
                             ? { label: user.office, id: user.office }
-                            : { label: "", id: "" }
+                            : { label: '', id: '' }
                         }
                         options={this.props.offices.map((e) => ({
                           value: e,
@@ -272,7 +272,7 @@ class UserDetails extends React.Component {
                         }))}
                         onChange={(e) =>
                           this.onEditUser(
-                            { id: "office", value: e ? e.value : e },
+                            { id: 'office', value: e ? e.value : e },
                             true
                           )
                         }
@@ -284,7 +284,7 @@ class UserDetails extends React.Component {
                         id="startdate"
                         type="date"
                         className={classes.textField}
-                        value={user.startdate ? user.startdate : ""}
+                        value={user.startdate ? user.startdate : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
@@ -307,7 +307,7 @@ class UserDetails extends React.Component {
                         id="workphone"
                         className={classes.textField}
                         type="tel"
-                        value={user.workphone ? user.workphone : ""}
+                        value={user.workphone ? user.workphone : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
@@ -319,7 +319,7 @@ class UserDetails extends React.Component {
                         type="email"
                         helperText="Enter your '@k2.co.nz' email address."
                         className={classes.textField}
-                        value={user.email ? user.email : ""}
+                        value={user.email ? user.email : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
@@ -331,7 +331,7 @@ class UserDetails extends React.Component {
                         type="email"
                         helperText="Enter your '@gmail.com' email address."
                         className={classes.textField}
-                        value={user.gmail ? user.gmail : ""}
+                        value={user.gmail ? user.gmail : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
@@ -347,7 +347,7 @@ class UserDetails extends React.Component {
                         id="personalphone"
                         type="tel"
                         className={classes.textField}
-                        value={user.personalphone ? user.personalphone : ""}
+                        value={user.personalphone ? user.personalphone : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
@@ -359,13 +359,14 @@ class UserDetails extends React.Component {
                         multiline
                         rowsMax="4"
                         className={classes.textField}
-                        value={user.address ? user.address : ""}
+                        value={user.address ? user.address : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </div>
                     <div className={classes.subHeading}>Email Signature</div>
-                    <div>{Parser(getEmailSignature(user))}</div>
+                    {/* <div>{Parser(getEmailSignature(user))}</div> */}
+                    <div>{getEmailSignature(user)}</div>
                     {/*<div>
                       <Button
                         variant="outlined"
@@ -389,22 +390,22 @@ class UserDetails extends React.Component {
                   <CircularProgress />
                 </div>
               ) : (
-                <div style={{ position: "relative", width: "60vw" }}>
+                <div style={{ position: 'relative', width: '60vw' }}>
                   <div>
                     <Button
                       className={classes.IconButton}
                       variant="outlined"
                       onClick={() => {
-                        if (!this.state.edited) this.setState({ edited: true });
+                        if (!this.state.edited) this.setState({ edited: true })
                         this.props.showModal({
                           modalType: USER_ATTR,
                           modalProps: {
                             userPath: this.state.userPath,
-                            title: "Add New Item",
+                            title: 'Add New Item',
                             staffName: user.name,
-                            doc: { type: "Tertiary" },
+                            doc: { type: 'Tertiary' },
                           },
-                        });
+                        })
                       }}
                     >
                       Add New Item
@@ -420,7 +421,7 @@ class UserDetails extends React.Component {
                             userPath={this.state.userPath}
                             staffName={user.name}
                           />
-                        );
+                        )
                       })}
                     </div>
                   ) : (
@@ -448,22 +449,22 @@ class UserDetails extends React.Component {
                       </Typography>
                     </ListItem>
                     <ListItem>
-                      {user.maskfit === "OK" ? (
+                      {user.maskfit === 'OK' ? (
                         <div className={classes.boldGreen}>
                           Mask Fit Tested <CheckCircleOutline />
                         </div>
                       ) : (
                         <div className={classes.boldGreen}>
-                          {user.maskfit === "Expired"
-                            ? "Mask Fit Test Expired!"
-                            : "Mask Fit Not Tested"}
+                          {user.maskfit === 'Expired'
+                            ? 'Mask Fit Test Expired!'
+                            : 'Mask Fit Not Tested'}
                           <Error />
                         </div>
                       )}
                     </ListItem>
                     <ListItem>
                       <div>
-                        Enter your mask fit certificate into your{" "}
+                        Enter your mask fit certificate into your{' '}
                         <i>Certificates</i> list.
                       </div>
                     </ListItem>
@@ -472,7 +473,7 @@ class UserDetails extends React.Component {
                         label="Model"
                         id="maskfitmodel"
                         className={classes.textField}
-                        value={user.maskfitmodel ? user.maskfitmodel : ""}
+                        value={user.maskfitmodel ? user.maskfitmodel : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
@@ -488,15 +489,15 @@ class UserDetails extends React.Component {
                                   label: user.maskfitsize,
                                   id: user.maskfitsize,
                                 }
-                              : { label: "", id: "" }
+                              : { label: '', id: '' }
                           }
-                          options={["S", "M", "L"].map((e) => ({
+                          options={['S', 'M', 'L'].map((e) => ({
                             value: e,
                             label: e,
                           }))}
                           onChange={(e) =>
                             this.onEditUser(
-                              { id: "maskfitsize", value: e ? e.value : e },
+                              { id: 'maskfitsize', value: e ? e.value : e },
                               true
                             )
                           }
@@ -509,7 +510,7 @@ class UserDetails extends React.Component {
                         label="Fit Factor"
                         id="maskfitfactor"
                         className={classes.textField}
-                        value={user.maskfitfactor ? user.maskfitfactor : ""}
+                        value={user.maskfitfactor ? user.maskfitfactor : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
@@ -523,7 +524,7 @@ class UserDetails extends React.Component {
                         value={
                           user.maskparticulatefilters
                             ? user.maskparticulatefilters
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -536,7 +537,7 @@ class UserDetails extends React.Component {
                         className={classes.textField}
                         type="date"
                         value={
-                          user.maskorganicfilters ? user.maskorganicfilters : ""
+                          user.maskorganicfilters ? user.maskorganicfilters : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -565,7 +566,7 @@ class UserDetails extends React.Component {
                             checked={user.ppeHighVis}
                             onChange={(e) =>
                               this.onEditUser(
-                                { id: "ppeHighVis", value: e.target.checked },
+                                { id: 'ppeHighVis', value: e.target.checked },
                                 true
                               )
                             }
@@ -583,7 +584,7 @@ class UserDetails extends React.Component {
                             checked={user.ppeHardHat}
                             onChange={(e) =>
                               this.onEditUser(
-                                { id: "ppeHardHat", value: e.target.checked },
+                                { id: 'ppeHardHat', value: e.target.checked },
                                 true
                               )
                             }
@@ -601,7 +602,7 @@ class UserDetails extends React.Component {
                             checked={user.ppeBoots}
                             onChange={(e) =>
                               this.onEditUser(
-                                { id: "ppeBoots", value: e.target.checked },
+                                { id: 'ppeBoots', value: e.target.checked },
                                 true
                               )
                             }
@@ -619,7 +620,7 @@ class UserDetails extends React.Component {
                             checked={user.ppeGlasses}
                             onChange={(e) =>
                               this.onEditUser(
-                                { id: "ppeGlasses", value: e.target.checked },
+                                { id: 'ppeGlasses', value: e.target.checked },
                                 true
                               )
                             }
@@ -656,7 +657,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencyprimaryname
                             ? user.emergencyprimaryname
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -670,7 +671,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencyprimaryrelation
                             ? user.emergencyprimaryrelation
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -684,7 +685,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencyprimaryhomephone
                             ? user.emergencyprimaryhomephone
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -698,7 +699,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencyprimaryworkphone
                             ? user.emergencyprimaryworkphone
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -712,7 +713,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencyprimarymobile
                             ? user.emergencyprimarymobile
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -726,7 +727,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencyprimaryemail
                             ? user.emergencyprimaryemail
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -740,7 +741,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencyprimaryhomeaddress
                             ? user.emergencyprimaryhomeaddress
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -761,7 +762,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencysecondaryname
                             ? user.emergencysecondaryname
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -775,7 +776,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencysecondaryrelation
                             ? user.emergencysecondaryrelation
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -789,7 +790,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencysecondaryhomephone
                             ? user.emergencysecondaryhomephone
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -803,7 +804,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencysecondaryworkphone
                             ? user.emergencysecondaryworkphone
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -817,7 +818,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencysecondarymobile
                             ? user.emergencysecondarymobile
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -831,7 +832,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencysecondaryemail
                             ? user.emergencysecondaryemail
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -845,7 +846,7 @@ class UserDetails extends React.Component {
                         value={
                           user.emergencysecondaryhomeaddress
                             ? user.emergencysecondaryhomeaddress
-                            : ""
+                            : ''
                         }
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -902,7 +903,7 @@ class UserDetails extends React.Component {
                             <FormHelperText>{permission.desc}</FormHelperText>
                           </div>
                         </div>
-                      );
+                      )
                     })}
                   </Grid>
                 </Grid>
@@ -912,10 +913,10 @@ class UserDetails extends React.Component {
         </div>
         {/* </Paper>*/}
       </div>
-    );
+    )
   }
 }
 
 export default withStyles(styles)(
   connect(mapStateToProps, mapDispatchToProps)(UserDetails)
-);
+)

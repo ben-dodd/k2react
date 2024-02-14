@@ -1,71 +1,71 @@
-import React from "react";
+import React from 'react'
 // import ReactDOM from 'react-dom';
-// import { WithContext as ReactTags } from 'react-tag-input';
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../../config/styles";
-import { connect } from "react-redux";
+
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../../config/styles'
+import { connect } from 'react-redux'
 // import store from '../../store';
-import { WHOS_READ } from "../../../constants/modal-types";
+import { WHOS_READ } from '../../../constants/modal-types'
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import Grid from "@material-ui/core/Grid";
-import { stateRef } from "../../../config/firebase";
-import classNames from "classnames";
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogActions from '@material-ui/core/DialogActions'
+import Grid from '@material-ui/core/Grid'
+import { stateRef } from '../../../config/firebase'
+import classNames from 'classnames'
 
-import { hideModal } from "../../../actions/modal";
+import { hideModal } from '../../../actions/modal'
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     modalType: state.modal.modalType,
     modalProps: state.modal.modalProps,
     notice: state.modal.modalProps.doc.notice,
-    staff: state.local.staff
-  };
-};
+    staff: state.local.staff,
+  }
+}
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    hideModal: () => dispatch(hideModal())
-  };
-};
+    hideModal: () => dispatch(hideModal()),
+  }
+}
 
 class WhosReadModal extends React.Component {
   state = {
-    whosRead: []
-  };
+    whosRead: [],
+  }
 
   UNSAFE_componentWillMount() {
     stateRef
-      .doc("noticereads")
-      .collection("notices")
+      .doc('noticereads')
+      .collection('notices')
       .doc(this.props.modalProps.doc.uid)
       .get()
-      .then(doc => {
+      .then((doc) => {
         if (doc.exists)
           this.setState({
-            whosRead: doc.data().payload
-          });
-      });
+            whosRead: doc.data().payload,
+          })
+      })
   }
 
   render() {
-    const { staff, modalProps, classes } = this.props;
-    let notRead = [];
-    let read = [];
+    const { staff, modalProps, classes } = this.props
+    let notRead = []
+    let read = []
     if (staff) {
       Object.values(staff)
-        .filter(s => s.auth && Boolean(s.auth["K2 Staff"]))
-        .forEach(staff => {
+        .filter((s) => s.auth && Boolean(s.auth['K2 Staff']))
+        .forEach((staff) => {
           if (this.state.whosRead.includes(staff.uid)) {
-            read.push(staff.name);
+            read.push(staff.name)
           } else {
-            notRead.push(staff.name);
+            notRead.push(staff.name)
           }
-        });
+        })
     }
 
     return (
@@ -75,7 +75,7 @@ class WhosReadModal extends React.Component {
         maxWidth="sm"
         fullWidth={true}
       >
-        <DialogTitle>{"Who Has Read The Notice"}</DialogTitle>
+        <DialogTitle>{'Who Has Read The Notice'}</DialogTitle>
         <DialogContent>
           <Grid container>
             {notRead.length !== 0 && (
@@ -89,8 +89,8 @@ class WhosReadModal extends React.Component {
                   Has Read
                 </div>
                 {read.length === 0
-                  ? "No one has read it."
-                  : read.sort().map(name => <div key={name}>{name}</div>)}
+                  ? 'No one has read it.'
+                  : read.sort().map((name) => <div key={name}>{name}</div>)}
               </Grid>
             )}
             {read.length !== 0 && (
@@ -104,8 +104,8 @@ class WhosReadModal extends React.Component {
                   Has Not Read
                 </div>
                 {notRead.length === 0
-                  ? "Everybody has read it."
-                  : notRead.sort().map(name => <div key={name}>{name}</div>)}
+                  ? 'Everybody has read it.'
+                  : notRead.sort().map((name) => <div key={name}>{name}</div>)}
               </Grid>
             )}
           </Grid>
@@ -113,7 +113,7 @@ class WhosReadModal extends React.Component {
         <DialogActions>
           <Button
             onClick={() => {
-              this.props.hideModal();
+              this.props.hideModal()
             }}
             color="primary"
           >
@@ -121,13 +121,10 @@ class WhosReadModal extends React.Component {
           </Button>
         </DialogActions>
       </Dialog>
-    );
+    )
   }
 }
 
 export default withStyles(styles)(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(WhosReadModal)
-);
+  connect(mapStateToProps, mapDispatchToProps)(WhosReadModal)
+)

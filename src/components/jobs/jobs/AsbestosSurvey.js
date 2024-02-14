@@ -1,31 +1,20 @@
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../../config/styles";
-import { connect } from "react-redux";
+import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../../config/styles'
+import { connect } from 'react-redux'
 
 //Modals
-import { showModal } from "../../../actions/modal";
-import InputLabel from "@material-ui/core/InputLabel";
-import IconButton from "@material-ui/core/IconButton";
-import AsbestosRegisterTable from "../components/AsbestosRegisterTable";
-import AirMonitoringRecords from "../components/AirMonitoringRecords";
+import { showModal } from '../../../actions/modal'
+import InputLabel from '@material-ui/core/InputLabel'
+import IconButton from '@material-ui/core/IconButton'
+import AsbestosRegisterTable from '../components/AsbestosRegisterTable'
+import AirMonitoringRecords from '../components/AirMonitoringRecords'
 
-import Template1Icon from "@material-ui/icons/Filter1";
-import Template2Icon from "@material-ui/icons/Filter2";
-import Template3Icon from "@material-ui/icons/Filter3";
+import Template1Icon from '@material-ui/icons/Filter1'
+import Template2Icon from '@material-ui/icons/Filter2'
+import Template3Icon from '@material-ui/icons/Filter3'
 
-import classNames from "classnames";
-import Popup from "reactjs-popup";
-import {
-  dateOf,
-  getDaysSinceDate,
-  getDaysSinceDateAgo,
-  andList,
-  personnelConvert,
-} from "../../../actions/helpers";
-
-import moment from "moment";
-import _ from "lodash";
+import _ from 'lodash'
 
 import {
   fetchWFMJobs,
@@ -40,18 +29,12 @@ import {
   updateGeocodes,
   saveStats,
   collateJobsList,
-  getJobColor,
-  getStateString,
-  getNextActionType,
-  getNextActionOverdueBy,
-  getWfmUrl,
-  getLeadHistoryDescription,
   handleJobChange,
-} from "../../../actions/jobs";
+} from '../../../actions/jobs'
 
-import { collateSamples } from "../../../actions/asbestosReportHelpers";
+import { collateSamples } from '../../../actions/asbestosReportHelpers'
 
-import { filterMap, filterMapReset } from "../../../actions/display";
+import { filterMap, filterMapReset } from '../../../actions/display'
 
 const mapStateToProps = (state) => {
   return {
@@ -74,8 +57,8 @@ const mapStateToProps = (state) => {
     filter: state.display.filterMap,
     otherOptions: state.const.otherOptions,
     modalType: state.modal.modalType,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -115,32 +98,32 @@ const mapDispatchToProps = (dispatch) => {
           geocodes
         )
       ),
-  };
-};
+  }
+}
 
 class AsbestosSurvey extends React.Component {
   state = {
     templateVersion: 3,
-  };
+  }
 
   UNSAFE_componentWillMount() {
-    const { site, sites, siteJobs, siteAcm, samples } = this.props;
+    const { site, sites, siteJobs, siteAcm, samples } = this.props
     const { registerMap, registerList, airMonitoringRecords } = collateSamples(
       sites[site],
       siteJobs ? siteJobs[site] || {} : {},
       siteAcm ? siteAcm[site] || {} : {},
       samples
-    );
-    this.setState({ registerMap, registerList, airMonitoringRecords });
+    )
+    this.setState({ registerMap, registerList, airMonitoringRecords })
   }
 
   render() {
-    const { classes, m, site, sites, siteJobs, siteAcm, samples } = this.props;
-    const { registerList, airMonitoringRecords } = this.state;
+    const { classes, m, site, sites, siteJobs, siteAcm, samples } = this.props
+    const { registerList, airMonitoringRecords } = this.state
 
     if (m) {
       const loading =
-        !sites[site] || !siteJobs[site] || !siteAcm[site] || !samples;
+        !sites[site] || !siteJobs[site] || !siteAcm[site] || !samples
       return (
         <div>
           <InputLabel>Select Template Version</InputLabel>
@@ -184,11 +167,11 @@ class AsbestosSurvey extends React.Component {
             classes={classes}
           />
         </div>
-      );
-    } else return <div />;
+      )
+    } else return <div />
   }
 }
 
 export default withStyles(styles)(
   connect(mapStateToProps, mapDispatchToProps)(AsbestosSurvey)
-);
+)

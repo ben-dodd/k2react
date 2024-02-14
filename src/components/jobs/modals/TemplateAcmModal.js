@@ -1,45 +1,33 @@
-import React from "react";
-// import ReactDOM from 'react-dom';
-// import { WithContext as ReactTags } from 'react-tag-input';
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../../config/styles";
-import { connect } from "react-redux";
-import moment from "moment";
+import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../../config/styles'
+import { connect } from 'react-redux'
+import moment from 'moment'
 // import store from '../../store';
-import { TEMPLATE_ACM } from "../../../constants/modal-types";
-import { sitesRef, storage, templateAcmRef } from "../../../config/firebase";
-import "../../../config/tags.css";
+import { TEMPLATE_ACM } from '../../../constants/modal-types'
+import { storage, templateAcmRef } from '../../../config/firebase'
+import '../../../config/tags.css'
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import FormGroup from "@material-ui/core/FormGroup";
-import TextField from "@material-ui/core/TextField";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogActions from '@material-ui/core/DialogActions'
+import TextField from '@material-ui/core/TextField'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
 
-import Input from "@material-ui/core/Input";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "react-select";
-import IconButton from "@material-ui/core/IconButton";
-import Checkbox from "@material-ui/core/Checkbox";
-import Tooltip from "@material-ui/core/Tooltip";
-// import Geosuggest from 'react-geosuggest';
-import ImageUploader from "react-images-upload";
-import ImageTools from "../../../config/ImageTools";
-import SuggestionField from "../../../widgets/SuggestionField";
+import InputAdornment from '@material-ui/core/InputAdornment'
+import InputLabel from '@material-ui/core/InputLabel'
+import Select from 'react-select'
+import IconButton from '@material-ui/core/IconButton'
+import Checkbox from '@material-ui/core/Checkbox'
+import Tooltip from '@material-ui/core/Tooltip'
+import SuggestionField from '../../../widgets/SuggestionField'
 
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-
-import UploadIcon from "@material-ui/icons/CloudUpload";
-import Go from "@material-ui/icons/ArrowForwardIos";
-import Close from "@material-ui/icons/Close";
+import UploadIcon from '@material-ui/icons/CloudUpload'
+import Close from '@material-ui/icons/Close'
 import {
   hideModal,
   handleModalChange,
@@ -47,30 +35,30 @@ import {
   resetModal,
   onUploadFile,
   setModalError,
-} from "../../../actions/modal";
-import { fetchSites } from "../../../actions/jobs";
+} from '../../../actions/modal'
+import { fetchSites } from '../../../actions/jobs'
 import {
   getSampleColors,
   updateResultMap,
   writeDescription,
-} from "../../../actions/asbestosLab";
+} from '../../../actions/asbestosLab'
 import {
   getMaterialRisk,
   getPriorityRisk,
   getTotalRisk,
-} from "../../../actions/asbestosReportHelpers";
-import { getUserAttrs } from "../../../actions/local";
+} from '../../../actions/asbestosReportHelpers'
+import { getUserAttrs } from '../../../actions/local'
 import {
   sendSlackMessage,
   numericAndLessThanOnly,
   quillModules,
   dateOf,
-} from "../../../actions/helpers";
-import { AsbButton, ScoreButton } from "../../../widgets/FormWidgets";
-import _ from "lodash";
-import classNames from "classnames";
+} from '../../../actions/helpers'
+import { AsbButton, ScoreButton } from '../../../widgets/FormWidgets'
+import _ from 'lodash'
+import classNames from 'classnames'
 
-import "../../../config/geosuggest.css";
+import '../../../config/geosuggest.css'
 
 const mapStateToProps = (state) => {
   return {
@@ -108,8 +96,8 @@ const mapStateToProps = (state) => {
     // Maintenance
     asbestosPriMaintTypeScores: state.const.asbestosPriMaintTypeScores,
     asbestosPriMaintFreqScores: state.const.asbestosPriMaintFreqScores,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -126,8 +114,8 @@ const mapDispatchToProps = (dispatch) => {
     handleSelectChange: (target) => dispatch(handleModalChange(target)),
     handleModalSubmit: (doc, pathRef) =>
       dispatch(handleModalSubmit(doc, pathRef)),
-  };
-};
+  }
+}
 
 class TemplateAcmModal extends React.Component {
   state = {
@@ -136,44 +124,44 @@ class TemplateAcmModal extends React.Component {
       am: true,
       cr: true,
     },
-  };
+  }
 
   deleteImage = () => {
-    storage.ref(this.state.acmImageRef).delete();
-    this.setState({ acmImageUrl: null, acmImageRef: null });
-  };
+    storage.ref(this.state.acmImageRef).delete()
+    this.setState({ acmImageUrl: null, acmImageRef: null })
+  }
 
   loadTemplate = () => {
     if (this.props.doc) {
-      this.setState(this.props.doc);
+      this.setState(this.props.doc)
     }
-  };
+  }
 
   handleAsbestosType = (res) => {
     this.setState({
       asbestosType: updateResultMap(res, this.state.asbestosType),
-    });
-  };
+    })
+  }
 
   render() {
-    const { modalProps, doc, classes } = this.props;
-    const colors = getSampleColors({ result: this.state.asbestosType });
+    const { modalProps, doc, classes } = this.props
+    const colors = getSampleColors({ result: this.state.asbestosType })
     const totalRisk =
       this.state.priorityRisk &&
       this.state.materialRisk &&
       this.state.materialRisk.color
         ? getTotalRisk(this.state.materialRisk, this.state.priorityRisk)
-        : null;
+        : null
     return (
       <Dialog
         open={this.props.modalType === TEMPLATE_ACM}
         onClose={this.props.hideModal}
         onEnter={this.loadTemplate}
         fullWidth
-        maxWidth={"sm"}
+        maxWidth={'sm'}
       >
         <DialogTitle>
-          {modalProps.title ? modalProps.title : "Add ACM Template"}
+          {modalProps.title ? modalProps.title : 'Add ACM Template'}
         </DialogTitle>
         <DialogContent>
           <InputLabel>Template Name</InputLabel>
@@ -187,7 +175,7 @@ class TemplateAcmModal extends React.Component {
                 ? this.state.description
                 : this.state.material
                 ? this.state.material
-                : ""
+                : ''
             }
             onChange={(e) => this.setState({ templateName: e.target.value })}
           />
@@ -197,7 +185,7 @@ class TemplateAcmModal extends React.Component {
           <SuggestionField
             that={this}
             suggestions="descriptionSuggestions"
-            value={this.state.description || ""}
+            value={this.state.description || ''}
             controlled
             onModify={(value) => this.setState({ description: value })}
           />
@@ -208,7 +196,7 @@ class TemplateAcmModal extends React.Component {
                 <Switch
                   checked={this.state.writeItemFirst || false}
                   onClick={(e) => {
-                    this.setState({ writeItemFirst: e.target.checked });
+                    this.setState({ writeItemFirst: e.target.checked })
                   }}
                   value="writeItemFirst"
                   color="secondary"
@@ -224,7 +212,7 @@ class TemplateAcmModal extends React.Component {
                 <Switch
                   checked={this.state.singularItem || false}
                   onClick={(e) => {
-                    this.setState({ singularItem: e.target.checked });
+                    this.setState({ singularItem: e.target.checked })
                   }}
                   value="singularItem"
                   color="secondary"
@@ -240,7 +228,7 @@ class TemplateAcmModal extends React.Component {
                 <Switch
                   checked={this.state.inaccessibleItem || false}
                   onClick={(e) => {
-                    this.setState({ inaccessibleItem: e.target.checked });
+                    this.setState({ inaccessibleItem: e.target.checked })
                   }}
                   value="inaccessibleItem"
                   color="secondary"
@@ -255,7 +243,7 @@ class TemplateAcmModal extends React.Component {
                 <Switch
                   checked={this.state.unknownItem || false}
                   onClick={(e) => {
-                    this.setState({ unknownItem: e.target.checked });
+                    this.setState({ unknownItem: e.target.checked })
                   }}
                   value="unknownItem"
                   color="secondary"
@@ -272,37 +260,35 @@ class TemplateAcmModal extends React.Component {
                 suggestions="materialSuggestions"
                 label="Material"
                 controlled
-                value={this.state.material ? this.state.material : ""}
+                value={this.state.material ? this.state.material : ''}
                 onModify={(value) => {
-                  let category = "",
+                  let category = '',
                     asbestosType = this.state.asbestosType
                       ? this.state.asbestosType
                       : { ch: true, am: true, cr: true },
                     asbestosContent = this.state.asbestosContent
                       ? this.state.asbestosContent
-                      : "",
+                      : '',
                     materialObj = Object.values(
                       this.props.materialSuggestions
-                    ).filter((e) => e.label === value);
+                    ).filter((e) => e.label === value)
                   if (materialObj.length > 0) {
-                    category = materialObj[0].category;
+                    category = materialObj[0].category
                     if (materialObj[0].asbestosType)
                       asbestosType = {
-                        ch: materialObj[0].asbestosType.includes("ch"),
-                        am: materialObj[0].asbestosType.includes("am"),
-                        cr: materialObj[0].asbestosType.includes("cr"),
-                      };
+                        ch: materialObj[0].asbestosType.includes('ch'),
+                        am: materialObj[0].asbestosType.includes('am'),
+                        cr: materialObj[0].asbestosType.includes('cr'),
+                      }
                     if (materialObj[0].asbestosContent)
-                      asbestosContent = parseInt(
-                        materialObj[0].asbestosContent
-                      );
+                      asbestosContent = parseInt(materialObj[0].asbestosContent)
                   }
                   this.setState({
                     material: value,
                     category,
                     asbestosType,
                     asbestosContent,
-                  });
+                  })
                 }}
               />
               <InputLabel className={classes.marginTopSmall}>
@@ -316,14 +302,14 @@ class TemplateAcmModal extends React.Component {
                         value: this.state.category,
                         label: this.state.category,
                       }
-                    : { value: "", label: "" }
+                    : { value: '', label: '' }
                 }
                 options={this.props.asbestosMaterialCategories.map((e) => ({
                   value: e.label,
                   label: e.label,
                 }))}
                 onChange={(e) => {
-                  this.setState({ category: e.value });
+                  this.setState({ category: e.value })
                 }}
               />
             </div>
@@ -335,39 +321,39 @@ class TemplateAcmModal extends React.Component {
           <div className={classes.flexRow}>
             {[
               {
-                label: "Presumed",
-                value: "p",
-                color: "Warning",
-                tooltip: "Default.",
+                label: 'Presumed',
+                value: 'p',
+                color: 'Warning',
+                tooltip: 'Default.',
               },
               {
-                label: "Strongly Presumed",
-                value: "s",
-                color: "StrongWarning",
-                tooltip: "Strongly presumed.",
+                label: 'Strongly Presumed',
+                value: 's',
+                color: 'StrongWarning',
+                tooltip: 'Strongly presumed.',
               },
               {
-                label: "Sampled",
-                value: "i",
-                color: "Bad",
-                tooltip: "Sampled.",
+                label: 'Sampled',
+                value: 'i',
+                color: 'Bad',
+                tooltip: 'Sampled.',
               },
             ].map((res) => {
               return ScoreButton(
                 classes[
                   `colorsButton${
-                    this.state.idKey === res.value ? res.color : "Off"
+                    this.state.idKey === res.value ? res.color : 'Off'
                   }`
                 ],
                 classes[
                   `colorsDiv${
-                    this.state.idKey === res.value ? res.color : "Off"
+                    this.state.idKey === res.value ? res.color : 'Off'
                   }`
                 ],
                 res.label,
                 res.tooltip,
                 () => this.setState({ idKey: res.value })
-              );
+              )
             })}
           </div>
 
@@ -376,7 +362,7 @@ class TemplateAcmModal extends React.Component {
             suggestions="extentSuggestions"
             label="Extent Description"
             controlled
-            value={this.state.extent || ""}
+            value={this.state.extent || ''}
             onModify={(value) => this.setState({ extent: value })}
           />
 
@@ -384,7 +370,7 @@ class TemplateAcmModal extends React.Component {
             <TextField
               id="extentNum"
               label="Extent Amount"
-              style={{ width: "60%" }}
+              style={{ width: '60%' }}
               value={this.state.extentNum}
               onChange={(e) =>
                 this.setState({
@@ -400,14 +386,14 @@ class TemplateAcmModal extends React.Component {
                       value: this.state.extentNumUnits,
                       label: this.state.extentNumUnits,
                     }
-                  : { value: "m²", label: "m²" }
+                  : { value: 'm²', label: 'm²' }
               }
-              options={["m²", "m", "lm", "m³", "items"].map((e) => ({
+              options={['m²', 'm', 'lm', 'm³', 'items'].map((e) => ({
                 value: e,
                 label: e,
               }))}
               onChange={(e) => {
-                this.setState({ extentNumUnits: e.value });
+                this.setState({ extentNumUnits: e.value })
               }}
             />
           </div>
@@ -417,7 +403,7 @@ class TemplateAcmModal extends React.Component {
               <Switch
                 checked={this.state.acmRemoved || false}
                 onClick={(e) => {
-                  this.setState({ acmRemoved: e.target.checked });
+                  this.setState({ acmRemoved: e.target.checked })
                 }}
                 value="acmRemoved"
                 color="secondary"
@@ -441,9 +427,9 @@ class TemplateAcmModal extends React.Component {
                           this.state.acmRemovalJob.asbestosRemovalist
                         } (${moment(
                           dateOf(this.state.acmRemovalJob.removalDate)
-                        ).format("D MMM YYYY")})`,
+                        ).format('D MMM YYYY')})`,
                       }
-                    : { value: "", label: "" }
+                    : { value: '', label: '' }
                 }
                 options={
                   this.props.sites &&
@@ -456,13 +442,13 @@ class TemplateAcmModal extends React.Component {
                         label: `${e.referenceNumber} ${
                           e.asbestosRemovalist
                         } (${moment(dateOf(e.removalDate)).format(
-                          "D MMM YYYY"
+                          'D MMM YYYY'
                         )})`,
                       }))
                     : []
                 }
                 onChange={(e) => {
-                  this.setState({ acmRemovalJob: e.value });
+                  this.setState({ acmRemovalJob: e.value })
                 }}
               />
             </div>
@@ -477,18 +463,18 @@ class TemplateAcmModal extends React.Component {
                 return ScoreButton(
                   classes[
                     `colorsButton${
-                      this.state.accessibility === res.label ? res.color : "Off"
+                      this.state.accessibility === res.label ? res.color : 'Off'
                     }`
                   ],
                   classes[
                     `colorsDiv${
-                      this.state.accessibility === res.label ? res.color : "Off"
+                      this.state.accessibility === res.label ? res.color : 'Off'
                     }`
                   ],
                   res.label,
                   res.tooltip,
                   () => this.setState({ accessibility: res.label })
-                );
+                )
               })}
           </div>
 
@@ -497,7 +483,7 @@ class TemplateAcmModal extends React.Component {
               <Switch
                 checked={this.state.genericItem || false}
                 onClick={(e) => {
-                  this.setState({ genericItem: e.target.checked });
+                  this.setState({ genericItem: e.target.checked })
                 }}
                 value="genericItem"
                 color="secondary"
@@ -510,16 +496,16 @@ class TemplateAcmModal extends React.Component {
               <InputLabel className={classes.marginTopSmall}>
                 Blurb for Report
               </InputLabel>
-              <ReactQuill
-                value={this.state.genericItemBlurb || ""}
+              {/* <ReactQuill
+                value={this.state.genericItemBlurb || ''}
                 modules={quillModules}
                 theme="snow"
                 className={classes.marginBottomMedium}
                 onChange={(content, delta, source) => {
-                  if (source === "user")
-                    this.setState({ genericItemBlurb: content });
+                  if (source === 'user')
+                    this.setState({ genericItemBlurb: content })
                 }}
-              />
+              /> */}
             </div>
           )}
 
@@ -536,14 +522,14 @@ class TemplateAcmModal extends React.Component {
                         `colorsButton${
                           this.state.productScore === res.label
                             ? res.color
-                            : "Off"
+                            : 'Off'
                         }`
                       ],
                       classes[
                         `colorsDiv${
                           this.state.productScore === res.label
                             ? res.color
-                            : "Off"
+                            : 'Off'
                         }`
                       ],
                       res.label,
@@ -556,7 +542,7 @@ class TemplateAcmModal extends React.Component {
                             productScore: res.label,
                           }),
                         })
-                    );
+                    )
                   })}
               </div>
 
@@ -571,14 +557,14 @@ class TemplateAcmModal extends React.Component {
                         `colorsButton${
                           this.state.damageScore === res.label
                             ? res.color
-                            : "Off"
+                            : 'Off'
                         }`
                       ],
                       classes[
                         `colorsDiv${
                           this.state.damageScore === res.label
                             ? res.color
-                            : "Off"
+                            : 'Off'
                         }`
                       ],
                       res.label,
@@ -591,7 +577,7 @@ class TemplateAcmModal extends React.Component {
                             damageScore: res.label,
                           }),
                         })
-                    );
+                    )
                   })}
               </div>
               <SuggestionField
@@ -599,7 +585,7 @@ class TemplateAcmModal extends React.Component {
                 suggestions="damageSuggestions"
                 label="Damage Description"
                 controlled
-                value={this.state.damageDescription || ""}
+                value={this.state.damageDescription || ''}
                 onModify={(value) =>
                   this.setState({ damageDescription: value })
                 }
@@ -616,14 +602,14 @@ class TemplateAcmModal extends React.Component {
                         `colorsButton${
                           this.state.surfaceScore === res.label
                             ? res.color
-                            : "Off"
+                            : 'Off'
                         }`
                       ],
                       classes[
                         `colorsDiv${
                           this.state.surfaceScore === res.label
                             ? res.color
-                            : "Off"
+                            : 'Off'
                         }`
                       ],
                       res.label,
@@ -636,7 +622,7 @@ class TemplateAcmModal extends React.Component {
                             surfaceScore: res.label,
                           }),
                         })
-                    );
+                    )
                   })}
               </div>
               <SuggestionField
@@ -644,7 +630,7 @@ class TemplateAcmModal extends React.Component {
                 suggestions="asbestosSurfaceSuggestions"
                 label="Surface Treatment Description"
                 controlled
-                value={this.state.surfaceDescription || ""}
+                value={this.state.surfaceDescription || ''}
                 onModify={(value) =>
                   this.setState({ surfaceDescription: value })
                 }
@@ -656,13 +642,13 @@ class TemplateAcmModal extends React.Component {
                     Presumed Asbestos Type
                   </InputLabel>
                   <div className={classes.flexRow}>
-                    {["ch", "am", "cr"].map((res) => {
+                    {['ch', 'am', 'cr'].map((res) => {
                       return AsbButton(
                         classes[`colorsButton${colors[res]}`],
                         classes[`colorsDiv${colors[res]}`],
                         res,
                         () => this.handleAsbestosType(res)
-                      );
+                      )
                     })}
                   </div>
                 </div>
@@ -673,9 +659,9 @@ class TemplateAcmModal extends React.Component {
                     value={
                       this.state.asbestosContent
                         ? this.state.asbestosContent
-                        : ""
+                        : ''
                     }
-                    style={{ width: "20%" }}
+                    style={{ width: '20%' }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">%</InputAdornment>
@@ -687,7 +673,7 @@ class TemplateAcmModal extends React.Component {
                           e.target.value,
                           1
                         ),
-                      });
+                      })
                     }}
                   />
                 </div>
@@ -703,12 +689,12 @@ class TemplateAcmModal extends React.Component {
             </div>
           )}
 
-          {this.state.idKey !== "i" && !this.state.inaccessibleItem && (
+          {this.state.idKey !== 'i' && !this.state.inaccessibleItem && (
             <SuggestionField
               that={this}
               suggestions="asbestosWhyNotSampledSuggestions"
               controlled
-              value={this.state.whyNotSampled || ""}
+              value={this.state.whyNotSampled || ''}
               multiline
               rows={2}
               label="Why Not Sampled?"
@@ -720,12 +706,12 @@ class TemplateAcmModal extends React.Component {
             Comment for Report
           </InputLabel>
           <ReactQuill
-            value={this.state.comment || ""}
+            value={this.state.comment || ''}
             modules={quillModules}
             className={classes.marginBottomMedium}
             theme="snow"
             onChange={(content, delta, source) => {
-              if (source === "user") this.setState({ comment: content });
+              if (source === 'user') this.setState({ comment: content })
             }}
           />
 
@@ -740,14 +726,14 @@ class TemplateAcmModal extends React.Component {
                     value: this.state.managementPrimary,
                     label: this.state.managementPrimary,
                   }
-                : { value: "", label: "" }
+                : { value: '', label: '' }
             }
             options={this.props.asbestosManagementOptions.map((e) => ({
               value: e.label,
               label: e.label,
             }))}
             onChange={(e) => {
-              this.setState({ managementPrimary: e.value });
+              this.setState({ managementPrimary: e.value })
             }}
           />
 
@@ -762,14 +748,14 @@ class TemplateAcmModal extends React.Component {
                     value: this.state.managementSecondary,
                     label: this.state.managementSecondary,
                   }
-                : { value: "", label: "" }
+                : { value: '', label: '' }
             }
             options={this.props.asbestosManagementOptions.map((e) => ({
               value: e.label,
               label: e.label,
             }))}
             onChange={(e) => {
-              this.setState({ managementSecondary: e.value });
+              this.setState({ managementSecondary: e.value })
             }}
           />
 
@@ -784,14 +770,14 @@ class TemplateAcmModal extends React.Component {
                     value: this.state.removalLicenceRequired,
                     label: this.state.removalLicenceRequired,
                   }
-                : { value: "", label: "" }
+                : { value: '', label: '' }
             }
-            options={["Class A", "Class B", "Unlicensed"].map((e) => ({
+            options={['Class A', 'Class B', 'Unlicensed'].map((e) => ({
               value: e,
               label: e,
             }))}
             onChange={(e) => {
-              this.setState({ removalLicenceRequired: e.value });
+              this.setState({ removalLicenceRequired: e.value })
             }}
           />
 
@@ -799,13 +785,12 @@ class TemplateAcmModal extends React.Component {
             Management Recommendations
           </InputLabel>
           <ReactQuill
-            value={this.state.recommendations || ""}
+            value={this.state.recommendations || ''}
             modules={quillModules}
             theme="snow"
             className={classes.marginBottomMedium}
             onChange={(content, delta, source) => {
-              if (source === "user")
-                this.setState({ recommendations: content });
+              if (source === 'user') this.setState({ recommendations: content })
             }}
           />
 
@@ -818,14 +803,14 @@ class TemplateAcmModal extends React.Component {
 
           {[
             {
-              label: "Main type of activity in area",
-              options: "asbestosPriMainActivityScores",
-              stateVar: "priMainActivityScore",
+              label: 'Main type of activity in area',
+              options: 'asbestosPriMainActivityScores',
+              stateVar: 'priMainActivityScore',
             },
             {
-              label: "Secondary activities for area",
-              options: "asbestosPriSecondaryActivityScores",
-              stateVar: "priSecondaryActivityScore",
+              label: 'Secondary activities for area',
+              options: 'asbestosPriSecondaryActivityScores',
+              stateVar: 'priSecondaryActivityScore',
             },
           ].map((e) => {
             return (
@@ -841,14 +826,14 @@ class TemplateAcmModal extends React.Component {
                           `colorsButton${
                             this.state[e.stateVar] === res.label
                               ? res.color
-                              : "Off"
+                              : 'Off'
                           }`
                         ],
                         classes[
                           `colorsDiv${
                             this.state[e.stateVar] === res.label
                               ? res.color
-                              : "Off"
+                              : 'Off'
                           }`
                         ],
                         res.label,
@@ -867,11 +852,11 @@ class TemplateAcmModal extends React.Component {
                                   : res.label,
                             }),
                           })
-                      );
+                      )
                     })}
                 </div>
               </div>
-            );
+            )
           })}
 
           <InputLabel className={classes.marginTopSmall}>
@@ -880,19 +865,19 @@ class TemplateAcmModal extends React.Component {
 
           {[
             {
-              label: "Location",
-              options: "asbestosPriLocationScores",
-              stateVar: "priLocationScore",
+              label: 'Location',
+              options: 'asbestosPriLocationScores',
+              stateVar: 'priLocationScore',
             },
             {
-              label: "Accessibility",
-              options: "asbestosPriAccessibilityScores",
-              stateVar: "priAccessibilityScore",
+              label: 'Accessibility',
+              options: 'asbestosPriAccessibilityScores',
+              stateVar: 'priAccessibilityScore',
             },
             {
-              label: "Extent/amount",
-              options: "asbestosPriExtentScores",
-              stateVar: "priExtentScore",
+              label: 'Extent/amount',
+              options: 'asbestosPriExtentScores',
+              stateVar: 'priExtentScore',
             },
           ].map((e) => {
             return (
@@ -908,14 +893,14 @@ class TemplateAcmModal extends React.Component {
                           `colorsButton${
                             this.state[e.stateVar] === res.label
                               ? res.color
-                              : "Off"
+                              : 'Off'
                           }`
                         ],
                         classes[
                           `colorsDiv${
                             this.state[e.stateVar] === res.label
                               ? res.color
-                              : "Off"
+                              : 'Off'
                           }`
                         ],
                         res.label,
@@ -934,11 +919,11 @@ class TemplateAcmModal extends React.Component {
                                   : res.label,
                             }),
                           })
-                      );
+                      )
                     })}
                 </div>
               </div>
-            );
+            )
           })}
 
           <InputLabel className={classes.marginTopSmall}>
@@ -947,19 +932,19 @@ class TemplateAcmModal extends React.Component {
 
           {[
             {
-              label: "Number of occupants",
-              options: "asbestosPriOccupantsScores",
-              stateVar: "priOccupantScore",
+              label: 'Number of occupants',
+              options: 'asbestosPriOccupantsScores',
+              stateVar: 'priOccupantScore',
             },
             {
-              label: "Frequency of use of area",
-              options: "asbestosPriUseFreqScores",
-              stateVar: "priUseFreqScore",
+              label: 'Frequency of use of area',
+              options: 'asbestosPriUseFreqScores',
+              stateVar: 'priUseFreqScore',
             },
             {
-              label: "Average daily time area is in use",
-              options: "asbestosPriAvgTimeScores",
-              stateVar: "priAvgTimeScore",
+              label: 'Average daily time area is in use',
+              options: 'asbestosPriAvgTimeScores',
+              stateVar: 'priAvgTimeScore',
             },
           ].map((e) => {
             return (
@@ -975,14 +960,14 @@ class TemplateAcmModal extends React.Component {
                           `colorsButton${
                             this.state[e.stateVar] === res.label
                               ? res.color
-                              : "Off"
+                              : 'Off'
                           }`
                         ],
                         classes[
                           `colorsDiv${
                             this.state[e.stateVar] === res.label
                               ? res.color
-                              : "Off"
+                              : 'Off'
                           }`
                         ],
                         res.label,
@@ -1001,11 +986,11 @@ class TemplateAcmModal extends React.Component {
                                   : res.label,
                             }),
                           })
-                      );
+                      )
                     })}
                 </div>
               </div>
-            );
+            )
           })}
 
           <InputLabel className={classes.marginTopSmall}>
@@ -1014,14 +999,14 @@ class TemplateAcmModal extends React.Component {
 
           {[
             {
-              label: "Type of maintenance activity",
-              options: "asbestosPriMaintTypeScores",
-              stateVar: "priMaintTypeScore",
+              label: 'Type of maintenance activity',
+              options: 'asbestosPriMaintTypeScores',
+              stateVar: 'priMaintTypeScore',
             },
             {
-              label: "Frequency of maintenance activity",
-              options: "asbestosPriMaintFreqScores",
-              stateVar: "priMaintFreqScore",
+              label: 'Frequency of maintenance activity',
+              options: 'asbestosPriMaintFreqScores',
+              stateVar: 'priMaintFreqScore',
             },
           ].map((e) => {
             return (
@@ -1037,14 +1022,14 @@ class TemplateAcmModal extends React.Component {
                           `colorsButton${
                             this.state[e.stateVar] === res.label
                               ? res.color
-                              : "Off"
+                              : 'Off'
                           }`
                         ],
                         classes[
                           `colorsDiv${
                             this.state[e.stateVar] === res.label
                               ? res.color
-                              : "Off"
+                              : 'Off'
                           }`
                         ],
                         res.label,
@@ -1063,11 +1048,11 @@ class TemplateAcmModal extends React.Component {
                                   : res.label,
                             }),
                           })
-                      );
+                      )
                     })}
                 </div>
               </div>
-            );
+            )
           })}
 
           <div className={classes.flexRowSpread}>
@@ -1134,25 +1119,25 @@ class TemplateAcmModal extends React.Component {
                 alt=""
                 width="200px"
                 style={{
-                  opacity: "0.5",
-                  borderStyle: "solid",
-                  borderWidth: "2px",
+                  opacity: '0.5',
+                  borderStyle: 'solid',
+                  borderWidth: '2px',
                 }}
               />
               <IconButton
                 style={{
-                  position: "relative",
-                  top: "2px",
-                  left: "-120px",
-                  borderStyle: "solid",
-                  borderWidth: "2px",
+                  position: 'relative',
+                  top: '2px',
+                  left: '-120px',
+                  borderStyle: 'solid',
+                  borderWidth: '2px',
                   fontSize: 8,
                 }}
                 onClick={() => {
                   if (
-                    window.confirm("Are you sure you wish to delete the image?")
+                    window.confirm('Are you sure you wish to delete the image?')
                   )
-                    this.deleteImage();
+                    this.deleteImage()
                 }}
               >
                 <Close />
@@ -1166,18 +1151,18 @@ class TemplateAcmModal extends React.Component {
             <input
               id="attr_upload_file"
               type="file"
-              style={{ display: "none" }}
+              style={{ display: 'none' }}
               onChange={(e) => {
                 if (this.state.acmImageUrl) {
-                  storage.ref(this.state.acmImageRef).delete();
+                  storage.ref(this.state.acmImageRef).delete()
                 }
                 this.props.onUploadFile({
                   file: e.currentTarget.files[0],
-                  storagePath: "sites/",
-                  prefix: "siteImage",
+                  storagePath: 'sites/',
+                  prefix: 'siteImage',
                   imageQuality: 30,
                   imageHeight: 100,
-                });
+                })
               }}
             />
             <LinearProgress
@@ -1196,7 +1181,7 @@ class TemplateAcmModal extends React.Component {
               this.props.handleModalSubmit({
                 doc: this.state,
                 pathRef: templateAcmRef,
-                docid: "random",
+                docid: 'random',
               })
             }
             color="primary"
@@ -1205,10 +1190,10 @@ class TemplateAcmModal extends React.Component {
           </Button>
         </DialogActions>
       </Dialog>
-    );
+    )
   }
 }
 
 export default withStyles(styles)(
   connect(mapStateToProps, mapDispatchToProps)(TemplateAcmModal)
-);
+)

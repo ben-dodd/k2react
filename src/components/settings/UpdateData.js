@@ -1,19 +1,19 @@
-import React from "react";
+import React from 'react'
 // import ReactDOM from 'react-dom';
-// import { WithContext as ReactTags } from 'react-tag-input';
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../config/styles";
-import { connect } from "react-redux";
-// import store from '../../store';
-import { UPDATE_DATA } from "../../constants/modal-types";
-import "../../config/tags.css";
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import { CSVLink } from "react-csv";
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../config/styles'
+import { connect } from 'react-redux'
+// import store from '../../store';
+import { UPDATE_DATA } from '../../constants/modal-types'
+import '../../config/tags.css'
+
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogActions from '@material-ui/core/DialogActions'
+import { CSVLink } from 'react-csv'
 
 import {
   fetchDocuments,
@@ -25,11 +25,11 @@ import {
   fetchTools,
   fetchTrainingPaths,
   fetchVehicles,
-} from "../../actions/local";
-import { analyseJobHistory } from "../../actions/jobs";
-import { grabJobData, grabLabData } from "../../actions/temp";
-import { fetchCocs } from "../../actions/asbestosLab";
-import { hideModal } from "../../actions/modal";
+} from '../../actions/local'
+import { analyseJobHistory } from '../../actions/jobs'
+import { grabJobData, grabLabData } from '../../actions/temp'
+import { fetchCocs } from '../../actions/asbestosLab'
+import { hideModal } from '../../actions/modal'
 
 const mapStateToProps = (state) => {
   return {
@@ -37,8 +37,8 @@ const mapStateToProps = (state) => {
     doc: state.modal.modalProps.doc,
     jobData: state.local.jobData,
     labData: state.local.labData,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -55,61 +55,61 @@ const mapDispatchToProps = (dispatch) => {
     hideModal: (modal) => dispatch(hideModal(modal)),
     grabJobData: () => dispatch(grabJobData()),
     grabLabData: () => dispatch(grabLabData()),
-  };
-};
+  }
+}
 
 class UpdateData extends React.Component {
   render() {
     // if (this.props.jobData.length === 0) this.props.grabJobData();
     // else console.log(this.props.jobData);
-    if (this.props.labData.length === 0) this.props.grabLabData();
-    else console.log(this.props.labData);
+    if (this.props.labData.length === 0) this.props.grabLabData()
+    else console.log(this.props.labData)
     const updateTypes = [
       {
         event: this.props.fetchCocs,
-        title: "Chains of Custody",
+        title: 'Chains of Custody',
       },
       {
         event: this.props.fetchDocuments,
-        title: "Documents",
+        title: 'Documents',
       },
       {
         event: this.props.fetchMethods,
-        title: "Methods",
+        title: 'Methods',
       },
       {
         event: this.props.fetchNotices,
-        title: "Notices",
+        title: 'Notices',
       },
       {
         event: this.props.fetchQuestions,
-        title: "Questions",
+        title: 'Questions',
       },
       {
         event: this.props.fetchQuizzes,
-        title: "Quizzes",
+        title: 'Quizzes',
       },
       {
         event: this.props.fetchStaff,
-        title: "Staff",
+        title: 'Staff',
       },
       {
         event: this.props.fetchTools,
-        title: "Tools",
+        title: 'Tools',
       },
       {
         event: this.props.fetchTrainingPaths,
-        title: "Training Paths",
+        title: 'Training Paths',
       },
       {
         event: this.props.fetchVehicles,
-        title: "Vehicles",
+        title: 'Vehicles',
       },
       {
         event: analyseJobHistory,
-        title: "Jobs",
+        title: 'Jobs',
       },
-    ];
+    ]
     return (
       <Dialog
         open={this.props.modalType === UPDATE_DATA}
@@ -140,7 +140,7 @@ class UpdateData extends React.Component {
         <DialogActions>
           <Button
             onClick={() => {
-              this.props.hideModal();
+              this.props.hideModal()
             }}
             color="secondary"
           >
@@ -148,10 +148,10 @@ class UpdateData extends React.Component {
           </Button>
         </DialogActions>
       </Dialog>
-    );
+    )
   }
 }
 
 export default withStyles(styles)(
   connect(mapStateToProps, mapDispatchToProps)(UpdateData)
-);
+)

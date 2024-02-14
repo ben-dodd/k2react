@@ -1,50 +1,45 @@
-import React from "react";
-import reactCSS from "reactcss";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../../config/styles";
-import { hotkeys, hotkey_display } from "react-keyboard-shortcuts";
-import { connect } from "react-redux";
-import { ASBESTOS_SAMPLE_DETAILS } from "../../../constants/modal-types";
-import "../../../config/tags.css";
+import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../../config/styles'
+import { ASBESTOS_SAMPLE_DETAILS } from '../../../constants/modal-types'
+import '../../../config/tags.css'
 
 import {
   SampleTextyDisplay,
   SampleTextyLine,
   AsbButton,
-} from "../../../widgets/FormWidgets";
+} from '../../../widgets/FormWidgets'
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import Grid from "@material-ui/core/Grid";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import Good from "@material-ui/icons/ThumbUp";
-import Bad from "@material-ui/icons/ThumbDown";
-import AsbestosSampleWASummary from "../components/AsbestosSampleWASummary";
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import Grid from '@material-ui/core/Grid'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogActions from '@material-ui/core/DialogActions'
+import Good from '@material-ui/icons/ThumbUp'
+import Bad from '@material-ui/icons/ThumbDown'
+import AsbestosSampleWASummary from '../components/AsbestosSampleWASummary'
 import {
   hideModal,
   hideModalSecondary,
   handleModalChange,
-} from "../../../actions/modal";
-import { dateOf, milliToDHM } from "../../../actions/helpers";
-import moment from "moment";
+} from '../../../actions/modal'
+import { dateOf, milliToDHM } from '../../../actions/helpers'
+import moment from 'moment'
 import {
   writeSoilDetails,
   getSampleColors,
   analyticalCriteraOK,
   writeShorthandResult,
-  getWAAnalysisSummary,
   writeSampleConditioningList,
   writeSampleDimensions,
   collateLayeredResults,
   compareAsbestosResult,
   writeSampleMoisture,
   writePersonnelQualFull,
-  getSampleStatus,
   resetSampleView,
-} from "../../../actions/asbestosLab";
-import { asbestosSamplesRef } from "../../../config/firebase";
+} from '../../../actions/asbestosLab'
+import { asbestosSamplesRef } from '../../../config/firebase'
 
 const mapStateToProps = (state) => {
   return {
@@ -57,8 +52,8 @@ const mapStateToProps = (state) => {
     me: state.local.me,
     staff: state.local.staff,
     shortcuts: state.const.keyboardShortcuts,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -66,43 +61,43 @@ const mapDispatchToProps = (dispatch) => {
     hideModalSecondary: () => dispatch(hideModalSecondary()),
     handleModalChange: (target) => dispatch(handleModalChange(target)),
     resetSampleView: () => dispatch(resetSampleView()),
-  };
-};
+  }
+}
 
 class AsbestosSampleDetailsModal extends React.Component {
   state = {
     pictures: [],
-  };
+  }
 
   previousSample = (samples) => {
-    let takeThisSample = false;
+    let takeThisSample = false
     samples.reverse().forEach((sample) => {
       if (takeThisSample) {
         //console.log(sample);
-        this.props.handleModalChange({ id: "doc", value: { ...sample } });
-        takeThisSample = false;
+        this.props.handleModalChange({ id: 'doc', value: { ...sample } })
+        takeThisSample = false
       }
-      if (sample.uid === this.props.modalProps.doc.uid) takeThisSample = true;
-    });
-  };
+      if (sample.uid === this.props.modalProps.doc.uid) takeThisSample = true
+    })
+  }
 
   nextSample = (samples) => {
-    let takeThisSample = false;
+    let takeThisSample = false
     samples.forEach((sample) => {
       if (takeThisSample) {
         //console.log(sample);
-        this.props.handleModalChange({ id: "doc", value: { ...sample } });
-        takeThisSample = false;
+        this.props.handleModalChange({ id: 'doc', value: { ...sample } })
+        takeThisSample = false
       }
-      if (sample.uid === this.props.modalProps.doc.uid) takeThisSample = true;
-    });
-  };
+      if (sample.uid === this.props.modalProps.doc.uid) takeThisSample = true
+    })
+  }
 
   onDrop = (picture) => {
     this.setState({
       pictures: this.state.pictures.concat(picture),
-    });
-  };
+    })
+  }
 
   render() {
     const {
@@ -111,129 +106,127 @@ class AsbestosSampleDetailsModal extends React.Component {
       modalType,
       modalTypeSecondary,
       modalPropsSecondary,
-    } = this.props;
+    } = this.props
     if (
       modalType === ASBESTOS_SAMPLE_DETAILS ||
       modalTypeSecondary === ASBESTOS_SAMPLE_DETAILS
     ) {
-      let sample = null;
-      let job = null;
+      let sample = null
+      let job = null
       if (!modalPropsSecondary || modalPropsSecondary.doc !== false)
-        sample = modalProps.doc;
-      else if (this.props.sampleView) sample = this.props.sampleView.sample;
+        sample = modalProps.doc
+      else if (this.props.sampleView) sample = this.props.sampleView.sample
       // let sample = modalProps.doc;
       if (!modalPropsSecondary || modalPropsSecondary.job !== false)
-        job = modalProps.job;
-      else if (this.props.sampleView) job = this.props.sampleView.coc;
+        job = modalProps.job
+      else if (this.props.sampleView) job = this.props.sampleView.coc
 
       let dates =
         job && job.dates
           ? job.dates.map((date) => {
-              return moment(dateOf(date)).format("D MMMM YYYY");
+              return moment(dateOf(date)).format('D MMMM YYYY')
             })
-          : [];
+          : []
 
-      let analysisDate = "Not analysed";
+      let analysisDate = 'Not analysed'
       if (sample && sample.analysisDate) {
-        analysisDate = moment(dateOf(sample.analysisDate)).format(
-          "D MMMM YYYY"
-        );
+        analysisDate = moment(dateOf(sample.analysisDate)).format('D MMMM YYYY')
       }
 
       // let nz = moment.tz.setDefault("Pacific/Auckland");
-      moment.updateLocale("en", {
+      moment.updateLocale('en', {
         // workingWeekdays: [1,2,3,4,5],
         workinghours: {
           0: null,
-          1: ["08:00:00", "17:00:00"],
-          2: ["08:00:00", "17:00:00"],
-          3: ["08:00:00", "17:00:00"],
-          4: ["08:00:00", "17:00:00"],
-          5: ["08:00:00", "17:00:00"],
+          1: ['08:00:00', '17:00:00'],
+          2: ['08:00:00', '17:00:00'],
+          3: ['08:00:00', '17:00:00'],
+          4: ['08:00:00', '17:00:00'],
+          5: ['08:00:00', '17:00:00'],
           6: null,
         },
         holidays: [
-          "2019-11-15",
-          "2019-12-25",
-          "2019-12-26",
-          "2020-01-01",
-          "2020-01-02",
-          "2020-02-06",
-          "2020-04-10",
-          "2020-04-13",
-          "2020-04-27",
-          "2020-06-01",
-          "2020-10-26",
-          "2020-11-13",
-          "2020-12-25",
-          "2020-12-26",
+          '2019-11-15',
+          '2019-12-25',
+          '2019-12-26',
+          '2020-01-01',
+          '2020-01-02',
+          '2020-02-06',
+          '2020-04-10',
+          '2020-04-13',
+          '2020-04-27',
+          '2020-06-01',
+          '2020-10-26',
+          '2020-11-13',
+          '2020-12-25',
+          '2020-12-26',
         ],
-      });
-      moment.locale("en");
-      moment.tz.setDefault("Pacific/Auckland");
+      })
+      moment.locale('en')
+      moment.tz.setDefault('Pacific/Auckland')
 
       // console.log(`is working time now ${moment().isWorkingTime()}`);
 
-      let endTime = new Date();
-      if (sample && sample.verifyDate) endTime = dateOf(sample.verifyDate);
+      let endTime = new Date()
+      if (sample && sample.verifyDate) endTime = dateOf(sample.verifyDate)
       // console.log(endTime);
       let timeTotal =
         sample && sample.receivedDate
           ? moment(endTime).diff(moment(dateOf(sample.receivedDate)))
-          : null;
+          : null
       let timeTotalBusiness =
         sample && sample.receivedDate
           ? moment(endTime).workingDiff(moment(dateOf(sample.receivedDate)))
-          : null;
+          : null
       let timeAdmin =
         sample && sample.analysisDate
           ? moment(endTime).diff(moment(dateOf(sample.analysisDate)))
-          : null;
+          : null
       let timeAdminBusiness =
         sample && sample.analysisDate
           ? moment(endTime).workingDiff(moment(dateOf(sample.analysisDate)))
-          : null;
-      endTime = new Date();
-      if (sample && sample.analysisDate) endTime = dateOf(sample.analysisDate);
+          : null
+      endTime = new Date()
+      if (sample && sample.analysisDate) endTime = dateOf(sample.analysisDate)
       let timeLab =
         sample && sample.receivedDate
           ? moment(endTime).diff(moment(dateOf(sample.receivedDate)))
-          : null;
+          : null
       let timeLabBusiness =
         sample && sample.receivedDate
           ? moment(endTime).workingDiff(moment(dateOf(sample.receivedDate)))
-          : null;
+          : null
       // console.log(milliToDHM(timeInLab));
       // console.log(milliToDHM(timeInLabBusiness));
       // console.log(timeInLabBusiness);
       // //console.log(timeInLab);
       // //console.log(timeInLabBusiness);
-      let status = getSampleStatus(sample);
-      let colors = getSampleColors(sample, classes);
-      let layersResult = null;
-      let soilResult = null;
+      let status = getSampleStatus(sample)
+      let colors = getSampleColors(sample, classes)
+      let layersResult = null
+      let soilResult = null
       if (sample && sample.layers)
         layersResult = compareAsbestosResult(
           { result: collateLayeredResults(sample.layers) },
           sample
-        );
+        )
       if (sample && sample.waSoilAnalysis)
         soilResult = compareAsbestosResult(
           { result: collateLayeredResults(sample.waSoilAnalysis) },
           sample
-        );
+        )
 
-      const good = <Good style={{ color: "green", fontSize: 14 }} />;
-      const half = <Bad style={{ color: "orange", fontSize: 14 }} />;
-      const bad = <Bad style={{ color: "red", fontSize: 14 }} />;
+      const good = <Good style={{ color: 'green', fontSize: 14 }} />
+      const half = <Bad style={{ color: 'orange', fontSize: 14 }} />
+      const bad = <Bad style={{ color: 'red', fontSize: 14 }} />
 
-      let sampleMoisture = null;
-      if (sample) sampleMoisture = writeSampleMoisture(sample, true);
-      let samples = [];
+      let sampleMoisture = null
+      if (sample) sampleMoisture = writeSampleMoisture(sample, true)
+      let samples = []
       if (!modalPropsSecondary || modalPropsSecondary.noNext === undefined)
         samples = Object.values(this.props.samples[job.uid]).filter(
           (s) => s.cocUid === job.uid
-        );
+        )
 
       return (
         <div>
@@ -248,8 +241,8 @@ class AsbestosSampleDetailsModal extends React.Component {
                 }
                 onClose={() => {
                   if (modalType === ASBESTOS_SAMPLE_DETAILS)
-                    this.props.hideModal();
-                  else this.props.hideModalSecondary();
+                    this.props.hideModal()
+                  else this.props.hideModalSecondary()
                 }}
                 maxWidth="lg"
                 fullWidth={true}
@@ -264,34 +257,34 @@ class AsbestosSampleDetailsModal extends React.Component {
                           <div className={classes.heading}>
                             Basic Information
                           </div>
-                          {SampleTextyLine("Status", status.toUpperCase())}
-                          {job.client && SampleTextyLine("Client", job.client)}
+                          {SampleTextyLine('Status', status.toUpperCase())}
+                          {job.client && SampleTextyLine('Client', job.client)}
                           {job.address &&
-                            SampleTextyLine("Address", job.address)}
+                            SampleTextyLine('Address', job.address)}
                           {sample.genericLocation &&
                             SampleTextyLine(
-                              "Generic Location",
+                              'Generic Location',
                               sample.genericLocation
                             )}
                           {sample.specificLocation &&
                             SampleTextyLine(
-                              "Specific Location",
+                              'Specific Location',
                               sample.specificLocation
                             )}
                           {sample.description &&
                             SampleTextyLine(
-                              "Short Description",
+                              'Short Description',
                               sample.description
                             )}
                           {sample.material &&
                             SampleTextyLine(
-                              "Material",
+                              'Material',
                               sample.material.charAt(0).toUpperCase() +
                                 sample.material.slice(1)
                             )}
                           {sample.category &&
                             SampleTextyLine(
-                              "Material Category",
+                              'Material Category',
                               sample.category
                             )}
                         </div>
@@ -299,12 +292,12 @@ class AsbestosSampleDetailsModal extends React.Component {
                           <div className={classes.heading}>Results</div>
                           <div
                             style={{
-                              display: "flex",
-                              flexDirection: "row",
+                              display: 'flex',
+                              flexDirection: 'row',
                               marginBottom: 12,
                             }}
                           >
-                            {["ch", "am", "cr", "umf", "no", "org", "smf"].map(
+                            {['ch', 'am', 'cr', 'umf', 'no', 'org', 'smf'].map(
                               (res) => {
                                 if (
                                   sample.result &&
@@ -315,28 +308,28 @@ class AsbestosSampleDetailsModal extends React.Component {
                                     classes[`colorsDiv${colors[res]}`],
                                     res,
                                     null
-                                  );
+                                  )
                               }
                             )}
                           </div>
                           {SampleTextyLine(
-                            "Analyst",
-                            sample.analyst ? sample.analyst : "Not analysed"
+                            'Analyst',
+                            sample.analyst ? sample.analyst : 'Not analysed'
                           )}
-                          {SampleTextyLine("Analysis Date", analysisDate)}
+                          {SampleTextyLine('Analysis Date', analysisDate)}
                           {sample.analysisRecordedBy &&
                             sample.analysisRecordedBy.name !== sample.analyst &&
                             SampleTextyLine(
-                              "Analysis Recorded By",
+                              'Analysis Recorded By',
                               sample.analysisRecordedBy.name
                             )}
                           {SampleTextyLine(
-                            "Result Verified?",
-                            sample.verified ? "Yes" : "No"
+                            'Result Verified?',
+                            sample.verified ? 'Yes' : 'No'
                           )}
                           {sample.verifiedBy &&
                             SampleTextyLine(
-                              "Result Verified By",
+                              'Result Verified By',
                               sample.verifiedBy.name
                             )}
                           {sample.layers &&
@@ -344,50 +337,50 @@ class AsbestosSampleDetailsModal extends React.Component {
                               .length > 0 && (
                               <div
                                 style={{
-                                  display: "flex",
-                                  flexDirection: "row",
+                                  display: 'flex',
+                                  flexDirection: 'row',
                                 }}
                               >
-                                <div style={{ width: "60%" }}>
+                                <div style={{ width: '60%' }}>
                                   {SampleTextyLine(
-                                    "Cumulative Layer Results",
+                                    'Cumulative Layer Results',
                                     writeShorthandResult(
                                       collateLayeredResults(sample.layers)
                                     )
                                   )}
                                 </div>
-                                <div style={{ width: "40%" }}>
-                                  {layersResult === "yes" ||
-                                  layersResult === "differentNonAsbestos"
+                                <div style={{ width: '40%' }}>
+                                  {layersResult === 'yes' ||
+                                  layersResult === 'differentNonAsbestos'
                                     ? good
-                                    : layersResult === "no"
+                                    : layersResult === 'no'
                                     ? bad
-                                    : layersResult === "none"
-                                    ? ""
+                                    : layersResult === 'none'
+                                    ? ''
                                     : half}
                                 </div>
                               </div>
                             )}
                           {sample.waSoilAnalysis && (
                             <div
-                              style={{ display: "flex", flexDirection: "row" }}
+                              style={{ display: 'flex', flexDirection: 'row' }}
                             >
-                              <div style={{ width: "60%" }}>
+                              <div style={{ width: '60%' }}>
                                 {SampleTextyLine(
-                                  "WA Standard Results",
+                                  'WA Standard Results',
                                   writeShorthandResult(
                                     collateLayeredResults(sample.waSoilAnalysis)
                                   )
                                 )}
                               </div>
-                              <div style={{ width: "40%" }}>
-                                {soilResult === "yes" ||
-                                soilResult === "differentNonAsbestos"
+                              <div style={{ width: '40%' }}>
+                                {soilResult === 'yes' ||
+                                soilResult === 'differentNonAsbestos'
                                   ? good
-                                  : soilResult === "no"
+                                  : soilResult === 'no'
                                   ? bad
-                                  : soilResult === "none"
-                                  ? ""
+                                  : soilResult === 'none'
+                                  ? ''
                                   : half}
                               </div>
                             </div>
@@ -403,16 +396,16 @@ class AsbestosSampleDetailsModal extends React.Component {
                                 let check = compareAsbestosResult(
                                   sample.confirm[key],
                                   sample
-                                );
+                                )
                                 return (
                                   <div
                                     key={key}
                                     style={{
-                                      display: "flex",
-                                      flexDirection: "row",
+                                      display: 'flex',
+                                      flexDirection: 'row',
                                     }}
                                   >
-                                    <div style={{ width: "60%" }}>
+                                    <div style={{ width: '60%' }}>
                                       {SampleTextyLine(
                                         `Sample Check ${key}`,
                                         `${writeShorthandResult(
@@ -420,19 +413,19 @@ class AsbestosSampleDetailsModal extends React.Component {
                                         )} (${sample.confirm[key].analyst})`
                                       )}
                                     </div>
-                                    <div style={{ width: "40%" }}>
-                                      {check === "yes" ||
-                                      check === "differentNonAsbestos"
+                                    <div style={{ width: '40%' }}>
+                                      {check === 'yes' ||
+                                      check === 'differentNonAsbestos'
                                         ? good
-                                        : check === "no"
+                                        : check === 'no'
                                         ? bad
-                                        : check === "none"
-                                        ? ""
+                                        : check === 'none'
+                                        ? ''
                                         : half}
                                     </div>
                                   </div>
-                                );
-                              } else return null;
+                                )
+                              } else return null
                             })}
                         </div>
                         <div className={classes.informationBox}>
@@ -441,23 +434,23 @@ class AsbestosSampleDetailsModal extends React.Component {
                           </div>
                           {sample.classification !== undefined &&
                             SampleTextyLine(
-                              "Homogenous?",
-                              sample.classification === "homo" ? "Yes" : "No"
+                              'Homogenous?',
+                              sample.classification === 'homo' ? 'Yes' : 'No'
                             )}
                           {sample.asbestosEvident !== undefined &&
                             SampleTextyLine(
-                              "Asbestos Evident?",
-                              sample.asbestosEvident ? "Yes" : "No"
+                              'Asbestos Evident?',
+                              sample.asbestosEvident ? 'Yes' : 'No'
                             )}
                           {sample.sampleConditioning !== undefined &&
                             SampleTextyLine(
-                              "Sample Conditioning",
+                              'Sample Conditioning',
                               writeSampleConditioningList(
                                 sample.sampleConditioning
                               )
                             )}
                           {SampleTextyDisplay(
-                            "Analytical Criteria OK?",
+                            'Analytical Criteria OK?',
                             analyticalCriteraOK(sample)
                           )}
                         </div>
@@ -466,54 +459,54 @@ class AsbestosSampleDetailsModal extends React.Component {
                         <div className={classes.informationBox}>
                           <div className={classes.heading}>Sample Details</div>
                           {SampleTextyLine(
-                            "Sampling Personnel",
+                            'Sampling Personnel',
                             sample.sampledBy && sample.sampledBy.length > 0
-                              ? sample.sampledBy.map((e) => e.name).join(", ")
-                              : "Not specified"
+                              ? sample.sampledBy.map((e) => e.name).join(', ')
+                              : 'Not specified'
                           )}
                           {SampleTextyLine(
-                            "Sampling Date(s)",
+                            'Sampling Date(s)',
                             sample.sampleDate
                               ? moment(dateOf(sample.sampleDate)).format(
-                                  "dddd, D MMMM YYYY"
+                                  'dddd, D MMMM YYYY'
                                 )
-                              : "Not specified"
+                              : 'Not specified'
                           )}
                           <div
                             style={{
-                              display: "flex",
-                              flexDirection: "row",
-                              justifyContent: "space-between",
+                              display: 'flex',
+                              flexDirection: 'row',
+                              justifyContent: 'space-between',
                             }}
                           >
                             {SampleTextyDisplay(
-                              "Weight Received",
+                              'Weight Received',
                               sample.weightReceived
-                                ? sample.weightReceived + "g"
-                                : "N/A"
+                                ? sample.weightReceived + 'g'
+                                : 'N/A'
                             )}
                             {SampleTextyDisplay(
-                              "Subsample Weight",
+                              'Subsample Weight',
                               sample.weightSubsample
-                                ? sample.weightSubsample + "g"
-                                : "N/A"
+                                ? sample.weightSubsample + 'g'
+                                : 'N/A'
                             )}
                             {SampleTextyDisplay(
-                              "Dry Weight (~105°C)",
-                              sample.weightDry ? sample.weightDry + "g" : "N/A"
+                              'Dry Weight (~105°C)',
+                              sample.weightDry ? sample.weightDry + 'g' : 'N/A'
                             )}
                             {SampleTextyDisplay(
-                              "Ashed Weight (~400°C)",
+                              'Ashed Weight (~400°C)',
                               sample.weightAshed
-                                ? sample.weightAshed + "g"
-                                : "N/A"
+                                ? sample.weightAshed + 'g'
+                                : 'N/A'
                             )}
                           </div>
 
                           {sampleMoisture && (
                             <div>
                               {SampleTextyDisplay(
-                                "Moisture Content",
+                                'Moisture Content',
                                 `${sampleMoisture}%`
                               )}
                             </div>
@@ -521,27 +514,27 @@ class AsbestosSampleDetailsModal extends React.Component {
 
                           {sample.dimensions &&
                             SampleTextyDisplay(
-                              "Dimensions",
+                              'Dimensions',
                               writeSampleDimensions(sample)
                             )}
                           {sample.labDescription &&
                             SampleTextyDisplay(
-                              "Lab Sample Description",
+                              'Lab Sample Description',
                               sample.labDescription
                             )}
                           {sample.labComments &&
                             SampleTextyDisplay(
-                              "Lab Observations/Comments",
+                              'Lab Observations/Comments',
                               sample.labComments
                             )}
                           {sample.footnote &&
                             SampleTextyDisplay(
-                              "Lab Footnote for Report",
+                              'Lab Footnote for Report',
                               sample.footnote
                             )}
                           {sample.soilDetails &&
                             SampleTextyDisplay(
-                              "Geotechnical Soil Details",
+                              'Geotechnical Soil Details',
                               writeSoilDetails(sample.soilDetails)
                             )}
                           {sample.layers &&
@@ -555,7 +548,7 @@ class AsbestosSampleDetailsModal extends React.Component {
                                 Object.keys(sample.layers[`layer3`].result)
                                   .length > 0)) &&
                             SampleTextyDisplay(
-                              "Layers",
+                              'Layers',
                               [
                                 ...Array(
                                   sample.layerNum ? sample.layerNum : 5
@@ -565,7 +558,7 @@ class AsbestosSampleDetailsModal extends React.Component {
                                   (num) =>
                                     sample.layers[`layer${num + 1}`] &&
                                     ((sample.layers[`layer${num + 1}`]
-                                      .description !== "" &&
+                                      .description !== '' &&
                                       sample.layers[`layer${num + 1}`]
                                         .description !== undefined) ||
                                       (sample.layers[`layer${num + 1}`]
@@ -585,151 +578,151 @@ class AsbestosSampleDetailsModal extends React.Component {
                           {sample.receivedDate
                             ? sample.verified
                               ? SampleTextyLine(
-                                  "Turnaround Time (Total)",
+                                  'Turnaround Time (Total)',
                                   milliToDHM(timeTotal, true, false)
                                 )
                               : SampleTextyLine(
-                                  "Time Since Received (Total)",
+                                  'Time Since Received (Total)',
                                   milliToDHM(timeTotal, true, false)
                                 )
                             : SampleTextyLine(
-                                "Turnaround Time (Total)",
-                                "Not yet received by lab"
+                                'Turnaround Time (Total)',
+                                'Not yet received by lab'
                               )}
                           {sample.receivedDate
                             ? sample.verified
                               ? SampleTextyLine(
-                                  "Turnaround Time (Business Hours Only)",
+                                  'Turnaround Time (Business Hours Only)',
                                   milliToDHM(timeTotalBusiness, true, true)
                                 )
                               : SampleTextyLine(
-                                  "Time Since Received (Business Hours Only)",
+                                  'Time Since Received (Business Hours Only)',
                                   milliToDHM(timeTotalBusiness, true, true)
                                 )
                             : SampleTextyLine(
-                                "Turnaround Time (Business Hours Only)",
-                                "Not yet received by lab"
+                                'Turnaround Time (Business Hours Only)',
+                                'Not yet received by lab'
                               )}
 
                           {sample.receivedDate
                             ? sample.analysisDate
                               ? SampleTextyLine(
-                                  "Lab Time (Total)",
+                                  'Lab Time (Total)',
                                   milliToDHM(timeLab, true, false)
                                 )
                               : SampleTextyLine(
-                                  "Time In Lab (Total)",
+                                  'Time In Lab (Total)',
                                   milliToDHM(timeLab, true, false)
                                 )
                             : SampleTextyLine(
-                                "Lab Time (Total)",
-                                "Not yet received by lab"
+                                'Lab Time (Total)',
+                                'Not yet received by lab'
                               )}
                           {sample.receivedDate
                             ? sample.analysisDate
                               ? SampleTextyLine(
-                                  "Lab Time (Business Hours Only)",
+                                  'Lab Time (Business Hours Only)',
                                   milliToDHM(timeLabBusiness, true, true)
                                 )
                               : SampleTextyLine(
-                                  "Time In Lab (Business Hours Only)",
+                                  'Time In Lab (Business Hours Only)',
                                   milliToDHM(timeLabBusiness, true, true)
                                 )
                             : SampleTextyLine(
-                                "Lab Time (Business Hours Only)",
-                                "Not yet received by lab"
+                                'Lab Time (Business Hours Only)',
+                                'Not yet received by lab'
                               )}
 
                           {sample.analysisDate
                             ? sample.verified
                               ? SampleTextyLine(
-                                  "Admin Time (Total)",
+                                  'Admin Time (Total)',
                                   milliToDHM(timeAdmin, true, false)
                                 )
                               : SampleTextyLine(
-                                  "Time In Admin (Total)",
+                                  'Time In Admin (Total)',
                                   milliToDHM(timeAdmin, true, false)
                                 )
                             : SampleTextyLine(
-                                "Admin Time (Total)",
-                                "Not yet received from lab"
+                                'Admin Time (Total)',
+                                'Not yet received from lab'
                               )}
                           {sample.analysisDate
                             ? sample.verified
                               ? SampleTextyLine(
-                                  "Admin Time (Business Hours Only)",
+                                  'Admin Time (Business Hours Only)',
                                   milliToDHM(timeAdminBusiness, true, true)
                                 )
                               : SampleTextyLine(
-                                  "Time In Admin (Business Hours Only)",
+                                  'Time In Admin (Business Hours Only)',
                                   milliToDHM(timeAdminBusiness, true, true)
                                 )
                             : SampleTextyLine(
-                                "Admin Time (Business Hours Only)",
-                                "Not yet received from lab"
+                                'Admin Time (Business Hours Only)',
+                                'Not yet received from lab'
                               )}
                         </div>
                         <div className={classes.informationBox}>
                           <div className={classes.heading}>Sample History</div>
                           {SampleTextyLine(
-                            "Created",
+                            'Created',
                             sample.createdDate
                               ? `${moment(sample.createdDate.toDate()).format(
-                                  "h:mma, dddd, D MMMM YYYY"
+                                  'h:mma, dddd, D MMMM YYYY'
                                 )} by ${
                                   sample.createdBy
                                     ? sample.createdBy.name
-                                    : "an unknown person"
+                                    : 'an unknown person'
                                 }`
-                              : "No creation date"
+                              : 'No creation date'
                           )}
                           {SampleTextyLine(
-                            "Received by Lab",
+                            'Received by Lab',
                             sample.receivedDate
                               ? `${moment(sample.receivedDate.toDate()).format(
-                                  "h:mma, dddd, D MMMM YYYY"
+                                  'h:mma, dddd, D MMMM YYYY'
                                 )} by ${
                                   sample.receivedBy
                                     ? sample.receivedBy.name
-                                    : "an unknown person"
+                                    : 'an unknown person'
                                 }`
-                              : "Not yet received by lab"
+                              : 'Not yet received by lab'
                           )}
                           {SampleTextyLine(
-                            "Analysis Started",
+                            'Analysis Started',
                             sample.analysisStartDate
                               ? `${moment(
                                   sample.analysisStartDate.toDate()
-                                ).format("h:mma, dddd, D MMMM YYYY")} by ${
+                                ).format('h:mma, dddd, D MMMM YYYY')} by ${
                                   sample.analysisStartedBy
                                     ? sample.analysisStartedBy.name
-                                    : "an unknown person"
+                                    : 'an unknown person'
                                 }`
-                              : "Analysis not yet started"
+                              : 'Analysis not yet started'
                           )}
                           {SampleTextyLine(
-                            "Result Logged",
+                            'Result Logged',
                             sample.analysisDate
                               ? `${moment(sample.analysisDate.toDate()).format(
-                                  "h:mma, dddd, D MMMM YYYY"
+                                  'h:mma, dddd, D MMMM YYYY'
                                 )} by ${
                                   sample.analysisRecordedBy
                                     ? sample.analysisRecordedBy.name
-                                    : "an unknown person"
+                                    : 'an unknown person'
                                 }`
-                              : "Result not yet logged"
+                              : 'Result not yet logged'
                           )}
                           {SampleTextyLine(
-                            "Result Verified",
+                            'Result Verified',
                             sample.verifyDate
                               ? `${moment(sample.verifyDate.toDate()).format(
-                                  "h:mma, dddd, D MMMM YYYY"
+                                  'h:mma, dddd, D MMMM YYYY'
                                 )} by ${
                                   sample.verifiedBy
                                     ? sample.verifiedBy.name
-                                    : "an unknown person"
+                                    : 'an unknown person'
                                 }`
-                              : "Result not yet verified"
+                              : 'Result not yet verified'
                           )}
                         </div>
                       </Grid>
@@ -776,10 +769,10 @@ class AsbestosSampleDetailsModal extends React.Component {
                   <Button
                     onClick={() => {
                       if (modalType === ASBESTOS_SAMPLE_DETAILS)
-                        this.props.hideModal();
+                        this.props.hideModal()
                       else {
-                        this.props.resetSampleView();
-                        this.props.hideModalSecondary();
+                        this.props.resetSampleView()
+                        this.props.hideModalSecondary()
                       }
                     }}
                     color="primary"
@@ -790,26 +783,26 @@ class AsbestosSampleDetailsModal extends React.Component {
               </Dialog>
             )}
         </div>
-      );
-    } else return null;
+      )
+    } else return null
   }
 
   getLayerRow = (num) => {
-    let layer = {};
-    let sample = this.props.modalProps.doc;
+    let layer = {}
+    let sample = this.props.modalProps.doc
 
     if (sample.layers && sample.layers[`layer${num}`]) {
-      layer = sample.layers[`layer${num}`];
+      layer = sample.layers[`layer${num}`]
     }
 
     return (
       <div
         key={num}
         style={{
-          flexDirection: "row",
-          display: "flex",
-          alignItems: "center",
-          width: "100%",
+          flexDirection: 'row',
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
           padding: 6,
         }}
       >
@@ -824,32 +817,32 @@ class AsbestosSampleDetailsModal extends React.Component {
               layer.color ? layer.color.a : null
             })`,
             marginRight: 10,
-            color: "#fff",
-            justifyContent: "center",
-            alignItems: "center",
-            display: "flex",
-            fontWeight: "bold",
+            color: '#fff',
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: 'flex',
+            fontWeight: 'bold',
           }}
         >
           {num}
         </div>
-        <div style={{ width: "25%" }}>
+        <div style={{ width: '25%' }}>
           {layer.description
             ? `${layer.description
                 .charAt(0)
                 .toUpperCase()}${layer.description.slice(1)}`
-            : "No description"}
+            : 'No description'}
         </div>
-        <div style={{ width: "20%" }}>{writeShorthandResult(layer.result)}</div>
-        <div style={{ width: "30%" }}>
+        <div style={{ width: '20%' }}>{writeShorthandResult(layer.result)}</div>
+        <div style={{ width: '30%' }}>
           {layer.concentration &&
             `Approx. ${layer.concentration}% asbestos content`}
         </div>
       </div>
-    );
-  };
+    )
+  }
 }
 
 export default withStyles(styles)(
   connect(mapStateToProps, mapDispatchToProps)(AsbestosSampleDetailsModal)
-);
+)

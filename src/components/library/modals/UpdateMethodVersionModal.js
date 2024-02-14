@@ -1,65 +1,63 @@
-import React from "react";
-import { WithContext as ReactTags } from "react-tag-input";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../../config/styles";
-import { connect } from "react-redux";
-import store from "../../../store";
-import { UPDATE_METHOD_VERSION } from "../../../constants/modal-types";
-import { methodsRef } from "../../../config/firebase";
-import "../../../config/tags.css";
+import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../../config/styles'
+import { connect } from 'react-redux'
+import { UPDATE_METHOD_VERSION } from '../../../constants/modal-types'
+import { methodsRef } from '../../../config/firebase'
+import '../../../config/tags.css'
 
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import TextField from "@material-ui/core/TextField";
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogActions from '@material-ui/core/DialogActions'
+import FormGroup from '@material-ui/core/FormGroup'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Checkbox from '@material-ui/core/Checkbox'
+import TextField from '@material-ui/core/TextField'
 import {
   hideModal,
   handleModalChange,
-  handleModalSubmit
-} from "../../../actions/modal";
-import _ from "lodash";
+  handleModalSubmit,
+} from '../../../actions/modal'
+import _ from 'lodash'
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     modalType: state.modal.modalType,
     modalProps: state.modal.modalProps,
     staff: state.local.staff,
-    me: state.local.me
-  };
-};
+    me: state.local.me,
+  }
+}
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
     hideModal: () => dispatch(hideModal()),
     handleModalChange: _.debounce(
-      target => dispatch(handleModalChange(target)),
+      (target) => dispatch(handleModalChange(target)),
       300
-    )
-  };
-};
+    ),
+  }
+}
 
 class UpdateMethodVersionModal extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       change: {
         person: this.props.me.name,
-        version: "",
+        version: '',
         date: new Date(),
-        changes: ""
+        changes: '',
       },
-      newVersion: false
-    };
+      newVersion: false,
+    }
   }
 
   render() {
-    const { classes, modalProps, modalType, doc } = this.props;
-    const { change, newVersion } = this.state;
+    const { classes, modalProps, modalType, doc } = this.props
+    const { change, newVersion } = this.state
     return (
       <Dialog
         open={modalType === UPDATE_METHOD_VERSION}
@@ -77,12 +75,12 @@ class UpdateMethodVersionModal extends React.Component {
                 multiline
                 rows={5}
                 className={classes.dialogField}
-                onChange={e =>
+                onChange={(e) =>
                   this.setState({
                     change: {
                       ...change,
-                      changes: e.target.value
-                    }
+                      changes: e.target.value,
+                    },
                   })
                 }
               />
@@ -91,7 +89,7 @@ class UpdateMethodVersionModal extends React.Component {
               control={
                 <Checkbox
                   checked={newVersion || false}
-                  onChange={e =>
+                  onChange={(e) =>
                     this.setState({ newVersion: e.target.checked })
                   }
                   value="enabled"
@@ -107,36 +105,32 @@ class UpdateMethodVersionModal extends React.Component {
           </Button>
           <Button
             onClick={() => {
-              let version = doc.version ? doc.version : 1;
-              let patch = doc.patch ? doc.patch : 0;
+              let version = doc.version ? doc.version : 1
+              let patch = doc.patch ? doc.patch : 0
               if (this.state.newVersion) {
-                version = version + 1;
-                patch = 0;
+                version = version + 1
+                patch = 0
               } else {
-                patch = patch + 1;
+                patch = patch + 1
               }
-              doc.changes.push(this.state.change);
-              doc.version = version;
-              doc.patch = patch;
+              doc.changes.push(this.state.change)
+              doc.version = version
+              doc.patch = patch
               this.props.handleModalSubmit({
                 doc: doc,
-                pathRef: methodsRef
-              });
+                pathRef: methodsRef,
+              })
             }}
             color="primary"
           >
             Submit
           </Button>
-          }
         </DialogActions>
       </Dialog>
-    );
+    )
   }
 }
 
 export default withStyles(styles)(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(UpdateMethodVersionModal)
-);
+  connect(mapStateToProps, mapDispatchToProps)(UpdateMethodVersionModal)
+)

@@ -1,25 +1,22 @@
-import React from "react";
+import React from 'react'
 
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import {
-  collateSamples,
-  issueDocument
-} from "../../../../actions/asbestosReportHelpers";
-import InputLabel from "@material-ui/core/InputLabel";
-import Tooltip from "@material-ui/core/Tooltip";
-import IconButton from "@material-ui/core/IconButton";
+// import ReactQuill from "react-quill";
+// import "react-quill/dist/quill.snow.css";
 
-import RefreshIcon from "@material-ui/icons/Sync";
+import InputLabel from '@material-ui/core/InputLabel'
+import Tooltip from '@material-ui/core/Tooltip'
+import IconButton from '@material-ui/core/IconButton'
 
-import { quillModules } from "../../../../actions/helpers";
+import RefreshIcon from '@material-ui/icons/Sync'
+
+import { quillModules } from '../../../../actions/helpers'
 import {
   writeExecutiveSummary,
   writeWhereIsTheHazard,
   writeRiskToHealth,
   writeBackground,
-  writeRecommendations
-} from "../../../../actions/asbestosReportHelpers";
+  writeRecommendations,
+} from '../../../../actions/asbestosReportHelpers'
 
 function ExecutiveSummaryAmp(props) {
   const {
@@ -31,8 +28,8 @@ function ExecutiveSummaryAmp(props) {
     template,
     classes,
     siteAcm,
-    that
-  } = props;
+    that,
+  } = props
   return (
     <div>
       <div className={classes.flexRowSpread}>
@@ -42,14 +39,14 @@ function ExecutiveSummaryAmp(props) {
         <Tooltip title="Refresh automatic content">
           <IconButton
             onClick={() => {
-              let content = writeExecutiveSummary(job, siteAcm, template);
-              that.setState({ executiveSummary: content });
+              let content = writeExecutiveSummary(job, siteAcm, template)
+              that.setState({ executiveSummary: content })
               props.onChange({
                 job,
-                field: "executiveSummary",
+                field: 'executiveSummary',
                 val: content,
-                siteUid
-              });
+                siteUid,
+              })
             }}
           >
             <RefreshIcon />
@@ -58,19 +55,19 @@ function ExecutiveSummaryAmp(props) {
       </div>
 
       <ReactQuill
-        value={that.state.executiveSummary || job.executiveSummary || ""}
+        value={that.state.executiveSummary || job.executiveSummary || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
         theme="snow"
         onChange={(content, delta, source) => {
-          if (source === "user") {
-            that.setState({ executiveSummary: content });
+          if (source === 'user') {
+            that.setState({ executiveSummary: content })
             props.onChange({
               job,
-              field: "executiveSummary",
+              field: 'executiveSummary',
               val: content,
-              siteUid
-            });
+              siteUid,
+            })
           }
         }}
       />
@@ -82,14 +79,14 @@ function ExecutiveSummaryAmp(props) {
         <Tooltip title="Refresh automatic content">
           <IconButton
             onClick={() => {
-              let content = writeWhereIsTheHazard(job, siteAcm, template);
-              that.setState({ whereIsTheHazard: content });
+              let content = writeWhereIsTheHazard(job, siteAcm, template)
+              that.setState({ whereIsTheHazard: content })
               props.onChange({
                 job,
-                field: "whereIsTheHazard",
+                field: 'whereIsTheHazard',
                 val: content,
-                siteUid
-              });
+                siteUid,
+              })
             }}
           >
             <RefreshIcon />
@@ -98,20 +95,20 @@ function ExecutiveSummaryAmp(props) {
       </div>
 
       <ReactQuill
-        value={that.state.whereIsTheHazard || job.whereIsTheHazard || ""}
+        value={that.state.whereIsTheHazard || job.whereIsTheHazard || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
         theme="snow"
         onChange={(content, delta, source) => {
-          if (source === "user") {
-            console.log(content);
-            that.setState({ whereIsTheHazard: content });
+          if (source === 'user') {
+            console.log(content)
+            that.setState({ whereIsTheHazard: content })
             props.onChange({
               job,
-              field: "whereIsTheHazard",
+              field: 'whereIsTheHazard',
               val: content,
-              siteUid
-            });
+              siteUid,
+            })
           }
         }}
       />
@@ -123,14 +120,14 @@ function ExecutiveSummaryAmp(props) {
         <Tooltip title="Refresh automatic content">
           <IconButton
             onClick={() => {
-              let content = writeRiskToHealth(job, siteAcm, template);
-              that.setState({ riskToHealth: content });
+              let content = writeRiskToHealth(job, siteAcm, template)
+              that.setState({ riskToHealth: content })
               props.onChange({
                 job,
-                field: "riskToHealth",
+                field: 'riskToHealth',
                 val: content,
-                siteUid
-              });
+                siteUid,
+              })
             }}
           >
             <RefreshIcon />
@@ -139,20 +136,20 @@ function ExecutiveSummaryAmp(props) {
       </div>
 
       <ReactQuill
-        value={that.state.riskToHealth || job.riskToHealth || ""}
+        value={that.state.riskToHealth || job.riskToHealth || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
         theme="snow"
         onChange={(content, delta, source) => {
-          if (source === "user") {
-            console.log(content);
-            that.setState({ riskToHealth: content });
+          if (source === 'user') {
+            console.log(content)
+            that.setState({ riskToHealth: content })
             props.onChange({
               job,
-              field: "riskToHealth",
+              field: 'riskToHealth',
               val: content,
-              siteUid
-            });
+              siteUid,
+            })
           }
         }}
       />
@@ -162,14 +159,14 @@ function ExecutiveSummaryAmp(props) {
         <Tooltip title="Refresh automatic content">
           <IconButton
             onClick={() => {
-              let content = writeBackground(job, site, staff, template);
-              that.setState({ background: content });
+              let content = writeBackground(job, site, staff, template)
+              that.setState({ background: content })
               props.onChange({
                 job,
-                field: "background",
+                field: 'background',
                 val: content,
-                siteUid
-              });
+                siteUid,
+              })
             }}
           >
             <RefreshIcon />
@@ -178,20 +175,20 @@ function ExecutiveSummaryAmp(props) {
       </div>
 
       <ReactQuill
-        value={that.state.background || job.background || ""}
+        value={that.state.background || job.background || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
         theme="snow"
         onChange={(content, delta, source) => {
-          if (source === "user") {
-            console.log(content);
-            that.setState({ background: content });
+          if (source === 'user') {
+            console.log(content)
+            that.setState({ background: content })
             props.onChange({
               job,
-              field: "background",
+              field: 'background',
               val: content,
-              siteUid
-            });
+              siteUid,
+            })
           }
         }}
       />
@@ -203,16 +200,16 @@ function ExecutiveSummaryAmp(props) {
         <Tooltip title="Refresh automatic content">
           <IconButton
             onClick={() => {
-              let content = writeRecommendations(job, siteAcm, template);
+              let content = writeRecommendations(job, siteAcm, template)
               that.setState({
-                immediateActionsRequired: content.immediateActionsRequired
-              });
+                immediateActionsRequired: content.immediateActionsRequired,
+              })
               props.onChange({
                 job,
-                field: "immediateActionsRequired",
+                field: 'immediateActionsRequired',
                 val: content.immediateActionsRequired,
-                siteUid
-              });
+                siteUid,
+              })
             }}
           >
             <RefreshIcon />
@@ -224,21 +221,21 @@ function ExecutiveSummaryAmp(props) {
         value={
           that.state.immediateActionsRequired ||
           job.immediateActionsRequired ||
-          ""
+          ''
         }
         modules={quillModules}
         className={classes.marginBottomMedium}
         theme="snow"
         onChange={(content, delta, source) => {
-          if (source === "user") {
-            console.log(content);
-            that.setState({ immediateActionsRequired: content });
+          if (source === 'user') {
+            console.log(content)
+            that.setState({ immediateActionsRequired: content })
             props.onChange({
               job,
-              field: "immediateActionsRequired",
+              field: 'immediateActionsRequired',
               val: content,
-              siteUid
-            });
+              siteUid,
+            })
           }
         }}
       />
@@ -250,17 +247,17 @@ function ExecutiveSummaryAmp(props) {
         <Tooltip title="Refresh automatic content">
           <IconButton
             onClick={() => {
-              let content = writeRecommendations(job, siteAcm, template);
+              let content = writeRecommendations(job, siteAcm, template)
               that.setState({
                 removalOrTreatmentOfAsbestos:
-                  content.removalOrTreatmentOfAsbestos
-              });
+                  content.removalOrTreatmentOfAsbestos,
+              })
               props.onChange({
                 job,
-                field: "removalOrTreatmentOfAsbestos",
+                field: 'removalOrTreatmentOfAsbestos',
                 val: content.removalOrTreatmentOfAsbestos,
-                siteUid
-              });
+                siteUid,
+              })
             }}
           >
             <RefreshIcon />
@@ -268,7 +265,7 @@ function ExecutiveSummaryAmp(props) {
         </Tooltip>
       </div>
 
-      <ReactQuill
+      {/* <ReactQuill
         value={
           that.state.removalOrTreatmentOfAsbestos ||
           job.removalOrTreatmentOfAsbestos ||
@@ -289,9 +286,9 @@ function ExecutiveSummaryAmp(props) {
             });
           }
         }}
-      />
+      /> */}
     </div>
-  );
+  )
 }
 
-export default ExecutiveSummaryAmp;
+export default ExecutiveSummaryAmp

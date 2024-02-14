@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense } from 'react'
 
 import {
   BrowserRouter as Router,
@@ -6,82 +6,81 @@ import {
   Link,
   Switch,
   withRouter,
-} from "react-router-dom";
-import { auth, constRef, noticesRef } from "../config/firebase";
-import { connect } from "react-redux";
-import { APP_SETTINGS, UPDATE_DATA } from "../constants/modal-types";
-import qs from "qs";
+} from 'react-router-dom'
+import { auth } from '../config/firebase'
+import { connect } from 'react-redux'
+import { APP_SETTINGS, UPDATE_DATA } from '../constants/modal-types'
+import qs from 'qs'
 
-import PropTypes from "prop-types";
-import classNames from "classnames";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../config/styles";
-import img_Logo from "../images/logo.png";
-import moment from "moment";
+// import PropTypes from "prop-types";
+import classNames from 'classnames'
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../config/styles'
+import moment from 'moment'
 
 // Material UI;
 
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Drawer from "@material-ui/core/Drawer";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import LinearProgress from "@material-ui/core/LinearProgress";
-import IconButton from "@material-ui/core/IconButton";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import InputBase from "@material-ui/core/InputBase";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Collapse from "@material-ui/core/Collapse";
+import CssBaseline from '@material-ui/core/CssBaseline'
+import Drawer from '@material-ui/core/Drawer'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import Typography from '@material-ui/core/Typography'
+import Divider from '@material-ui/core/Divider'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import IconButton from '@material-ui/core/IconButton'
+import Avatar from '@material-ui/core/Avatar'
+import Button from '@material-ui/core/Button'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import InputBase from '@material-ui/core/InputBase'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Collapse from '@material-ui/core/Collapse'
 
 // Icons
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import NoticeboardIcon from "@material-ui/icons/SpeakerNotes";
-import JobsIcon from "@material-ui/icons/Work";
-import CurrentJobsIcon from "@material-ui/icons/Assignment";
-import LeadsIcon from "@material-ui/icons/LocalPhone";
-import SitesIcon from "@material-ui/icons/Place";
-import MapIcon from "@material-ui/icons/Map";
-import LabIcon from "@material-ui/icons/Colorize";
-import StaffIcon from "@material-ui/icons/People";
-import MyDetailsIcon from "@material-ui/icons/Person";
-import VehiclesIcon from "@material-ui/icons/DirectionsCar";
-import DevIcon from "@material-ui/icons/HourglassEmpty";
-import TrainingIcon from "@material-ui/icons/School";
-import QuizIcon from "@material-ui/icons/ContactSupport";
-import ToolsIcon from "@material-ui/icons/Build";
-import LibraryIcon from "@material-ui/icons/LocalLibrary";
-import HelpIcon from "@material-ui/icons/Help";
-import UpdatesIcon from "@material-ui/icons/Update";
-import SettingsIcon from "@material-ui/icons/Settings";
-import UpdateIcon from "@material-ui/icons/Cached";
-import IncidentIcon from "@material-ui/icons/LocalHospital";
-import CocIcon from "@material-ui/icons/TableChart";
-import InventoryIcon from "@material-ui/icons/Category";
-import LogIcon from "@material-ui/icons/ListAlt";
-import QCIcon from "@material-ui/icons/OfflinePin";
-import StatsIcon from "@material-ui/icons/InsertChart";
-import TrainingPathIcon from "@material-ui/icons/DirectionsWalk";
-import TrainingOverviewIcon from "@material-ui/icons/SupervisorAccount";
-import ReadingLogIcon from "@material-ui/icons/Ballot";
+import DashboardIcon from '@material-ui/icons/Dashboard'
+import NoticeboardIcon from '@material-ui/icons/SpeakerNotes'
+import JobsIcon from '@material-ui/icons/Work'
+import CurrentJobsIcon from '@material-ui/icons/Assignment'
+import LeadsIcon from '@material-ui/icons/LocalPhone'
+import SitesIcon from '@material-ui/icons/Place'
+import MapIcon from '@material-ui/icons/Map'
+import LabIcon from '@material-ui/icons/Colorize'
+import StaffIcon from '@material-ui/icons/People'
+import MyDetailsIcon from '@material-ui/icons/Person'
+import VehiclesIcon from '@material-ui/icons/DirectionsCar'
+import DevIcon from '@material-ui/icons/HourglassEmpty'
+import TrainingIcon from '@material-ui/icons/School'
+import QuizIcon from '@material-ui/icons/ContactSupport'
+import ToolsIcon from '@material-ui/icons/Build'
+import LibraryIcon from '@material-ui/icons/LocalLibrary'
+import HelpIcon from '@material-ui/icons/Help'
+import UpdatesIcon from '@material-ui/icons/Update'
+import SettingsIcon from '@material-ui/icons/Settings'
+import UpdateIcon from '@material-ui/icons/Cached'
+import IncidentIcon from '@material-ui/icons/LocalHospital'
+import CocIcon from '@material-ui/icons/TableChart'
+import InventoryIcon from '@material-ui/icons/Category'
+import LogIcon from '@material-ui/icons/ListAlt'
+import QCIcon from '@material-ui/icons/OfflinePin'
+import StatsIcon from '@material-ui/icons/InsertChart'
+import TrainingPathIcon from '@material-ui/icons/DirectionsWalk'
+import TrainingOverviewIcon from '@material-ui/icons/SupervisorAccount'
+import ReadingLogIcon from '@material-ui/icons/Ballot'
 
-import MenuIcon from "@material-ui/icons/Menu";
-import SearchIcon from "@material-ui/icons/Search";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ExpandLess from "@material-ui/icons/ExpandLess";
-import ExpandMore from "@material-ui/icons/ExpandMore";
+import MenuIcon from '@material-ui/icons/Menu'
+import SearchIcon from '@material-ui/icons/Search'
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
 
-import AppSettings from "./settings/AppSettings";
-import UpdateData from "./settings/UpdateData";
+import AppSettings from './settings/AppSettings'
+import UpdateData from './settings/UpdateData'
 
-import store from "../store";
+import store from '../store'
 
 import {
   fetchMe,
@@ -91,7 +90,7 @@ import {
   fetchAssets,
   onSearchChange,
   onCatChange,
-} from "../actions/local";
+} from '../actions/local'
 import {
   fetchGeocodes,
   analyseJobHistory,
@@ -99,11 +98,11 @@ import {
   authoriseWFM,
   fetchWFMStaff,
   fetchWFMAuth,
-} from "../actions/jobs";
-import { sendSlackMessage, dateOf } from "../actions/helpers";
-import { resetModal, showModal } from "../actions/modal";
-import { resetDisplay } from "../actions/display";
-import { initConstants } from "../actions/const";
+} from '../actions/jobs'
+import { sendSlackMessage, dateOf } from '../actions/helpers'
+import { resetModal, showModal } from '../actions/modal'
+import { resetDisplay } from '../actions/display'
+import { initConstants } from '../actions/const'
 import {
   fixIds,
   transferNoticeboardReads,
@@ -115,47 +114,46 @@ import {
   renameAnalysisLog,
   splitWFMStates,
   fixNoticeReads,
-} from "../actions/temp";
+} from '../actions/temp'
 
 // Pages
-const Noticeboard = lazy(() => import("./noticeboard/Noticeboard"));
+const Noticeboard = lazy(() => import('./noticeboard/Noticeboard'))
 
-const AsbestosLab = lazy(() => import("./asbestoslab/AsbestosLab"));
-const AsbestosLog = lazy(() => import("./asbestoslab/AsbestosLog"));
+const AsbestosLab = lazy(() => import('./asbestoslab/AsbestosLab'))
+const AsbestosLog = lazy(() => import('./asbestoslab/AsbestosLog'))
 const AsbestosQualityControl = lazy(() =>
-  import("./asbestoslab/AsbestosQualityControl")
-);
-const AsbestosStats = lazy(() => import("./asbestoslab/AsbestosStats"));
+  import('./asbestoslab/AsbestosQualityControl')
+)
+const AsbestosStats = lazy(() => import('./asbestoslab/AsbestosStats'))
 
-const JobMap = lazy(() => import("./jobs/JobMap"));
-const JobsTable = lazy(() => import("./jobs/JobsTable"));
-const Leads = lazy(() => import("./jobs/Leads"));
-const JobStats = lazy(() => import("./jobs/JobStats"));
-const Jobs = lazy(() => import("./jobs/Jobs"));
-const Site = lazy(() => import("./jobs/Site"));
-const Sites = lazy(() => import("./jobs/Sites"));
+const JobMap = lazy(() => import('./jobs/JobMap'))
+const JobsTable = lazy(() => import('./jobs/JobsTable'))
+const Leads = lazy(() => import('./jobs/Leads'))
+const JobStats = lazy(() => import('./jobs/JobStats'))
+const Jobs = lazy(() => import('./jobs/Jobs'))
+const Site = lazy(() => import('./jobs/Site'))
+const Sites = lazy(() => import('./jobs/Sites'))
 
-const Staff = lazy(() => import("./personnel/Staff"));
+const Staff = lazy(() => import('./personnel/Staff'))
 
-const MyDetails = lazy(() => import("./personnel/MyDetails"));
+const MyDetails = lazy(() => import('./personnel/MyDetails'))
 
-const Inventory = lazy(() => import("./inventory/Inventory"));
+const Inventory = lazy(() => import('./inventory/Inventory'))
 
-const TrainingOverview = lazy(() => import("./training/TrainingOverview"));
-const TrainingPaths = lazy(() => import("./training/TrainingPaths"));
-const TrainingReadingLog = lazy(() => import("./training/TrainingReadingLog"));
+const TrainingOverview = lazy(() => import('./training/TrainingOverview'))
+const TrainingPaths = lazy(() => import('./training/TrainingPaths'))
+const TrainingReadingLog = lazy(() => import('./training/TrainingReadingLog'))
 
-const TrainingPath = lazy(() => import("./training/TrainingPath"));
+const TrainingPath = lazy(() => import('./training/TrainingPath'))
 
-const Quizzes = lazy(() => import("./training/quizzes/Quizzes"));
-const Questions = lazy(() => import("./training/quizzes/Questions"));
-const Quiz = lazy(() => import("./training/quizzes/Quiz"));
+const Quizzes = lazy(() => import('./training/quizzes/Quizzes'))
+const Questions = lazy(() => import('./training/quizzes/Questions'))
+const Quiz = lazy(() => import('./training/quizzes/Quiz'))
 
-const Library = lazy(() => import("./library/Library"));
-const DocumentViewer = lazy(() => import("./library/DocumentViewer"));
-const K2SignInScreen = lazy(() => import("./K2SignInScreen"));
+const Library = lazy(() => import('./library/Library'))
+const DocumentViewer = lazy(() => import('./library/DocumentViewer'))
+const K2SignInScreen = lazy(() => import('./K2SignInScreen'))
 
-const { whyDidYouUpdate } = require("why-did-you-update");
 const mapStateToProps = (state) => {
   return {
     staff: state.local.staff,
@@ -168,8 +166,8 @@ const mapStateToProps = (state) => {
     wfmRefreshToken: state.local.wfmRefreshToken,
     wfmAccessExpiry: state.local.wfmAccessExpiry,
     wfmAuthLoaded: state.local.wfmAuthLoaded,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -191,15 +189,15 @@ const mapDispatchToProps = (dispatch) => {
     fetchAssets: (update) => dispatch(fetchAssets(update)),
     authoriseWFM: (params) => dispatch(authoriseWFM(params)),
     // fixIds: () => dispatch(fixIds())
-  };
-};
+  }
+}
 
-const thisVersion = "1.3.3";
+const thisVersion = '1.3.3'
 
 class MainScreen extends React.PureComponent {
   // static whyDidYouRender = true;
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
       openDrawer: true,
       anchorEl: null,
@@ -212,22 +210,22 @@ class MainScreen extends React.PureComponent {
       // openMyDetails: false,
       openTraining: false,
       // openHelp: false,
-    };
+    }
   }
 
   UNSAFE_componentWillMount() {
     sendSlackMessage(
       `${auth.currentUser.displayName} is triggering MainScreen componentWillMount`
-    );
+    )
     // if (!this.props.wfmAccessToken) this.props.authoriseWFM();
-    if (this.props.me && this.props.me.uid === undefined) this.props.fetchMe();
-    if (this.props.menuItems === undefined) this.props.initConstants();
-    this.props.fetchGeocodes();
+    if (this.props.me && this.props.me.uid === undefined) this.props.fetchMe()
+    if (this.props.menuItems === undefined) this.props.initConstants()
+    this.props.fetchGeocodes()
     // this.props.fetchAssets();
     // splitWFMStates();
     if (this.props.staff && Object.keys(this.props.staff).length === 0)
-      this.props.fetchStaff();
-    this.props.fetchWFMAuth();
+      this.props.fetchStaff()
+    this.props.fetchWFMAuth()
     // this.props.fixIds();
     // fixNoticeReads();
     // transferNoticeboardReads();
@@ -241,15 +239,15 @@ class MainScreen extends React.PureComponent {
     // fixNoticeReads();
     // renameAnalysisLog();
     // this.props.copyStaff('vpqfRcdsxOZMEoP5Aw6B','yrMXpAUR66Ug0Qb1kDeV8R9IBWq1');
-    this.checkWFMAuthorised();
-    this.getWFMData();
+    this.checkWFMAuthorised()
+    this.getWFMData()
     setTimeout(
       () =>
         this.setState({
           hidden: false,
         }),
       2000
-    );
+    )
   }
 
   getWFMData = () => {
@@ -258,20 +256,20 @@ class MainScreen extends React.PureComponent {
         this.props.fetchWFMClients(
           this.props.wfmAccessToken,
           this.props.wfmRefreshToken
-        );
+        )
       }
       // this.props.fetchWFMStaff(
       //   this.props.wfmAccessToken,
       //   this.props.wfmRefreshToken
       // );
     } else {
-      console.log("token not here yet");
-      setTimeout(this.getWFMData, 500);
+      console.log('token not here yet')
+      setTimeout(this.getWFMData, 500)
     }
-  };
+  }
 
   checkWFMAuthorised = () => {
-    console.log("CHECK AUTH CALLED");
+    console.log('CHECK AUTH CALLED')
     if (this.props.wfmAuthLoaded) {
       if (
         this.props.wfmAccessToken &&
@@ -280,55 +278,55 @@ class MainScreen extends React.PureComponent {
         console.log(
           `Access Expires on ${moment(
             dateOf(this.props.wfmAccessExpiry)
-          ).format("lll")}`
-        );
+          ).format('lll')}`
+        )
         // All good
       } else if (this.props.wfmRefreshToken) {
         // Use refresh token to get a new access token
         // console.log(this.props.wfmRefreshToken);
         this.props.authoriseWFM({
           refreshToken: this.props.wfmRefreshToken,
-        });
+        })
       } else {
         // Authenticate user and authorize MyK2 to use WFM
         let code = qs.parse(this.props.location.search, {
           ignoreQueryPrefix: true,
-        }).code;
+        }).code
         if (!code) {
-          let path = `${process.env.REACT_APP_WFM_AUTH_ROOT}${process.env.REACT_APP_WFM_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}&scope=workflowmax offline_access&state=${process.env.REACT_APP_WFM_STATE_KEY}`;
-          window.location.assign(path);
+          let path = `${process.env.REACT_APP_WFM_AUTH_ROOT}${process.env.REACT_APP_WFM_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}&scope=workflowmax offline_access&state=${process.env.REACT_APP_WFM_STATE_KEY}`
+          window.location.assign(path)
         } else {
           // User has been sent back to MyK2 with the code
-          this.props.authoriseWFM({ code });
+          this.props.authoriseWFM({ code })
         }
       }
     } else {
-      console.log("auth not here yet");
-      setTimeout(this.checkWFMAuthorised, 500);
+      console.log('auth not here yet')
+      setTimeout(this.checkWFMAuthorised, 500)
     }
-  };
+  }
 
   handleLogOut = () => {
     // sendSlackMessage(`${this.props.state.local.me.name} has logged out.`);
     auth.signOut().then(() => {
-      this.props.resetDisplay();
-      this.props.resetLocal();
-      this.props.resetModal();
-      this.props.history.push("/");
-    });
-  };
+      this.props.resetDisplay()
+      this.props.resetLocal()
+      this.props.resetModal()
+      this.props.history.push('/')
+    })
+  }
 
   handleGoogleMenuToggle = (event) => {
-    this.setState({ anchorEl: event.currentTarget });
-  };
+    this.setState({ anchorEl: event.currentTarget })
+  }
 
   handleGoogleMenuClose = (event) => {
-    this.setState({ anchorEl: null });
-  };
+    this.setState({ anchorEl: null })
+  }
 
   handleDrawerOpen = () => {
-    this.setState({ openDrawer: true });
-  };
+    this.setState({ openDrawer: true })
+  }
 
   handleDrawerClose = () => {
     this.setState({
@@ -336,68 +334,68 @@ class MainScreen extends React.PureComponent {
       openRef: false,
       openStaff: false,
       openMyDetails: false,
-    });
-  };
+    })
+  }
 
   handleRefClick = () => {
     // this.setState({
     //   // openDrawer: true,
     //   openRef: !this.state.openRef
     // });
-  };
+  }
 
   handleAsbestosClick = () => {
     this.setState({
       // openDrawer: true,
       openAsbestos: !this.state.openAsbestos,
-    });
-  };
+    })
+  }
 
   handleDevClick = () => {
     this.setState({
       openDrawer: true,
       openDev: !this.state.openDev,
-    });
-  };
+    })
+  }
 
   handleStaffClick = () => {
     // this.setState({
     //   // openDrawer: true,
     //   openStaff: !this.state.openStaff
     // });
-  };
+  }
 
   handleJobsClick = () => {
     this.setState({
       // openDrawer: true,
       openJobs: !this.state.openJobs,
-    });
-  };
+    })
+  }
 
   handleMyDetailsClick = () => {
     // this.setState({
     //   // openDrawer: true,
     //   openMyDetails: !this.state.openMyDetails
     // });
-  };
+  }
 
   handleTrainingClick = () => {
     this.setState({
       openDrawer: true,
       openTraining: !this.state.openTraining,
-    });
-  };
+    })
+  }
 
   render() {
-    const { classes, latestVersion, location } = this.props;
-    const { anchorEl } = this.state;
+    const { classes, latestVersion, location } = this.props
+    const { anchorEl } = this.state
 
-    let displayName;
-    let menuItems = this.props.menuItems ? this.props.menuItems : [];
+    let displayName
+    let menuItems = this.props.menuItems ? this.props.menuItems : []
     if (auth.currentUser) {
-      displayName = auth.currentUser.displayName;
+      displayName = auth.currentUser.displayName
     } else {
-      displayName = "";
+      displayName = ''
     }
 
     // Edit navigation drawer here
@@ -423,7 +421,7 @@ class MainScreen extends React.PureComponent {
         </div>
         <Divider />
         <List>
-          {menuItems.includes("Noticeboard") && (
+          {menuItems.includes('Noticeboard') && (
             <div>
               <ListItem button component={Link} to="/noticeboard">
                 <ListItemIcon>
@@ -436,7 +434,7 @@ class MainScreen extends React.PureComponent {
             </div>
           )}
 
-          {menuItems.includes("Staff") && (
+          {menuItems.includes('Staff') && (
             <ListItem button component={Link} to="/staff">
               <ListItemIcon>
                 <StaffIcon className={classes.colorAccent} />
@@ -445,7 +443,7 @@ class MainScreen extends React.PureComponent {
             </ListItem>
           )}
 
-          {menuItems.includes("My Details") && (
+          {menuItems.includes('My Details') && (
             <div>
               <ListItem button component={Link} to="/mydetails">
                 <ListItemIcon>
@@ -457,7 +455,7 @@ class MainScreen extends React.PureComponent {
               <Divider />
             </div>
           )}
-          {menuItems.includes("Jobs") && (
+          {menuItems.includes('Jobs') && (
             <div>
               <ListItem button component={Link} to="/jobs">
                 <ListItemIcon>
@@ -542,7 +540,7 @@ class MainScreen extends React.PureComponent {
             </List>
           </Collapse>
         </div>}*/}
-          {menuItems.includes("Asbestos Lab") && (
+          {menuItems.includes('Asbestos Lab') && (
             <div>
               <ListItem button component={Link} to="/asbestoslab">
                 <ListItemIcon>
@@ -617,7 +615,7 @@ class MainScreen extends React.PureComponent {
           <ListItemText primary="Inventory" />
         </ListItem>*/}
 
-          {menuItems.includes("Training") && (
+          {menuItems.includes('Training') && (
             <div>
               <ListItem button onClick={this.handleTrainingClick}>
                 <ListItemIcon>
@@ -685,7 +683,7 @@ class MainScreen extends React.PureComponent {
             </div>
           )}
 
-          {menuItems.includes("Library") && (
+          {menuItems.includes('Library') && (
             <div>
               <ListItem button component={Link} to="/library">
                 <ListItemIcon>
@@ -697,7 +695,7 @@ class MainScreen extends React.PureComponent {
             </div>
           )}
 
-          {this.props.me.auth && this.props.me.auth["Admin"] && (
+          {this.props.me.auth && this.props.me.auth['Admin'] && (
             <div>
               <Divider />
               <ListItem
@@ -705,7 +703,7 @@ class MainScreen extends React.PureComponent {
                 onClick={() => {
                   this.props.showModal({
                     modalType: APP_SETTINGS,
-                  });
+                  })
                 }}
               >
                 <ListItemIcon>
@@ -716,7 +714,7 @@ class MainScreen extends React.PureComponent {
               <ListItem
                 button
                 onClick={() => {
-                  this.props.showModal({ modalType: UPDATE_DATA });
+                  this.props.showModal({ modalType: UPDATE_DATA })
                 }}
               >
                 <ListItemIcon>
@@ -835,7 +833,7 @@ class MainScreen extends React.PureComponent {
           </Collapse>*/}
         </List>
       </Drawer>
-    );
+    )
 
     return (
       <React.Fragment>
@@ -853,7 +851,7 @@ class MainScreen extends React.PureComponent {
               // && this.props.state.local.staff[auth.currentUser.uid].gmail == auth.currentUser.email)
               <div className={classes.root}>
                 {this.props.location.pathname &&
-                  !this.props.location.pathname.includes("/site/") && (
+                  !this.props.location.pathname.includes('/site/') && (
                     <AppBar
                       position="absolute"
                       className={classNames(
@@ -1223,11 +1221,9 @@ class MainScreen extends React.PureComponent {
                               <InputBase
                                 value={this.props.search}
                                 onChange={(e) => {
-                                  store.dispatch(
-                                    onSearchChange(e.target.value)
-                                  );
+                                  store.dispatch(onSearchChange(e.target.value))
                                   if (e.target.value !== null) {
-                                    store.dispatch(onCatChange(null));
+                                    store.dispatch(onCatChange(null))
                                   }
                                 }}
                                 placeholder="Search…"
@@ -1240,7 +1236,7 @@ class MainScreen extends React.PureComponent {
                           )}
                         />
                         <Button
-                          aria-owns={anchorEl ? "google-menu" : null}
+                          aria-owns={anchorEl ? 'google-menu' : null}
                           aria-haspopup="true"
                           onClick={this.handleGoogleMenuToggle}
                         >
@@ -1442,14 +1438,14 @@ class MainScreen extends React.PureComponent {
           </div>
         )}
       </React.Fragment>
-    );
+    )
   }
 }
 
-MainScreen.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
+// MainScreen.propTypes = {
+//   classes: PropTypes.object.isRequired,
+// };
 
 export default withRouter(
   withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(MainScreen))
-);
+)

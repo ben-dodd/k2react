@@ -1,42 +1,40 @@
-import React from "react";
-// import { WithContext as ReactTags } from 'react-tag-input';
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../../config/styles";
-import { connect } from "react-redux";
+import React from 'react'
+
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../../config/styles'
+import { connect } from 'react-redux'
 import {
   ASBESTOS_COC_EDIT,
   ASBESTOS_SAMPLE_EDIT_COC,
-} from "../../../constants/modal-types";
+} from '../../../constants/modal-types'
 
-import Button from "@material-ui/core/Button";
-import Tooltip from "@material-ui/core/Tooltip";
-import Dialog from "@material-ui/core/Dialog";
-import Grid from "@material-ui/core/Grid";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogActions from "@material-ui/core/DialogActions";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
-import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import IconButton from "@material-ui/core/IconButton";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Radio from "@material-ui/core/Radio";
-import Select from "react-select";
-import SuggestionField from "../../../widgets/SuggestionField";
-import AsbestosSampleListAir from "../components/AsbestosSampleListAir";
-import AsbestosSampleListBulk from "../components/AsbestosSampleListBulk";
-// import { CSSTransition } from 'react-transition-group';
-// import '../../../config/styles.css';
+import Button from '@material-ui/core/Button'
+import Tooltip from '@material-ui/core/Tooltip'
+import Dialog from '@material-ui/core/Dialog'
+import Grid from '@material-ui/core/Grid'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogActions from '@material-ui/core/DialogActions'
+import TextField from '@material-ui/core/TextField'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
+import FormControl from '@material-ui/core/FormControl'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import IconButton from '@material-ui/core/IconButton'
+import RadioGroup from '@material-ui/core/RadioGroup'
+import Radio from '@material-ui/core/Radio'
+import Select from 'react-select'
+import SuggestionField from '../../../widgets/SuggestionField'
+import AsbestosSampleListAir from '../components/AsbestosSampleListAir'
+import AsbestosSampleListBulk from '../components/AsbestosSampleListBulk'
 
-import { DatePicker } from "@material-ui/pickers";
+import { DatePicker } from '@material-ui/pickers'
 
-import Add from "@material-ui/icons/Add";
-import Sync from "@material-ui/icons/Sync";
-import Link from "@material-ui/icons/Link";
-import Go from "@material-ui/icons/ArrowForwardIos";
+import Add from '@material-ui/icons/Add'
+import Sync from '@material-ui/icons/Sync'
+import Link from '@material-ui/icons/Link'
+import Go from '@material-ui/icons/ArrowForwardIos'
 import {
   hideModal,
   handleModalChange,
@@ -45,13 +43,13 @@ import {
   setModalError,
   resetModal,
   showModalSecondary,
-} from "../../../actions/modal";
-import { fetchStaff, addLog } from "../../../actions/local";
+} from '../../../actions/modal'
+import { fetchStaff, addLog } from '../../../actions/local'
 import {
   getDetailedWFMJob,
   resetWfmJob,
   getDefaultLetterAddress,
-} from "../../../actions/jobs";
+} from '../../../actions/jobs'
 import {
   fetchSamples,
   handleCocSubmit,
@@ -60,17 +58,16 @@ import {
   getAirSampleData,
   getSampleColors,
   updateResultMap,
-} from "../../../actions/asbestosLab";
+} from '../../../actions/asbestosLab'
 import {
   titleCase,
   sentenceCase,
   dateOf,
   personnelConvert,
   numericOnly,
-} from "../../../actions/helpers";
-import _ from "lodash";
+} from '../../../actions/helpers'
+import _ from 'lodash'
 
-const { whyDidYouUpdate } = require("why-did-you-update");
 const mapStateToProps = (state) => {
   return {
     materialSuggestions: state.const.asbestosMaterialSuggestions,
@@ -86,8 +83,8 @@ const mapStateToProps = (state) => {
     samples: state.asbestosLab.samples,
     otherOptions: state.const.otherOptions,
     wfmAccessToken: state.local.wfmAccessToken,
-  };
-};
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -110,8 +107,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchSamples: (cocUid, jobNumber, modal, airSamples) =>
       dispatch(fetchSamples(cocUid, jobNumber, modal, airSamples)),
     resetModal: () => dispatch(resetModal()),
-  };
-};
+  }
+}
 
 // function getStyles(name, that) {
 //   return {
@@ -124,7 +121,7 @@ const mapDispatchToProps = (dispatch) => {
 
 const initState = {
   jobNumber: null,
-  sampleType: "bulk",
+  sampleType: 'bulk',
 
   personnel: [],
   personnelSetup: [],
@@ -140,7 +137,7 @@ const initState = {
   sampleEditModified: false,
   sampleDelete: false,
   sampleDoSwap: false,
-  sampleSwap: "",
+  sampleSwap: '',
 
   // airFilterModal: null,
   // airFilterModified: false,
@@ -160,112 +157,112 @@ const initState = {
   showBulkChangeSamples: false,
 
   samples: {},
-};
+}
 
 class CocModal extends React.PureComponent {
   // static whyDidYouRender = true;
-  state = initState;
+  state = initState
 
   UNSAFE_componentWillMount() {
-    if (Object.keys(this.props.staff).length < 1) this.props.fetchStaff();
+    if (Object.keys(this.props.staff).length < 1) this.props.fetchStaff()
     if (this.props.doc && this.props.doc.sampleType)
       this.setState({
         sampleType: this.props.doc.sampleType,
-      });
+      })
   }
 
   wfmSync = () => {
-    let jobNumber = this.props.doc.jobNumber;
-    let initJobNumber = this.state.jobNumber;
-    if (!jobNumber && this.state.jobNumber) jobNumber = this.state.jobNumber;
+    let jobNumber = this.props.doc.jobNumber
+    let initJobNumber = this.state.jobNumber
+    if (!jobNumber && this.state.jobNumber) jobNumber = this.state.jobNumber
     if (!jobNumber) {
-      this.props.setModalError("Enter the job number to sync with WorkflowMax");
+      this.props.setModalError('Enter the job number to sync with WorkflowMax')
     } else if (
-      jobNumber.substring(0, 2).toUpperCase() !== "AS" &&
+      jobNumber.substring(0, 2).toUpperCase() !== 'AS' &&
       this.props.otherOptions &&
       this.props.otherOptions.filter(
-        (v) => v.option === "asbestosNumbersMustBeAS"
-      )[0].value === "true"
+        (v) => v.option === 'asbestosNumbersMustBeAS'
+      )[0].value === 'true'
     ) {
-      this.props.setModalError('Asbestos job numbers must begin with "AS"');
+      this.props.setModalError('Asbestos job numbers must begin with "AS"')
     } else {
-      this.props.setModalError(null);
-      this.props.handleSelectChange({ id: "modal", value: { isNew: false } });
-      let createUid = this.props.doc.uid === undefined;
+      this.props.setModalError(null)
+      this.props.handleSelectChange({ id: 'modal', value: { isNew: false } })
+      let createUid = this.props.doc.uid === undefined
       this.props.getDetailedWFMJob({
         jobNumber,
         createUid,
         accessToken: this.props.wfmAccessToken,
         refreshToken: this.props.me.refreshToken,
-      });
-      let uid = this.props.doc.uid;
+      })
+      let uid = this.props.doc.uid
       // //console.log('wfmsync fetch samples');
       this.props.fetchSamples(
         uid,
         jobNumber,
         true,
-        this.state.sampleType === "air"
-      );
-      this.setState({ modified: true });
+        this.state.sampleType === 'air'
+      )
+      this.setState({ modified: true })
     }
-  };
+  }
 
   loadSamples = () => {
     if (this.props.doc && !this.props.doc.samples)
       this.props.handleModalChange({
-        id: "samples",
+        id: 'samples',
         value: this.props.samples[this.props.doc.uid] || {},
-      });
-  };
+      })
+  }
 
   handleResultClick = (res, sampleNumber) => {
-    const { doc } = this.props;
+    const { doc } = this.props
     let sample =
       doc &&
       doc.samples &&
       doc.samples[sampleNumber + 1] &&
       !doc.samples[sampleNumber + 1].deleted
         ? doc.samples[sampleNumber + 1]
-        : {};
-    let newMap = updateResultMap(res, sample.result);
-    this.props.handleSampleChange(sampleNumber, { result: newMap });
-  };
+        : {}
+    let newMap = updateResultMap(res, sample.result)
+    this.props.handleSampleChange(sampleNumber, { result: newMap })
+  }
 
   render() {
-    const { modalProps, modalType, doc, wfmJob, classes, me } = this.props;
-    console.log(doc);
+    const { modalProps, modalType, doc, wfmJob, classes, me } = this.props
+    console.log(doc)
 
     if (modalType === ASBESTOS_COC_EDIT) {
-      const names = [{ name: "Client", uid: "Client" }].concat(
+      const names = [{ name: 'Client', uid: 'Client' }].concat(
         Object.values(this.props.staff).sort((a, b) =>
           a.name.localeCompare(b.name)
         )
-      );
+      )
 
-      let sampleNumbers = [this.state.numberOfSamples];
+      let sampleNumbers = [this.state.numberOfSamples]
       if (doc && doc.samples)
         sampleNumbers = sampleNumbers.concat(
           Object.keys(doc.samples).map((key) => parseInt(key))
-        );
-      let numberOfSamples = Math.max(...sampleNumbers);
-      let wfmSynced = doc.jobNumber && !modalProps.isNew;
+        )
+      let numberOfSamples = Math.max(...sampleNumbers)
+      let wfmSynced = doc.jobNumber && !modalProps.isNew
 
-      let blockInput = !doc.uid && (!wfmSynced || modalProps.error);
-      if (blockInput !== false) blockInput = true;
-      let noSamples = true;
+      let blockInput = !doc.uid && (!wfmSynced || modalProps.error)
+      if (blockInput !== false) blockInput = true
+      let noSamples = true
       if (doc && doc.samples)
         Object.values(doc.samples).forEach((s) => {
           if (
-            this.state.sampleType === "bulk" &&
+            this.state.sampleType === 'bulk' &&
             !s.deleted &&
             (s.description ||
               s.material ||
               s.specificLocation ||
               s.genericLocation)
           )
-            noSamples = false;
+            noSamples = false
           else if (
-            this.state.sampleType === "air" &&
+            this.state.sampleType === 'air' &&
             !s.deleted &&
             (s.specificLocation ||
               s.initialFlowRate ||
@@ -274,8 +271,8 @@ class CocModal extends React.PureComponent {
               s.endTime ||
               s.totalRunTime)
           )
-            noSamples = false;
-        });
+            noSamples = false
+        })
 
       return (
         <Dialog
@@ -292,10 +289,10 @@ class CocModal extends React.PureComponent {
               <div>
                 <div>Create New Chain of Custody</div>
                 <div className={classes.subtitle}>
-                  {this.state.sampleType === "air" &&
-                    "Membrane Filter Method for Estimating Airborne Asbestos Fibres (NOHSC 3003:2005)"}
-                  {this.state.sampleType === "bulk" &&
-                    "Qualitative Identification of Asbestos in Bulk Samples (AS 4964-2004)"}
+                  {this.state.sampleType === 'air' &&
+                    'Membrane Filter Method for Estimating Airborne Asbestos Fibres (NOHSC 3003:2005)'}
+                  {this.state.sampleType === 'bulk' &&
+                    'Qualitative Identification of Asbestos in Bulk Samples (AS 4964-2004)'}
                 </div>
               </div>
             </DialogTitle>
@@ -354,7 +351,7 @@ class CocModal extends React.PureComponent {
                             </div>
                           ) : (
                             <div>
-                              {doc.type !== "bulk" && (
+                              {doc.type !== 'bulk' && (
                                 <div className={classes.informationBox}>
                                   <Grid container>
                                     <Grid item>
@@ -407,21 +404,21 @@ class CocModal extends React.PureComponent {
                       )}
                       {doc.historicalCoc ? (
                         <div className={classes.informationBoxWhiteRounded}>
-                          {this.state.sampleType === "air" && (
+                          {this.state.sampleType === 'air' && (
                             <div>
                               <InputLabel>Test Description</InputLabel>
                               <SuggestionField
                                 that={this}
                                 suggestions="airTestDescriptions"
-                                defaultValue={doc.airTestDescription || ""}
+                                defaultValue={doc.airTestDescription || ''}
                                 onModify={(value) => {
                                   this.setState({
                                     modified: true,
-                                  });
+                                  })
                                   this.props.handleModalChange({
-                                    id: "airTestDescription",
+                                    id: 'airTestDescription',
                                     value: value,
-                                  });
+                                  })
                                 }}
                               />
                             </div>
@@ -434,10 +431,10 @@ class CocModal extends React.PureComponent {
                               row
                               aria-label="inhouseSampling"
                               name="inhouseSampling"
-                              value={doc.inhouseSampling || "true"}
+                              value={doc.inhouseSampling || 'true'}
                               onChange={(e) =>
                                 this.props.handleModalChange({
-                                  id: "inhouseSampling",
+                                  id: 'inhouseSampling',
                                   value: e.target.value,
                                 })
                               }
@@ -455,7 +452,7 @@ class CocModal extends React.PureComponent {
                             </RadioGroup>
                           </FormControl>
                           {doc.inhouseSampling === undefined ||
-                          doc.inhouseSampling === "true" ? (
+                          doc.inhouseSampling === 'true' ? (
                             <div>
                               <InputLabel className={classes.marginTopSmall}>
                                 Sampling By
@@ -476,30 +473,30 @@ class CocModal extends React.PureComponent {
                                     value: e.uid,
                                     label: e.name,
                                   })),
-                                  { value: "Other", label: "Other" },
+                                  { value: 'Other', label: 'Other' },
                                 ]}
                                 onChange={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "sampledBy",
+                                    id: 'sampledBy',
                                     value: personnelConvert(e),
-                                  });
+                                  })
                                 }}
                               />
                               {doc.sampledBy &&
-                                doc.sampledBy[0].value === "Other" && (
+                                doc.sampledBy[0].value === 'Other' && (
                                   <div>
                                     <TextField
                                       id="otherSampledBy"
                                       label="Sampling Personnel"
-                                      style={{ width: "100%" }}
+                                      style={{ width: '100%' }}
                                       defaultValue={doc && doc.otherSampledBy}
                                       onChange={(e) => {
-                                        this.setState({ modified: true });
+                                        this.setState({ modified: true })
                                         this.props.handleModalChange({
-                                          id: "otherSampledBy",
+                                          id: 'otherSampledBy',
                                           value: e.target.value,
-                                        });
+                                        })
                                       }}
                                     />
                                     {/* Asbestos Assessors Numbers in here? */}
@@ -511,42 +508,42 @@ class CocModal extends React.PureComponent {
                               <TextField
                                 id="samplingCompany"
                                 label="Name of Sampling Company"
-                                style={{ width: "100%" }}
+                                style={{ width: '100%' }}
                                 defaultValue={doc && doc.samplingCompany}
                                 onChange={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "samplingCompany",
+                                    id: 'samplingCompany',
                                     value: e.target.value,
-                                  });
+                                  })
                                 }}
                               />
                               <TextField
                                 id="samplingCompanyRef"
                                 label="Sampling Company Job Reference"
-                                style={{ width: "100%" }}
+                                style={{ width: '100%' }}
                                 defaultValue={doc && doc.samplingCompanyRef}
                                 onChange={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "samplingCompanyRef",
+                                    id: 'samplingCompanyRef',
                                     value: e.target.value,
-                                  });
+                                  })
                                 }}
                               />
                               <TextField
                                 id="samplingCompanyPersonnel"
                                 label="Name of Sampler"
-                                style={{ width: "100%" }}
+                                style={{ width: '100%' }}
                                 defaultValue={
                                   doc && doc.samplingCompanyPersonnel
                                 }
                                 onChange={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "samplingCompanyPersonnel",
+                                    id: 'samplingCompanyPersonnel',
                                     value: e.target.value,
-                                  });
+                                  })
                                 }}
                               />
                             </div>
@@ -562,13 +559,13 @@ class CocModal extends React.PureComponent {
                             format="ddd, D MMMM YYYY"
                             clearable
                             openTo="year"
-                            views={["year", "month", "date"]}
+                            views={['year', 'month', 'date']}
                             onChange={(date) => {
-                              this.setState({ modified: true });
+                              this.setState({ modified: true })
                               this.props.handleModalChange({
-                                id: "sampleDate",
+                                id: 'sampleDate',
                                 value: dateOf(date),
-                              });
+                              })
                             }}
                           />
                           <InputLabel className={classes.marginTopSmall}>
@@ -579,10 +576,10 @@ class CocModal extends React.PureComponent {
                               row
                               aria-label="inhouseTesting"
                               name="inhouseTesting"
-                              value={doc.inhouseTesting || "true"}
+                              value={doc.inhouseTesting || 'true'}
                               onChange={(e) =>
                                 this.props.handleModalChange({
-                                  id: "inhouseTesting",
+                                  id: 'inhouseTesting',
                                   value: e.target.value,
                                 })
                               }
@@ -600,7 +597,7 @@ class CocModal extends React.PureComponent {
                             </RadioGroup>
                           </FormControl>
                           {doc.inhouseTesting === undefined ||
-                          doc.inhouseTesting === "true" ? (
+                          doc.inhouseTesting === 'true' ? (
                             <div>
                               <InputLabel className={classes.marginTopSmall}>
                                 Analysis By
@@ -621,14 +618,14 @@ class CocModal extends React.PureComponent {
                                     value: e.uid,
                                     label: e.name,
                                   })),
-                                  { value: "other", label: "Other" },
+                                  { value: 'other', label: 'Other' },
                                 ]}
                                 onChange={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "analysisBy",
+                                    id: 'analysisBy',
                                     value: personnelConvert(e),
-                                  });
+                                  })
                                 }}
                               />
                             </div>
@@ -637,42 +634,42 @@ class CocModal extends React.PureComponent {
                               <TextField
                                 id="testingLaboratory"
                                 label="Testing Laboratory"
-                                style={{ width: "100%" }}
+                                style={{ width: '100%' }}
                                 defaultValue={doc && doc.testingLaboratory}
                                 onChange={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "testingLaboratory",
+                                    id: 'testingLaboratory',
                                     value: e.target.value,
-                                  });
+                                  })
                                 }}
                               />
                               <TextField
                                 id="testingLaboratoryRef"
                                 label="Testing Laboratory Job Reference"
-                                style={{ width: "100%" }}
+                                style={{ width: '100%' }}
                                 defaultValue={doc && doc.testingLaboratoryRef}
                                 onChange={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "testingLaboratoryRef",
+                                    id: 'testingLaboratoryRef',
                                     value: e.target.value,
-                                  });
+                                  })
                                 }}
                               />
                               <TextField
                                 id="testingLaboratoryAnalysts"
                                 label="Name of Analyst(s)"
-                                style={{ width: "100%" }}
+                                style={{ width: '100%' }}
                                 defaultValue={
                                   doc && doc.testingLaboratoryAnalysts
                                 }
                                 onChange={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "testingLaboratoryAnalysts",
+                                    id: 'testingLaboratoryAnalysts',
                                     value: e.target.value,
-                                  });
+                                  })
                                 }}
                               />
                             </div>
@@ -689,13 +686,13 @@ class CocModal extends React.PureComponent {
                             format="ddd, D MMMM YYYY"
                             clearable
                             openTo="year"
-                            views={["year", "month", "date"]}
+                            views={['year', 'month', 'date']}
                             onChange={(date) => {
-                              this.setState({ modified: true });
+                              this.setState({ modified: true })
                               this.props.handleModalChange({
-                                id: "receivedDate",
+                                id: 'receivedDate',
                                 value: dateOf(date),
-                              });
+                              })
                             }}
                           />
 
@@ -710,13 +707,13 @@ class CocModal extends React.PureComponent {
                             format="ddd, D MMMM YYYY"
                             clearable
                             openTo="year"
-                            views={["year", "month", "date"]}
+                            views={['year', 'month', 'date']}
                             onChange={(date) => {
-                              this.setState({ modified: true });
+                              this.setState({ modified: true })
                               this.props.handleModalChange({
-                                id: "analysisDate",
+                                id: 'analysisDate',
                                 value: dateOf(date),
-                              });
+                              })
                             }}
                           />
 
@@ -729,35 +726,35 @@ class CocModal extends React.PureComponent {
                             format="ddd, D MMMM YYYY"
                             clearable
                             openTo="year"
-                            views={["year", "month", "date"]}
+                            views={['year', 'month', 'date']}
                             onChange={(date) => {
-                              this.setState({ modified: true });
+                              this.setState({ modified: true })
                               this.props.handleModalChange({
-                                id: "issueDate",
+                                id: 'issueDate',
                                 value: dateOf(date),
-                              });
+                              })
                             }}
                           />
                           <TextField
                             id="historicalCocNotes"
                             label="Notes"
-                            style={{ width: "100%" }}
+                            style={{ width: '100%' }}
                             defaultValue={doc && doc.historicalCocNotes}
                             rows={5}
                             helperText="Include any useful background information on this sampling."
                             multiline
                             onChange={(e) => {
-                              this.setState({ modified: true });
+                              this.setState({ modified: true })
                               this.props.handleModalChange({
-                                id: "historicalCocNotes",
+                                id: 'historicalCocNotes',
                                 value: e.target.value,
-                              });
+                              })
                             }}
                           />
                         </div>
                       ) : (
                         <div className={classes.informationBoxWhiteRounded}>
-                          {this.state.sampleType === "air" && (
+                          {this.state.sampleType === 'air' && (
                             <div>
                               <InputLabel>Test Description</InputLabel>
                               <SuggestionField
@@ -766,16 +763,16 @@ class CocModal extends React.PureComponent {
                                 defaultValue={
                                   doc.airTestDescription
                                     ? doc.airTestDescription
-                                    : ""
+                                    : ''
                                 }
                                 onModify={(value) => {
                                   this.setState({
                                     modified: true,
-                                  });
+                                  })
                                   this.props.handleModalChange({
-                                    id: "airTestDescription",
+                                    id: 'airTestDescription',
                                     value: value,
-                                  });
+                                  })
                                 }}
                               />
                               <InputLabel className={classes.marginTopSmall}>
@@ -797,11 +794,11 @@ class CocModal extends React.PureComponent {
                                   label: e.name,
                                 }))}
                                 onChange={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "sampledBy",
+                                    id: 'sampledBy',
                                     value: personnelConvert(e),
-                                  });
+                                  })
                                 }}
                               />
                             </div>
@@ -809,17 +806,17 @@ class CocModal extends React.PureComponent {
                           <TextField
                             id="labInstructions"
                             label="Lab Instructions"
-                            style={{ width: "100%" }}
+                            style={{ width: '100%' }}
                             defaultValue={doc && doc.labInstructions}
                             rows={5}
                             helperText="Include any information that may be useful for the lab. E.g. for a soil sample you might include information on what contamination you are expecting."
                             multiline
                             onChange={(e) => {
-                              this.setState({ modified: true });
+                              this.setState({ modified: true })
                               this.props.handleModalChange({
-                                id: "labInstructions",
+                                id: 'labInstructions',
                                 value: e.target.value,
-                              });
+                              })
                             }}
                           />
                           <FormControlLabel
@@ -827,11 +824,11 @@ class CocModal extends React.PureComponent {
                               <Switch
                                 checked={doc.priority === 1 ? true : false}
                                 onClick={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "priority",
+                                    id: 'priority',
                                     value: doc.priority === 1 ? 0 : 1,
-                                  });
+                                  })
                                 }}
                                 value="priority"
                                 color="secondary"
@@ -846,11 +843,11 @@ class CocModal extends React.PureComponent {
                                   doc.isClearance === true ? true : false
                                 }
                                 onClick={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "isClearance",
+                                    id: 'isClearance',
                                     value: e.target.checked,
-                                  });
+                                  })
                                 }}
                                 value="isClearance"
                                 color="secondary"
@@ -863,7 +860,7 @@ class CocModal extends React.PureComponent {
                     </Grid>
                     {!doc.historicalCoc && (
                       <Grid item xs={8} lg={12}>
-                        {this.state.sampleType === "bulk" && (
+                        {this.state.sampleType === 'bulk' && (
                           <div className={classes.informationBoxWhiteRounded}>
                             <FormControlLabel
                               control={
@@ -872,11 +869,11 @@ class CocModal extends React.PureComponent {
                                     doc.waAnalysis === true ? true : false
                                   }
                                   onClick={(e) => {
-                                    this.setState({ modified: true });
+                                    this.setState({ modified: true })
                                     this.props.handleModalChange({
-                                      id: "waAnalysis",
+                                      id: 'waAnalysis',
                                       value: e.target.checked,
-                                    });
+                                    })
                                   }}
                                   value="priority"
                                   color="primary"
@@ -891,27 +888,29 @@ class CocModal extends React.PureComponent {
                                     doc.acmInSoilLimit
                                       ? {
                                           value: doc.acmInSoilLimit,
-                                          label: this.props.acmInSoilLimits.filter(
-                                            (e) =>
-                                              e.value === doc.acmInSoilLimit
-                                          )[0].label,
+                                          label:
+                                            this.props.acmInSoilLimits.filter(
+                                              (e) =>
+                                                e.value === doc.acmInSoilLimit
+                                            )[0].label,
                                         }
                                       : {
-                                          value: "0.01",
-                                          label: this.props.acmInSoilLimits.filter(
-                                            (e) => e.value === "0.01"
-                                          )[0].label,
+                                          value: '0.01',
+                                          label:
+                                            this.props.acmInSoilLimits.filter(
+                                              (e) => e.value === '0.01'
+                                            )[0].label,
                                         }
                                   }
                                   options={this.props.acmInSoilLimits.map(
                                     (e) => ({ value: e.value, label: e.label })
                                   )}
                                   onChange={(e) => {
-                                    this.setState({ modified: true });
+                                    this.setState({ modified: true })
                                     this.props.handleModalChange({
-                                      id: "acmInSoilLimit",
+                                      id: 'acmInSoilLimit',
                                       value: e.value,
-                                    });
+                                    })
                                   }}
                                 />
                                 <div className={classes.informationBoxRounded}>
@@ -921,7 +920,7 @@ class CocModal extends React.PureComponent {
                                           (e) => e.value === doc.acmInSoilLimit
                                         )[0].heading
                                       : this.props.acmInSoilLimits.filter(
-                                          (e) => e.value === "0.01"
+                                          (e) => e.value === '0.01'
                                         )[0].heading}
                                   </div>
                                   <div>
@@ -930,7 +929,7 @@ class CocModal extends React.PureComponent {
                                           (e) => e.value === doc.acmInSoilLimit
                                         )[0].description
                                       : this.props.acmInSoilLimits.filter(
-                                          (e) => e.value === "0.01"
+                                          (e) => e.value === '0.01'
                                         )[0].description}
                                   </div>
                                 </div>
@@ -946,11 +945,11 @@ class CocModal extends React.PureComponent {
                                   doc.labToContactClient === true ? true : false
                                 }
                                 onClick={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "labToContactClient",
+                                    id: 'labToContactClient',
                                     value: e.target.checked,
-                                  });
+                                  })
                                 }}
                                 value="labToContactClient"
                                 color="primary"
@@ -968,14 +967,14 @@ class CocModal extends React.PureComponent {
                                     ? doc.labContactName
                                     : doc.contact && doc.contact.name
                                     ? doc.contact.name
-                                    : ""
+                                    : ''
                                 }
                                 onChange={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "labContactName",
+                                    id: 'labContactName',
                                     value: e.target.value,
-                                  });
+                                  })
                                 }}
                               />
                               <TextField
@@ -988,14 +987,14 @@ class CocModal extends React.PureComponent {
                                     ? doc.contact.mobile
                                     : doc.contact && doc.contact.phone
                                     ? doc.contact.phone
-                                    : ""
+                                    : ''
                                 }
                                 onChange={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "labContactNumber",
+                                    id: 'labContactNumber',
                                     value: e.target.value,
-                                  });
+                                  })
                                 }}
                               />
                               <TextField
@@ -1006,14 +1005,14 @@ class CocModal extends React.PureComponent {
                                     ? doc.labContactEmail
                                     : doc.contact && doc.contact.email
                                     ? doc.contact.email
-                                    : ""
+                                    : ''
                                 }
                                 onChange={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "labContactEmail",
+                                    id: 'labContactEmail',
                                     value: e.target.value,
-                                  });
+                                  })
                                 }}
                               />
                             </div>
@@ -1029,11 +1028,11 @@ class CocModal extends React.PureComponent {
                                     : false
                                 }
                                 onClick={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "sendCoverLetterWithCertificate",
+                                    id: 'sendCoverLetterWithCertificate',
                                     value: e.target.checked,
-                                  });
+                                  })
                                 }}
                                 value="sendCoverLetterWithCertificate"
                                 color="primary"
@@ -1046,17 +1045,17 @@ class CocModal extends React.PureComponent {
                               <TextField
                                 id="letterAddress"
                                 label="Cover Letter Address"
-                                style={{ width: "100%" }}
+                                style={{ width: '100%' }}
                                 defaultValue={getDefaultLetterAddress(doc)}
                                 rowsMax={10}
                                 helperText="The address to be put on the front page of the certificate cover letter."
                                 multiline
                                 onChange={(e) => {
-                                  this.setState({ modified: true });
+                                  this.setState({ modified: true })
                                   this.props.handleModalChange({
-                                    id: "coverLetterAddress",
+                                    id: 'coverLetterAddress',
                                     value: e.target.value,
-                                  });
+                                  })
                                 }}
                               />
                             </div>
@@ -1075,7 +1074,7 @@ class CocModal extends React.PureComponent {
                                   onClick={(e) => {
                                     this.setState({
                                       showBulkChangeSamples: true,
-                                    });
+                                    })
                                   }}
                                   value="showBulkChangeSamples"
                                   color="primary"
@@ -1088,17 +1087,17 @@ class CocModal extends React.PureComponent {
                                 <TextField
                                   id="letterAddress"
                                   label="Cover Letter Address"
-                                  style={{ width: "100%" }}
+                                  style={{ width: '100%' }}
                                   defaultValue={getDefaultLetterAddress(doc)}
                                   rows={5}
                                   helperText="The address to be put on the front page of the certificate cover letter."
                                   multiline
                                   onChange={(e) => {
-                                    this.setState({ modified: true });
+                                    this.setState({ modified: true })
                                     this.props.handleModalChange({
-                                      id: "coverLetterAddress",
+                                      id: 'coverLetterAddress',
                                       value: e.target.value,
-                                    });
+                                    })
                                   }}
                                 />
                               </div>
@@ -1110,7 +1109,7 @@ class CocModal extends React.PureComponent {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} lg={10}>
-                  {this.state.sampleType === "bulk" ? (
+                  {this.state.sampleType === 'bulk' ? (
                     <AsbestosSampleListBulk
                       listType="heading"
                       classes={classes}
@@ -1123,7 +1122,7 @@ class CocModal extends React.PureComponent {
                       doc={doc}
                     />
                   )}
-                  {this.state.sampleType === "bulk"
+                  {this.state.sampleType === 'bulk'
                     ? Array.from(Array(numberOfSamples), (x, i) => i).map(
                         (i) => {
                           let sample =
@@ -1132,13 +1131,13 @@ class CocModal extends React.PureComponent {
                             doc.samples[i + 1] &&
                             !doc.samples[i + 1].deleted
                               ? doc.samples[i + 1]
-                              : {};
+                              : {}
                           let disabled =
                             blockInput ||
-                            (sample.cocUid && sample.cocUid !== doc.uid);
-                          if (!disabled) disabled = false;
+                            (sample.cocUid && sample.cocUid !== doc.uid)
+                          if (!disabled) disabled = false
                           return sample.uid && sample.deleted === false ? (
-                            sample.sampleType === "air" ? (
+                            sample.sampleType === 'air' ? (
                               <AsbestosSampleListAir
                                 key={i}
                                 i={i}
@@ -1198,7 +1197,7 @@ class CocModal extends React.PureComponent {
                               listType="editable"
                               that={this}
                             />
-                          );
+                          )
                         }
                       )
                     : Array.from(Array(numberOfSamples), (x, i) => i).map(
@@ -1209,13 +1208,13 @@ class CocModal extends React.PureComponent {
                             doc.samples[i + 1] &&
                             !doc.samples[i + 1].deleted
                               ? doc.samples[i + 1]
-                              : {};
+                              : {}
                           let disabled =
                             blockInput ||
-                            (sample.cocUid && sample.cocUid !== doc.uid);
-                          if (!disabled) disabled = false;
+                            (sample.cocUid && sample.cocUid !== doc.uid)
+                          if (!disabled) disabled = false
                           return sample.uid && sample.deleted === false ? (
-                            sample.sampleType === "air" ? (
+                            sample.sampleType === 'air' ? (
                               <AsbestosSampleListAir
                                 i={i}
                                 disabled={disabled}
@@ -1273,13 +1272,13 @@ class CocModal extends React.PureComponent {
                               listType="editable"
                               that={this}
                             />
-                          );
+                          )
                         }
                       )}
                   <Button
                     className={classes.buttonViewMore}
                     onClick={() => {
-                      this.setState({ numberOfSamples: numberOfSamples + 10 });
+                      this.setState({ numberOfSamples: numberOfSamples + 10 })
                     }}
                   >
                     <Add className={classes.marginRightSmall} /> Add More
@@ -1292,7 +1291,7 @@ class CocModal extends React.PureComponent {
             <DialogContent className={classes.boxDark}>
               <div className={classes.informationBoxWhiteRounded}>
                 <div style={{ fontSize: 24 }}>Create New Chain of Custody</div>
-                {this.props.me.name === "Ben Dodd" && (
+                {this.props.me.name === 'Ben Dodd' && (
                   <div>
                     <Tooltip title="Step 1: Select your sample type">
                       <FormControl>
@@ -1326,14 +1325,14 @@ class CocModal extends React.PureComponent {
                     <Input
                       id="jobNumber"
                       className={classes.bigInput}
-                      value={this.state.jobNumber || ""}
+                      value={this.state.jobNumber || ''}
                       onChange={(e) => {
                         // this.setState({ modified: true, });
                         this.setState({
                           jobNumber: e.target.value
-                            .replace(/\s/g, "")
+                            .replace(/\s/g, '')
                             .toUpperCase(),
-                        });
+                        })
                       }}
                       // startAdornment={<InputAdornment position="start">AS</InputAdornment>}
                     />
@@ -1356,8 +1355,8 @@ class CocModal extends React.PureComponent {
             <DialogActions>
               <Button
                 onClick={() => {
-                  this.props.resetWfmJob();
-                  this.props.resetModal();
+                  this.props.resetWfmJob()
+                  this.props.resetModal()
                 }}
                 color="secondary"
               >
@@ -1369,59 +1368,59 @@ class CocModal extends React.PureComponent {
                   if (wfmJob.client) {
                     doc.jobNumber = doc.jobNumber
                       ? doc.jobNumber.toUpperCase().trim()
-                      : null;
-                    doc.client = wfmJob.client ? wfmJob.client.trim() : null;
-                    doc.address = wfmJob.address ? wfmJob.address.trim() : null;
+                      : null
+                    doc.client = wfmJob.client ? wfmJob.client.trim() : null
+                    doc.address = wfmJob.address ? wfmJob.address.trim() : null
                     doc.clientOrderNumber = wfmJob.clientOrderNumber.trim()
                       ? wfmJob.clientOrderNumber
-                      : null;
-                    doc.contact = wfmJob.contact ? wfmJob.contact : null;
-                    doc.dueDate = wfmJob.dueDate ? wfmJob.dueDate : null;
-                    doc.manager = wfmJob.manager ? wfmJob.manager.trim() : null;
+                      : null
+                    doc.contact = wfmJob.contact ? wfmJob.contact : null
+                    doc.dueDate = wfmJob.dueDate ? wfmJob.dueDate : null
+                    doc.manager = wfmJob.manager ? wfmJob.manager.trim() : null
                     doc.managerID = wfmJob.managerID
                       ? wfmJob.managerID.trim()
-                      : null;
-                    doc.wfmType = wfmJob.wfmType ? wfmJob.wfmType : null;
-                    doc.wfmID = wfmJob.wfmID ? wfmJob.wfmID : null;
-                    doc.wfmState = wfmJob.wfmState ? wfmJob.wfmState : null;
+                      : null
+                    doc.wfmType = wfmJob.wfmType ? wfmJob.wfmType : null
+                    doc.wfmID = wfmJob.wfmID ? wfmJob.wfmID : null
+                    doc.wfmState = wfmJob.wfmState ? wfmJob.wfmState : null
                   }
-                  let now = new Date();
-                  let originalSamples = {};
+                  let now = new Date()
+                  let originalSamples = {}
                   if (!doc.createdDate) {
                     let log = {
-                      type: "Create",
+                      type: 'Create',
                       log: `Chain of Custody created.`,
                       chainOfCustody: doc.uid,
-                    };
-                    addLog("asbestosLab", log, me);
-                    doc.deleted = false;
-                    doc.createdDate = now;
-                    doc.createdBy = { id: me.uid, name: me.name };
+                    }
+                    addLog('asbestosLab', log, me)
+                    doc.deleted = false
+                    doc.createdDate = now
+                    doc.createdBy = { id: me.uid, name: me.name }
                     if (Object.keys(doc.samples).length === 0)
-                      doc.status = "No Samples";
-                    else if (doc.historicalCoc) doc.status = "Historical";
-                    else doc.status = "In Transit";
-                  } else originalSamples = this.props.samples[doc.uid];
+                      doc.status = 'No Samples'
+                    else if (doc.historicalCoc) doc.status = 'Historical'
+                    else doc.status = 'In Transit'
+                  } else originalSamples = this.props.samples[doc.uid]
                   if (doc.historicalCoc) {
-                    doc.versionUpToDate = true;
-                    doc.mostRecentIssueSent = true;
+                    doc.versionUpToDate = true
+                    doc.mostRecentIssueSent = true
                   } else {
-                    doc.versionUpToDate = false;
-                    doc.mostRecentIssueSent = false;
+                    doc.versionUpToDate = false
+                    doc.mostRecentIssueSent = false
                   }
-                  doc.lastModified = now;
-                  if (this.state.sampleType !== "air") {
-                    doc.defaultSampleDate = this.state.defaultSampleDate;
-                    doc.defaultSampledBy = this.state.defaultSampledBy;
+                  doc.lastModified = now
+                  if (this.state.sampleType !== 'air') {
+                    doc.defaultSampleDate = this.state.defaultSampleDate
+                    doc.defaultSampledBy = this.state.defaultSampledBy
                   }
                   handleCocSubmit({
                     doc: doc,
                     me: me,
                     originalSamples,
                     sampleType: this.state.sampleType,
-                  });
-                  this.props.resetModal();
-                  this.props.resetWfmJob();
+                  })
+                  this.props.resetModal()
+                  this.props.resetWfmJob()
                 }}
                 color="primary"
               >
@@ -1432,8 +1431,8 @@ class CocModal extends React.PureComponent {
             <DialogActions>
               <Button
                 onClick={() => {
-                  this.props.resetWfmJob();
-                  this.props.resetModal();
+                  this.props.resetWfmJob()
+                  this.props.resetModal()
                 }}
                 color="secondary"
               >
@@ -1442,11 +1441,11 @@ class CocModal extends React.PureComponent {
             </DialogActions>
           )}
         </Dialog>
-      );
-    } else return null;
+      )
+    } else return null
   }
 }
 
 export default withStyles(styles)(
   connect(mapStateToProps, mapDispatchToProps)(CocModal)
-);
+)

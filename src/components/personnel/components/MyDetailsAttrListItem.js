@@ -1,62 +1,59 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react'
+import { connect } from 'react-redux'
 
-import ListItem from "@material-ui/core/ListItem";
-import IconButton from "@material-ui/core/IconButton";
-import Grid from "@material-ui/core/Grid";
+import ListItem from '@material-ui/core/ListItem'
+import IconButton from '@material-ui/core/IconButton'
+import Grid from '@material-ui/core/Grid'
 
-import Edit from "@material-ui/icons/Edit";
-import Image from "@material-ui/icons/Image";
-import Delete from "@material-ui/icons/Delete";
+import Edit from '@material-ui/icons/Edit'
+import Image from '@material-ui/icons/Image'
+import Delete from '@material-ui/icons/Delete'
 
-import AttrModal from "../modals/AttrModal";
-import { USER_ATTR } from "../../../constants/modal-types";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../../config/styles";
-import { showModal } from "../../../actions/modal";
-import { getUserAttrs } from "../../../actions/local";
-import Popup from "reactjs-popup";
-import { usersRef, storage } from "../../../config/firebase";
-import moment from "moment";
+import AttrModal from '../modals/AttrModal'
+import { USER_ATTR } from '../../../constants/modal-types'
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../../config/styles'
+import { showModal } from '../../../actions/modal'
+import { getUserAttrs } from '../../../actions/local'
+import Popup from 'reactjs-popup'
+import { usersRef, storage } from '../../../config/firebase'
+import moment from 'moment'
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    showModal: modal => dispatch(showModal(modal)),
-    getUserAttrs: userPath => dispatch(getUserAttrs(userPath))
-  };
-};
+    showModal: (modal) => dispatch(showModal(modal)),
+    getUserAttrs: (userPath) => dispatch(getUserAttrs(userPath)),
+  }
+}
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    qualificationtypes: state.const.qualificationtypes
-  };
-};
+    qualificationtypes: state.const.qualificationtypes,
+  }
+}
 
 function deleteAttr(uid, user, file) {
-  //console.log("UID: " + uid);
-  //console.log("User: " + user);
-  //console.log("File: " + file);
-  if (file) storage.ref(file).delete();
+  if (file) storage.ref(file).delete()
   usersRef
     .doc(user)
-    .collection("attr")
+    .collection('attr')
     .doc(uid)
     .delete()
-    .then(() => {});
+    .then(() => {})
 }
 
 function AttrList(props) {
-  const { classes, attr } = props;
-  let cameracolor = "lightgrey";
-  if (attr.fileUrl) cameracolor = "green";
+  const { classes, attr } = props
+  let cameracolor = 'lightgrey'
+  if (attr.fileUrl) cameracolor = 'green'
 
-  let qual = props.qualificationtypes[attr.type];
+  let qual = props.qualificationtypes[attr.type]
 
-  let expirycolor = "black";
-  let today = new Date();
+  let expirycolor = 'black'
+  let today = new Date()
   if (attr.expiry) {
-    let expiry = new Date(attr.expiry);
-    if (expiry <= today) expirycolor = "red";
+    let expiry = new Date(attr.expiry)
+    if (expiry <= today) expirycolor = 'red'
   }
   return (
     <ListItem dense className={classes.hoverItem} key={attr.type + attr.date}>
@@ -65,9 +62,11 @@ function AttrList(props) {
           {attr.fileUrl ? (
             <Popup
               trigger={
-                <span><Image
-                  style={{ fontSize: 24, color: cameracolor, margin: 10 }}
-                /></span>
+                <span>
+                  <Image
+                    style={{ fontSize: 24, color: cameracolor, margin: 10 }}
+                  />
+                </span>
               }
               position="right bottom"
               on="hover"
@@ -85,10 +84,10 @@ function AttrList(props) {
                 modalProps: {
                   doc: attr,
                   userPath: props.userPath,
-                  title: "Edit Item",
-                  staffName: props.staffName
-                }
-              });
+                  title: 'Edit Item',
+                  staffName: props.staffName,
+                },
+              })
             }}
           >
             <Edit />
@@ -96,17 +95,16 @@ function AttrList(props) {
           <AttrModal />
         </Grid>
         <Grid item xs={8}>
-          <div className={classes.subHeading}>
-            {qual.name}
-          </div>
+          <div className={classes.subHeading}>{qual.name}</div>
           {qual.id && attr.id && (
             <div>
-              <span className={classes.headingInline}>ID Number:</span> {attr.id}
+              <span className={classes.headingInline}>ID Number:</span>{' '}
+              {attr.id}
             </div>
           )}
           {qual.number && attr.number && (
             <div>
-              <span className={classes.headingInline}>Licence Number:</span>{" "}
+              <span className={classes.headingInline}>Licence Number:</span>{' '}
               {attr.number}
             </div>
           )}
@@ -125,31 +123,31 @@ function AttrList(props) {
           </div>
           {qual.class && attr.class && (
             <div>
-              <span className={classes.headingInline}>Class(es):</span>{" "}
-              {attr.class.join(", ")}
+              <span className={classes.headingInline}>Class(es):</span>{' '}
+              {attr.class.join(', ')}
             </div>
           )}
           {qual.unit && attr.unit && (
             <div>
-              <span className={classes.headingInline}>Unit Standard(s):</span>{" "}
-              {attr.unit.join(", ")}
+              <span className={classes.headingInline}>Unit Standard(s):</span>{' '}
+              {attr.unit.join(', ')}
             </div>
           )}
           {qual.course && attr.course && (
             <div>
-              <span className={classes.headingInline}>Course(s):</span>{" "}
-              {attr.course.join(", ")}
+              <span className={classes.headingInline}>Course(s):</span>{' '}
+              {attr.course.join(', ')}
             </div>
           )}
           {attr.date && (
             <div>
-              <span className={classes.headingInline}>Issue Date:</span>{" "}
-              {moment(attr.date).format('D MMMM YYYY')}{" "}
+              <span className={classes.headingInline}>Issue Date:</span>{' '}
+              {moment(attr.date).format('D MMMM YYYY')}{' '}
             </div>
           )}
           {qual.expiry && attr.expiry && (
             <div>
-              <span className={classes.headingInline}>Expiry Date:</span>{" "}
+              <span className={classes.headingInline}>Expiry Date:</span>{' '}
               <span style={{ color: expirycolor }}>
                 {moment(attr.expiry).format('D MMMM YYYY')}
               </span>
@@ -157,7 +155,8 @@ function AttrList(props) {
           )}
           {qual.issuer && attr.issuer && (
             <div>
-              <span className={classes.headingInline}>Issued By:</span> {attr.issuer}
+              <span className={classes.headingInline}>Issued By:</span>{' '}
+              {attr.issuer}
             </div>
           )}
           {qual.notes && attr.notes && (
@@ -170,10 +169,10 @@ function AttrList(props) {
           <IconButton
             onClick={() => {
               if (
-                window.confirm("Are you sure you wish to delete this item?")
+                window.confirm('Are you sure you wish to delete this item?')
               ) {
-                deleteAttr(attr.uid, props.userPath, attr.fileRef);
-                props.getUserAttrs(props.userPath);
+                deleteAttr(attr.uid, props.userPath, attr.fileRef)
+                props.getUserAttrs(props.userPath)
               }
             }}
           >
@@ -182,12 +181,9 @@ function AttrList(props) {
         </Grid>
       </Grid>
     </ListItem>
-  );
+  )
 }
 
 export default withStyles(styles)(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(AttrList)
-);
+  connect(mapStateToProps, mapDispatchToProps)(AttrList)
+)

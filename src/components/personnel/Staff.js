@@ -1,45 +1,45 @@
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../config/styles";
+import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../config/styles'
 
-import Grid from "@material-ui/core/Grid";
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
-import GridListTileBar from "@material-ui/core/GridListTileBar";
-import ListItem from "@material-ui/core/ListItem";
+import Grid from '@material-ui/core/Grid'
+import GridList from '@material-ui/core/GridList'
+import GridListTile from '@material-ui/core/GridListTile'
+import GridListTileBar from '@material-ui/core/GridListTileBar'
+import ListItem from '@material-ui/core/ListItem'
 // import Paper from '@material-ui/core/Paper';
-import Tab from "@material-ui/core/Tab";
-import Tabs from "@material-ui/core/Tabs";
-import Chip from "@material-ui/core/Chip";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Button from "@material-ui/core/Button";
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "react-select";
-import Input from "@material-ui/core/Input";
+import Tab from '@material-ui/core/Tab'
+import Tabs from '@material-ui/core/Tabs'
+import Chip from '@material-ui/core/Chip'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Button from '@material-ui/core/Button'
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
+import FormControl from '@material-ui/core/FormControl'
+import InputLabel from '@material-ui/core/InputLabel'
+import Select from 'react-select'
+import Input from '@material-ui/core/Input'
 
-import LocationCity from "@material-ui/icons/LocationCity";
-import School from "@material-ui/icons/School";
-import Face from "@material-ui/icons/Face";
-import LocalHospital from "@material-ui/icons/LocalHospital";
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import Https from "@material-ui/icons/Https";
-import CheckCircleOutline from "@material-ui/icons/CheckCircleOutline";
+import LocationCity from '@material-ui/icons/LocationCity'
+import School from '@material-ui/icons/School'
+import Face from '@material-ui/icons/Face'
+import LocalHospital from '@material-ui/icons/LocalHospital'
+import ExpandMore from '@material-ui/icons/ExpandMore'
+import Https from '@material-ui/icons/Https'
+import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline'
 
-import "react-table/react-table.css";
-import Popup from "reactjs-popup";
-import ApiCalendar from "react-google-calendar-api";
+import 'react-table/react-table.css'
+import Popup from 'reactjs-popup'
+import ApiCalendar from 'react-google-calendar-api'
 
-import StaffOverviewListItem from "./components/StaffOverviewListItem.js";
-import { connect } from "react-redux";
-import { getUserAttrs, fetchStaff } from "../../actions/local";
-import { tabStaff, filterStaff } from "../../actions/display";
-import { auth, usersRef } from "../../config/firebase";
+import StaffOverviewListItem from './components/StaffOverviewListItem.js'
+import { connect } from 'react-redux'
+import { getUserAttrs, fetchStaff } from '../../actions/local'
+import { tabStaff, filterStaff } from '../../actions/display'
+import { auth, usersRef } from '../../config/firebase'
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     staff: state.local.staff,
     me: state.local.me,
@@ -49,205 +49,203 @@ const mapStateToProps = state => {
     permissions: state.const.permissions,
     qualificationtypes: state.const.qualificationtypes,
     tab: state.display.tabStaff,
-    filter: state.display.filterStaff
-  };
-};
+    filter: state.display.filterStaff,
+  }
+}
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch) => {
   return {
-    getUserAttrs: userPath => dispatch(getUserAttrs(userPath)),
+    getUserAttrs: (userPath) => dispatch(getUserAttrs(userPath)),
     fetchStaff: () => dispatch(fetchStaff()),
-    tabStaff: tab => dispatch(tabStaff(tab)),
-    filterStaff: filter => dispatch(filterStaff(filter))
-  };
-};
+    tabStaff: (tab) => dispatch(tabStaff(tab)),
+    filterStaff: (filter) => dispatch(filterStaff(filter)),
+  }
+}
 
 class Staff extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       tabValue: this.props.tab,
       admin: false,
       filterStaff: this.props.filter,
-      events: {}
-    };
+      events: {},
+    }
   }
 
   componentWillMount() {
-    if (!this.state.staff) this.props.fetchStaff();
+    if (!this.state.staff) this.props.fetchStaff()
   }
 
-  filterOffice = chip => {
-    let state = true;
-    if (this.props.filter.officeFilters[chip]) state = false;
+  filterOffice = (chip) => {
+    let state = true
+    if (this.props.filter.officeFilters[chip]) state = false
 
-    let filterOn = false;
+    let filterOn = false
 
     let officeFilters = {
       ...this.props.filter.officeFilters,
-      [chip]: state
-    };
+      [chip]: state,
+    }
 
-    Object.values(officeFilters).forEach(filter => {
-      if (filter) filterOn = true;
-    });
+    Object.values(officeFilters).forEach((filter) => {
+      if (filter) filterOn = true
+    })
 
     let newFilter = {
       ...this.props.filter,
       officeFilters: officeFilters,
-      officeFilterOn: filterOn
-    };
+      officeFilterOn: filterOn,
+    }
 
-    this.props.filterStaff(newFilter);
-  };
+    this.props.filterStaff(newFilter)
+  }
 
-  filterAttr = chip => {
-    let state = true;
-    if (this.props.filter.attrFilters[chip]) state = false;
+  filterAttr = (chip) => {
+    let state = true
+    if (this.props.filter.attrFilters[chip]) state = false
 
-    let filterOn = state;
+    let filterOn = state
 
     let attrFilters = {
       ...this.props.filter.attrFilters,
-      [chip]: state
-    };
+      [chip]: state,
+    }
 
-    Object.values(attrFilters).forEach(filter => {
-      if (filter) filterOn = true;
-    });
+    Object.values(attrFilters).forEach((filter) => {
+      if (filter) filterOn = true
+    })
 
     let newFilters = {
       ...this.props.filter,
       attrFilters: attrFilters,
-      attrFilterOn: filterOn
-    };
+      attrFilterOn: filterOn,
+    }
 
-    this.props.filterStaff(newFilters);
-  };
+    this.props.filterStaff(newFilters)
+  }
 
-  filterAuth = chip => {
-    let state = true;
-    if (this.props.filter.authFilters[chip]) state = false;
+  filterAuth = (chip) => {
+    let state = true
+    if (this.props.filter.authFilters[chip]) state = false
 
-    let filterOn = state;
+    let filterOn = state
 
     let authFilters = {
       ...this.props.filter.authFilters,
-      [chip]: state
-    };
+      [chip]: state,
+    }
 
-    Object.values(authFilters).forEach(filter => {
-      if (filter) filterOn = true;
-    });
+    Object.values(authFilters).forEach((filter) => {
+      if (filter) filterOn = true
+    })
 
     let newFilters = {
       ...this.props.filter,
       authFilters: authFilters,
-      authFilterOn: filterOn
-    };
+      authFilterOn: filterOn,
+    }
 
-    this.props.filterStaff(newFilters);
-  };
+    this.props.filterStaff(newFilters)
+  }
 
   handleTabChange = (event, value) => {
-    this.props.tabStaff(value);
-  };
+    this.props.tabStaff(value)
+  }
 
   getEvents = (expanded, calendarid) => {
     if (expanded && calendarid) {
       if (ApiCalendar.sign && !this.state.events[calendarid]) {
         //console.log("Api calendar is signed");
-        ApiCalendar.listUpcomingEvents(7, calendarid).then(
-          ({ result }: any) => {
-            // Possible error here
-            //console.log("Results in");
-            this.setState({
-              events: {
-                ...this.state.events,
-                [calendarid]: result.items
-              }
-            });
-            //console.log(result.items);
-          }
-        );
+        ApiCalendar.listUpcomingEvents(7, calendarid).then(({ result }) => {
+          // Possible error here
+          //console.log("Results in");
+          this.setState({
+            events: {
+              ...this.state.events,
+              [calendarid]: result.items,
+            },
+          })
+          //console.log(result.items);
+        })
       }
     }
-  };
+  }
 
   updateAllStaff = () => {
     //console.log("Updating all staff");
-    Object.keys(this.props.staff).forEach(userPath => {
+    Object.keys(this.props.staff).forEach((userPath) => {
       //console.log("Updating " + userPath);
-      this.props.getUserAttrs(userPath);
-    });
-  };
+      this.props.getUserAttrs(userPath)
+    })
+  }
 
-  setDocView = type => {
+  setDocView = (type) => {
     let newFilter = {
       ...this.props.filter,
-      docview: type
-    };
-    this.props.filterStaff(newFilter);
-  };
+      docview: type,
+    }
+    this.props.filterStaff(newFilter)
+  }
 
-  email = who => {
-    var list = [];
-    Object.values(this.props.staff).forEach(user => {
+  email = (who) => {
+    var list = []
+    Object.values(this.props.staff).forEach((user) => {
       if (
         user.auth &&
-        user.auth["K2 Staff"] &&
+        user.auth['K2 Staff'] &&
         user.email &&
         user.uid !== auth.currentUser.uid
       ) {
-        if (who === "all") {
-          list.push(user.email);
-        } else if (who === "Christchurch" && user.office === "Christchurch") {
-          list.push(user.email);
-        } else if (who === "Auckland" && user.office !== "Christchurch") {
-          list.push(user.email);
+        if (who === 'all') {
+          list.push(user.email)
+        } else if (who === 'Christchurch' && user.office === 'Christchurch') {
+          list.push(user.email)
+        } else if (who === 'Auckland' && user.office !== 'Christchurch') {
+          list.push(user.email)
         }
       }
-    });
-    let href = "mailto:" + list.join(";");
-    window.location.href = href;
-  };
+    })
+    let href = 'mailto:' + list.join(';')
+    window.location.href = href
+  }
 
-  filterUser = user => {
-    let filter = false;
+  filterUser = (user) => {
+    let filter = false
     if (
       this.props.filter.officeFilterOn === false ||
       this.props.filter.officeFilters[user.office]
     )
-      filter = true;
+      filter = true
     if (this.props.filter.attrFilterOn) {
-      if (this.props.filter.attrFilters["IP402"] && !user.ip402) filter = false;
-      if (this.props.filter.attrFilters["Asbestos Assessor"] && !user.aanumber)
-        filter = false;
-      if (this.props.filter.attrFilters["Tertiary Degree"] && !user.tertiary)
-        filter = false;
+      if (this.props.filter.attrFilters['IP402'] && !user.ip402) filter = false
+      if (this.props.filter.attrFilters['Asbestos Assessor'] && !user.aanumber)
+        filter = false
+      if (this.props.filter.attrFilters['Tertiary Degree'] && !user.tertiary)
+        filter = false
       if (
-        this.props.filter.attrFilters["Science Degree"] &&
-        !(user.tertiary && user.tertiary.includes("Sc"))
+        this.props.filter.attrFilters['Science Degree'] &&
+        !(user.tertiary && user.tertiary.includes('Sc'))
       )
-        filter = false;
+        filter = false
       if (
-        this.props.filter.attrFilters["Mask Fit Tested"] &&
-        user.maskfit !== "OK"
+        this.props.filter.attrFilters['Mask Fit Tested'] &&
+        user.maskfit !== 'OK'
       )
-        filter = false;
-      if (this.props.filter.attrFilters["First Aid"] && !user.firstaid)
-        filter = false;
+        filter = false
+      if (this.props.filter.attrFilters['First Aid'] && !user.firstaid)
+        filter = false
     }
     if (this.props.filter.authFilterOn) {
-      this.props.permissions.forEach(permission => {
-        if (!user.auth) filter = false;
+      this.props.permissions.forEach((permission) => {
+        if (!user.auth) filter = false
         else if (
           this.props.filter.authFilters[permission.name] &&
           !user.auth[permission.name]
         )
-          filter = false;
-      });
+          filter = false
+      })
     }
     if (this.props.search) {
       if (
@@ -255,18 +253,18 @@ class Staff extends React.Component {
           .toLowerCase()
           .includes(this.props.search.toLowerCase())
       )
-        filter = false;
+        filter = false
     }
-    return filter;
-  };
+    return filter
+  }
 
   getDocs = () => {
     const staff = Object.values(this.props.staff).sort((a, b) =>
       a.name.localeCompare(b.name)
-    );
-    let docs = [];
-    if (this.props.filter.docview !== "none") {
-      staff.forEach(e => {
+    )
+    let docs = []
+    if (this.props.filter.docview !== 'none') {
+      staff.forEach((e) => {
         if (e.docimages && e.docimages.length > 0) {
           if (
             !this.props.search ||
@@ -274,29 +272,29 @@ class Staff extends React.Component {
               .toLowerCase()
               .includes(this.props.search.toLowerCase())
           ) {
-            e.docimages.forEach(attr => {
+            e.docimages.forEach((attr) => {
               if (attr.type === this.props.filter.docview) {
                 docs.push({
                   url: attr.url,
-                  name: e.name
-                });
+                  name: e.name,
+                })
               }
-            });
+            })
           }
         }
-      });
+      })
     }
-    return docs;
-  };
+    return docs
+  }
 
   render() {
     // const TreeTable = treeTableHOC(ReactTable);
     // const staff = Object.values(this.props.staff).concat([this.props.me]).sort((a, b) => a.name.localeCompare(b.name));
     const staff = Object.values(this.props.staff)
       .sort((a, b) => a.name.localeCompare(b.name))
-      .filter(e => e.key !== "historic");
-    const { classes, tab } = this.props;
-    const docs = this.getDocs();
+      .filter((e) => e.key !== 'historic')
+    const { classes, tab } = this.props
+    const docs = this.getDocs()
     const filter = (
       <ExpansionPanel>
         <ExpansionPanelSummary expandIcon={<ExpandMore />}>
@@ -305,7 +303,7 @@ class Staff extends React.Component {
         <ExpansionPanelDetails>
           <div>
             <div className={classes.flexRow}>
-              {this.props.offices.map(chip => {
+              {this.props.offices.map((chip) => {
                 return (
                   <div key={chip} className={classes.paddingAllSmall}>
                     <Chip
@@ -313,25 +311,25 @@ class Staff extends React.Component {
                       variant="outlined"
                       color={
                         this.props.filter.officeFilters[chip]
-                          ? "secondary"
-                          : "default"
+                          ? 'secondary'
+                          : 'default'
                       }
                       onClick={() => this.filterOffice(chip)}
                       label={chip}
                     />
                   </div>
-                );
+                )
               })}
             </div>
             <div className={classes.flexRow}>
               {[
-                "IP402",
-                "Asbestos Assessor",
-                "Tertiary Degree",
-                "Science Degree",
-                "Mask Fit Tested",
-                "First Aid"
-              ].map(chip => {
+                'IP402',
+                'Asbestos Assessor',
+                'Tertiary Degree',
+                'Science Degree',
+                'Mask Fit Tested',
+                'First Aid',
+              ].map((chip) => {
                 return (
                   <div key={chip} className={classes.paddingAllSmall}>
                     <Chip
@@ -339,18 +337,18 @@ class Staff extends React.Component {
                       variant="outlined"
                       color={
                         this.props.filter.attrFilters[chip]
-                          ? "secondary"
-                          : "default"
+                          ? 'secondary'
+                          : 'default'
                       }
                       onClick={() => this.filterAttr(chip)}
                       label={chip}
                     />
                   </div>
-                );
+                )
               })}
             </div>
             <div className={classes.flexRow}>
-              {this.props.permissions.map(chip => {
+              {this.props.permissions.map((chip) => {
                 return (
                   <div key={chip.name} className={classes.paddingAllSmall}>
                     <Chip
@@ -358,20 +356,20 @@ class Staff extends React.Component {
                       variant="outlined"
                       color={
                         this.props.filter.authFilters[chip.name]
-                          ? "secondary"
-                          : "default"
+                          ? 'secondary'
+                          : 'default'
                       }
                       onClick={() => this.filterAuth(chip.name)}
                       label={chip.name}
                     />
                   </div>
-                );
+                )
               })}
             </div>
           </div>
         </ExpansionPanelDetails>
       </ExpansionPanel>
-    );
+    )
 
     return (
       <div className={classes.marginTopStandard}>
@@ -396,15 +394,15 @@ class Staff extends React.Component {
               {staff.length > 0 ? (
                 <div className={classes.marginTopSmall}>
                   {staff
-                    .filter(user => {
-                      return this.filterUser(user);
+                    .filter((user) => {
+                      return this.filterUser(user)
                     })
-                    .map(user => {
+                    .map((user) => {
                       return (
                         <ExpansionPanel
                           key={user.name}
                           onChange={(event, ex) => {
-                            this.getEvents(ex, user.gmail);
+                            this.getEvents(ex, user.gmail)
                           }}
                         >
                           <ExpansionPanelSummary expandIcon={<ExpandMore />}>
@@ -414,12 +412,12 @@ class Staff extends React.Component {
                             <StaffOverviewListItem
                               staff={{
                                 ...user,
-                                events: this.state.events[user.gmail]
+                                events: this.state.events[user.gmail],
                               }}
                             />
                           </ExpansionPanelDetails>
                         </ExpansionPanel>
-                      );
+                      )
                     })}
                 </div>
               ) : (
@@ -430,14 +428,14 @@ class Staff extends React.Component {
           {tab === 1 && (
             <div className={classes.paperWidth}>
               <Button
-                onClick={() => this.email("all")}
+                onClick={() => this.email('all')}
                 color="primary"
                 variant="outlined"
               >
                 Email All Staff
               </Button>
               <Button
-                onClick={() => this.email("Christchurch")}
+                onClick={() => this.email('Christchurch')}
                 color="primary"
                 variant="outlined"
                 className={classes.marginSidesSmall}
@@ -445,13 +443,13 @@ class Staff extends React.Component {
                 Email Christchurch Staff
               </Button>
               <Button
-                onClick={() => this.email("Auckland")}
+                onClick={() => this.email('Auckland')}
                 color="primary"
                 variant="outlined"
               >
                 Email North Island Staff
               </Button>
-              {this.props.contacts.map(user => {
+              {this.props.contacts.map((user) => {
                 return (
                   <ListItem key={user.name}>
                     <Grid container>
@@ -462,7 +460,7 @@ class Staff extends React.Component {
                         {user.workphone ? (
                           <Popup
                             trigger={
-                              <a href={"tel:" + user.workphone}>
+                              <a href={'tel:' + user.workphone}>
                                 {user.workphone}
                               </a>
                             }
@@ -479,20 +477,20 @@ class Staff extends React.Component {
                       </Grid>
                     </Grid>
                   </ListItem>
-                );
+                )
               })}
               <hr />
               {staff
-                .filter(user => {
+                .filter((user) => {
                   if (this.props.search) {
                     return user.name
                       .toLowerCase()
-                      .includes(this.props.search.toLowerCase());
+                      .includes(this.props.search.toLowerCase())
                   } else {
-                    return true;
+                    return true
                   }
                 })
-                .map(user => {
+                .map((user) => {
                   return (
                     <ListItem className={classes.hoverItem} key={user.name}>
                       <Grid container>
@@ -503,7 +501,7 @@ class Staff extends React.Component {
                           {user.workphone ? (
                             <Popup
                               trigger={
-                                <a href={"tel:" + user.workphone}>
+                                <a href={'tel:' + user.workphone}>
                                   {user.workphone}
                                 </a>
                               }
@@ -522,7 +520,7 @@ class Staff extends React.Component {
                           {user.email ? (
                             <a
                               className={classes.noTextDecoration}
-                              href={"mailto:" + user.email}
+                              href={'mailto:' + user.email}
                             >
                               {user.email}
                             </a>
@@ -534,7 +532,7 @@ class Staff extends React.Component {
                           {user.gmail ? (
                             <a
                               className={classes.noTextDecoration}
-                              href={"mailto:" + user.gmail}
+                              href={'mailto:' + user.gmail}
                             >
                               {user.gmail}
                             </a>
@@ -544,7 +542,7 @@ class Staff extends React.Component {
                         </Grid>
                       </Grid>
                     </ListItem>
-                  );
+                  )
                 })}
             </div>
           )}
@@ -579,10 +577,10 @@ class Staff extends React.Component {
                 </Grid>
               </ListItem>
               {staff
-                .filter(user => {
-                  return this.filterUser(user);
+                .filter((user) => {
+                  return this.filterUser(user)
                 })
-                .map(user => {
+                .map((user) => {
                   return (
                     <ListItem className={classes.hoverItemFat} key={user.name}>
                       <Grid container>
@@ -606,7 +604,7 @@ class Staff extends React.Component {
                           {user.maskfit && (
                             <Face
                               className={
-                                user.maskfit === "OK"
+                                user.maskfit === 'OK'
                                   ? classes.iconRegularGreen
                                   : classes.iconRegularRed
                               }
@@ -617,7 +615,7 @@ class Staff extends React.Component {
                           {user.firstaid && (
                             <LocalHospital
                               className={
-                                user.firstaid === "OK"
+                                user.firstaid === 'OK'
                                   ? classes.iconRegularGreen
                                   : classes.iconRegularRed
                               }
@@ -629,7 +627,7 @@ class Staff extends React.Component {
                         </Grid>
                       </Grid>
                     </ListItem>
-                  );
+                  )
                 })}
             </div>
           )}
@@ -641,15 +639,15 @@ class Staff extends React.Component {
                   className={classes.select}
                   defaultValue={{
                     label: this.props.filter.docview,
-                    id: this.props.filter.docview
+                    id: this.props.filter.docview,
                   }}
                   options={Object.keys(this.props.qualificationtypes).map(
-                    e => ({
+                    (e) => ({
                       value: e,
-                      label: this.props.qualificationtypes[e].name
+                      label: this.props.qualificationtypes[e].name,
                     })
                   )}
-                  onChange={e => this.setDocView(e ? e.value : e)}
+                  onChange={(e) => this.setDocView(e ? e.value : e)}
                   isClearable
                 />
               </FormControl>
@@ -659,18 +657,18 @@ class Staff extends React.Component {
                 color="primary"
                 onClick={() => {
                   let url =
-                    "https://api.k2.co.nz/v1/doc/scripts/staff/qualification_documents.php?images=" +
-                    docs.map(doc => encodeURIComponent(doc.url)).join(";") +
-                    "&doctype=" +
+                    'https://api.k2.co.nz/v1/doc/scripts/staff/qualification_documents.php?images=' +
+                    docs.map((doc) => encodeURIComponent(doc.url)).join(';') +
+                    '&doctype=' +
                     this.props.qualificationtypes[this.props.filter.docview]
                       .name +
-                    "&format=A5";
-                  window.open(url);
+                    '&format=A5'
+                  window.open(url)
                 }}
               >
                 Printable Version
               </Button>
-              {this.props.filter.docview !== "none" && (
+              {this.props.filter.docview !== 'none' && (
                 <GridList
                   cellHeight={
                     this.props.filter.docview
@@ -685,7 +683,7 @@ class Staff extends React.Component {
                       : 6
                   }
                 >
-                  {docs.map(doc => {
+                  {docs.map((doc) => {
                     return (
                       <GridListTile
                         key={doc.url}
@@ -694,7 +692,7 @@ class Staff extends React.Component {
                         <img src={doc.url} alt={doc.name} />
                         <GridListTileBar title={doc.name} />
                       </GridListTile>
-                    );
+                    )
                   })}
                 </GridList>
               )}
@@ -703,13 +701,10 @@ class Staff extends React.Component {
         </div>
         {/* </Paper>*/}
       </div>
-    );
+    )
   }
 }
 
 export default withStyles(styles)(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Staff)
-);
+  connect(mapStateToProps, mapDispatchToProps)(Staff)
+)
