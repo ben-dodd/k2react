@@ -1445,11 +1445,11 @@ export const saveCurrentJobState = (state) => (dispatch) => {
         if (job.category === 'Noise') bucket = 'noise'
         sortedState[bucket][job.wfmID] = job
       } else if (false) {
-        // Stop saving leads to job state for now
-        var bucket = 'leads' + job.wfmID.slice(-2)
-        leadBuckets[bucket] = true
-        if (sortedState[bucket] === undefined) sortedState[bucket] = {}
-        sortedState[bucket][job.wfmID] = job
+        // // Stop saving leads to job state for now
+        // var bucket = 'leads' + job.wfmID.slice(-2)
+        // leadBuckets[bucket] = true
+        // if (sortedState[bucket] === undefined) sortedState[bucket] = {}
+        // sortedState[bucket][job.wfmID] = job
       }
     })
 

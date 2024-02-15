@@ -199,7 +199,7 @@ class TrainingModuleModal extends React.Component {
           }
           label='Show this section'
         />
-        <ReactQuill
+        {/* <ReactQuill
           value={(doc.steps && doc.steps.outline && doc.steps.outline.outline) || ''}
           modules={quillModules}
           theme='snow'
@@ -213,7 +213,7 @@ class TrainingModuleModal extends React.Component {
               })
           }}
           style={{ marginBottom: 16 }}
-        />
+        /> */}
         <FormGroup>
           <FormControl className={classes.dialogField}>
             <InputLabel>Trainers</InputLabel>
@@ -312,7 +312,7 @@ class TrainingModuleModal extends React.Component {
           }
           label='Show this section'
         />
-        <ReactQuill
+        {/* <ReactQuill
           value={(doc.steps && doc.steps.bgreading && doc.steps.bgreading.outline) || ''}
           modules={quillModules}
           theme='snow'
@@ -325,7 +325,7 @@ class TrainingModuleModal extends React.Component {
               })
           }}
           style={{ marginBottom: 16 }}
-        />
+        /> */}
         <FormGroup>
           <TextField
             id='requiredcaption'
@@ -488,7 +488,7 @@ class TrainingModuleModal extends React.Component {
           }
           label='Show this section'
         />
-        <ReactQuill
+        {/* <ReactQuill
           value={(doc.steps && doc.steps.practical && doc.steps.practical.outline) || ''}
           modules={quillModules}
           theme='snow'
@@ -501,7 +501,7 @@ class TrainingModuleModal extends React.Component {
               })
           }}
           style={{ marginBottom: 16 }}
-        />
+        /> */}
         <FormGroup>
           <TextField
             id='requiredcaption'
@@ -637,7 +637,7 @@ class TrainingModuleModal extends React.Component {
           }
           label='Show this section'
         />
-        <ReactQuill
+        {/* <ReactQuill
           value={(doc.steps && doc.steps.inhouse && doc.steps.inhouse.outline) || ''}
           modules={quillModules}
           theme='snow'
@@ -650,7 +650,7 @@ class TrainingModuleModal extends React.Component {
               })
           }}
           style={{ marginBottom: 16 }}
-        />
+        /> */}
         <TextField
           id='checklist'
           label='Checklist'
@@ -705,7 +705,7 @@ class TrainingModuleModal extends React.Component {
           }
           label='Show this section'
         />
-        <ReactQuill
+        {/* <ReactQuill
           value={(doc.steps && doc.steps.sitevisits && doc.steps.sitevisits.outline) || ''}
           modules={quillModules}
           theme='snow'
@@ -718,7 +718,7 @@ class TrainingModuleModal extends React.Component {
               })
           }}
           style={{ marginBottom: 16 }}
-        />
+        /> */}
         <Grid container>
           <Grid item xs={9}>
             <h6>Job Description</h6>
@@ -783,7 +783,7 @@ class TrainingModuleModal extends React.Component {
           }
           label='Show this section'
         />
-        <ReactQuill
+        {/* <ReactQuill
           value={(doc.steps && doc.steps.review && doc.steps.outline.review) || ''}
           modules={quillModules}
           theme='snow'
@@ -796,7 +796,7 @@ class TrainingModuleModal extends React.Component {
               })
           }}
           style={{ marginBottom: 16 }}
-        />
+        /> */}
         <FormGroup />
       </form>
     )

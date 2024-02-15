@@ -513,11 +513,11 @@ const styles = (theme) => ({
     justifyContent: 'center'
   },
 
-  cardHeaderType: {
-    color: '#fff',
-    fontWeight: 500,
-    fontSize: 16
-  },
+  // cardHeaderType: {
+  //   color: '#fff',
+  //   fontWeight: 500,
+  //   fontSize: 16
+  // },
 
   cardHeader: {
     backgroundColor: theme.palette.primary.light
@@ -700,15 +700,15 @@ const styles = (theme) => ({
     backgroundColor: 'red'
   },
 
-  dashboardIcon: {
-    color: 'white',
-    fontSize: 14
-  },
+  // dashboardIcon: {
+  //   color: 'white',
+  //   fontSize: 14
+  // },
 
-  formIcon: {
-    color: 'black',
-    fontSize: 18
-  },
+  // formIcon: {
+  //   color: 'black',
+  //   fontSize: 18
+  // },
 
   warningIcon: {
     color: 'red',
@@ -1891,14 +1891,14 @@ const styles = (theme) => ({
     }
   },
 
-  flexRowHover: {
-    flexDirection: 'row',
-    display: 'flex',
-    alignItems: 'center',
-    '&:hover': {
-      backgroundColor: theme.palette.app.hover
-    }
-  },
+  // flexRowHover: {
+  //   flexDirection: 'row',
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   '&:hover': {
+  //     backgroundColor: theme.palette.app.hover
+  //   }
+  // },
 
   flexRowHoverPretty: {
     marginTop: theme.spacing(1),

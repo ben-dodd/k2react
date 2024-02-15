@@ -565,7 +565,7 @@ class TemplateAcmModal extends React.Component {
           )}
 
           <InputLabel className={classes.marginTopSmall}>Comment for Report</InputLabel>
-          <ReactQuill
+          {/* <ReactQuill
             value={this.state.comment || ''}
             modules={quillModules}
             className={classes.marginBottomMedium}
@@ -573,7 +573,7 @@ class TemplateAcmModal extends React.Component {
             onChange={(content, delta, source) => {
               if (source === 'user') this.setState({ comment: content })
             }}
-          />
+          /> */}
 
           <InputLabel className={classes.marginTopSmall}>Basic Primary Management</InputLabel>
           <Select
@@ -636,7 +636,7 @@ class TemplateAcmModal extends React.Component {
           />
 
           <InputLabel className={classes.marginTopSmall}>Management Recommendations</InputLabel>
-          <ReactQuill
+          {/* <ReactQuill
             value={this.state.recommendations || ''}
             modules={quillModules}
             theme='snow'
@@ -644,7 +644,7 @@ class TemplateAcmModal extends React.Component {
             onChange={(content, delta, source) => {
               if (source === 'user') this.setState({ recommendations: content })
             }}
-          />
+          /> */}
 
           <InputLabel className={classes.marginTopSmall}>Priority Risk Assessment</InputLabel>
           <InputLabel className={classes.marginTopSmall}>Normal Occupant Activity</InputLabel>

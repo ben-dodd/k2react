@@ -9,7 +9,7 @@ import IconButton from '@material-ui/core/IconButton'
 
 import RefreshIcon from '@material-ui/icons/Sync'
 
-import { quillModules } from '../../../../actions/helpers'
+// import { quillModules } from '../../../../actions/helpers'
 import {
   writeExecutiveSummary,
   writeWhereIsTheHazard,
@@ -42,7 +42,7 @@ function ExecutiveSummaryAmp(props) {
         </Tooltip>
       </div>
 
-      <ReactQuill
+      {/* <ReactQuill
         value={that.state.executiveSummary || job.executiveSummary || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
@@ -58,7 +58,7 @@ function ExecutiveSummaryAmp(props) {
             })
           }
         }}
-      />
+      /> */}
 
       <div className={classes.flexRowSpread}>
         <InputLabel className={classes.marginTopSmall}>Where is the Hazard?</InputLabel>
@@ -80,7 +80,7 @@ function ExecutiveSummaryAmp(props) {
         </Tooltip>
       </div>
 
-      <ReactQuill
+      {/* <ReactQuill
         value={that.state.whereIsTheHazard || job.whereIsTheHazard || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
@@ -97,7 +97,7 @@ function ExecutiveSummaryAmp(props) {
             })
           }
         }}
-      />
+      /> */}
 
       <div className={classes.flexRowSpread}>
         <InputLabel className={classes.marginTopSmall}>Risk to Health</InputLabel>
@@ -119,7 +119,7 @@ function ExecutiveSummaryAmp(props) {
         </Tooltip>
       </div>
 
-      <ReactQuill
+      {/* <ReactQuill
         value={that.state.riskToHealth || job.riskToHealth || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
@@ -136,7 +136,7 @@ function ExecutiveSummaryAmp(props) {
             })
           }
         }}
-      />
+      /> */}
 
       <div className={classes.flexRowSpread}>
         <InputLabel className={classes.marginTopSmall}>Background</InputLabel>
@@ -158,7 +158,7 @@ function ExecutiveSummaryAmp(props) {
         </Tooltip>
       </div>
 
-      <ReactQuill
+      {/* <ReactQuill
         value={that.state.background || job.background || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
@@ -175,7 +175,7 @@ function ExecutiveSummaryAmp(props) {
             })
           }
         }}
-      />
+      /> */}
 
       <div className={classes.flexRowSpread}>
         <InputLabel className={classes.marginTopSmall}>Immediate Actions Required</InputLabel>
@@ -199,7 +199,7 @@ function ExecutiveSummaryAmp(props) {
         </Tooltip>
       </div>
 
-      <ReactQuill
+      {/* <ReactQuill
         value={that.state.immediateActionsRequired || job.immediateActionsRequired || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
@@ -216,7 +216,7 @@ function ExecutiveSummaryAmp(props) {
             })
           }
         }}
-      />
+      /> */}
 
       <div className={classes.flexRowSpread}>
         <InputLabel className={classes.marginTopSmall}>Removal or Treatment of Asbestos</InputLabel>
