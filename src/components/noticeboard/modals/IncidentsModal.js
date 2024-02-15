@@ -31,14 +31,7 @@ import MoveIcon from '@material-ui/icons/OpenWith'
 import ClearIcon from '@material-ui/icons/Clear'
 import AddIcon from '@material-ui/icons/Add'
 
-import {
-  hideModal,
-  handleModalChange,
-  handleModalSubmit,
-  onUploadFile,
-  handleTagDelete,
-  handleTagAddition,
-} from '../../actions/modal'
+import { hideModal, handleModalChange, handleModalSubmit, onUploadFile, handleTagDelete, handleTagAddition } from '../../actions/modal'
 import { getUserAttrs, fetchIncidents } from '../../actions/local'
 import _ from 'lodash'
 
@@ -48,7 +41,7 @@ const mapStateToProps = (state) => {
     modalProps: state.modal.modalProps,
     doc: state.modal.modalProps.doc,
     categories: state.const.incidentcategories,
-    questions: state.local.questions,
+    questions: state.local.questions
   }
 }
 
@@ -56,20 +49,13 @@ const mapDispatchToProps = (dispatch) => {
   return {
     hideModal: () => dispatch(hideModal()),
     onUploadFile: (file, pathRef) => dispatch(onUploadFile(file, pathRef)),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300),
     handleSelectChange: (target) => dispatch(handleModalChange(target)),
-    handleModalSubmit: (doc, pathRef) =>
-      dispatch(handleModalSubmit(doc, pathRef)),
+    handleModalSubmit: (doc, pathRef) => dispatch(handleModalSubmit(doc, pathRef)),
     handleTagDelete: (tag) => dispatch(handleTagDelete(tag)),
     handleTagAddition: (tag) => dispatch(handleTagAddition(tag)),
-    getUserAttrs: _.debounce(
-      (userPath) => dispatch(getUserAttrs(userPath)),
-      1000
-    ),
-    fetchIncidents: (update) => dispatch(fetchIncidents(update)),
+    getUserAttrs: _.debounce((userPath) => dispatch(getUserAttrs(userPath)), 1000),
+    fetchIncidents: (update) => dispatch(fetchIncidents(update))
   }
 }
 
@@ -88,12 +74,12 @@ class IncidentModal extends React.Component {
     drawings: [],
     text: '',
     canUndo: false,
-    canRedo: false,
+    canRedo: false
   }
 
   _toolSwitch = (tool) => {
     this.setState({
-      tool: tool,
+      tool: tool
     })
   }
 
@@ -111,7 +97,7 @@ class IncidentModal extends React.Component {
     this._sketch.undo()
     this.setState({
       canUndo: this._sketch.canUndo(),
-      canRedo: this._sketch.canRedo(),
+      canRedo: this._sketch.canRedo()
     })
   }
 
@@ -119,7 +105,7 @@ class IncidentModal extends React.Component {
     this._sketch.redo()
     this.setState({
       canUndo: this._sketch.canUndo(),
-      canRedo: this._sketch.canRedo(),
+      canRedo: this._sketch.canRedo()
     })
   }
 
@@ -129,7 +115,7 @@ class IncidentModal extends React.Component {
       this.setState({
         controlledValue: null,
         canUndo: this._sketch.canUndo(),
-        canRedo: this._sketch.canRedo(),
+        canRedo: this._sketch.canRedo()
       })
     }
   }
@@ -157,55 +143,35 @@ class IncidentModal extends React.Component {
       })
 
     return (
-      <Dialog
-        open={this.props.modalType === INCIDENT}
-        onClose={() => this.props.hideModal}
-        maxWidth="lg"
-        fullWidth={true}
-      >
-        <DialogTitle>
-          {modalProps.title ? modalProps.title : 'Submit Incident Report'}
-        </DialogTitle>
+      <Dialog open={this.props.modalType === INCIDENT} onClose={() => this.props.hideModal} maxWidth='lg' fullWidth={true}>
+        <DialogTitle>{modalProps.title ? modalProps.title : 'Submit Incident Report'}</DialogTitle>
         <DialogContent>
           <form>
             <InputLabel shrink>Diagram of incident</InputLabel>
             <Grid container spacing={8}>
               <Grid item>
-                <IconButton aira-label="Undo" onClick={this._undo}>
-                  <UndoIcon
-                    disabled={!this.state.canUndo}
-                    color={this.state.canUndo ? 'secondary' : 'action'}
-                  />
+                <IconButton aira-label='Undo' onClick={this._undo}>
+                  <UndoIcon disabled={!this.state.canUndo} color={this.state.canUndo ? 'secondary' : 'action'} />
                 </IconButton>
               </Grid>
               <Grid item>
-                <IconButton aira-label="Redo" onClick={this._redo}>
-                  <RedoIcon
-                    disabled={!this.state.canRedo}
-                    color={this.state.canRedo ? 'secondary' : 'action'}
-                  />
+                <IconButton aira-label='Redo' onClick={this._redo}>
+                  <RedoIcon disabled={!this.state.canRedo} color={this.state.canRedo ? 'secondary' : 'action'} />
                 </IconButton>
               </Grid>
               <Grid item>
-                <IconButton
-                  aira-label="Move"
-                  onClick={() => this._toolSwitch('select')}
-                >
-                  <MoveIcon
-                    color={
-                      this.state.tool === 'select' ? 'secondary' : 'action'
-                    }
-                  />
+                <IconButton aira-label='Move' onClick={() => this._toolSwitch('select')}>
+                  <MoveIcon color={this.state.tool === 'select' ? 'secondary' : 'action'} />
                 </IconButton>
               </Grid>
               <Grid item>
-                <IconButton aira-label="Clear" onClick={this._clear}>
+                <IconButton aira-label='Clear' onClick={this._clear}>
                   <ClearIcon color={'secondary'} />
                 </IconButton>
               </Grid>
               <Grid item>
                 <Button
-                  variant="outlined"
+                  variant='outlined'
                   color={this.state.tool === 'pencil' ? 'secondary' : 'primary'}
                   onClick={() => this._toolSwitch('pencil')}
                 >
@@ -214,7 +180,7 @@ class IncidentModal extends React.Component {
               </Grid>
               <Grid item>
                 <Button
-                  variant="outlined"
+                  variant='outlined'
                   color={this.state.tool === 'line' ? 'secondary' : 'primary'}
                   onClick={() => this._toolSwitch('line')}
                 >
@@ -223,7 +189,7 @@ class IncidentModal extends React.Component {
               </Grid>
               <Grid item>
                 <Button
-                  variant="outlined"
+                  variant='outlined'
                   color={this.state.tool === 'circle' ? 'secondary' : 'primary'}
                   onClick={() => this._toolSwitch('circle')}
                 >
@@ -232,33 +198,27 @@ class IncidentModal extends React.Component {
               </Grid>
               <Grid item>
                 <Button
-                  variant="outlined"
-                  color={
-                    this.state.tool === 'rectangle' ? 'secondary' : 'primary'
-                  }
+                  variant='outlined'
+                  color={this.state.tool === 'rectangle' ? 'secondary' : 'primary'}
                   onClick={() => this._toolSwitch('rectangle')}
                 >
                   Rectangle
                 </Button>
               </Grid>
               <Grid item>
-                <TextField
-                  label={'Add Text'}
-                  onChange={(e) => this.setState({ text: e.target.value })}
-                  value={this.state.text}
-                />
+                <TextField label={'Add Text'} onChange={(e) => this.setState({ text: e.target.value })} value={this.state.text} />
               </Grid>
               <Grid item>
-                <IconButton color="primary" onClick={this._addText}>
+                <IconButton color='primary' onClick={this._addText}>
                   <AddIcon />
                 </IconButton>
               </Grid>
             </Grid>
             <SketchField
-              name="sketch"
+              name='sketch'
               ref={(c) => (this._sketch = c)}
-              width="1024px"
-              height="540px"
+              width='1024px'
+              height='540px'
               tool={this.state.tool}
               lineColor={this.state.lineColor}
               lineWidth={3}
@@ -276,17 +236,17 @@ class IncidentModal extends React.Component {
                       onChange={(e) => {
                         this.props.handleSelectChange({
                           id: 'category',
-                          value: e.target.value,
+                          value: e.target.value
                         })
                         this.props.handleSelectChange({
                           id: 'categorydesc',
-                          value: categorymap[e.target.value],
+                          value: categorymap[e.target.value]
                         })
                       }}
                       value={doc.category}
-                      input={<Input name="category" id="category" />}
+                      input={<Input name='category' id='category' />}
                     >
-                      <option value="" />
+                      <option value='' />
                       {categories &&
                         categories.map((category) => {
                           return (
@@ -298,25 +258,21 @@ class IncidentModal extends React.Component {
                     </Select>
                   </FormControl>
                   <TextField
-                    id="date"
-                    label="Time and Date of Incident"
-                    defaultValue={
-                      doc &&
-                      doc.date &&
-                      moment(doc.date).format('YYYY-MM-DDTHH:ss')
-                    }
+                    id='date'
+                    label='Time and Date of Incident'
+                    defaultValue={doc && doc.date && moment(doc.date).format('YYYY-MM-DDTHH:ss')}
                     className={classes.dialogField}
-                    type="datetime-local"
+                    type='datetime-local'
                     InputLabelProps={{
-                      shrink: true,
+                      shrink: true
                     }}
                     onChange={(e) => {
                       this.props.handleModalChange(e.target)
                     }}
                   />
                   <TextField
-                    id="job"
-                    label="Job Number"
+                    id='job'
+                    label='Job Number'
                     defaultValue={doc && doc.jobNumber}
                     className={classes.dialogField}
                     onChange={(e) => {
@@ -324,8 +280,8 @@ class IncidentModal extends React.Component {
                     }}
                   />
                   <TextField
-                    id="where"
-                    label="Where did it happen?"
+                    id='where'
+                    label='Where did it happen?'
                     defaultValue={doc && doc.address_of_incident}
                     className={classes.dialogField}
                     onChange={(e) => {
@@ -335,8 +291,8 @@ class IncidentModal extends React.Component {
                 </Grid>
                 <Grid xs={6}>
                   <TextField
-                    id="detail"
-                    label="Give details about what happened"
+                    id='detail'
+                    label='Give details about what happened'
                     defaultValue={doc && doc.details_of_incident}
                     className={classes.dialogField}
                     multiline
@@ -345,8 +301,8 @@ class IncidentModal extends React.Component {
                     }}
                   />
                   <TextField
-                    id="witnesses"
-                    label="Names of witnesses"
+                    id='witnesses'
+                    label='Names of witnesses'
                     defaultValue={doc && doc.names_of_witnesses}
                     className={classes.dialogField}
                     multiline
@@ -355,8 +311,8 @@ class IncidentModal extends React.Component {
                     }}
                   />
                   <TextField
-                    id="injurytype"
-                    label="Type of injury (e.g. cut)"
+                    id='injurytype'
+                    label='Type of injury (e.g. cut)'
                     defaultValue={doc && doc.type_of_injury}
                     className={classes.dialogField}
                     onChange={(e) => {
@@ -364,8 +320,8 @@ class IncidentModal extends React.Component {
                     }}
                   />
                   <TextField
-                    id="what_was_injured"
-                    label="Part(s) of body injured, or nearly injured"
+                    id='what_was_injured'
+                    label='Part(s) of body injured, or nearly injured'
                     defaultValue={doc && doc.what_was_injured}
                     className={classes.dialogField}
                     onChange={(e) => {
@@ -378,15 +334,15 @@ class IncidentModal extends React.Component {
                     onChange={(e) => {
                       this.props.handleModalChange({
                         id: 'doctor_visit',
-                        value: e.target.checked,
+                        value: e.target.checked
                       })
                     }}
-                    color="secondary"
+                    color='secondary'
                   />
                   {doc && doc.doctor_visit && (
                     <TextField
-                      id="doctordetails"
-                      label="Describe details and outcomes of the doctor visit"
+                      id='doctordetails'
+                      label='Describe details and outcomes of the doctor visit'
                       defaultValue={doc && doc.details_of_doctor}
                       className={classes.dialogField}
                       multiline
@@ -405,12 +361,12 @@ class IncidentModal extends React.Component {
             onClick={() => {
               this.props.hideModal()
             }}
-            color="secondary"
+            color='secondary'
           >
             Cancel
           </Button>
           {modalProps.isUploading ? (
-            <Button color="primary" disabled>
+            <Button color='primary' disabled>
               Submit
             </Button>
           ) : (
@@ -421,14 +377,14 @@ class IncidentModal extends React.Component {
                 doc.author.replace(/\s+/g, '_')
                 this.props.handleModalSubmit({
                   doc: doc,
-                  pathRef: incidentsRef,
+                  pathRef: incidentsRef
                 })
                 this.props.fetchIncidents(true)
                 // } else {
                 //   window.alert("Add a category and message before submitting.");
                 // }
               }}
-              color="primary"
+              color='primary'
             >
               Submit
             </Button>
@@ -439,6 +395,4 @@ class IncidentModal extends React.Component {
   }
 }
 
-export default withStyles(modalStyles)(
-  connect(mapStateToProps, mapDispatchToProps)(IncidentModal)
-)
+export default withStyles(modalStyles)(connect(mapStateToProps, mapDispatchToProps)(IncidentModal))

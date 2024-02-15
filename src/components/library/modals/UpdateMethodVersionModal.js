@@ -15,11 +15,7 @@ import FormGroup from '@material-ui/core/FormGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import TextField from '@material-ui/core/TextField'
-import {
-  hideModal,
-  handleModalChange,
-  handleModalSubmit,
-} from '../../../actions/modal'
+import { hideModal, handleModalChange, handleModalSubmit } from '../../../actions/modal'
 import _ from 'lodash'
 
 const mapStateToProps = (state) => {
@@ -27,17 +23,14 @@ const mapStateToProps = (state) => {
     modalType: state.modal.modalType,
     modalProps: state.modal.modalProps,
     staff: state.local.staff,
-    me: state.local.me,
+    me: state.local.me
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     hideModal: () => dispatch(hideModal()),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300)
   }
 }
 
@@ -49,9 +42,9 @@ class UpdateMethodVersionModal extends React.Component {
         person: this.props.me.name,
         version: '',
         date: new Date(),
-        changes: '',
+        changes: ''
       },
-      newVersion: false,
+      newVersion: false
     }
   }
 
@@ -59,18 +52,15 @@ class UpdateMethodVersionModal extends React.Component {
     const { classes, modalProps, modalType, doc } = this.props
     const { change, newVersion } = this.state
     return (
-      <Dialog
-        open={modalType === UPDATE_METHOD_VERSION}
-        onClose={this.props.hideModal}
-      >
+      <Dialog open={modalType === UPDATE_METHOD_VERSION} onClose={this.props.hideModal}>
         <DialogTitle>Update Method</DialogTitle>
         <DialogContent>
           Please detail the changes made.
           <form>
             <FormGroup>
               <TextField
-                id="changes"
-                label="Version Changes"
+                id='changes'
+                label='Version Changes'
                 value={change && change.changes}
                 multiline
                 rows={5}
@@ -79,28 +69,22 @@ class UpdateMethodVersionModal extends React.Component {
                   this.setState({
                     change: {
                       ...change,
-                      changes: e.target.value,
-                    },
+                      changes: e.target.value
+                    }
                   })
                 }
               />
             </FormGroup>
             <FormControlLabel
               control={
-                <Checkbox
-                  checked={newVersion || false}
-                  onChange={(e) =>
-                    this.setState({ newVersion: e.target.checked })
-                  }
-                  value="enabled"
-                />
+                <Checkbox checked={newVersion || false} onChange={(e) => this.setState({ newVersion: e.target.checked })} value='enabled' />
               }
-              label="Flag as major update (requires re-reading of method)"
+              label='Flag as major update (requires re-reading of method)'
             />
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.props.hideModal()} color="secondary">
+          <Button onClick={() => this.props.hideModal()} color='secondary'>
             Cancel
           </Button>
           <Button
@@ -118,10 +102,10 @@ class UpdateMethodVersionModal extends React.Component {
               doc.patch = patch
               this.props.handleModalSubmit({
                 doc: doc,
-                pathRef: methodsRef,
+                pathRef: methodsRef
               })
             }}
-            color="primary"
+            color='primary'
           >
             Submit
           </Button>
@@ -131,6 +115,4 @@ class UpdateMethodVersionModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(UpdateMethodVersionModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(UpdateMethodVersionModal))

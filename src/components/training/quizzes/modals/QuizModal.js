@@ -30,7 +30,7 @@ import {
   handleModalSubmit,
   onUploadFile,
   handleTagDelete,
-  handleTagAddition,
+  handleTagAddition
 } from '../../../../actions/modal'
 import { getUserAttrs } from '../../../../actions/local'
 import _ from 'lodash'
@@ -41,7 +41,7 @@ const mapStateToProps = (state) => {
     modalProps: state.modal.modalProps,
     doc: state.modal.modalProps.doc,
     categories: state.const.trainingCategories,
-    questions: state.local.questions,
+    questions: state.local.questions
   }
 }
 
@@ -49,19 +49,12 @@ const mapDispatchToProps = (dispatch) => {
   return {
     hideModal: () => dispatch(hideModal()),
     onUploadFile: (file, pathRef) => dispatch(onUploadFile(file, pathRef)),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300),
     handleSelectChange: (target) => dispatch(handleModalChange(target)),
-    handleModalSubmit: (doc, pathRef) =>
-      dispatch(handleModalSubmit(doc, pathRef)),
+    handleModalSubmit: (doc, pathRef) => dispatch(handleModalSubmit(doc, pathRef)),
     handleTagDelete: (tag) => dispatch(handleTagDelete(tag)),
     handleTagAddition: (tag) => dispatch(handleTagAddition(tag)),
-    getUserAttrs: _.debounce(
-      (userPath) => dispatch(getUserAttrs(userPath)),
-      1000
-    ),
+    getUserAttrs: _.debounce((userPath) => dispatch(getUserAttrs(userPath)), 1000)
   }
 }
 
@@ -71,7 +64,7 @@ class QuizModal extends React.Component {
     let optionallist = this.props.doc.optional ? this.props.doc.optional : []
     let list = requiredlist.concat(optionallist)
     return {
-      fontWeight: list.indexOf(name) === -1 ? 200 : 600,
+      fontWeight: list.indexOf(name) === -1 ? 200 : 600
     }
   }
 
@@ -81,13 +74,8 @@ class QuizModal extends React.Component {
     if (doc.optional) max = max + doc.optional.length
     if (doc.required) max = max + doc.required.length
     return (
-      <Dialog
-        open={this.props.modalType === QUIZ}
-        onClose={() => this.props.hideModal}
-      >
-        <DialogTitle>
-          {modalProps.title ? modalProps.title : 'Add New Quiz'}
-        </DialogTitle>
+      <Dialog open={this.props.modalType === QUIZ} onClose={() => this.props.hideModal}>
+        <DialogTitle>{modalProps.title ? modalProps.title : 'Add New Quiz'}</DialogTitle>
         <DialogContent>
           <form>
             <FormGroup>
@@ -97,13 +85,13 @@ class QuizModal extends React.Component {
                   onChange={(e) => {
                     this.props.handleSelectChange({
                       id: 'category',
-                      value: e.target.value,
+                      value: e.target.value
                     })
                   }}
                   value={doc.category}
-                  input={<Input name="category" id="category" />}
+                  input={<Input name='category' id='category' />}
                 >
-                  <option value="" />
+                  <option value='' />
                   {categories &&
                     categories.map((category) => {
                       return (
@@ -115,8 +103,8 @@ class QuizModal extends React.Component {
                 </Select>
               </FormControl>
               <TextField
-                id="title"
-                label="Title"
+                id='title'
+                label='Title'
                 defaultValue={doc && doc.title}
                 className={classes.dialogField}
                 onChange={(e) => {
@@ -124,8 +112,8 @@ class QuizModal extends React.Component {
                 }}
               />
               <TextField
-                id="desc"
-                label="Description"
+                id='desc'
+                label='Description'
                 defaultValue={doc && doc.desc}
                 multiline
                 className={classes.dialogField}
@@ -141,32 +129,25 @@ class QuizModal extends React.Component {
                   onChange={(e) => {
                     this.props.handleSelectChange({
                       id: 'required',
-                      value: e.target.value,
+                      value: e.target.value
                     })
                   }}
-                  input={<Input id="required" />}
-                  renderValue={(selected) => (
-                    <div>{selected.length} questions selected.</div>
-                  )}
+                  input={<Input id='required' />}
+                  renderValue={(selected) => <div>{selected.length} questions selected.</div>}
                   MenuProps={{
                     PaperProps: {
                       style: {
                         maxHeight: 48 * 4.5 + 8,
-                        width: 500,
-                      },
-                    },
+                        width: 500
+                      }
+                    }
                   }}
                 >
                   {questions.map((question) => {
                     if (!doc.optional) doc.optional = []
                     let disabled = doc.optional.indexOf(question.uid) > -1
                     return (
-                      <MenuItem
-                        key={question.uid}
-                        value={question.uid}
-                        style={this.getStyles(question.uid)}
-                        disabled={disabled}
-                      >
+                      <MenuItem key={question.uid} value={question.uid} style={this.getStyles(question.uid)} disabled={disabled}>
                         {question.question}
                       </MenuItem>
                     )
@@ -181,32 +162,25 @@ class QuizModal extends React.Component {
                   onChange={(e) => {
                     this.props.handleSelectChange({
                       id: 'optional',
-                      value: e.target.value,
+                      value: e.target.value
                     })
                   }}
-                  input={<Input id="optional" />}
-                  renderValue={(selected) => (
-                    <div>{selected.length} questions selected.</div>
-                  )}
+                  input={<Input id='optional' />}
+                  renderValue={(selected) => <div>{selected.length} questions selected.</div>}
                   MenuProps={{
                     PaperProps: {
                       style: {
                         maxHeight: 48 * 4.5 + 8,
-                        width: 500,
-                      },
-                    },
+                        width: 500
+                      }
+                    }
                   }}
                 >
                   {questions.map((question) => {
                     if (!doc.required) doc.required = []
                     let disabled = doc.required.indexOf(question.uid) > -1
                     return (
-                      <MenuItem
-                        key={question.uid}
-                        value={question.uid}
-                        style={this.getStyles(question.uid)}
-                        disabled={disabled}
-                      >
+                      <MenuItem key={question.uid} value={question.uid} style={this.getStyles(question.uid)} disabled={disabled}>
                         {question.question}
                       </MenuItem>
                     )
@@ -214,10 +188,10 @@ class QuizModal extends React.Component {
                 </Select>
               </FormControl>
               <TextField
-                id="numberofquestions"
-                type="number"
+                id='numberofquestions'
+                type='number'
                 InputProps={{ inputProps: { min: 1, max: max } }}
-                label="Number of Questions to Display"
+                label='Number of Questions to Display'
                 defaultValue={doc && doc.numberofquestions}
                 className={classes.dialogField}
                 onChange={(e) => {
@@ -232,31 +206,28 @@ class QuizModal extends React.Component {
             onClick={() => {
               this.props.hideModal()
             }}
-            color="secondary"
+            color='secondary'
           >
             Cancel
           </Button>
           {modalProps.isUploading ? (
-            <Button color="primary" disabled>
+            <Button color='primary' disabled>
               Submit
             </Button>
           ) : (
             <Button
               onClick={() => {
                 if (doc.category && doc.title) {
-                  doc.type =
-                    doc.category.toUpperCase() +
-                    '-' +
-                    doc.title.replace(/\s+/g, '-').toLowerCase()
+                  doc.type = doc.category.toUpperCase() + '-' + doc.title.replace(/\s+/g, '-').toLowerCase()
                   this.props.handleModalSubmit({
                     doc: doc,
-                    pathRef: quizzesRef,
+                    pathRef: quizzesRef
                   })
                 } else {
                   window.alert('Add a category and title before submitting.')
                 }
               }}
-              color="primary"
+              color='primary'
             >
               Submit
             </Button>
@@ -267,6 +238,4 @@ class QuizModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(QuizModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(QuizModal))

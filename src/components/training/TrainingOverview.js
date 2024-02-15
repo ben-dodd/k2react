@@ -12,13 +12,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Edit from '@material-ui/icons/Edit'
 
 import { TRAINING } from '../../constants/modal-types'
-import {
-  fetchTrainingPaths,
-  fetchStaff,
-  fetchDocuments,
-  fetchMethods,
-  fetchQuizzes,
-} from '../../actions/local'
+import { fetchTrainingPaths, fetchStaff, fetchDocuments, fetchMethods, fetchQuizzes } from '../../actions/local'
 import { showModal } from '../../actions/modal'
 import TrainingPathModal from './modals/TrainingPathModal'
 import QuizModal from './quizzes/modals/QuizModal'
@@ -28,7 +22,7 @@ import DocumentModal from '../library/modals/DocumentModal'
 const mapStateToProps = (state) => {
   return {
     me: state.local.me,
-    paths: state.local.trainingpaths,
+    paths: state.local.trainingpaths
   }
 }
 
@@ -39,7 +33,7 @@ const mapDispatchToProps = (dispatch) => {
     fetchDocuments: () => dispatch(fetchDocuments()),
     fetchMethods: () => dispatch(fetchMethods()),
     fetchQuizzes: () => dispatch(fetchQuizzes()),
-    showModal: (modal) => dispatch(showModal(modal)),
+    showModal: (modal) => dispatch(showModal(modal))
   }
 }
 
@@ -53,7 +47,7 @@ class TrainingOverview extends React.Component {
         {this.props.me.auth['Training Editor'] && (
           <div>
             <Button
-              variant="outlined"
+              variant='outlined'
               style={{ marginBottom: 16 }}
               onClick={() => {
                 let doc = {
@@ -66,21 +60,19 @@ class TrainingOverview extends React.Component {
                     outline: {
                       enabled: true,
                       outline:
-                        '<p>By the end of this module you will be able to complete X.</p><p><br></p><p>This covers:</p><ul><li>Thing 1</li><li>Thing 2</li></ul><p><br></p><p>If at any time you need assistance with the content in this module please speak to a trained team member.</p>',
+                        '<p>By the end of this module you will be able to complete X.</p><p><br></p><p>This covers:</p><ul><li>Thing 1</li><li>Thing 2</li></ul><p><br></p><p>If at any time you need assistance with the content in this module please speak to a trained team member.</p>'
                     },
                     bgreading: {
                       enabled: true,
                       outline:
                         '<p>This stage covers the background knowledge required to understand X.</p><p><br></p><p>By the end of this stage you should understand:</p><ul><li>Concept 1</li><li>Concept 2</li><li>Concept 3</li></ul>',
-                      requiredcaption:
-                        'Prior to undertaking X, you must have read the following documents.',
+                      requiredcaption: 'Prior to undertaking X, you must have read the following documents.',
                       requiredreadings: [],
                       quiz: '',
-                      supplementarycaption:
-                        'Additional readings are below, it is not required that you have read these prior to X.',
+                      supplementarycaption: 'Additional readings are below, it is not required that you have read these prior to X.',
                       supplementaryreadings: [],
                       readinglog: [],
-                      quizlog: [],
+                      quizlog: []
                     },
                     practical: {
                       enabled: true,
@@ -89,17 +81,16 @@ class TrainingOverview extends React.Component {
                       requiredcaption:
                         'The following methods must be read before starting in-house training. A short quiz follows each one to assess comprehension.',
                       requiredmethods: [],
-                      supplementarycaption:
-                        'The following methods detail less common sampling techniques and procedures.',
+                      supplementarycaption: 'The following methods detail less common sampling techniques and procedures.',
                       supplementarymethods: [],
                       methodlog: [],
-                      quizlog: [],
+                      quizlog: []
                     },
                     inhouse: {
                       enabled: true,
                       outline:
                         '<p>In this stage you will undertake a mock biological assessment through to completion.</p><p><br></p><p>By the end of this stage you should understand:</p><ul><li>Task 1</li><li>Task 2</li><li>Task 3</li></ul>',
-                      checklist: [],
+                      checklist: []
                     },
                     jobtypes: {},
                     sitevisits: {
@@ -109,14 +100,14 @@ class TrainingOverview extends React.Component {
                       jobtypes: [
                         {
                           name: '',
-                          number: 0,
-                        },
-                      ],
+                          number: 0
+                        }
+                      ]
                     },
                     review: {
-                      enabled: true,
-                    },
-                  },
+                      enabled: true
+                    }
+                  }
                 }
                 this.props.fetchStaff()
                 this.props.fetchDocuments()
@@ -124,7 +115,7 @@ class TrainingOverview extends React.Component {
                 this.props.fetchQuizzes()
                 this.props.showModal({
                   modalType: TRAINING,
-                  modalProps: { title: 'Add New Training Path', doc: doc },
+                  modalProps: { title: 'Add New Training Path', doc: doc }
                 })
               }}
             >
@@ -153,13 +144,7 @@ class TrainingOverview extends React.Component {
             const url = '/training/' + path.uid
             return (
               <GridListTile key={path.uid}>
-                <Link to={url}>
-                  {path.img ? (
-                    <img src={path.img} alt={path.title} />
-                  ) : (
-                    <img src={path.fileUrl} alt={path.title} />
-                  )}
-                </Link>
+                <Link to={url}>{path.img ? <img src={path.img} alt={path.title} /> : <img src={path.fileUrl} alt={path.title} />}</Link>
                 <GridListTileBar
                   title={path.title}
                   subtitle={path.subtitle}
@@ -176,8 +161,8 @@ class TrainingOverview extends React.Component {
                               modalType: TRAINING,
                               modalProps: {
                                 title: 'Edit Training Module',
-                                doc: path,
-                              },
+                                doc: path
+                              }
                             })
                           }}
                         >

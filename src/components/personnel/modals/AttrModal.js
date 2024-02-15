@@ -25,12 +25,7 @@ import IconButton from '@material-ui/core/IconButton'
 
 import UploadIcon from '@material-ui/icons/CloudUpload'
 import Close from '@material-ui/icons/Close'
-import {
-  hideModal,
-  handleModalChange,
-  handleModalSubmit,
-  onUploadFile,
-} from '../../../actions/modal'
+import { hideModal, handleModalChange, handleModalSubmit, onUploadFile } from '../../../actions/modal'
 import { getUserAttrs } from '../../../actions/local'
 import { sendSlackMessage } from '../../../actions/helpers'
 import _ from 'lodash'
@@ -44,7 +39,7 @@ const mapStateToProps = (state) => {
     tags: state.modal.modalProps.tags,
     tagSuggestions: state.const.docTagSuggestions,
     qualificationtypes: state.const.qualificationtypes,
-    delimiters: state.const.tagDelimiters,
+    delimiters: state.const.tagDelimiters
   }
 }
 
@@ -52,28 +47,17 @@ const mapDispatchToProps = (dispatch) => {
   return {
     hideModal: () => dispatch(hideModal()),
     onUploadFile: (file, pathRef) => dispatch(onUploadFile(file, pathRef)),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300),
     handleSelectChange: (target) => dispatch(handleModalChange(target)),
-    handleModalSubmit: (doc, pathRef) =>
-      dispatch(handleModalSubmit(doc, pathRef)),
-    getUserAttrs: _.debounce(
-      (userPath) => dispatch(getUserAttrs(userPath)),
-      1000
-    ),
+    handleModalSubmit: (doc, pathRef) => dispatch(handleModalSubmit(doc, pathRef)),
+    getUserAttrs: _.debounce((userPath) => dispatch(getUserAttrs(userPath)), 1000)
   }
 }
 
 class AttrModal extends React.Component {
   sendNewAttrSlack = () => {
     let message = {
-      text: `${
-        this.props.modalProps.staffName
-      } has added a new qualification.\n${
-        this.props.qualificationtypes[this.props.doc.type].name
-      }`,
+      text: `${this.props.modalProps.staffName} has added a new qualification.\n${this.props.qualificationtypes[this.props.doc.type].name}`
     }
     sendSlackMessage(message, true)
   }
@@ -84,13 +68,9 @@ class AttrModal extends React.Component {
     if (uid) {
       let change = {
         fileUrl: null,
-        fileRef: null,
+        fileRef: null
       }
-      usersRef
-        .doc(this.props.modalProps.userPath)
-        .collection('attr')
-        .doc(uid)
-        .update(change)
+      usersRef.doc(this.props.modalProps.userPath).collection('attr').doc(uid).update(change)
     }
     storage.ref(file).delete()
   }
@@ -98,13 +78,8 @@ class AttrModal extends React.Component {
   render() {
     const { modalProps, doc, classes } = this.props
     return (
-      <Dialog
-        open={this.props.modalType === USER_ATTR}
-        onClose={() => this.props.hideModal}
-      >
-        <DialogTitle>
-          {modalProps.title ? modalProps.title : 'Add New Item'}
-        </DialogTitle>
+      <Dialog open={this.props.modalType === USER_ATTR} onClose={() => this.props.hideModal}>
+        <DialogTitle>{modalProps.title ? modalProps.title : 'Add New Item'}</DialogTitle>
         <DialogContent>
           {doc.type && (
             <form>
@@ -115,18 +90,13 @@ class AttrModal extends React.Component {
                     onChange={(e) =>
                       this.props.handleSelectChange({
                         id: 'type',
-                        value: e.target.value,
+                        value: e.target.value
                       })
                     }
                     value={doc.type}
-                    input={
-                      <Input
-                        name="qualificationtypes"
-                        id="qualificationtypes"
-                      />
-                    }
+                    input={<Input name='qualificationtypes' id='qualificationtypes' />}
                   >
-                    <option value="" />
+                    <option value='' />
                     {this.props.qualificationtypes &&
                       Object.keys(this.props.qualificationtypes).map((key) => {
                         return (
@@ -139,8 +109,8 @@ class AttrModal extends React.Component {
                 </FormControl>
                 {this.props.qualificationtypes[doc.type].id && (
                   <TextField
-                    id="id"
-                    label="ID Number"
+                    id='id'
+                    label='ID Number'
                     defaultValue={doc && doc.id}
                     className={classes.dialogField}
                     onChange={(e) => {
@@ -151,8 +121,8 @@ class AttrModal extends React.Component {
 
                 {this.props.qualificationtypes[doc.type].number && (
                   <TextField
-                    id="number"
-                    label="Licence Number"
+                    id='number'
+                    label='Licence Number'
                     defaultValue={doc && doc.number}
                     className={classes.dialogField}
                     onChange={(e) => {
@@ -163,11 +133,11 @@ class AttrModal extends React.Component {
 
                 {this.props.qualificationtypes[doc.type].full && (
                   <TextField
-                    id="full"
-                    label="Full Qualification Title"
+                    id='full'
+                    label='Full Qualification Title'
                     defaultValue={doc && doc.full}
                     className={classes.dialogField}
-                    helperText="e.g. Bachelor of Science in Physics and Geography"
+                    helperText='e.g. Bachelor of Science in Physics and Geography'
                     onChange={(e) => {
                       this.props.handleModalChange(e.target)
                     }}
@@ -176,11 +146,11 @@ class AttrModal extends React.Component {
 
                 {this.props.qualificationtypes[doc.type].title && (
                   <TextField
-                    id="title"
-                    label="Qualification Title"
+                    id='title'
+                    label='Qualification Title'
                     defaultValue={doc && doc.title}
                     className={classes.dialogField}
-                    helperText="The title of the qualification or unit standard."
+                    helperText='The title of the qualification or unit standard.'
                     onChange={(e) => {
                       this.props.handleModalChange(e.target)
                     }}
@@ -189,15 +159,15 @@ class AttrModal extends React.Component {
 
                 {this.props.qualificationtypes[doc.type].course && (
                   <TextField
-                    id="course"
-                    label="Course Name(s)"
+                    id='course'
+                    label='Course Name(s)'
                     defaultValue={doc && doc.course && doc.course.join(', ')}
                     className={classes.dialogField}
-                    helperText="The name of the course as written on your card. If more than one course, separate each one with a comma."
+                    helperText='The name of the course as written on your card. If more than one course, separate each one with a comma.'
                     onChange={(e) => {
                       this.props.handleModalChange({
                         id: e.target.id,
-                        value: e.target.value.split(','),
+                        value: e.target.value.split(',')
                       })
                     }}
                   />
@@ -205,11 +175,11 @@ class AttrModal extends React.Component {
 
                 {this.props.qualificationtypes[doc.type].abbrev && (
                   <TextField
-                    id="abbrev"
-                    label="Abbreviated Title"
+                    id='abbrev'
+                    label='Abbreviated Title'
                     defaultValue={doc && doc.abbrev}
                     className={classes.dialogField}
-                    helperText="e.g. BSc (Hons); This will be displayed beside your name on reports"
+                    helperText='e.g. BSc (Hons); This will be displayed beside your name on reports'
                     onChange={(e) => {
                       this.props.handleModalChange(e.target)
                     }}
@@ -218,15 +188,15 @@ class AttrModal extends React.Component {
 
                 {this.props.qualificationtypes[doc.type].unit && (
                   <TextField
-                    id="unit"
-                    label="Unit Standard Number(s)"
+                    id='unit'
+                    label='Unit Standard Number(s)'
                     defaultValue={doc && doc.unit && doc.unit.join(', ')}
                     className={classes.dialogField}
-                    helperText="If more than one unit standard, seperate each one with a comma"
+                    helperText='If more than one unit standard, seperate each one with a comma'
                     onChange={(e) => {
                       this.props.handleModalChange({
                         id: e.target.id,
-                        value: e.target.value.split(','),
+                        value: e.target.value.split(',')
                       })
                     }}
                   />
@@ -234,15 +204,15 @@ class AttrModal extends React.Component {
 
                 {this.props.qualificationtypes[doc.type].class && (
                   <TextField
-                    id="class"
-                    label="Class(es)"
+                    id='class'
+                    label='Class(es)'
                     defaultValue={doc && doc.class && doc.class.join(', ')}
                     className={classes.dialogField}
-                    helperText="1 = Car Full, 1L = Car Learner, 1R = Car Restricted etc. If more than one class, separate each one with a comma."
+                    helperText='1 = Car Full, 1L = Car Learner, 1R = Car Restricted etc. If more than one class, separate each one with a comma.'
                     onChange={(e) => {
                       this.props.handleModalChange({
                         id: e.target.id,
-                        value: e.target.value.split(','),
+                        value: e.target.value.split(',')
                       })
                     }}
                   />
@@ -250,8 +220,8 @@ class AttrModal extends React.Component {
 
                 {this.props.qualificationtypes[doc.type].issuer && (
                   <TextField
-                    id="issuer"
-                    label="Issuer/Provider"
+                    id='issuer'
+                    label='Issuer/Provider'
                     defaultValue={doc && doc.issuer}
                     className={classes.dialogField}
                     onChange={(e) => {
@@ -262,9 +232,9 @@ class AttrModal extends React.Component {
 
                 {/*Date is always shown*/}
                 <TextField
-                  id="date"
-                  label="Date Issued"
-                  type="date"
+                  id='date'
+                  label='Date Issued'
+                  type='date'
                   defaultValue={doc && doc.date}
                   className={classes.dialogField}
                   onChange={(e) => {
@@ -275,9 +245,9 @@ class AttrModal extends React.Component {
 
                 {this.props.qualificationtypes[doc.type].expiry && (
                   <TextField
-                    id="expiry"
-                    label="Expiry Date"
-                    type="date"
+                    id='expiry'
+                    label='Expiry Date'
+                    type='date'
                     defaultValue={doc && doc.expiry}
                     className={classes.dialogField}
                     onChange={(e) => {
@@ -289,8 +259,8 @@ class AttrModal extends React.Component {
 
                 {this.props.qualificationtypes[doc.type].notes && (
                   <TextField
-                    id="notes"
-                    label="Notes"
+                    id='notes'
+                    label='Notes'
                     multiline
                     maxlines={4}
                     defaultValue={doc && doc.notes}
@@ -305,12 +275,12 @@ class AttrModal extends React.Component {
                   <div>
                     <img
                       src={doc.fileUrl}
-                      alt=""
-                      width="200px"
+                      alt=''
+                      width='200px'
                       style={{
                         opacity: '0.5',
                         borderStyle: 'solid',
-                        borderWidth: '2px',
+                        borderWidth: '2px'
                       }}
                     />
                     <IconButton
@@ -320,15 +290,10 @@ class AttrModal extends React.Component {
                         left: '-120px',
                         borderStyle: 'solid',
                         borderWidth: '2px',
-                        fontSize: 8,
+                        fontSize: 8
                       }}
                       onClick={() => {
-                        if (
-                          window.confirm(
-                            'Are you sure you wish to delete the image?'
-                          )
-                        )
-                          this.deleteImage(doc.fileRef, doc.uid)
+                        if (window.confirm('Are you sure you wish to delete the image?')) this.deleteImage(doc.fileRef, doc.uid)
                       }}
                     >
                       <Close />
@@ -337,14 +302,12 @@ class AttrModal extends React.Component {
                 )}
 
                 {/*Always allow file upload*/}
-                <InputLabel style={{ fontSize: 12, marginTop: 4 }}>
-                  Upload Scanned Image (Image files are preferred over PDF)
-                </InputLabel>
+                <InputLabel style={{ fontSize: 12, marginTop: 4 }}>Upload Scanned Image (Image files are preferred over PDF)</InputLabel>
                 <label>
                   <UploadIcon className={classes.colorAccent} />
                   <input
-                    id="attr_upload_file"
-                    type="file"
+                    id='attr_upload_file'
+                    type='file'
                     style={{ display: 'none' }}
                     onChange={(e) => {
                       if (doc.fileUrl) {
@@ -352,20 +315,11 @@ class AttrModal extends React.Component {
                       }
                       this.props.onUploadFile({
                         file: e.currentTarget.files[0],
-                        storagePath:
-                          'attr/' +
-                          modalProps.staffName.replace(/\s+/g, '') +
-                          '/' +
-                          doc.type +
-                          '_',
+                        storagePath: 'attr/' + modalProps.staffName.replace(/\s+/g, '') + '/' + doc.type + '_'
                       })
                     }}
                   />
-                  <LinearProgress
-                    style={{ marginTop: 4 }}
-                    variant="determinate"
-                    value={modalProps.uploadProgress}
-                  />
+                  <LinearProgress style={{ marginTop: 4 }} variant='determinate' value={modalProps.uploadProgress} />
                 </label>
               </FormGroup>
             </form>
@@ -376,12 +330,12 @@ class AttrModal extends React.Component {
             onClick={() => {
               this.props.hideModal()
             }}
-            color="secondary"
+            color='secondary'
           >
             Cancel
           </Button>
           {modalProps.isUploading ? (
-            <Button color="primary" disabled>
+            <Button color='primary' disabled>
               Submit
             </Button>
           ) : (
@@ -389,12 +343,12 @@ class AttrModal extends React.Component {
               onClick={() => {
                 this.props.handleModalSubmit({
                   doc: doc,
-                  pathRef: usersRef.doc(modalProps.userPath).collection('attr'),
+                  pathRef: usersRef.doc(modalProps.userPath).collection('attr')
                 })
                 this.sendNewAttrSlack()
                 this.props.getUserAttrs(modalProps.userPath)
               }}
-              color="primary"
+              color='primary'
             >
               Submit
             </Button>
@@ -405,6 +359,4 @@ class AttrModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(AttrModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(AttrModal))

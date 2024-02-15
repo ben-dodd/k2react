@@ -1,25 +1,17 @@
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createMuiTheme } from '@material-ui/core/styles'
 
-export const colorList = [
-  '#a2539c',
-  '#e33714',
-  '#6fa1b6',
-  '#995446',
-  '#ff0065',
-  '#87cc14',
-  '#7d6d26',
-];
+export const colorList = ['#a2539c', '#e33714', '#6fa1b6', '#995446', '#ff0065', '#87cc14', '#7d6d26']
 
 const palette = {
   primary: {
-    dark: "#004c2f",
-    main: "#006D44",
-    light: "#338a69"
+    dark: '#004c2f',
+    main: '#006D44',
+    light: '#338a69'
   },
   secondary: {
-    dark: "#b21f00",
-    main: "#FF2D00",
-    light: "#ff5733"
+    dark: '#b21f00',
+    main: '#FF2D00',
+    light: '#ff5733'
   },
   indicators: {
     bad: 'red',
@@ -35,7 +27,7 @@ const palette = {
     benign: 'lightblue',
     benignText: 'blue',
     off: 'white',
-    offText: '#ddd',
+    offText: '#ddd'
   },
   jobs: {
     workplace: '#a2539c',
@@ -45,24 +37,16 @@ const palette = {
     meth: '#ff0065',
     bio: '#87cc14',
     asbestos: '#7d6d26',
-    all: '#555',
+    all: '#555'
   },
-  colorList: [
-    '#a2539c',
-    '#e33714',
-    '#6fa1b6',
-    '#995446',
-    '#ff0065',
-    '#87cc14',
-    '#7d6d26',
-  ],
+  colorList: ['#a2539c', '#e33714', '#6fa1b6', '#995446', '#ff0065', '#87cc14', '#7d6d26'],
   app: {
     hover: '#eee',
     hoverHighlight: '#eec',
     highlight: '#ffd',
     disabled: '#ddd',
     shaded: '#aaa',
-    shadedHighlighted: '#004c2f',
+    shadedHighlighted: '#004c2f'
   },
   stages: {
     start: '#dae9ec',
@@ -74,7 +58,7 @@ const palette = {
     workComplete: '#6ea7b3',
     workCompleteText: 'white',
     readyForIssue: '#9fefff',
-    readyForIssueText: 'black',
+    readyForIssueText: 'black'
   },
   stagesGreen: {
     start: '#e7f1ee',
@@ -86,9 +70,9 @@ const palette = {
     workComplete: '#2e8766',
     workCompleteText: 'white',
     readyForIssue: '#006d44',
-    readyForIssueText: 'white',
-  },
-};
+    readyForIssueText: 'white'
+  }
+}
 
 export default createMuiTheme({
   typography: {
@@ -99,31 +83,31 @@ export default createMuiTheme({
   overrides: {
     MuiTooltip: {
       tooltip: {
-        fontSize: 12,
-      },
+        fontSize: 12
+      }
     },
     MuiFormControlLabel: {
       label: {
-        fontSize: 12,
-      },
+        fontSize: 12
+      }
     },
     MuiInputLabel: {
       root: {
-        fontSize: 12,
-      },
+        fontSize: 12
+      }
     },
     MuiListItemText: {
       primary: {
         fontSize: 12,
-        color: '#333',
-      },
+        color: '#333'
+      }
     },
     MuiTab: {
       root: {
         indicatorColor: palette.secondary.main,
-        textColorPrimary: "white"
+        textColorPrimary: 'white'
       }
-    },
+    }
     // MuiButton: {
     //   root: {
     //     fontSize: 12,
@@ -132,4 +116,4 @@ export default createMuiTheme({
     //   textSecondary: palette.secondary.main,
     // }
   }
-});
+})

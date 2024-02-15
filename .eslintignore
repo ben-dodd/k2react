@@ -18,8 +18,11 @@ apiGoogleconfig.json
 .env.test.local
 .env.production.local
 .env
+webpack.config.js
+.eslintrc.js
 Update.txt
 qual.xlsx
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+webpack.config.js

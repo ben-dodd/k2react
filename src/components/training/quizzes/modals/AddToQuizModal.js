@@ -25,17 +25,14 @@ const mapStateToProps = (state) => {
   return {
     modalType: state.modal.modalType,
     modalProps: state.modal.modalProps,
-    quizzes: state.local.quizzes,
+    quizzes: state.local.quizzes
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     hideModal: () => dispatch(hideModal()),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300)
   }
 }
 
@@ -44,38 +41,24 @@ class AddToQuizModal extends React.Component {
     super(props)
     this.state = {
       quiz: '',
-      required: false,
+      required: false
     }
   }
 
   addToQuiz = () => {
-    let quiz = this.props.quizzes.filter(
-      (quiz) => quiz.uid === this.state.quiz
-    )[0]
+    let quiz = this.props.quizzes.filter((quiz) => quiz.uid === this.state.quiz)[0]
     let optional = quiz.optional
     let required = quiz.required
-    let optionalexists = optional.filter(
-      (question) => this.props.modalProps.doc.uid === question
-    )
-    let requiredexists = required.filter(
-      (question) => this.props.modalProps.doc.uid === question
-    )
-    if (optionalexists)
-      optional = optional.filter(
-        (question) => this.props.modalProps.doc.uid !== question
-      )
-    if (requiredexists)
-      required = required.filter(
-        (question) => this.props.modalProps.doc.uid !== question
-      )
+    let optionalexists = optional.filter((question) => this.props.modalProps.doc.uid === question)
+    let requiredexists = required.filter((question) => this.props.modalProps.doc.uid === question)
+    if (optionalexists) optional = optional.filter((question) => this.props.modalProps.doc.uid !== question)
+    if (requiredexists) required = required.filter((question) => this.props.modalProps.doc.uid !== question)
     if (this.state.required) {
       required.push(this.props.modalProps.doc.uid)
     } else {
       optional.push(this.props.modalProps.doc.uid)
     }
-    quizzesRef
-      .doc(this.state.quiz)
-      .update({ optional: optional, required: required })
+    quizzesRef.doc(this.state.quiz).update({ optional: optional, required: required })
   }
 
   render() {
@@ -92,9 +75,9 @@ class AddToQuizModal extends React.Component {
                 <Select
                   onChange={(e) => this.setState({ quiz: e.target.value })}
                   value={this.state.quiz}
-                  input={<Input name="quiz" id="quiz" />}
+                  input={<Input name='quiz' id='quiz' />}
                 >
-                  <option value="" />
+                  <option value='' />
                   {this.props.quizzes &&
                     this.props.quizzes.map((quiz) => {
                       return (
@@ -112,16 +95,16 @@ class AddToQuizModal extends React.Component {
                     onChange={() => {
                       this.setState({ required: !this.state.required })
                     }}
-                    value="required"
+                    value='required'
                   />
                 }
-                label="Question required (Will always be displayed on this quiz)"
+                label='Question required (Will always be displayed on this quiz)'
               />
             </FormGroup>
           </form>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => this.props.hideModal()} color="secondary">
+          <Button onClick={() => this.props.hideModal()} color='secondary'>
             Cancel
           </Button>
           <Button
@@ -133,7 +116,7 @@ class AddToQuizModal extends React.Component {
                 window.alert('You must select a quiz from the list.')
               }
             }}
-            color="primary"
+            color='primary'
           >
             Add
           </Button>
@@ -143,6 +126,4 @@ class AddToQuizModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(AddToQuizModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(AddToQuizModal))

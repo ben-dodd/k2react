@@ -17,14 +17,7 @@ import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
 import SuggestionField from '../../../widgets/SuggestionField'
 
-import {
-  hideModal,
-  handleModalChange,
-  handleModalSubmit,
-  resetModal,
-  onUploadFile,
-  setModalError,
-} from '../../../actions/modal'
+import { hideModal, handleModalChange, handleModalSubmit, resetModal, onUploadFile, setModalError } from '../../../actions/modal'
 import { fetchSites } from '../../../actions/jobs'
 import _ from 'lodash'
 
@@ -35,7 +28,7 @@ const mapStateToProps = (state) => {
     modalType: state.modal.modalType,
     modalProps: state.modal.modalProps,
     doc: state.modal.modalProps.doc,
-    userRefName: state.local.userRefName,
+    userRefName: state.local.userRefName
   }
 }
 
@@ -45,65 +38,51 @@ const mapDispatchToProps = (dispatch) => {
     hideModal: () => dispatch(hideModal()),
     setModalError: (e) => dispatch(setModalError(e)),
     resetModal: () => dispatch(resetModal()),
-    onUploadFile: (file, pathRef, prefix, imageQuality) =>
-      dispatch(onUploadFile(file, pathRef, prefix, imageQuality)),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    onUploadFile: (file, pathRef, prefix, imageQuality) => dispatch(onUploadFile(file, pathRef, prefix, imageQuality)),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300),
     handleSelectChange: (target) => dispatch(handleModalChange(target)),
-    handleModalSubmit: (doc, pathRef) =>
-      dispatch(handleModalSubmit(doc, pathRef)),
+    handleModalSubmit: (doc, pathRef) => dispatch(handleModalSubmit(doc, pathRef))
   }
 }
 
 class TemplateBmModal extends React.Component {
   state = {
-    jobNumber: '',
+    jobNumber: ''
   }
 
   render() {
     const { modalProps, classes } = this.props
     return (
-      <Dialog
-        open={this.props.modalType === TEMPLATE_BUILDING_MATERIAL}
-        onClose={this.props.hideModal}
-      >
-        <DialogTitle>
-          {modalProps.title ? modalProps.title : 'Add Job to Site'}
-        </DialogTitle>
+      <Dialog open={this.props.modalType === TEMPLATE_BUILDING_MATERIAL} onClose={this.props.hideModal}>
+        <DialogTitle>{modalProps.title ? modalProps.title : 'Add Job to Site'}</DialogTitle>
         <DialogContent>
           <InputLabel>Job Description</InputLabel>
           <SuggestionField
             that={this}
-            suggestions="siteJobDescriptions"
-            defaultValue={
-              this.state.jobDescription ? this.state.jobDescription : ''
-            }
+            suggestions='siteJobDescriptions'
+            defaultValue={this.state.jobDescription ? this.state.jobDescription : ''}
             onModify={(value) => this.setState({ jobDescription: value })}
           />
           <FormControl>
             <InputLabel shrink>Job Number</InputLabel>
             <Input
-              id="jobNumber"
+              id='jobNumber'
               className={classes.bigInput}
               value={this.state.jobNumber}
               onChange={(e) => {
                 this.setState({
-                  jobNumber: e.target.value.replace(/\s/g, '').toUpperCase(),
+                  jobNumber: e.target.value.replace(/\s/g, '').toUpperCase()
                 })
               }}
             />
           </FormControl>
-          {modalProps.error && (
-            <div className={classes.informationBox}>{modalProps.error}</div>
-          )}
+          {modalProps.error && <div className={classes.informationBox}>{modalProps.error}</div>}
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.resetModal} color="secondary">
+          <Button onClick={this.props.resetModal} color='secondary'>
             Cancel
           </Button>
-          <Button onClick={this.wfmSync} color="primary">
+          <Button onClick={this.wfmSync} color='primary'>
             Submit
           </Button>
         </DialogActions>
@@ -112,6 +91,4 @@ class TemplateBmModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(TemplateBmModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(TemplateBmModal))

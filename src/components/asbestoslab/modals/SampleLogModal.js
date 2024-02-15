@@ -23,16 +23,15 @@ const mapStateToProps = (state) => {
   return {
     modalType: state.modal.modalType,
     modalProps: state.modal.modalProps,
-    logs: state.local.logs,
+    logs: state.local.logs
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchLogs: (uid, limit) =>
-      dispatch(fetchLogs('asbestosLab', 'sample', uid, limit)),
+    fetchLogs: (uid, limit) => dispatch(fetchLogs('asbestosLab', 'sample', uid, limit)),
     clearLog: () => dispatch(clearLog()),
-    hideModal: () => dispatch(hideModal()),
+    hideModal: () => dispatch(hideModal())
   }
 }
 
@@ -47,16 +46,14 @@ class SampleLogModal extends React.Component {
         <Dialog
           open={modalType === ASBESTOS_SAMPLE_LOG}
           onClose={this.props.hideModal}
-          maxWidth="lg"
+          maxWidth='lg'
           fullWidth={true}
           onEnter={() => this.props.fetchLogs(modalProps.uid, 20)}
           onExit={this.props.clearLog}
         >
-          <DialogTitle>
-            {modalProps.title ? modalProps.title : 'Sample History'}
-          </DialogTitle>
+          <DialogTitle>{modalProps.title ? modalProps.title : 'Sample History'}</DialogTitle>
           <DialogContent>
-            <Grid container direction="column">
+            <Grid container direction='column'>
               <Grid item>
                 <Grid container style={{ fontWeight: 'bold' }}>
                   <Grid item xs={2}>
@@ -99,7 +96,7 @@ class SampleLogModal extends React.Component {
               onClick={() => {
                 this.props.hideModal()
               }}
-              color="primary"
+              color='primary'
             >
               Close
             </Button>
@@ -110,6 +107,4 @@ class SampleLogModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(SampleLogModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SampleLogModal))

@@ -22,13 +22,13 @@ import moment from 'moment'
 const mapDispatchToProps = (dispatch) => {
   return {
     showModal: (modal) => dispatch(showModal(modal)),
-    getUserAttrs: (userPath) => dispatch(getUserAttrs(userPath)),
+    getUserAttrs: (userPath) => dispatch(getUserAttrs(userPath))
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    qualificationtypes: state.const.qualificationtypes,
+    qualificationtypes: state.const.qualificationtypes
   }
 }
 
@@ -57,22 +57,20 @@ function AttrList(props) {
   }
   return (
     <ListItem dense className={classes.hoverItem} key={attr.type + attr.date}>
-      <Grid container direction="row" justify="flex-start" alignItems="center">
+      <Grid container direction='row' justify='flex-start' alignItems='center'>
         <Grid item xs={2}>
           {attr.fileUrl ? (
             <Popup
               trigger={
                 <span>
-                  <Image
-                    style={{ fontSize: 24, color: cameracolor, margin: 10 }}
-                  />
+                  <Image style={{ fontSize: 24, color: cameracolor, margin: 10 }} />
                 </span>
               }
-              position="right bottom"
-              on="hover"
+              position='right bottom'
+              on='hover'
               disabled={attr.fileUrl == null}
             >
-              <img alt="" src={attr.fileUrl} width={200} />
+              <img alt='' src={attr.fileUrl} width={200} />
             </Popup>
           ) : (
             <Image style={{ fontSize: 24, color: cameracolor, margin: 10 }} />
@@ -85,8 +83,8 @@ function AttrList(props) {
                   doc: attr,
                   userPath: props.userPath,
                   title: 'Edit Item',
-                  staffName: props.staffName,
-                },
+                  staffName: props.staffName
+                }
               })
             }}
           >
@@ -98,14 +96,12 @@ function AttrList(props) {
           <div className={classes.subHeading}>{qual.name}</div>
           {qual.id && attr.id && (
             <div>
-              <span className={classes.headingInline}>ID Number:</span>{' '}
-              {attr.id}
+              <span className={classes.headingInline}>ID Number:</span> {attr.id}
             </div>
           )}
           {qual.number && attr.number && (
             <div>
-              <span className={classes.headingInline}>Licence Number:</span>{' '}
-              {attr.number}
+              <span className={classes.headingInline}>Licence Number:</span> {attr.number}
             </div>
           )}
           {qual.title && attr.title && (
@@ -123,40 +119,33 @@ function AttrList(props) {
           </div>
           {qual.class && attr.class && (
             <div>
-              <span className={classes.headingInline}>Class(es):</span>{' '}
-              {attr.class.join(', ')}
+              <span className={classes.headingInline}>Class(es):</span> {attr.class.join(', ')}
             </div>
           )}
           {qual.unit && attr.unit && (
             <div>
-              <span className={classes.headingInline}>Unit Standard(s):</span>{' '}
-              {attr.unit.join(', ')}
+              <span className={classes.headingInline}>Unit Standard(s):</span> {attr.unit.join(', ')}
             </div>
           )}
           {qual.course && attr.course && (
             <div>
-              <span className={classes.headingInline}>Course(s):</span>{' '}
-              {attr.course.join(', ')}
+              <span className={classes.headingInline}>Course(s):</span> {attr.course.join(', ')}
             </div>
           )}
           {attr.date && (
             <div>
-              <span className={classes.headingInline}>Issue Date:</span>{' '}
-              {moment(attr.date).format('D MMMM YYYY')}{' '}
+              <span className={classes.headingInline}>Issue Date:</span> {moment(attr.date).format('D MMMM YYYY')}{' '}
             </div>
           )}
           {qual.expiry && attr.expiry && (
             <div>
               <span className={classes.headingInline}>Expiry Date:</span>{' '}
-              <span style={{ color: expirycolor }}>
-                {moment(attr.expiry).format('D MMMM YYYY')}
-              </span>
+              <span style={{ color: expirycolor }}>{moment(attr.expiry).format('D MMMM YYYY')}</span>
             </div>
           )}
           {qual.issuer && attr.issuer && (
             <div>
-              <span className={classes.headingInline}>Issued By:</span>{' '}
-              {attr.issuer}
+              <span className={classes.headingInline}>Issued By:</span> {attr.issuer}
             </div>
           )}
           {qual.notes && attr.notes && (
@@ -168,9 +157,7 @@ function AttrList(props) {
         <Grid item xs={1}>
           <IconButton
             onClick={() => {
-              if (
-                window.confirm('Are you sure you wish to delete this item?')
-              ) {
+              if (window.confirm('Are you sure you wish to delete this item?')) {
                 deleteAttr(attr.uid, props.userPath, attr.fileRef)
                 props.getUserAttrs(props.userPath)
               }
@@ -184,6 +171,4 @@ function AttrList(props) {
   )
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(AttrList)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(AttrList))

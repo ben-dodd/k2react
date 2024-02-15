@@ -33,7 +33,7 @@ const mapStateToProps = (state) => {
     categories: state.const.noticeCategories,
     search: state.local.search,
     category: state.local.category,
-    modalType: state.modal.modalType,
+    modalType: state.modal.modalType
   }
 }
 
@@ -43,7 +43,7 @@ const mapDispatchToProps = (dispatch) => {
     onCatChange: (cat) => dispatch(onCatChange(cat)),
     showModal: (modal) => dispatch(showModal(modal)),
     fetchNotices: (update) => dispatch(fetchNotices(update)),
-    fetchNoticeReads: (update) => dispatch(fetchNoticeReads(update)),
+    fetchNoticeReads: (update) => dispatch(fetchNoticeReads(update))
   }
 }
 
@@ -53,7 +53,7 @@ class Noticeboard extends React.PureComponent {
     super(props)
     this.state = {
       hideRead: false,
-      noticeLimit: 12,
+      noticeLimit: 12
     }
   }
 
@@ -61,10 +61,8 @@ class Noticeboard extends React.PureComponent {
     // console.log(this.props.staff);
     // console.log(this.props.noticeReads);
     // if (this.props.staff && Object.keys(this.props.staff).length === 0) this.props.fetchStaff();
-    if (this.props.noticeReads && this.props.noticeReads.length === 0)
-      this.props.fetchNoticeReads()
-    if (this.props.notices && this.props.notices.length === 0)
-      this.props.fetchNotices()
+    if (this.props.noticeReads && this.props.noticeReads.length === 0) this.props.fetchNoticeReads()
+    if (this.props.notices && this.props.notices.length === 0) this.props.fetchNotices()
     // this.props.fetchNoticeReads(true);
   }
 
@@ -74,19 +72,17 @@ class Noticeboard extends React.PureComponent {
   // }
 
   switch = (category) => {
-    this.props.category === category
-      ? this.props.onCatChange(null)
-      : this.props.onCatChange(category)
+    this.props.category === category ? this.props.onCatChange(null) : this.props.onCatChange(category)
     this.props.onSearchChange(null)
     this.setState({
       modPath: null,
-      noticeLimit: 12,
+      noticeLimit: 12
     })
   }
 
   select = (uid) => {
     this.setState({
-      modPath: uid,
+      modPath: uid
     })
   }
 
@@ -98,9 +94,7 @@ class Noticeboard extends React.PureComponent {
       if (
         this.props.me.favnotices &&
         this.props.me.favnotices.includes(notice.uid) &&
-        (this.props.category === 'fav' ||
-          this.props.category === '' ||
-          this.props.category === null)
+        (this.props.category === 'fav' || this.props.category === '' || this.props.category === null)
       ) {
         return true
       }
@@ -112,29 +106,16 @@ class Noticeboard extends React.PureComponent {
         noticeReads.includes(notice.uid)
       )
         return false
-      if (
-        notice.auth !== undefined &&
-        this.props.me.auth &&
-        this.props.me.auth[notice.auth] === false
-      ) {
+      if (notice.auth !== undefined && this.props.me.auth && this.props.me.auth[notice.auth] === false) {
         return false
       }
-      if (
-        this.props.me.deletednotices &&
-        this.props.me.deletednotices.includes(notice.uid)
-      ) {
+      if (this.props.me.deletednotices && this.props.me.deletednotices.includes(notice.uid)) {
         return false
       }
       if (this.props.category === 'imp' && notice.important) return true
       if (this.props.search) {
         let search = [notice.categorydesc, notice.text, notice.author]
-        if (notice.category === 'has')
-          search = search.concat([
-            notice.incidentdesc,
-            notice.incidentno,
-            notice.incidentstaff,
-            notice.job,
-          ])
+        if (notice.category === 'has') search = search.concat([notice.incidentdesc, notice.incidentno, notice.incidentstaff, notice.job])
         if (notice.comments) {
           Object.values(notice.comments).forEach((comment) => {
             search = search.concat([comment.text, comment.author.name])
@@ -144,11 +125,7 @@ class Noticeboard extends React.PureComponent {
         let searchterm = this.props.search.toLowerCase().split(' ')
         let res = true
         searchterm.forEach((term) => {
-          if (
-            search.find((tag) => tag && tag.toLowerCase().includes(term)) ===
-            undefined
-          )
-            res = false
+          if (search.find((tag) => tag && tag.toLowerCase().includes(term)) === undefined) res = false
         })
         return res
       } else if (this.props.category) {
@@ -166,7 +143,7 @@ class Noticeboard extends React.PureComponent {
         {modalType === WHOS_READ && <WhosReadModal />}
 
         <Button
-          variant="outlined"
+          variant='outlined'
           className={classes.marginRightBottomSmall}
           onClick={() => {
             this.props.showModal({
@@ -180,9 +157,9 @@ class Noticeboard extends React.PureComponent {
                   author: this.props.me.name,
                   authorUid: auth.currentUser.uid,
                   auth: '',
-                  date: moment().format('YYYY-MM-DD'),
-                },
-              },
+                  date: moment().format('YYYY-MM-DD')
+                }
+              }
             })
           }}
         >
@@ -193,9 +170,7 @@ class Noticeboard extends React.PureComponent {
           control={
             <Checkbox
               checked={
-                this.props.me &&
-                this.props.me.settings &&
-                this.props.me.settings.showReadNotices !== undefined
+                this.props.me && this.props.me.settings && this.props.me.settings.showReadNotices !== undefined
                   ? this.props.me.settings.showReadNotices
                   : true
               }
@@ -203,15 +178,15 @@ class Noticeboard extends React.PureComponent {
                 usersRef.doc(auth.currentUser.uid).update({
                   settings: {
                     ...this.props.me.settings,
-                    showReadNotices: event.target.checked,
-                  },
+                    showReadNotices: event.target.checked
+                  }
                 })
               }}
-              value="hideRead"
-              color="secondary"
+              value='hideRead'
+              color='secondary'
             />
           }
-          label="Show Read Notices"
+          label='Show Read Notices'
         />
 
         {/*<Dropzone onDrop={acceptedFiles => {
@@ -242,10 +217,8 @@ class Noticeboard extends React.PureComponent {
             return (
               <Grid item key={cat.key}>
                 <Button
-                  color={
-                    this.props.category === cat.key ? 'secondary' : 'primary'
-                  }
-                  variant="outlined"
+                  color={this.props.category === cat.key ? 'secondary' : 'primary'}
+                  variant='outlined'
                   onClick={() => this.switch(cat.key)}
                 >
                   {cat.desc}
@@ -257,12 +230,10 @@ class Noticeboard extends React.PureComponent {
 
         {this.props.notices && this.props.notices.length === 0 ? (
           <div className={classes.marginTopSmall}>
-            <LinearProgress color="secondary" />
+            <LinearProgress color='secondary' />
           </div>
         ) : notices.length === 0 ? (
-          <div className={classNames(classes.marginTopSmall, classes.noItems)}>
-            No notices to display.
-          </div>
+          <div className={classNames(classes.marginTopSmall, classes.noItems)}>No notices to display.</div>
         ) : (
           <Grid container spacing={2} style={{ paddingTop: 30 }}>
             {notices.map((notice) => {
@@ -290,6 +261,4 @@ class Noticeboard extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(Noticeboard)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Noticeboard))

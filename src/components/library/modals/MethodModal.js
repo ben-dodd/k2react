@@ -37,7 +37,7 @@ import {
   handleModalChangeStep,
   handleModalSubmit,
   onUploadFile,
-  handleGlossaryChange,
+  handleGlossaryChange
 } from '../../../actions/modal'
 import { sendSlackMessage } from '../../../actions/helpers'
 import { getUserAttrs } from '../../../actions/local'
@@ -57,29 +57,21 @@ const mapStateToProps = (state) => {
     staff: state.local.staff,
     tags: state.modal.modalProps.tags,
     tagSuggestions: state.const.docTagSuggestions,
-    userRefName: state.local.userRefName,
+    userRefName: state.local.userRefName
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getUserAttrs: _.debounce(
-      (userPath) => dispatch(getUserAttrs(userPath)),
-      1000
-    ),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    getUserAttrs: _.debounce((userPath) => dispatch(getUserAttrs(userPath)), 1000),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300),
     handleModalChangeStep: (target) => dispatch(handleModalChangeStep(target)),
-    handleModalSubmit: (doc, pathRef) =>
-      dispatch(handleModalSubmit(doc, pathRef)),
-    handleGlossaryChange: (number, type, value) =>
-      dispatch(handleGlossaryChange(number, type, value)),
+    handleModalSubmit: (doc, pathRef) => dispatch(handleModalSubmit(doc, pathRef)),
+    handleGlossaryChange: (number, type, value) => dispatch(handleGlossaryChange(number, type, value)),
     handleSelectChange: (target) => dispatch(handleModalChange(target)),
     hideModal: () => dispatch(hideModal()),
     showModal: (modal) => dispatch(showModal(modal)),
-    onUploadFile: (file, pathRef) => dispatch(onUploadFile(file, pathRef)),
+    onUploadFile: (file, pathRef) => dispatch(onUploadFile(file, pathRef))
   }
 }
 
@@ -88,16 +80,14 @@ class MethodModal extends React.Component {
     super(props)
     this.state = {
       page: 1,
-      editorState: {},
+      editorState: {}
     }
   }
 
   convertToDraft = (html) => {
     const contentBlock = htmlToDraft(html)
     if (contentBlock) {
-      const contentState = ContentState.createFromBlockArray(
-        contentBlock.contentBlocks
-      )
+      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks)
       //console.log(EditorState.createWithContent(contentState));
       return EditorState.createWithContent(contentState)
     } else {
@@ -107,18 +97,13 @@ class MethodModal extends React.Component {
 
   getStyles = (uid, list) => {
     return {
-      fontWeight:
-        list && list.constructor === Array && list.indexOf(uid) > -1
-          ? 600
-          : 200,
+      fontWeight: list && list.constructor === Array && list.indexOf(uid) > -1 ? 600 : 200
     }
   }
 
   sendNewAttrSlack = () => {
     let message = {
-      text: `${this.props.modalProps.staffName} has added a new module.\n${
-        this.props.qualificationtypes[this.props.doc.type].name
-      }`,
+      text: `${this.props.modalProps.staffName} has added a new module.\n${this.props.qualificationtypes[this.props.doc.type].name}`
     }
     sendSlackMessage(message, true)
   }
@@ -127,7 +112,7 @@ class MethodModal extends React.Component {
     const { doc, classes } = this.props
     const staff = Object.values({
       ...this.props.staff,
-      [this.props.me.uid]: this.props.me,
+      [this.props.me.uid]: this.props.me
     })
       .map((staff) => staff.name)
       .sort()
@@ -136,8 +121,8 @@ class MethodModal extends React.Component {
       <form>
         <FormGroup>
           <TextField
-            id="title"
-            label="Title"
+            id='title'
+            label='Title'
             className={classes.dialogField}
             defaultValue={doc && doc.title}
             onChange={(e) => {
@@ -145,8 +130,8 @@ class MethodModal extends React.Component {
             }}
           />
           <TextField
-            id="subtitle"
-            label="Subtitle"
+            id='subtitle'
+            label='Subtitle'
             className={classes.dialogField}
             defaultValue={doc && doc.subtitle}
             onChange={(e) => {
@@ -154,11 +139,11 @@ class MethodModal extends React.Component {
             }}
           />
           <TextField
-            id="tmCode"
-            label="TM Code"
+            id='tmCode'
+            label='TM Code'
             className={classes.dialogField}
             defaultValue={doc && doc.tmCode}
-            helperText="e.g. TM 4.21-17 Part 1"
+            helperText='e.g. TM 4.21-17 Part 1'
             onChange={(e) => {
               this.props.handleModalChange(e.target)
             }}
@@ -169,13 +154,13 @@ class MethodModal extends React.Component {
               onChange={(e) => {
                 this.props.handleModalChange({
                   id: 'preparedBy',
-                  value: e.target.value,
+                  value: e.target.value
                 })
               }}
               value={doc && doc.preparedBy}
-              input={<Input name="preparedBy" id="preparedBy" />}
+              input={<Input name='preparedBy' id='preparedBy' />}
             >
-              <option value="" />
+              <option value='' />
               {staff &&
                 staff.map((staff) => {
                   return (
@@ -192,13 +177,13 @@ class MethodModal extends React.Component {
               onChange={(e) => {
                 this.props.handleModalChange({
                   id: 'checkedBy',
-                  value: e.target.value,
+                  value: e.target.value
                 })
               }}
               value={doc && doc.checkedBy}
-              input={<Input name="checkedBy" id="checkedBy" />}
+              input={<Input name='checkedBy' id='checkedBy' />}
             >
-              <option value="" />
+              <option value='' />
               {staff &&
                 staff.map((staff) => {
                   return (
@@ -215,15 +200,13 @@ class MethodModal extends React.Component {
               onChange={(e) => {
                 this.props.handleModalChange({
                   id: 'documentController',
-                  value: e.target.value,
+                  value: e.target.value
                 })
               }}
               value={doc && doc.documentController}
-              input={
-                <Input name="documentController" id="documentController" />
-              }
+              input={<Input name='documentController' id='documentController' />}
             >
-              <option value="" />
+              <option value='' />
               {staff &&
                 staff.map((staff) => {
                   return (
@@ -235,8 +218,8 @@ class MethodModal extends React.Component {
             </Select>
           </FormControl>
           <TextField
-            id="referencemethod"
-            label="Reference Method"
+            id='referencemethod'
+            label='Reference Method'
             fullWidth
             multiline
             style={{ marginBottom: 12 }}
@@ -244,13 +227,13 @@ class MethodModal extends React.Component {
             onChange={(e) => {
               this.props.handleModalChange({
                 id: 'referencemethod',
-                value: e.target.value,
+                value: e.target.value
               })
             }}
           />
           <TextField
-            id="deviations"
-            label="Deviations"
+            id='deviations'
+            label='Deviations'
             fullWidth
             multiline
             style={{ marginBottom: 12 }}
@@ -258,13 +241,11 @@ class MethodModal extends React.Component {
             onChange={(e) => {
               this.props.handleModalChange({
                 id: 'deviations',
-                value: e.target.value,
+                value: e.target.value
               })
             }}
           />
-          <InputLabel style={{ fontSize: 12, marginTop: 4 }}>
-            Current Version
-          </InputLabel>
+          <InputLabel style={{ fontSize: 12, marginTop: 4 }}>Current Version</InputLabel>
           {`${doc.version}.${doc.patch}`}
         </FormGroup>
       </form>
@@ -273,22 +254,14 @@ class MethodModal extends React.Component {
     const glossarypage = (
       <form>
         <h5>Glossary</h5>
-        {Array.from(
-          Array(doc.numberInGlossary ? doc.numberInGlossary : 10),
-          (x, i) => i
-        ).map((i) => {
+        {Array.from(Array(doc.numberInGlossary ? doc.numberInGlossary : 10), (x, i) => i).map((i) => {
           return (
             <Grid container key={i}>
               <Grid item xs={4}>
                 <TextField
                   id={`glossaryterm${i + 1}`}
                   style={{ width: '100%' }}
-                  defaultValue={
-                    doc &&
-                    doc.glossary &&
-                    doc.glossary[i + 1] &&
-                    doc.glossary[i + 1].term
-                  }
+                  defaultValue={doc && doc.glossary && doc.glossary[i + 1] && doc.glossary[i + 1].term}
                   onChange={(e) => {
                     this.props.handleGlossaryChange(i, 'term', e.target.value)
                   }}
@@ -299,32 +272,23 @@ class MethodModal extends React.Component {
                   id={`glossarydefinition{i+1}`}
                   multiline
                   style={{ width: '100%' }}
-                  defaultValue={
-                    doc &&
-                    doc.glossary &&
-                    doc.glossary[i + 1] &&
-                    doc.glossary[i + 1].definition
-                  }
+                  defaultValue={doc && doc.glossary && doc.glossary[i + 1] && doc.glossary[i + 1].definition}
                   onChange={(e) => {
-                    this.props.handleGlossaryChange(
-                      i,
-                      'definition',
-                      e.target.value
-                    )
+                    this.props.handleGlossaryChange(i, 'definition', e.target.value)
                   }}
                 />
               </Grid>
             </Grid>
           )
         })}
-        <Grid container justify="center" alignItems="center">
+        <Grid container justify='center' alignItems='center'>
           <Grid item xs={12}>
             <Button
               style={{ marginTop: 24, marginLeft: 128 }}
               onClick={() => {
                 this.props.handleModalChange({
                   id: 'numberInGlossary',
-                  value: doc.numberInGlossary ? doc.numberInGlossary + 10 : 20,
+                  value: doc.numberInGlossary ? doc.numberInGlossary + 10 : 20
                 })
               }}
             >
@@ -339,21 +303,16 @@ class MethodModal extends React.Component {
       <form>
         <h5>Section {this.state.page - 2}</h5>
         <TextField
-          id="title"
-          label="Title"
+          id='title'
+          label='Title'
           fullWidth
           style={{ marginBottom: 12 }}
-          value={
-            (doc.steps &&
-              doc.steps[this.state.page - 3] &&
-              doc.steps[this.state.page - 3].title) ||
-            ''
-          }
+          value={(doc.steps && doc.steps[this.state.page - 3] && doc.steps[this.state.page - 3].title) || ''}
           onChange={(e) =>
             this.props.handleModalChangeStep({
               step: (this.state.page - 3).toString(),
               id: 'title',
-              value: e.target.value,
+              value: e.target.value
             })
           }
         />
@@ -364,37 +323,30 @@ class MethodModal extends React.Component {
             this.setState({
               editorState: {
                 ...this.state.editorState,
-                [this.state.page - 3]: changedState,
-              },
+                [this.state.page - 3]: changedState
+              }
             })
-            let html = draftToHtml(
-              convertToRaw(changedState.getCurrentContent())
-            )
+            let html = draftToHtml(convertToRaw(changedState.getCurrentContent()))
             this.props.handleModalChangeStep({
               step: (this.state.page - 3).toString(),
               id: 'content',
-              value: html,
+              value: html
             })
           }}
         />
 
         <TextField
-          id="html"
-          label="HTML"
+          id='html'
+          label='HTML'
           multiline
           fullWidth
           style={{ marginBottom: 12 }}
-          value={
-            (doc.steps &&
-              doc.steps[this.state.page - 3] &&
-              doc.steps[this.state.page - 3].content) ||
-            ''
-          }
+          value={(doc.steps && doc.steps[this.state.page - 3] && doc.steps[this.state.page - 3].content) || ''}
           onChange={(e) =>
             this.props.handleModalChangeStep({
               step: (this.state.page - 3).toString(),
               id: 'content',
-              value: e.target.value,
+              value: e.target.value
             })
           }
         />
@@ -417,23 +369,21 @@ class MethodModal extends React.Component {
 
     return (
       <Dialog
-        key="methodmodal"
-        maxWidth="md"
+        key='methodmodal'
+        maxWidth='md'
         fullWidth={true}
         open={this.props.modalType === METHOD}
         onEnter={() => this.setState({ page: 1 })}
         onClose={() => this.props.hideModal}
       >
-        <DialogTitle>
-          {modalProps.title ? modalProps.title : 'Add New K2 Method'}
-        </DialogTitle>
+        <DialogTitle>{modalProps.title ? modalProps.title : 'Add New K2 Method'}</DialogTitle>
         <DialogContent>{this.getPage()}</DialogContent>
         <DialogActions>
           <Button
             onClick={() => {
               this.props.hideModal()
             }}
-            color="secondary"
+            color='secondary'
           >
             Cancel
           </Button>
@@ -442,38 +392,32 @@ class MethodModal extends React.Component {
             onClick={() => {
               this.setState({ page: this.state.page - 1 })
             }}
-            color="default"
+            color='default'
           >
             Back
           </Button>
           <Button
             onClick={() => {
               if (!this.state.editorState[this.state.page - 1]) {
-                if (
-                  doc.steps &&
-                  doc.steps[this.state.page - 1] &&
-                  doc.steps[this.state.page - 1].content
-                ) {
+                if (doc.steps && doc.steps[this.state.page - 1] && doc.steps[this.state.page - 1].content) {
                   this.setState({
                     editorState: {
                       ...this.state.editorState,
-                      [this.state.page - 1]: this.convertToDraft(
-                        doc.steps[this.state.page - 1].content
-                      ),
-                    },
+                      [this.state.page - 1]: this.convertToDraft(doc.steps[this.state.page - 1].content)
+                    }
                   })
                 } else {
                   this.setState({
                     editorState: {
                       ...this.state.editorState,
-                      [this.state.page - 1]: EditorState.createEmpty(),
-                    },
+                      [this.state.page - 1]: EditorState.createEmpty()
+                    }
                   })
                 }
               }
               this.setState({ page: this.state.page + 1 })
             }}
-            color="default"
+            color='default'
           >
             Forward
           </Button>
@@ -495,18 +439,18 @@ class MethodModal extends React.Component {
                 }
                 this.props.handleModalSubmit({
                   doc: doc,
-                  pathRef: methodsRef,
+                  pathRef: methodsRef
                 })
               } else {
                 this.props.handleModalSubmit({
                   doc: doc,
-                  pathRef: methodsRef,
+                  pathRef: methodsRef
                 })
                 // this.props.showModal({ modalType: UPDATE_METHOD_VERSION, modalProps: { doc: doc, } });
               }
               // this.sendNewAttrSlack();
             }}
-            color="primary"
+            color='primary'
           >
             Submit
           </Button>
@@ -516,6 +460,4 @@ class MethodModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(MethodModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(MethodModal))

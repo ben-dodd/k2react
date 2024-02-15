@@ -8,7 +8,7 @@ import {
   holdSample,
   writeShorthandResult,
   getConfirmColor,
-  getSampleStatusCode,
+  getSampleStatusCode
 } from '../../../actions/asbestosLab'
 import { AsbestosSampleStatus } from '../../../widgets/DisplayWidgets'
 import { showModal } from '../../../actions/modal'
@@ -18,7 +18,7 @@ import {
   ASBESTOS_COC_EDIT,
   ASBESTOS_SAMPLE_LOG,
   CONFIRM_RESULT,
-  ASBESTOS_SAMPLE_DETAILS,
+  ASBESTOS_SAMPLE_DETAILS
 } from '../../../constants/modal-types'
 
 import Grid from '@material-ui/core/Grid'
@@ -49,15 +49,14 @@ const mapStateToProps = (state) => {
     noAsbestosResultReasons: state.const.noAsbestosResultReasons,
     asbestosSampleDisplayAdvanced: state.display.asbestosSampleDisplayAdvanced,
     modalType: state.modal.modalType,
-    expanded: state.display.asbestosLabExpanded,
+    expanded: state.display.asbestosLabExpanded
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     showModal: (modal) => dispatch(showModal(modal)),
-    toggleAsbestosSampleDisplayMode: () =>
-      dispatch(toggleAsbestosSampleDisplayMode()),
+    toggleAsbestosSampleDisplayMode: () => dispatch(toggleAsbestosSampleDisplayMode())
   }
 }
 
@@ -74,26 +73,17 @@ class AsbestosSampleListItem extends React.Component {
     //   return false;
     // }
 
-    if (
-      nextProps.expanded === nextProps.job &&
-      this.props.expanded !== this.props.job
-    ) {
+    if (nextProps.expanded === nextProps.job && this.props.expanded !== this.props.job) {
       return true // List has been opened
     }
     if (nextProps.expanded !== nextProps.job) return false // List is not expanded (hidden)
     // nextProps.cocs[nextProps.job].sampleList && console.log(nextProps.cocs[nextProps.job].sampleList[0]);
+    if (nextProps.cocs[nextProps.job].sampleList && nextProps.cocs[nextProps.job].sampleList[0] === nextProps.sample) return true
     if (
-      nextProps.cocs[nextProps.job].sampleList &&
-      nextProps.cocs[nextProps.job].sampleList[0] === nextProps.sample
+      this.props.samples[this.props.job][this.props.sample].sampleNumber !== nextProps.samples[nextProps.job][nextProps.sample].sampleNumber
     )
       return true
-    if (
-      this.props.samples[this.props.job][this.props.sample].sampleNumber !==
-      nextProps.samples[nextProps.job][nextProps.sample].sampleNumber
-    )
-      return true
-    if (this.props.samples[this.props.job] === nextProps.samples[nextProps.job])
-      return false
+    if (this.props.samples[this.props.job] === nextProps.samples[nextProps.job]) return false
     if (this.props.modalType === ASBESTOS_SAMPLE_EDIT) return false // Edit modal is open
     if (this.props.modalType === ASBESTOS_COC_EDIT) return false // COC modal is open
     return true
@@ -108,18 +98,12 @@ class AsbestosSampleListItem extends React.Component {
     // let colors = getSampleColors(sample, classes);
     let confirmColor = ''
     if (sample.confirm) confirmColor = getConfirmColor(sample)
-    let editor =
-      this.props.me.auth && this.props.me.auth['Asbestos Bulk Analysis']
+    let editor = this.props.me.auth && this.props.me.auth['Asbestos Bulk Analysis']
     let basicResult = getBasicResult(sample)
     let sampleStatus = getSampleStatusCode(sample)
     let noResults = true
     let acmLimit = job.acmInSoilLimit ? parseFloat(job.acmInSoilLimit) : 0.01
-    let overLimit =
-      sample.waTotals &&
-      (sample.waTotals.waOverLimit ||
-        sample.waTotals.concentration.acmFloat >= acmLimit)
-        ? true
-        : false
+    let overLimit = sample.waTotals && (sample.waTotals.waOverLimit || sample.waTotals.concentration.acmFloat >= acmLimit) ? true : false
     // console.log(`Asbestos Sample List Item: ${job.jobNumber}-${sample.sampleNumber}`)
 
     return (
@@ -129,25 +113,15 @@ class AsbestosSampleListItem extends React.Component {
             <div className={classes.flexRowLeftAlignEllipsis}>
               <div className={classes.circleShaded}>{sample.sampleNumber}</div>
               {sample.imagePathRemote && (
-                <Popup
-                  trigger={<CameraIcon className={classes.iconRegularGreen} />}
-                  position="right center"
-                  on="hover"
-                >
-                  <img alt="" src={sample.imagePathRemote} width={200} />
+                <Popup trigger={<CameraIcon className={classes.iconRegularGreen} />} position='right center' on='hover'>
+                  <img alt='' src={sample.imagePathRemote} width={200} />
                 </Popup>
               )}
               {writeDescription(sample)}
-              {sample.onHold && (
-                <div className={classes.boldRedWarningText}>ON HOLD</div>
-              )}
+              {sample.onHold && <div className={classes.boldRedWarningText}>ON HOLD</div>}
               {basicResult === 'none' && sample.noAsbestosResultReason && (
                 <div className={classes.boldRedWarningText}>
-                  {this.props.noAsbestosResultReasons
-                    .filter(
-                      (el) => el.value === sample.noAsbestosResultReason
-                    )[0]
-                    .label.toUpperCase()}
+                  {this.props.noAsbestosResultReasons.filter((el) => el.value === sample.noAsbestosResultReason)[0].label.toUpperCase()}
                 </div>
               )}
             </div>
@@ -160,8 +134,8 @@ class AsbestosSampleListItem extends React.Component {
                   basicResult === 'none'
                     ? classes.roundButtonShadedLong
                     : basicResult === 'negative'
-                    ? classes.roundButtonShadedLongGreen
-                    : classes.roundButtonShadedLongRed
+                      ? classes.roundButtonShadedLongGreen
+                      : classes.roundButtonShadedLongRed
                 }
               >
                 {writeShorthandResult(sample.result)}
@@ -169,26 +143,14 @@ class AsbestosSampleListItem extends React.Component {
               {job.waAnalysis && (
                 <div
                   className={
-                    sample.waAnalysisComplete
-                      ? overLimit
-                        ? classes.circleShadedBad
-                        : classes.circleShadedOk
-                      : classes.circleShaded
+                    sample.waAnalysisComplete ? (overLimit ? classes.circleShadedBad : classes.circleShadedOk) : classes.circleShaded
                   }
                 >
                   <WAIcon />
                 </div>
               )}
-              <div
-                className={
-                  sample.weightReceived
-                    ? classes.roundButtonShadedComplete
-                    : classes.roundButtonShaded
-                }
-              >
-                {sample.weightReceived
-                  ? `${sample.weightReceived}g`
-                  : 'NO WEIGHT'}
+              <div className={sample.weightReceived ? classes.roundButtonShadedComplete : classes.roundButtonShaded}>
+                {sample.weightReceived ? `${sample.weightReceived}g` : 'NO WEIGHT'}
               </div>
             </div>
           </Grid>
@@ -197,15 +159,14 @@ class AsbestosSampleListItem extends React.Component {
               {editor && (
                 <IconButton
                   onClick={(event) => {
-                    if (!this.props.asbestosSampleDisplayAdvanced)
-                      this.props.toggleAsbestosSampleDisplayMode()
+                    if (!this.props.asbestosSampleDisplayAdvanced) this.props.toggleAsbestosSampleDisplayMode()
                     this.props.showModal({
                       modalType: ASBESTOS_SAMPLE_EDIT,
                       modalProps: {
                         activeSample: sample.sampleNumber,
                         activeCoc: job.uid,
-                        sampleList: job.sampleList,
-                      },
+                        sampleList: job.sampleList
+                      }
                     })
                   }}
                 >
@@ -213,15 +174,15 @@ class AsbestosSampleListItem extends React.Component {
                 </IconButton>
               )}
               {/*</Tooltip>*/}
-              <Tooltip id="det-tooltip" title={'Sample Details'}>
+              <Tooltip id='det-tooltip' title={'Sample Details'}>
                 <IconButton
                   onClick={(event) => {
                     this.props.showModal({
                       modalType: ASBESTOS_SAMPLE_DETAILS,
                       modalProps: {
                         doc: sample,
-                        job: job,
-                      },
+                        job: job
+                      }
                     })
                   }}
                 >
@@ -245,15 +206,15 @@ class AsbestosSampleListItem extends React.Component {
                   </Tooltip>
                 }*/}
               <Tooltip
-                id="cr-tooltip"
+                id='cr-tooltip'
                 title={
                   editor
                     ? 'Result Checks'
                     : confirmColor === 'Red'
-                    ? 'Contradictory result given by other analyst'
-                    : confirmColor === 'Green'
-                    ? 'Result confirmed by another analyst'
-                    : 'Slightly different result given by other analyst'
+                      ? 'Contradictory result given by other analyst'
+                      : confirmColor === 'Green'
+                        ? 'Result confirmed by another analyst'
+                        : 'Slightly different result given by other analyst'
                 }
               >
                 <IconButton
@@ -261,56 +222,39 @@ class AsbestosSampleListItem extends React.Component {
                     this.props.showModal({
                       modalType: CONFIRM_RESULT,
                       modalProps: {
-                        title: `Analysis Checks for ${
-                          job.jobNumber
-                        }-${sample.sampleNumber.toString()}`,
+                        title: `Analysis Checks for ${job.jobNumber}-${sample.sampleNumber.toString()}`,
                         sample: sample,
-                        jobUid: job.uid,
-                      },
+                        jobUid: job.uid
+                      }
                     })
                   }
                 >
                   {confirmColor === 'Red' ? (
                     <ThumbsDown className={classes.iconRegularRed} />
                   ) : (
-                    <ConfirmIcon
-                      className={classes[`iconRegular${confirmColor}`]}
-                    />
+                    <ConfirmIcon className={classes[`iconRegular${confirmColor}`]} />
                   )}
                 </IconButton>
               </Tooltip>
-              <Tooltip
-                id="h-tooltip"
-                title={
-                  sample.onHold ? 'Take Sample off Hold' : 'Put Sample on Hold'
-                }
-              >
+              <Tooltip id='h-tooltip' title={sample.onHold ? 'Take Sample off Hold' : 'Put Sample on Hold'}>
                 <IconButton
                   onClick={(event) => {
                     //console.log('Clicked');
                     holdSample(sample, job, this.props.me)
                   }}
                 >
-                  <HoldIcon
-                    className={
-                      sample.onHold
-                        ? classes.iconRegularRed
-                        : classes.iconRegular
-                    }
-                  />
+                  <HoldIcon className={sample.onHold ? classes.iconRegularRed : classes.iconRegular} />
                 </IconButton>
               </Tooltip>
-              <Tooltip id="sl-tooltip" title={'Sample Log'}>
+              <Tooltip id='sl-tooltip' title={'Sample Log'}>
                 <IconButton
                   onClick={(event) => {
                     this.props.showModal({
                       modalType: ASBESTOS_SAMPLE_LOG,
                       modalProps: {
-                        title: `Sample History for ${
-                          job.jobNumber
-                        }-${sample.sampleNumber.toString()}`,
-                        ...sample,
-                      },
+                        title: `Sample History for ${job.jobNumber}-${sample.sampleNumber.toString()}`,
+                        ...sample
+                      }
                     })
                   }}
                 >
@@ -325,6 +269,4 @@ class AsbestosSampleListItem extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(AsbestosSampleListItem)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(AsbestosSampleListItem))

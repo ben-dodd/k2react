@@ -21,12 +21,7 @@ import IconButton from '@material-ui/core/IconButton'
 
 import UploadIcon from '@material-ui/icons/CloudUpload'
 import Close from '@material-ui/icons/Close'
-import {
-  hideModal,
-  handleModalChange,
-  handleModalSubmit,
-  onUploadFile,
-} from '../../../actions/modal'
+import { hideModal, handleModalChange, handleModalSubmit, onUploadFile } from '../../../actions/modal'
 import { fetchSites } from '../../../actions/jobs'
 import { numericOnly } from '../../../actions/helpers'
 import _ from 'lodash'
@@ -41,7 +36,7 @@ const mapStateToProps = (state) => {
     doc: state.modal.modalProps.doc,
     userRefName: state.local.userRefName,
     siteTypes: state.const.siteTypes,
-    assetClasses: state.const.assetClassesTrain,
+    assetClasses: state.const.assetClassesTrain
   }
 }
 
@@ -49,38 +44,25 @@ const mapDispatchToProps = (dispatch) => {
   return {
     fetchSites: (update) => dispatch(fetchSites(update)),
     hideModal: () => dispatch(hideModal()),
-    onUploadFile: (file, pathRef, prefix, imageQuality) =>
-      dispatch(onUploadFile(file, pathRef, prefix, imageQuality)),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    onUploadFile: (file, pathRef, prefix, imageQuality) => dispatch(onUploadFile(file, pathRef, prefix, imageQuality)),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300),
     handleSelectChange: (target) => dispatch(handleModalChange(target)),
-    handleModalSubmit: (doc, pathRef) =>
-      dispatch(handleModalSubmit(doc, pathRef)),
+    handleModalSubmit: (doc, pathRef) => dispatch(handleModalSubmit(doc, pathRef))
   }
 }
 
-const jobTypes = [
-  'Stack',
-  'Workplace',
-  'Noise',
-  'Asbestos',
-  'Methamphetamine',
-  'Biological',
-  'Other',
-]
+const jobTypes = ['Stack', 'Workplace', 'Noise', 'Asbestos', 'Methamphetamine', 'Biological', 'Other']
 
 class SiteModal extends React.Component {
   deleteImage = (file, uid) => {
     this.props.handleSelectChange({
       id: 'doc',
-      value: { siteImageUrl: null, siteImageRef: null },
+      value: { siteImageUrl: null, siteImageRef: null }
     })
     if (uid) {
       let change = {
         siteImageUrl: null,
-        siteImageRef: null,
+        siteImageRef: null
       }
       sitesRef.doc(uid).update(change)
     }
@@ -92,23 +74,18 @@ class SiteModal extends React.Component {
     console.log(this.props.modalType)
     console.log(doc.uid)
     return (
-      <Dialog
-        open={this.props.modalType === SITE}
-        onClose={this.props.hideModal}
-      >
-        <DialogTitle>
-          {modalProps.title ? modalProps.title : 'Add New Site'}
-        </DialogTitle>
+      <Dialog open={this.props.modalType === SITE} onClose={this.props.hideModal}>
+        <DialogTitle>{modalProps.title ? modalProps.title : 'Add New Site'}</DialogTitle>
         <DialogContent>
           <TextField
             className={classes.formInputLarge}
-            id="siteName"
-            label="Site Name"
+            id='siteName'
+            label='Site Name'
             defaultValue={doc.siteName || ''}
             onChange={(e) => {
               this.props.handleModalChange({
                 id: 'siteName',
-                value: e.target.value,
+                value: e.target.value
               })
             }}
           />
@@ -120,14 +97,14 @@ class SiteModal extends React.Component {
             onChange={(e) => {
               this.props.handleModalChange({
                 id: 'type',
-                value: e.target.value,
+                value: e.target.value
               })
             }}
             inputProps={{
-              name: 'type',
+              name: 'type'
             }}
           >
-            <option value="" />
+            <option value='' />
             {siteTypes.map((s) => (
               <option key={s.value} value={s.value}>
                 {s.label}
@@ -145,14 +122,14 @@ class SiteModal extends React.Component {
                   onChange={(e) => {
                     this.props.handleModalChange({
                       id: 'assetClass',
-                      value: e.target.value,
+                      value: e.target.value
                     })
                   }}
                   inputProps={{
-                    name: 'assetClass',
+                    name: 'assetClass'
                   }}
                 >
-                  <option value="" />
+                  <option value='' />
                   {assetClasses.map((s) => (
                     <option key={s.value} value={s.value}>
                       {s.label}
@@ -162,21 +139,19 @@ class SiteModal extends React.Component {
               </div>
               <TextField
                 className={classes.formInputLarge}
-                id="assetClass"
-                label="Asset Number"
+                id='assetClass'
+                label='Asset Number'
                 defaultValue={doc.assetNumber || ''}
                 onChange={(e) => {
                   this.props.handleModalChange({
                     id: 'assetNumber',
-                    value: numericOnly(e.target.value),
+                    value: numericOnly(e.target.value)
                   })
                 }}
               />
             </div>
           )}
-          <InputLabel className={classes.marginTopSmall}>
-            Primary Job Type
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Primary Job Type</InputLabel>
           <Select
             className={classes.formInputLarge}
             native
@@ -184,14 +159,14 @@ class SiteModal extends React.Component {
             onChange={(e) => {
               this.props.handleModalChange({
                 id: 'primaryJobType',
-                value: e.target.value,
+                value: e.target.value
               })
             }}
             inputProps={{
-              name: 'primaryJobType',
+              name: 'primaryJobType'
             }}
           >
-            <option value="" />
+            <option value='' />
             {jobTypes.map((s) => (
               <option key={s} value={s.toLowerCase()}>
                 {s}
@@ -204,12 +179,12 @@ class SiteModal extends React.Component {
             <div>
               <img
                 src={doc.siteImageUrl}
-                alt=""
-                width="200px"
+                alt=''
+                width='200px'
                 style={{
                   opacity: '0.5',
                   borderStyle: 'solid',
-                  borderWidth: '2px',
+                  borderWidth: '2px'
                 }}
               />
               <IconButton
@@ -219,13 +194,10 @@ class SiteModal extends React.Component {
                   left: '-120px',
                   borderStyle: 'solid',
                   borderWidth: '2px',
-                  fontSize: 8,
+                  fontSize: 8
                 }}
                 onClick={() => {
-                  if (
-                    window.confirm('Are you sure you wish to delete the image?')
-                  )
-                    this.deleteImage(doc.siteImageRef, doc.uid)
+                  if (window.confirm('Are you sure you wish to delete the image?')) this.deleteImage(doc.siteImageRef, doc.uid)
                 }}
               >
                 <Close />
@@ -233,16 +205,12 @@ class SiteModal extends React.Component {
             </div>
           )}
           {/*Always allow file upload*/}
-          <InputLabel className={classes.marginTopSmall}>
-            Upload Site Image
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Upload Site Image</InputLabel>
           <label>
-            <UploadIcon
-              className={classNames(classes.hoverCursor, classes.colorAccent)}
-            />
+            <UploadIcon className={classNames(classes.hoverCursor, classes.colorAccent)} />
             <input
-              id="attr_upload_file"
-              type="file"
+              id='attr_upload_file'
+              type='file'
               style={{ display: 'none' }}
               onChange={(e) => {
                 if (doc.siteImageUrl) {
@@ -253,23 +221,19 @@ class SiteModal extends React.Component {
                   storagePath: 'sites/',
                   prefix: 'siteImage',
                   imageQuality: 30,
-                  imageHeight: 100,
+                  imageHeight: 100
                 })
               }}
             />
-            <LinearProgress
-              className={classes.formInputLarge}
-              variant="determinate"
-              value={modalProps.uploadProgress}
-            />
+            <LinearProgress className={classes.formInputLarge} variant='determinate' value={modalProps.uploadProgress} />
           </label>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.hideModal} color="secondary">
+          <Button onClick={this.props.hideModal} color='secondary'>
             Cancel
           </Button>
           {modalProps.isUploading ? (
-            <Button color="primary" disabled>
+            <Button color='primary' disabled>
               Submit
             </Button>
           ) : (
@@ -278,11 +242,11 @@ class SiteModal extends React.Component {
                 this.props.handleModalSubmit({
                   doc: doc,
                   pathRef: sitesRef,
-                  docid: 'random',
+                  docid: 'random'
                 })
                 this.props.fetchSites(true)
               }}
-              color="primary"
+              color='primary'
             >
               Submit
             </Button>
@@ -293,6 +257,4 @@ class SiteModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(SiteModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SiteModal))

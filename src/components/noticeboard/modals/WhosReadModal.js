@@ -23,19 +23,19 @@ const mapStateToProps = (state) => {
     modalType: state.modal.modalType,
     modalProps: state.modal.modalProps,
     notice: state.modal.modalProps.doc.notice,
-    staff: state.local.staff,
+    staff: state.local.staff
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    hideModal: () => dispatch(hideModal()),
+    hideModal: () => dispatch(hideModal())
   }
 }
 
 class WhosReadModal extends React.Component {
   state = {
-    whosRead: [],
+    whosRead: []
   }
 
   UNSAFE_componentWillMount() {
@@ -47,7 +47,7 @@ class WhosReadModal extends React.Component {
       .then((doc) => {
         if (doc.exists)
           this.setState({
-            whosRead: doc.data().payload,
+            whosRead: doc.data().payload
           })
       })
   }
@@ -69,43 +69,20 @@ class WhosReadModal extends React.Component {
     }
 
     return (
-      <Dialog
-        open={this.props.modalType === WHOS_READ}
-        onClose={this.props.hideModal}
-        maxWidth="sm"
-        fullWidth={true}
-      >
+      <Dialog open={this.props.modalType === WHOS_READ} onClose={this.props.hideModal} maxWidth='sm' fullWidth={true}>
         <DialogTitle>{'Who Has Read The Notice'}</DialogTitle>
         <DialogContent>
           <Grid container>
             {notRead.length !== 0 && (
               <Grid item xs={6}>
-                <div
-                  className={classNames(
-                    classes.marginBottomSmall,
-                    classes.bold
-                  )}
-                >
-                  Has Read
-                </div>
-                {read.length === 0
-                  ? 'No one has read it.'
-                  : read.sort().map((name) => <div key={name}>{name}</div>)}
+                <div className={classNames(classes.marginBottomSmall, classes.bold)}>Has Read</div>
+                {read.length === 0 ? 'No one has read it.' : read.sort().map((name) => <div key={name}>{name}</div>)}
               </Grid>
             )}
             {read.length !== 0 && (
               <Grid item xs={6}>
-                <div
-                  className={classNames(
-                    classes.marginBottomSmall,
-                    classes.bold
-                  )}
-                >
-                  Has Not Read
-                </div>
-                {notRead.length === 0
-                  ? 'Everybody has read it.'
-                  : notRead.sort().map((name) => <div key={name}>{name}</div>)}
+                <div className={classNames(classes.marginBottomSmall, classes.bold)}>Has Not Read</div>
+                {notRead.length === 0 ? 'Everybody has read it.' : notRead.sort().map((name) => <div key={name}>{name}</div>)}
               </Grid>
             )}
           </Grid>
@@ -115,7 +92,7 @@ class WhosReadModal extends React.Component {
             onClick={() => {
               this.props.hideModal()
             }}
-            color="primary"
+            color='primary'
           >
             OK
           </Button>
@@ -125,6 +102,4 @@ class WhosReadModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(WhosReadModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(WhosReadModal))

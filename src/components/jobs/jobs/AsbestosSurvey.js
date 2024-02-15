@@ -29,7 +29,7 @@ import {
   updateGeocodes,
   saveStats,
   collateJobsList,
-  handleJobChange,
+  handleJobChange
 } from '../../../actions/jobs'
 
 import { collateSamples } from '../../../actions/asbestosReportHelpers'
@@ -56,7 +56,7 @@ const mapStateToProps = (state) => {
     me: state.local.me,
     filter: state.display.filterMap,
     otherOptions: state.const.otherOptions,
-    modalType: state.modal.modalType,
+    modalType: state.modal.modalType
   }
 }
 
@@ -66,12 +66,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchWFMLeads: () => dispatch(fetchWFMLeads()),
     fetchWFMClients: () => dispatch(fetchWFMClients()),
     handleJobChange: (info) => dispatch(handleJobChange(info)),
-    handleJobChangeDebounced: _.debounce(
-      (info) => dispatch(handleJobChange(info)),
-      2000
-    ),
-    fetchCurrentJobState: (ignoreCompleted) =>
-      dispatch(fetchCurrentJobState(ignoreCompleted)),
+    handleJobChangeDebounced: _.debounce((info) => dispatch(handleJobChange(info)), 2000),
+    fetchCurrentJobState: (ignoreCompleted) => dispatch(fetchCurrentJobState(ignoreCompleted)),
     clearWfmJob: () => dispatch(clearWfmJob()),
     saveCurrentJobState: (state) => dispatch(saveCurrentJobState(state)),
     saveGeocodes: (g) => dispatch(saveGeocodes(g)),
@@ -82,28 +78,14 @@ const mapDispatchToProps = (dispatch) => {
     filterMap: (filter) => dispatch(filterMap(filter)),
     filterMapReset: () => dispatch(filterMapReset()),
     showModal: (modal) => dispatch(showModal(modal)),
-    collateJobsList: (
-      wfmJobs,
-      wfmLeads,
-      currentJobState,
-      wfmClients,
-      geocodes
-    ) =>
-      dispatch(
-        collateJobsList(
-          wfmJobs,
-          wfmLeads,
-          currentJobState,
-          wfmClients,
-          geocodes
-        )
-      ),
+    collateJobsList: (wfmJobs, wfmLeads, currentJobState, wfmClients, geocodes) =>
+      dispatch(collateJobsList(wfmJobs, wfmLeads, currentJobState, wfmClients, geocodes))
   }
 }
 
 class AsbestosSurvey extends React.Component {
   state = {
-    templateVersion: 3,
+    templateVersion: 3
   }
 
   UNSAFE_componentWillMount() {
@@ -122,56 +104,27 @@ class AsbestosSurvey extends React.Component {
     const { registerList, airMonitoringRecords } = this.state
 
     if (m) {
-      const loading =
-        !sites[site] || !siteJobs[site] || !siteAcm[site] || !samples
+      const loading = !sites[site] || !siteJobs[site] || !siteAcm[site] || !samples
       return (
         <div>
           <InputLabel>Select Template Version</InputLabel>
           <div className={classes.flexRow}>
             <IconButton onClick={() => this.setState({ templateVersion: 1 })}>
-              <Template1Icon
-                className={
-                  this.state.templateVersion === 1
-                    ? classes.iconRegularGreen
-                    : classes.iconRegular
-                }
-              />
+              <Template1Icon className={this.state.templateVersion === 1 ? classes.iconRegularGreen : classes.iconRegular} />
             </IconButton>
             <IconButton onClick={() => this.setState({ templateVersion: 2 })}>
-              <Template2Icon
-                className={
-                  this.state.templateVersion === 2
-                    ? classes.iconRegularGreen
-                    : classes.iconRegular
-                }
-              />
+              <Template2Icon className={this.state.templateVersion === 2 ? classes.iconRegularGreen : classes.iconRegular} />
             </IconButton>
             <IconButton onClick={() => this.setState({ templateVersion: 3 })}>
-              <Template3Icon
-                className={
-                  this.state.templateVersion === 3
-                    ? classes.iconRegularGreen
-                    : classes.iconRegular
-                }
-              />
+              <Template3Icon className={this.state.templateVersion === 3 ? classes.iconRegularGreen : classes.iconRegular} />
             </IconButton>
           </div>
-          <AsbestosRegisterTable
-            loading={loading}
-            registerList={registerList}
-            classes={classes}
-          />
-          <AirMonitoringRecords
-            loading={loading}
-            airMonitoringRecords={airMonitoringRecords}
-            classes={classes}
-          />
+          <AsbestosRegisterTable loading={loading} registerList={registerList} classes={classes} />
+          <AirMonitoringRecords loading={loading} airMonitoringRecords={airMonitoringRecords} classes={classes} />
         </div>
       )
     } else return <div />
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(AsbestosSurvey)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(AsbestosSurvey))

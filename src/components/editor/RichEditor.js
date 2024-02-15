@@ -33,16 +33,7 @@ function SimpleEditor(props) {
       editorState={props.editorState}
       onEditorStateChange={props.onEditorStateChange}
       toolbar={{
-        options: [
-          'inline',
-          'blockType',
-          'fontSize',
-          'list',
-          'textAlign',
-          'colorPicker',
-          'link',
-          'history',
-        ],
+        options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'colorPicker', 'link', 'history'],
         colorPicker: {
           colors: [
             'rgb(97,189,109)',
@@ -71,13 +62,13 @@ function SimpleEditor(props) {
             'rgb(209,72,65)',
             'rgb(184,49,47)',
             'rgb(124,112,107)',
-            'rgb(209,213,216)',
-          ],
-        },
+            'rgb(209,213,216)'
+          ]
+        }
       }}
-      toolbarClassName="rdw-storybook-toolbar"
-      wrapperClassName="rdw-storybook-wrapper"
-      editorClassName="rdw-storybook-editor"
+      toolbarClassName='rdw-storybook-toolbar'
+      wrapperClassName='rdw-storybook-wrapper'
+      editorClassName='rdw-storybook-editor'
     />
   )
 }
@@ -89,18 +80,7 @@ function RichEditor(props) {
       editorState={props.editorState}
       onEditorStateChange={props.onEditorStateChange}
       toolbar={{
-        options: [
-          'inline',
-          'blockType',
-          'fontSize',
-          'list',
-          'textAlign',
-          'colorPicker',
-          'link',
-          'embedded',
-          'image',
-          'history',
-        ],
+        options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'colorPicker', 'link', 'embedded', 'image', 'history'],
         colorPicker: {
           colors: [
             'rgb(97,189,109)',
@@ -129,14 +109,14 @@ function RichEditor(props) {
             'rgb(209,72,65)',
             'rgb(184,49,47)',
             'rgb(124,112,107)',
-            'rgb(209,213,216)',
-          ],
+            'rgb(209,213,216)'
+          ]
         },
         embedded: {
           defaultSize: {
             height: '1132',
-            width: '800',
-          },
+            width: '800'
+          }
         },
         image: {
           uploadCallback: uploadImageCallBack,
@@ -145,13 +125,13 @@ function RichEditor(props) {
           alt: { present: true, mandatory: false },
           defaultSize: {
             height: 'auto',
-            width: 'auto',
-          },
-        },
+            width: 'auto'
+          }
+        }
       }}
-      toolbarClassName="rdw-storybook-toolbar"
-      wrapperClassName="rdw-storybook-wrapper"
-      editorClassName="rdw-storybook-editor"
+      toolbarClassName='rdw-storybook-toolbar'
+      wrapperClassName='rdw-storybook-wrapper'
+      editorClassName='rdw-storybook-editor'
     />
   )
 }

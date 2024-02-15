@@ -15,28 +15,16 @@ import {
   writeWhereIsTheHazard,
   writeRiskToHealth,
   writeBackground,
-  writeRecommendations,
+  writeRecommendations
 } from '../../../../actions/asbestosReportHelpers'
 
 function ExecutiveSummaryAmp(props) {
-  const {
-    job,
-    siteUid,
-    site,
-    staff,
-    onChange,
-    template,
-    classes,
-    siteAcm,
-    that,
-  } = props
+  const { job, siteUid, site, staff, onChange, template, classes, siteAcm, that } = props
   return (
     <div>
       <div className={classes.flexRowSpread}>
-        <InputLabel className={classes.marginTopSmall}>
-          Executive Summary
-        </InputLabel>
-        <Tooltip title="Refresh automatic content">
+        <InputLabel className={classes.marginTopSmall}>Executive Summary</InputLabel>
+        <Tooltip title='Refresh automatic content'>
           <IconButton
             onClick={() => {
               let content = writeExecutiveSummary(job, siteAcm, template)
@@ -45,7 +33,7 @@ function ExecutiveSummaryAmp(props) {
                 job,
                 field: 'executiveSummary',
                 val: content,
-                siteUid,
+                siteUid
               })
             }}
           >
@@ -58,7 +46,7 @@ function ExecutiveSummaryAmp(props) {
         value={that.state.executiveSummary || job.executiveSummary || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
-        theme="snow"
+        theme='snow'
         onChange={(content, delta, source) => {
           if (source === 'user') {
             that.setState({ executiveSummary: content })
@@ -66,17 +54,15 @@ function ExecutiveSummaryAmp(props) {
               job,
               field: 'executiveSummary',
               val: content,
-              siteUid,
+              siteUid
             })
           }
         }}
       />
 
       <div className={classes.flexRowSpread}>
-        <InputLabel className={classes.marginTopSmall}>
-          Where is the Hazard?
-        </InputLabel>
-        <Tooltip title="Refresh automatic content">
+        <InputLabel className={classes.marginTopSmall}>Where is the Hazard?</InputLabel>
+        <Tooltip title='Refresh automatic content'>
           <IconButton
             onClick={() => {
               let content = writeWhereIsTheHazard(job, siteAcm, template)
@@ -85,7 +71,7 @@ function ExecutiveSummaryAmp(props) {
                 job,
                 field: 'whereIsTheHazard',
                 val: content,
-                siteUid,
+                siteUid
               })
             }}
           >
@@ -98,7 +84,7 @@ function ExecutiveSummaryAmp(props) {
         value={that.state.whereIsTheHazard || job.whereIsTheHazard || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
-        theme="snow"
+        theme='snow'
         onChange={(content, delta, source) => {
           if (source === 'user') {
             console.log(content)
@@ -107,17 +93,15 @@ function ExecutiveSummaryAmp(props) {
               job,
               field: 'whereIsTheHazard',
               val: content,
-              siteUid,
+              siteUid
             })
           }
         }}
       />
 
       <div className={classes.flexRowSpread}>
-        <InputLabel className={classes.marginTopSmall}>
-          Risk to Health
-        </InputLabel>
-        <Tooltip title="Refresh automatic content">
+        <InputLabel className={classes.marginTopSmall}>Risk to Health</InputLabel>
+        <Tooltip title='Refresh automatic content'>
           <IconButton
             onClick={() => {
               let content = writeRiskToHealth(job, siteAcm, template)
@@ -126,7 +110,7 @@ function ExecutiveSummaryAmp(props) {
                 job,
                 field: 'riskToHealth',
                 val: content,
-                siteUid,
+                siteUid
               })
             }}
           >
@@ -139,7 +123,7 @@ function ExecutiveSummaryAmp(props) {
         value={that.state.riskToHealth || job.riskToHealth || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
-        theme="snow"
+        theme='snow'
         onChange={(content, delta, source) => {
           if (source === 'user') {
             console.log(content)
@@ -148,7 +132,7 @@ function ExecutiveSummaryAmp(props) {
               job,
               field: 'riskToHealth',
               val: content,
-              siteUid,
+              siteUid
             })
           }
         }}
@@ -156,7 +140,7 @@ function ExecutiveSummaryAmp(props) {
 
       <div className={classes.flexRowSpread}>
         <InputLabel className={classes.marginTopSmall}>Background</InputLabel>
-        <Tooltip title="Refresh automatic content">
+        <Tooltip title='Refresh automatic content'>
           <IconButton
             onClick={() => {
               let content = writeBackground(job, site, staff, template)
@@ -165,7 +149,7 @@ function ExecutiveSummaryAmp(props) {
                 job,
                 field: 'background',
                 val: content,
-                siteUid,
+                siteUid
               })
             }}
           >
@@ -178,7 +162,7 @@ function ExecutiveSummaryAmp(props) {
         value={that.state.background || job.background || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
-        theme="snow"
+        theme='snow'
         onChange={(content, delta, source) => {
           if (source === 'user') {
             console.log(content)
@@ -187,28 +171,26 @@ function ExecutiveSummaryAmp(props) {
               job,
               field: 'background',
               val: content,
-              siteUid,
+              siteUid
             })
           }
         }}
       />
 
       <div className={classes.flexRowSpread}>
-        <InputLabel className={classes.marginTopSmall}>
-          Immediate Actions Required
-        </InputLabel>
-        <Tooltip title="Refresh automatic content">
+        <InputLabel className={classes.marginTopSmall}>Immediate Actions Required</InputLabel>
+        <Tooltip title='Refresh automatic content'>
           <IconButton
             onClick={() => {
               let content = writeRecommendations(job, siteAcm, template)
               that.setState({
-                immediateActionsRequired: content.immediateActionsRequired,
+                immediateActionsRequired: content.immediateActionsRequired
               })
               props.onChange({
                 job,
                 field: 'immediateActionsRequired',
                 val: content.immediateActionsRequired,
-                siteUid,
+                siteUid
               })
             }}
           >
@@ -218,14 +200,10 @@ function ExecutiveSummaryAmp(props) {
       </div>
 
       <ReactQuill
-        value={
-          that.state.immediateActionsRequired ||
-          job.immediateActionsRequired ||
-          ''
-        }
+        value={that.state.immediateActionsRequired || job.immediateActionsRequired || ''}
         modules={quillModules}
         className={classes.marginBottomMedium}
-        theme="snow"
+        theme='snow'
         onChange={(content, delta, source) => {
           if (source === 'user') {
             console.log(content)
@@ -234,29 +212,26 @@ function ExecutiveSummaryAmp(props) {
               job,
               field: 'immediateActionsRequired',
               val: content,
-              siteUid,
+              siteUid
             })
           }
         }}
       />
 
       <div className={classes.flexRowSpread}>
-        <InputLabel className={classes.marginTopSmall}>
-          Removal or Treatment of Asbestos
-        </InputLabel>
-        <Tooltip title="Refresh automatic content">
+        <InputLabel className={classes.marginTopSmall}>Removal or Treatment of Asbestos</InputLabel>
+        <Tooltip title='Refresh automatic content'>
           <IconButton
             onClick={() => {
               let content = writeRecommendations(job, siteAcm, template)
               that.setState({
-                removalOrTreatmentOfAsbestos:
-                  content.removalOrTreatmentOfAsbestos,
+                removalOrTreatmentOfAsbestos: content.removalOrTreatmentOfAsbestos
               })
               props.onChange({
                 job,
                 field: 'removalOrTreatmentOfAsbestos',
                 val: content.removalOrTreatmentOfAsbestos,
-                siteUid,
+                siteUid
               })
             }}
           >

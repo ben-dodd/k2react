@@ -8,7 +8,7 @@ const mapStyles = {
   flexGrow: 1,
   overflow: 'auto',
   // width: '90%',
-  height: '100%',
+  height: '100%'
 }
 
 class JobsMapContainer extends React.Component {

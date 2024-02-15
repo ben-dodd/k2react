@@ -3,10 +3,7 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { styles } from '../../../config/styles'
 import { connect } from 'react-redux'
-import {
-  ASBESTOS_COC_EDIT,
-  ASBESTOS_SAMPLE_EDIT_COC,
-} from '../../../constants/modal-types'
+import { ASBESTOS_COC_EDIT, ASBESTOS_SAMPLE_EDIT_COC } from '../../../constants/modal-types'
 
 import Button from '@material-ui/core/Button'
 import Tooltip from '@material-ui/core/Tooltip'
@@ -42,14 +39,10 @@ import {
   onUploadFile,
   setModalError,
   resetModal,
-  showModalSecondary,
+  showModalSecondary
 } from '../../../actions/modal'
 import { fetchStaff, addLog } from '../../../actions/local'
-import {
-  getDetailedWFMJob,
-  resetWfmJob,
-  getDefaultLetterAddress,
-} from '../../../actions/jobs'
+import { getDetailedWFMJob, resetWfmJob, getDefaultLetterAddress } from '../../../actions/jobs'
 import {
   fetchSamples,
   handleCocSubmit,
@@ -57,15 +50,9 @@ import {
   writeDescription,
   getAirSampleData,
   getSampleColors,
-  updateResultMap,
+  updateResultMap
 } from '../../../actions/asbestosLab'
-import {
-  titleCase,
-  sentenceCase,
-  dateOf,
-  personnelConvert,
-  numericOnly,
-} from '../../../actions/helpers'
+import { titleCase, sentenceCase, dateOf, personnelConvert, numericOnly } from '../../../actions/helpers'
 import _ from 'lodash'
 
 const mapStateToProps = (state) => {
@@ -82,7 +69,7 @@ const mapStateToProps = (state) => {
     staff: state.local.staff,
     samples: state.asbestosLab.samples,
     otherOptions: state.const.otherOptions,
-    wfmAccessToken: state.local.wfmAccessToken,
+    wfmAccessToken: state.local.wfmAccessToken
   }
 }
 
@@ -91,22 +78,16 @@ const mapDispatchToProps = (dispatch) => {
     hideModal: () => dispatch(hideModal()),
     fetchStaff: () => dispatch(fetchStaff()),
     onUploadFile: (file, pathRef) => dispatch(onUploadFile(file, pathRef)),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      50
-    ),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 50),
     handleSelectChange: (target) => dispatch(handleModalChange(target)),
-    handleModalSubmit: (doc, pathRef) =>
-      dispatch(handleModalSubmit(doc, pathRef)),
-    handleSampleChange: (number, changes) =>
-      dispatch(handleSampleChange(number, changes)),
+    handleModalSubmit: (doc, pathRef) => dispatch(handleModalSubmit(doc, pathRef)),
+    handleSampleChange: (number, changes) => dispatch(handleSampleChange(number, changes)),
     setModalError: (error) => dispatch(setModalError(error)),
     showModalSecondary: (modal) => dispatch(showModalSecondary(modal)),
     getDetailedWFMJob: (info) => dispatch(getDetailedWFMJob(info)),
     resetWfmJob: () => dispatch(resetWfmJob()),
-    fetchSamples: (cocUid, jobNumber, modal, airSamples) =>
-      dispatch(fetchSamples(cocUid, jobNumber, modal, airSamples)),
-    resetModal: () => dispatch(resetModal()),
+    fetchSamples: (cocUid, jobNumber, modal, airSamples) => dispatch(fetchSamples(cocUid, jobNumber, modal, airSamples)),
+    resetModal: () => dispatch(resetModal())
   }
 }
 
@@ -156,7 +137,7 @@ const initState = {
   recentSuggestionsMaterial: [],
   showBulkChangeSamples: false,
 
-  samples: {},
+  samples: {}
 }
 
 class CocModal extends React.PureComponent {
@@ -167,7 +148,7 @@ class CocModal extends React.PureComponent {
     if (Object.keys(this.props.staff).length < 1) this.props.fetchStaff()
     if (this.props.doc && this.props.doc.sampleType)
       this.setState({
-        sampleType: this.props.doc.sampleType,
+        sampleType: this.props.doc.sampleType
       })
   }
 
@@ -180,9 +161,7 @@ class CocModal extends React.PureComponent {
     } else if (
       jobNumber.substring(0, 2).toUpperCase() !== 'AS' &&
       this.props.otherOptions &&
-      this.props.otherOptions.filter(
-        (v) => v.option === 'asbestosNumbersMustBeAS'
-      )[0].value === 'true'
+      this.props.otherOptions.filter((v) => v.option === 'asbestosNumbersMustBeAS')[0].value === 'true'
     ) {
       this.props.setModalError('Asbestos job numbers must begin with "AS"')
     } else {
@@ -193,16 +172,11 @@ class CocModal extends React.PureComponent {
         jobNumber,
         createUid,
         accessToken: this.props.wfmAccessToken,
-        refreshToken: this.props.me.refreshToken,
+        refreshToken: this.props.me.refreshToken
       })
       let uid = this.props.doc.uid
       // //console.log('wfmsync fetch samples');
-      this.props.fetchSamples(
-        uid,
-        jobNumber,
-        true,
-        this.state.sampleType === 'air'
-      )
+      this.props.fetchSamples(uid, jobNumber, true, this.state.sampleType === 'air')
       this.setState({ modified: true })
     }
   }
@@ -211,19 +185,14 @@ class CocModal extends React.PureComponent {
     if (this.props.doc && !this.props.doc.samples)
       this.props.handleModalChange({
         id: 'samples',
-        value: this.props.samples[this.props.doc.uid] || {},
+        value: this.props.samples[this.props.doc.uid] || {}
       })
   }
 
   handleResultClick = (res, sampleNumber) => {
     const { doc } = this.props
     let sample =
-      doc &&
-      doc.samples &&
-      doc.samples[sampleNumber + 1] &&
-      !doc.samples[sampleNumber + 1].deleted
-        ? doc.samples[sampleNumber + 1]
-        : {}
+      doc && doc.samples && doc.samples[sampleNumber + 1] && !doc.samples[sampleNumber + 1].deleted ? doc.samples[sampleNumber + 1] : {}
     let newMap = updateResultMap(res, sample.result)
     this.props.handleSampleChange(sampleNumber, { result: newMap })
   }
@@ -233,17 +202,10 @@ class CocModal extends React.PureComponent {
     console.log(doc)
 
     if (modalType === ASBESTOS_COC_EDIT) {
-      const names = [{ name: 'Client', uid: 'Client' }].concat(
-        Object.values(this.props.staff).sort((a, b) =>
-          a.name.localeCompare(b.name)
-        )
-      )
+      const names = [{ name: 'Client', uid: 'Client' }].concat(Object.values(this.props.staff).sort((a, b) => a.name.localeCompare(b.name)))
 
       let sampleNumbers = [this.state.numberOfSamples]
-      if (doc && doc.samples)
-        sampleNumbers = sampleNumbers.concat(
-          Object.keys(doc.samples).map((key) => parseInt(key))
-        )
+      if (doc && doc.samples) sampleNumbers = sampleNumbers.concat(Object.keys(doc.samples).map((key) => parseInt(key)))
       let numberOfSamples = Math.max(...sampleNumbers)
       let wfmSynced = doc.jobNumber && !modalProps.isNew
 
@@ -252,24 +214,12 @@ class CocModal extends React.PureComponent {
       let noSamples = true
       if (doc && doc.samples)
         Object.values(doc.samples).forEach((s) => {
-          if (
-            this.state.sampleType === 'bulk' &&
-            !s.deleted &&
-            (s.description ||
-              s.material ||
-              s.specificLocation ||
-              s.genericLocation)
-          )
+          if (this.state.sampleType === 'bulk' && !s.deleted && (s.description || s.material || s.specificLocation || s.genericLocation))
             noSamples = false
           else if (
             this.state.sampleType === 'air' &&
             !s.deleted &&
-            (s.specificLocation ||
-              s.initialFlowRate ||
-              s.finalFlowRate ||
-              s.startTime ||
-              s.endTime ||
-              s.totalRunTime)
+            (s.specificLocation || s.initialFlowRate || s.finalFlowRate || s.startTime || s.endTime || s.totalRunTime)
           )
             noSamples = false
         })
@@ -279,7 +229,7 @@ class CocModal extends React.PureComponent {
           open={modalType === ASBESTOS_COC_EDIT}
           onClose={() => this.props.hideModal()}
           fullScreen={true}
-          maxWidth="lg"
+          maxWidth='lg'
           disableEscapeKeyDown={!blockInput && (doc || wfmJob) !== false}
           fullWidth={true}
           onEnter={this.loadSamples}
@@ -289,10 +239,8 @@ class CocModal extends React.PureComponent {
               <div>
                 <div>Create New Chain of Custody</div>
                 <div className={classes.subtitle}>
-                  {this.state.sampleType === 'air' &&
-                    'Membrane Filter Method for Estimating Airborne Asbestos Fibres (NOHSC 3003:2005)'}
-                  {this.state.sampleType === 'bulk' &&
-                    'Qualitative Identification of Asbestos in Bulk Samples (AS 4964-2004)'}
+                  {this.state.sampleType === 'air' && 'Membrane Filter Method for Estimating Airborne Asbestos Fibres (NOHSC 3003:2005)'}
+                  {this.state.sampleType === 'bulk' && 'Qualitative Identification of Asbestos in Bulk Samples (AS 4964-2004)'}
                 </div>
               </div>
             </DialogTitle>
@@ -320,27 +268,20 @@ class CocModal extends React.PureComponent {
                                 </Grid>
                                 <Grid item>
                                   <div className={classes.flexRow}>
-                                    {((doc && doc.wfmID) ||
-                                      (wfmJob && wfmJob.wfmID)) && (
-                                      <Tooltip title="View Job on WorkflowMax">
+                                    {((doc && doc.wfmID) || (wfmJob && wfmJob.wfmID)) && (
+                                      <Tooltip title='View Job on WorkflowMax'>
                                         <IconButton
                                           onClick={() =>
                                             window.open(
-                                              `https://my.workflowmax.com/job/jobview.aspx?id=${
-                                                wfmJob
-                                                  ? wfmJob.wfmID
-                                                  : doc.wfmID
-                                              }`
+                                              `https://my.workflowmax.com/job/jobview.aspx?id=${wfmJob ? wfmJob.wfmID : doc.wfmID}`
                                             )
                                           }
                                         >
-                                          <Link
-                                            className={classes.iconRegular}
-                                          />
+                                          <Link className={classes.iconRegular} />
                                         </IconButton>
                                       </Tooltip>
                                     )}
-                                    <Tooltip title="Re-sync Job with WorkflowMax">
+                                    <Tooltip title='Re-sync Job with WorkflowMax'>
                                       <IconButton onClick={this.wfmSync}>
                                         <Sync className={classes.iconRegular} />
                                       </IconButton>
@@ -366,31 +307,22 @@ class CocModal extends React.PureComponent {
                                     </Grid>
                                     <Grid item>
                                       <div className={classes.flexRow}>
-                                        {((doc && doc.wfmID) ||
-                                          (wfmJob && wfmJob.wfmID)) && (
-                                          <Tooltip title="View Job on WorkflowMax">
+                                        {((doc && doc.wfmID) || (wfmJob && wfmJob.wfmID)) && (
+                                          <Tooltip title='View Job on WorkflowMax'>
                                             <IconButton
                                               onClick={() =>
                                                 window.open(
-                                                  `https://my.workflowmax.com/job/jobview.aspx?id=${
-                                                    wfmJob
-                                                      ? wfmJob.wfmID
-                                                      : doc.wfmID
-                                                  }`
+                                                  `https://my.workflowmax.com/job/jobview.aspx?id=${wfmJob ? wfmJob.wfmID : doc.wfmID}`
                                                 )
                                               }
                                             >
-                                              <Link
-                                                className={classes.iconRegular}
-                                              />
+                                              <Link className={classes.iconRegular} />
                                             </IconButton>
                                           </Tooltip>
                                         )}
-                                        <Tooltip title="Sync Job with WorkflowMax">
+                                        <Tooltip title='Sync Job with WorkflowMax'>
                                           <IconButton onClick={this.wfmSync}>
-                                            <Sync
-                                              className={classes.iconRegular}
-                                            />
+                                            <Sync className={classes.iconRegular} />
                                           </IconButton>
                                         </Tooltip>
                                       </div>
@@ -409,54 +341,41 @@ class CocModal extends React.PureComponent {
                               <InputLabel>Test Description</InputLabel>
                               <SuggestionField
                                 that={this}
-                                suggestions="airTestDescriptions"
+                                suggestions='airTestDescriptions'
                                 defaultValue={doc.airTestDescription || ''}
                                 onModify={(value) => {
                                   this.setState({
-                                    modified: true,
+                                    modified: true
                                   })
                                   this.props.handleModalChange({
                                     id: 'airTestDescription',
-                                    value: value,
+                                    value: value
                                   })
                                 }}
                               />
                             </div>
                           )}
-                          <InputLabel className={classes.marginTopSmall}>
-                            Sampling Company
-                          </InputLabel>
+                          <InputLabel className={classes.marginTopSmall}>Sampling Company</InputLabel>
                           <FormControl>
                             <RadioGroup
                               row
-                              aria-label="inhouseSampling"
-                              name="inhouseSampling"
+                              aria-label='inhouseSampling'
+                              name='inhouseSampling'
                               value={doc.inhouseSampling || 'true'}
                               onChange={(e) =>
                                 this.props.handleModalChange({
                                   id: 'inhouseSampling',
-                                  value: e.target.value,
+                                  value: e.target.value
                                 })
                               }
                             >
-                              <FormControlLabel
-                                value="true"
-                                control={<Radio />}
-                                label="K2 Environmental Ltd"
-                              />
-                              <FormControlLabel
-                                value="false"
-                                control={<Radio />}
-                                label="3rd Party"
-                              />
+                              <FormControlLabel value='true' control={<Radio />} label='K2 Environmental Ltd' />
+                              <FormControlLabel value='false' control={<Radio />} label='3rd Party' />
                             </RadioGroup>
                           </FormControl>
-                          {doc.inhouseSampling === undefined ||
-                          doc.inhouseSampling === 'true' ? (
+                          {doc.inhouseSampling === undefined || doc.inhouseSampling === 'true' ? (
                             <div>
-                              <InputLabel className={classes.marginTopSmall}>
-                                Sampling By
-                              </InputLabel>
+                              <InputLabel className={classes.marginTopSmall}>Sampling By</InputLabel>
                               <Select
                                 isMulti
                                 className={classes.selectTight}
@@ -464,144 +383,124 @@ class CocModal extends React.PureComponent {
                                   doc.sampledBy
                                     ? doc.sampledBy.map((e) => ({
                                         value: e.uid,
-                                        label: e.name,
+                                        label: e.name
                                       }))
                                     : null
                                 }
                                 options={[
                                   ...names.map((e) => ({
                                     value: e.uid,
-                                    label: e.name,
+                                    label: e.name
                                   })),
-                                  { value: 'Other', label: 'Other' },
+                                  { value: 'Other', label: 'Other' }
                                 ]}
                                 onChange={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'sampledBy',
-                                    value: personnelConvert(e),
+                                    value: personnelConvert(e)
                                   })
                                 }}
                               />
-                              {doc.sampledBy &&
-                                doc.sampledBy[0].value === 'Other' && (
-                                  <div>
-                                    <TextField
-                                      id="otherSampledBy"
-                                      label="Sampling Personnel"
-                                      style={{ width: '100%' }}
-                                      defaultValue={doc && doc.otherSampledBy}
-                                      onChange={(e) => {
-                                        this.setState({ modified: true })
-                                        this.props.handleModalChange({
-                                          id: 'otherSampledBy',
-                                          value: e.target.value,
-                                        })
-                                      }}
-                                    />
-                                    {/* Asbestos Assessors Numbers in here? */}
-                                  </div>
-                                )}
+                              {doc.sampledBy && doc.sampledBy[0].value === 'Other' && (
+                                <div>
+                                  <TextField
+                                    id='otherSampledBy'
+                                    label='Sampling Personnel'
+                                    style={{ width: '100%' }}
+                                    defaultValue={doc && doc.otherSampledBy}
+                                    onChange={(e) => {
+                                      this.setState({ modified: true })
+                                      this.props.handleModalChange({
+                                        id: 'otherSampledBy',
+                                        value: e.target.value
+                                      })
+                                    }}
+                                  />
+                                  {/* Asbestos Assessors Numbers in here? */}
+                                </div>
+                              )}
                             </div>
                           ) : (
                             <div>
                               <TextField
-                                id="samplingCompany"
-                                label="Name of Sampling Company"
+                                id='samplingCompany'
+                                label='Name of Sampling Company'
                                 style={{ width: '100%' }}
                                 defaultValue={doc && doc.samplingCompany}
                                 onChange={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'samplingCompany',
-                                    value: e.target.value,
+                                    value: e.target.value
                                   })
                                 }}
                               />
                               <TextField
-                                id="samplingCompanyRef"
-                                label="Sampling Company Job Reference"
+                                id='samplingCompanyRef'
+                                label='Sampling Company Job Reference'
                                 style={{ width: '100%' }}
                                 defaultValue={doc && doc.samplingCompanyRef}
                                 onChange={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'samplingCompanyRef',
-                                    value: e.target.value,
+                                    value: e.target.value
                                   })
                                 }}
                               />
                               <TextField
-                                id="samplingCompanyPersonnel"
-                                label="Name of Sampler"
+                                id='samplingCompanyPersonnel'
+                                label='Name of Sampler'
                                 style={{ width: '100%' }}
-                                defaultValue={
-                                  doc && doc.samplingCompanyPersonnel
-                                }
+                                defaultValue={doc && doc.samplingCompanyPersonnel}
                                 onChange={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'samplingCompanyPersonnel',
-                                    value: e.target.value,
+                                    value: e.target.value
                                   })
                                 }}
                               />
                             </div>
                           )}
-                          <InputLabel className={classes.marginTopSmall}>
-                            Sample Date
-                          </InputLabel>
+                          <InputLabel className={classes.marginTopSmall}>Sample Date</InputLabel>
                           <DatePicker
-                            value={
-                              doc.sampleDate ? dateOf(doc.sampleDate) : null
-                            }
+                            value={doc.sampleDate ? dateOf(doc.sampleDate) : null}
                             autoOk
-                            format="ddd, D MMMM YYYY"
+                            format='ddd, D MMMM YYYY'
                             clearable
-                            openTo="year"
+                            openTo='year'
                             views={['year', 'month', 'date']}
                             onChange={(date) => {
                               this.setState({ modified: true })
                               this.props.handleModalChange({
                                 id: 'sampleDate',
-                                value: dateOf(date),
+                                value: dateOf(date)
                               })
                             }}
                           />
-                          <InputLabel className={classes.marginTopSmall}>
-                            Testing Laboratory
-                          </InputLabel>
+                          <InputLabel className={classes.marginTopSmall}>Testing Laboratory</InputLabel>
                           <FormControl>
                             <RadioGroup
                               row
-                              aria-label="inhouseTesting"
-                              name="inhouseTesting"
+                              aria-label='inhouseTesting'
+                              name='inhouseTesting'
                               value={doc.inhouseTesting || 'true'}
                               onChange={(e) =>
                                 this.props.handleModalChange({
                                   id: 'inhouseTesting',
-                                  value: e.target.value,
+                                  value: e.target.value
                                 })
                               }
                             >
-                              <FormControlLabel
-                                value="true"
-                                control={<Radio />}
-                                label="K2 Environmental Ltd"
-                              />
-                              <FormControlLabel
-                                value="false"
-                                control={<Radio />}
-                                label="3rd Party"
-                              />
+                              <FormControlLabel value='true' control={<Radio />} label='K2 Environmental Ltd' />
+                              <FormControlLabel value='false' control={<Radio />} label='3rd Party' />
                             </RadioGroup>
                           </FormControl>
-                          {doc.inhouseTesting === undefined ||
-                          doc.inhouseTesting === 'true' ? (
+                          {doc.inhouseTesting === undefined || doc.inhouseTesting === 'true' ? (
                             <div>
-                              <InputLabel className={classes.marginTopSmall}>
-                                Analysis By
-                              </InputLabel>
+                              <InputLabel className={classes.marginTopSmall}>Analysis By</InputLabel>
                               <Select
                                 isMulti
                                 className={classes.selectTight}
@@ -609,22 +508,22 @@ class CocModal extends React.PureComponent {
                                   doc.analysisBy
                                     ? doc.analysisBy.map((e) => ({
                                         value: e.uid,
-                                        label: e.name,
+                                        label: e.name
                                       }))
                                     : null
                                 }
                                 options={[
                                   ...names.map((e) => ({
                                     value: e.uid,
-                                    label: e.name,
+                                    label: e.name
                                   })),
-                                  { value: 'other', label: 'Other' },
+                                  { value: 'other', label: 'Other' }
                                 ]}
                                 onChange={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'analysisBy',
-                                    value: personnelConvert(e),
+                                    value: personnelConvert(e)
                                   })
                                 }}
                               />
@@ -632,122 +531,110 @@ class CocModal extends React.PureComponent {
                           ) : (
                             <div>
                               <TextField
-                                id="testingLaboratory"
-                                label="Testing Laboratory"
+                                id='testingLaboratory'
+                                label='Testing Laboratory'
                                 style={{ width: '100%' }}
                                 defaultValue={doc && doc.testingLaboratory}
                                 onChange={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'testingLaboratory',
-                                    value: e.target.value,
+                                    value: e.target.value
                                   })
                                 }}
                               />
                               <TextField
-                                id="testingLaboratoryRef"
-                                label="Testing Laboratory Job Reference"
+                                id='testingLaboratoryRef'
+                                label='Testing Laboratory Job Reference'
                                 style={{ width: '100%' }}
                                 defaultValue={doc && doc.testingLaboratoryRef}
                                 onChange={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'testingLaboratoryRef',
-                                    value: e.target.value,
+                                    value: e.target.value
                                   })
                                 }}
                               />
                               <TextField
-                                id="testingLaboratoryAnalysts"
-                                label="Name of Analyst(s)"
+                                id='testingLaboratoryAnalysts'
+                                label='Name of Analyst(s)'
                                 style={{ width: '100%' }}
-                                defaultValue={
-                                  doc && doc.testingLaboratoryAnalysts
-                                }
+                                defaultValue={doc && doc.testingLaboratoryAnalysts}
                                 onChange={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'testingLaboratoryAnalysts',
-                                    value: e.target.value,
+                                    value: e.target.value
                                   })
                                 }}
                               />
                             </div>
                           )}
 
-                          <InputLabel className={classes.marginTopSmall}>
-                            Received Date
-                          </InputLabel>
+                          <InputLabel className={classes.marginTopSmall}>Received Date</InputLabel>
                           <DatePicker
-                            value={
-                              doc.receivedDate ? dateOf(doc.receivedDate) : null
-                            }
+                            value={doc.receivedDate ? dateOf(doc.receivedDate) : null}
                             autoOk
-                            format="ddd, D MMMM YYYY"
+                            format='ddd, D MMMM YYYY'
                             clearable
-                            openTo="year"
+                            openTo='year'
                             views={['year', 'month', 'date']}
                             onChange={(date) => {
                               this.setState({ modified: true })
                               this.props.handleModalChange({
                                 id: 'receivedDate',
-                                value: dateOf(date),
+                                value: dateOf(date)
                               })
                             }}
                           />
 
-                          <InputLabel className={classes.marginTopSmall}>
-                            Analysis Date
-                          </InputLabel>
+                          <InputLabel className={classes.marginTopSmall}>Analysis Date</InputLabel>
                           <DatePicker
-                            value={
-                              doc.analysisDate ? dateOf(doc.analysisDate) : null
-                            }
+                            value={doc.analysisDate ? dateOf(doc.analysisDate) : null}
                             autoOk
-                            format="ddd, D MMMM YYYY"
+                            format='ddd, D MMMM YYYY'
                             clearable
-                            openTo="year"
+                            openTo='year'
                             views={['year', 'month', 'date']}
                             onChange={(date) => {
                               this.setState({ modified: true })
                               this.props.handleModalChange({
                                 id: 'analysisDate',
-                                value: dateOf(date),
+                                value: dateOf(date)
                               })
                             }}
                           />
 
-                          <InputLabel className={classes.marginTopSmall}>
-                            Certificate Issue Date
-                          </InputLabel>
+                          <InputLabel className={classes.marginTopSmall}>Certificate Issue Date</InputLabel>
                           <DatePicker
                             value={doc.issueDate ? dateOf(doc.issueDate) : null}
                             autoOk
-                            format="ddd, D MMMM YYYY"
+                            format='ddd, D MMMM YYYY'
                             clearable
-                            openTo="year"
+                            openTo='year'
                             views={['year', 'month', 'date']}
                             onChange={(date) => {
                               this.setState({ modified: true })
                               this.props.handleModalChange({
                                 id: 'issueDate',
-                                value: dateOf(date),
+                                value: dateOf(date)
                               })
                             }}
                           />
                           <TextField
-                            id="historicalCocNotes"
-                            label="Notes"
+                            id='historicalCocNotes'
+                            label='Notes'
                             style={{ width: '100%' }}
                             defaultValue={doc && doc.historicalCocNotes}
                             rows={5}
-                            helperText="Include any useful background information on this sampling."
+                            helperText='Include any useful background information on this sampling.'
                             multiline
                             onChange={(e) => {
                               this.setState({ modified: true })
                               this.props.handleModalChange({
                                 id: 'historicalCocNotes',
-                                value: e.target.value,
+                                value: e.target.value
                               })
                             }}
                           />
@@ -759,25 +646,19 @@ class CocModal extends React.PureComponent {
                               <InputLabel>Test Description</InputLabel>
                               <SuggestionField
                                 that={this}
-                                suggestions="airTestDescriptions"
-                                defaultValue={
-                                  doc.airTestDescription
-                                    ? doc.airTestDescription
-                                    : ''
-                                }
+                                suggestions='airTestDescriptions'
+                                defaultValue={doc.airTestDescription ? doc.airTestDescription : ''}
                                 onModify={(value) => {
                                   this.setState({
-                                    modified: true,
+                                    modified: true
                                   })
                                   this.props.handleModalChange({
                                     id: 'airTestDescription',
-                                    value: value,
+                                    value: value
                                   })
                                 }}
                               />
-                              <InputLabel className={classes.marginTopSmall}>
-                                Sampling By
-                              </InputLabel>
+                              <InputLabel className={classes.marginTopSmall}>Sampling By</InputLabel>
                               <Select
                                 isMulti
                                 className={classes.selectTight}
@@ -785,37 +666,37 @@ class CocModal extends React.PureComponent {
                                   doc.sampledBy
                                     ? doc.sampledBy.map((e) => ({
                                         value: e.uid,
-                                        label: e.name,
+                                        label: e.name
                                       }))
                                     : null
                                 }
                                 options={names.map((e) => ({
                                   value: e.uid,
-                                  label: e.name,
+                                  label: e.name
                                 }))}
                                 onChange={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'sampledBy',
-                                    value: personnelConvert(e),
+                                    value: personnelConvert(e)
                                   })
                                 }}
                               />
                             </div>
                           )}
                           <TextField
-                            id="labInstructions"
-                            label="Lab Instructions"
+                            id='labInstructions'
+                            label='Lab Instructions'
                             style={{ width: '100%' }}
                             defaultValue={doc && doc.labInstructions}
                             rows={5}
-                            helperText="Include any information that may be useful for the lab. E.g. for a soil sample you might include information on what contamination you are expecting."
+                            helperText='Include any information that may be useful for the lab. E.g. for a soil sample you might include information on what contamination you are expecting.'
                             multiline
                             onChange={(e) => {
                               this.setState({ modified: true })
                               this.props.handleModalChange({
                                 id: 'labInstructions',
-                                value: e.target.value,
+                                value: e.target.value
                               })
                             }}
                           />
@@ -827,33 +708,31 @@ class CocModal extends React.PureComponent {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'priority',
-                                    value: doc.priority === 1 ? 0 : 1,
+                                    value: doc.priority === 1 ? 0 : 1
                                   })
                                 }}
-                                value="priority"
-                                color="secondary"
+                                value='priority'
+                                color='secondary'
                               />
                             }
-                            label="Urgent"
+                            label='Urgent'
                           />
                           <FormControlLabel
                             control={
                               <Switch
-                                checked={
-                                  doc.isClearance === true ? true : false
-                                }
+                                checked={doc.isClearance === true ? true : false}
                                 onClick={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'isClearance',
-                                    value: e.target.checked,
+                                    value: e.target.checked
                                   })
                                 }}
-                                value="isClearance"
-                                color="secondary"
+                                value='isClearance'
+                                color='secondary'
                               />
                             }
-                            label="Clearance"
+                            label='Clearance'
                           />
                         </div>
                       )}
@@ -865,21 +744,19 @@ class CocModal extends React.PureComponent {
                             <FormControlLabel
                               control={
                                 <Switch
-                                  checked={
-                                    doc.waAnalysis === true ? true : false
-                                  }
+                                  checked={doc.waAnalysis === true ? true : false}
                                   onClick={(e) => {
                                     this.setState({ modified: true })
                                     this.props.handleModalChange({
                                       id: 'waAnalysis',
-                                      value: e.target.checked,
+                                      value: e.target.checked
                                     })
                                   }}
-                                  value="priority"
-                                  color="primary"
+                                  value='priority'
+                                  color='primary'
                                 />
                               }
-                              label="Western Australian Standard Analysis"
+                              label='Western Australian Standard Analysis'
                             />
                             {doc.waAnalysis && (
                               <div>
@@ -888,49 +765,32 @@ class CocModal extends React.PureComponent {
                                     doc.acmInSoilLimit
                                       ? {
                                           value: doc.acmInSoilLimit,
-                                          label:
-                                            this.props.acmInSoilLimits.filter(
-                                              (e) =>
-                                                e.value === doc.acmInSoilLimit
-                                            )[0].label,
+                                          label: this.props.acmInSoilLimits.filter((e) => e.value === doc.acmInSoilLimit)[0].label
                                         }
                                       : {
                                           value: '0.01',
-                                          label:
-                                            this.props.acmInSoilLimits.filter(
-                                              (e) => e.value === '0.01'
-                                            )[0].label,
+                                          label: this.props.acmInSoilLimits.filter((e) => e.value === '0.01')[0].label
                                         }
                                   }
-                                  options={this.props.acmInSoilLimits.map(
-                                    (e) => ({ value: e.value, label: e.label })
-                                  )}
+                                  options={this.props.acmInSoilLimits.map((e) => ({ value: e.value, label: e.label }))}
                                   onChange={(e) => {
                                     this.setState({ modified: true })
                                     this.props.handleModalChange({
                                       id: 'acmInSoilLimit',
-                                      value: e.value,
+                                      value: e.value
                                     })
                                   }}
                                 />
                                 <div className={classes.informationBoxRounded}>
                                   <div className={classes.bold}>
                                     {doc.acmInSoilLimit
-                                      ? this.props.acmInSoilLimits.filter(
-                                          (e) => e.value === doc.acmInSoilLimit
-                                        )[0].heading
-                                      : this.props.acmInSoilLimits.filter(
-                                          (e) => e.value === '0.01'
-                                        )[0].heading}
+                                      ? this.props.acmInSoilLimits.filter((e) => e.value === doc.acmInSoilLimit)[0].heading
+                                      : this.props.acmInSoilLimits.filter((e) => e.value === '0.01')[0].heading}
                                   </div>
                                   <div>
                                     {doc.acmInSoilLimit
-                                      ? this.props.acmInSoilLimits.filter(
-                                          (e) => e.value === doc.acmInSoilLimit
-                                        )[0].description
-                                      : this.props.acmInSoilLimits.filter(
-                                          (e) => e.value === '0.01'
-                                        )[0].description}
+                                      ? this.props.acmInSoilLimits.filter((e) => e.value === doc.acmInSoilLimit)[0].description
+                                      : this.props.acmInSoilLimits.filter((e) => e.value === '0.01')[0].description}
                                   </div>
                                 </div>
                               </div>
@@ -941,77 +801,71 @@ class CocModal extends React.PureComponent {
                           <FormControlLabel
                             control={
                               <Switch
-                                checked={
-                                  doc.labToContactClient === true ? true : false
-                                }
+                                checked={doc.labToContactClient === true ? true : false}
                                 onClick={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'labToContactClient',
-                                    value: e.target.checked,
+                                    value: e.target.checked
                                   })
                                 }}
-                                value="labToContactClient"
-                                color="primary"
+                                value='labToContactClient'
+                                color='primary'
                               />
                             }
-                            label="Lab to Contact Client"
+                            label='Lab to Contact Client'
                           />
                           {doc.labToContactClient && (
                             <div>
                               <TextField
-                                id="labContactName"
-                                label="Contact Name"
+                                id='labContactName'
+                                label='Contact Name'
                                 value={
-                                  doc && doc.labContactName
-                                    ? doc.labContactName
-                                    : doc.contact && doc.contact.name
-                                    ? doc.contact.name
-                                    : ''
+                                  doc && doc.labContactName ? doc.labContactName : doc.contact && doc.contact.name ? doc.contact.name : ''
                                 }
                                 onChange={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'labContactName',
-                                    value: e.target.value,
+                                    value: e.target.value
                                   })
                                 }}
                               />
                               <TextField
-                                id="labContactNumber"
-                                label="Contact Number"
+                                id='labContactNumber'
+                                label='Contact Number'
                                 value={
                                   doc && doc.labContactNumber
                                     ? doc.labContactNumber
                                     : doc.contact && doc.contact.mobile
-                                    ? doc.contact.mobile
-                                    : doc.contact && doc.contact.phone
-                                    ? doc.contact.phone
-                                    : ''
+                                      ? doc.contact.mobile
+                                      : doc.contact && doc.contact.phone
+                                        ? doc.contact.phone
+                                        : ''
                                 }
                                 onChange={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'labContactNumber',
-                                    value: e.target.value,
+                                    value: e.target.value
                                   })
                                 }}
                               />
                               <TextField
-                                id="labContactEmail"
-                                label="Contact Email"
+                                id='labContactEmail'
+                                label='Contact Email'
                                 value={
                                   doc && doc.labContactEmail
                                     ? doc.labContactEmail
                                     : doc.contact && doc.contact.email
-                                    ? doc.contact.email
-                                    : ''
+                                      ? doc.contact.email
+                                      : ''
                                 }
                                 onChange={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'labContactEmail',
-                                    value: e.target.value,
+                                    value: e.target.value
                                   })
                                 }}
                               />
@@ -1022,39 +876,35 @@ class CocModal extends React.PureComponent {
                           <FormControlLabel
                             control={
                               <Switch
-                                checked={
-                                  doc.sendCoverLetterWithCertificate === true
-                                    ? true
-                                    : false
-                                }
+                                checked={doc.sendCoverLetterWithCertificate === true ? true : false}
                                 onClick={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'sendCoverLetterWithCertificate',
-                                    value: e.target.checked,
+                                    value: e.target.checked
                                   })
                                 }}
-                                value="sendCoverLetterWithCertificate"
-                                color="primary"
+                                value='sendCoverLetterWithCertificate'
+                                color='primary'
                               />
                             }
-                            label="Send Cover Letter with Certificate"
+                            label='Send Cover Letter with Certificate'
                           />
                           {doc.sendCoverLetterWithCertificate && (
                             <div>
                               <TextField
-                                id="letterAddress"
-                                label="Cover Letter Address"
+                                id='letterAddress'
+                                label='Cover Letter Address'
                                 style={{ width: '100%' }}
                                 defaultValue={getDefaultLetterAddress(doc)}
                                 rowsMax={10}
-                                helperText="The address to be put on the front page of the certificate cover letter."
+                                helperText='The address to be put on the front page of the certificate cover letter.'
                                 multiline
                                 onChange={(e) => {
                                   this.setState({ modified: true })
                                   this.props.handleModalChange({
                                     id: 'coverLetterAddress',
-                                    value: e.target.value,
+                                    value: e.target.value
                                   })
                                 }}
                               />
@@ -1066,37 +916,33 @@ class CocModal extends React.PureComponent {
                             <FormControlLabel
                               control={
                                 <Switch
-                                  checked={
-                                    this.state.showBulkChangeSamples === true
-                                      ? true
-                                      : false
-                                  }
+                                  checked={this.state.showBulkChangeSamples === true ? true : false}
                                   onClick={(e) => {
                                     this.setState({
-                                      showBulkChangeSamples: true,
+                                      showBulkChangeSamples: true
                                     })
                                   }}
-                                  value="showBulkChangeSamples"
-                                  color="primary"
+                                  value='showBulkChangeSamples'
+                                  color='primary'
                                 />
                               }
-                              label="Bulk Change Sample Details"
+                              label='Bulk Change Sample Details'
                             />
                             {this.state.showBulkChangeSamples && (
                               <div>
                                 <TextField
-                                  id="letterAddress"
-                                  label="Cover Letter Address"
+                                  id='letterAddress'
+                                  label='Cover Letter Address'
                                   style={{ width: '100%' }}
                                   defaultValue={getDefaultLetterAddress(doc)}
                                   rows={5}
-                                  helperText="The address to be put on the front page of the certificate cover letter."
+                                  helperText='The address to be put on the front page of the certificate cover letter.'
                                   multiline
                                   onChange={(e) => {
                                     this.setState({ modified: true })
                                     this.props.handleModalChange({
                                       id: 'coverLetterAddress',
-                                      value: e.target.value,
+                                      value: e.target.value
                                     })
                                   }}
                                 />
@@ -1110,82 +956,40 @@ class CocModal extends React.PureComponent {
                 </Grid>
                 <Grid item xs={12} lg={10}>
                   {this.state.sampleType === 'bulk' ? (
-                    <AsbestosSampleListBulk
-                      listType="heading"
-                      classes={classes}
-                      doc={doc}
-                    />
+                    <AsbestosSampleListBulk listType='heading' classes={classes} doc={doc} />
                   ) : (
-                    <AsbestosSampleListAir
-                      listType="heading"
-                      classes={classes}
-                      doc={doc}
-                    />
+                    <AsbestosSampleListAir listType='heading' classes={classes} doc={doc} />
                   )}
                   {this.state.sampleType === 'bulk'
-                    ? Array.from(Array(numberOfSamples), (x, i) => i).map(
-                        (i) => {
-                          let sample =
-                            doc &&
-                            doc.samples &&
-                            doc.samples[i + 1] &&
-                            !doc.samples[i + 1].deleted
-                              ? doc.samples[i + 1]
-                              : {}
-                          let disabled =
-                            blockInput ||
-                            (sample.cocUid && sample.cocUid !== doc.uid)
-                          if (!disabled) disabled = false
-                          return sample.uid && sample.deleted === false ? (
-                            sample.sampleType === 'air' ? (
-                              <AsbestosSampleListAir
-                                key={i}
-                                i={i}
-                                disabled={disabled}
-                                names={names}
-                                classes={classes}
-                                sampleType="bulk"
-                                doc={doc}
-                                onEdit={() =>
-                                  this.props.showModalSecondary({
-                                    modalType: ASBESTOS_SAMPLE_EDIT_COC,
-                                    modalProps: {
-                                      doc,
-                                      sample,
-                                      names,
-                                      onExit: (modified) =>
-                                        this.setState({
-                                          modified: modified,
-                                        }),
-                                    },
-                                  })
-                                }
-                              />
-                            ) : (
-                              <AsbestosSampleListBulk
-                                key={i}
-                                i={i}
-                                disabled={disabled}
-                                names={names}
-                                classes={classes}
-                                sampleType="bulk"
-                                doc={doc}
-                                onEdit={() =>
-                                  this.props.showModalSecondary({
-                                    modalType: ASBESTOS_SAMPLE_EDIT_COC,
-                                    modalProps: {
-                                      doc,
-                                      sample,
-                                      names,
-                                      onExit: (modified) =>
-                                        this.setState({
-                                          modified: modified,
-                                        }),
-                                    },
-                                  })
-                                }
-                              />
-                            )
+                    ? Array.from(Array(numberOfSamples), (x, i) => i).map((i) => {
+                        let sample = doc && doc.samples && doc.samples[i + 1] && !doc.samples[i + 1].deleted ? doc.samples[i + 1] : {}
+                        let disabled = blockInput || (sample.cocUid && sample.cocUid !== doc.uid)
+                        if (!disabled) disabled = false
+                        return sample.uid && sample.deleted === false ? (
+                          sample.sampleType === 'air' ? (
+                            <AsbestosSampleListAir
+                              key={i}
+                              i={i}
+                              disabled={disabled}
+                              names={names}
+                              classes={classes}
+                              sampleType='bulk'
+                              doc={doc}
+                              onEdit={() =>
+                                this.props.showModalSecondary({
+                                  modalType: ASBESTOS_SAMPLE_EDIT_COC,
+                                  modalProps: {
+                                    doc,
+                                    sample,
+                                    names,
+                                    onExit: (modified) =>
+                                      this.setState({
+                                        modified: modified
+                                      })
+                                  }
+                                })
+                              }
+                            />
                           ) : (
                             <AsbestosSampleListBulk
                               key={i}
@@ -1193,96 +997,109 @@ class CocModal extends React.PureComponent {
                               disabled={disabled}
                               names={names}
                               classes={classes}
+                              sampleType='bulk'
                               doc={doc}
-                              listType="editable"
-                              that={this}
+                              onEdit={() =>
+                                this.props.showModalSecondary({
+                                  modalType: ASBESTOS_SAMPLE_EDIT_COC,
+                                  modalProps: {
+                                    doc,
+                                    sample,
+                                    names,
+                                    onExit: (modified) =>
+                                      this.setState({
+                                        modified: modified
+                                      })
+                                  }
+                                })
+                              }
                             />
                           )
-                        }
-                      )
-                    : Array.from(Array(numberOfSamples), (x, i) => i).map(
-                        (i) => {
-                          let sample =
-                            doc &&
-                            doc.samples &&
-                            doc.samples[i + 1] &&
-                            !doc.samples[i + 1].deleted
-                              ? doc.samples[i + 1]
-                              : {}
-                          let disabled =
-                            blockInput ||
-                            (sample.cocUid && sample.cocUid !== doc.uid)
-                          if (!disabled) disabled = false
-                          return sample.uid && sample.deleted === false ? (
-                            sample.sampleType === 'air' ? (
-                              <AsbestosSampleListAir
-                                i={i}
-                                disabled={disabled}
-                                names={names}
-                                classes={classes}
-                                sampleType="air"
-                                doc={doc}
-                                onEdit={() =>
-                                  this.props.showModalSecondary({
-                                    modalType: ASBESTOS_SAMPLE_EDIT_COC,
-                                    modalProps: {
-                                      doc,
-                                      sample,
-                                      names,
-                                      onExit: (modified) =>
-                                        this.setState({
-                                          modified: modified,
-                                        }),
-                                    },
-                                  })
-                                }
-                              />
-                            ) : (
-                              <AsbestosSampleListBulk
-                                i={i}
-                                disabled={disabled}
-                                names={names}
-                                classes={classes}
-                                sampleType="air"
-                                doc={doc}
-                                onEdit={() =>
-                                  this.props.showModalSecondary({
-                                    modalType: ASBESTOS_SAMPLE_EDIT_COC,
-                                    modalProps: {
-                                      doc,
-                                      sample,
-                                      names,
-                                      onExit: (modified) =>
-                                        this.setState({
-                                          modified: modified,
-                                        }),
-                                    },
-                                  })
-                                }
-                              />
-                            )
-                          ) : (
+                        ) : (
+                          <AsbestosSampleListBulk
+                            key={i}
+                            i={i}
+                            disabled={disabled}
+                            names={names}
+                            classes={classes}
+                            doc={doc}
+                            listType='editable'
+                            that={this}
+                          />
+                        )
+                      })
+                    : Array.from(Array(numberOfSamples), (x, i) => i).map((i) => {
+                        let sample = doc && doc.samples && doc.samples[i + 1] && !doc.samples[i + 1].deleted ? doc.samples[i + 1] : {}
+                        let disabled = blockInput || (sample.cocUid && sample.cocUid !== doc.uid)
+                        if (!disabled) disabled = false
+                        return sample.uid && sample.deleted === false ? (
+                          sample.sampleType === 'air' ? (
                             <AsbestosSampleListAir
-                              key={i}
                               i={i}
                               disabled={disabled}
                               names={names}
                               classes={classes}
+                              sampleType='air'
                               doc={doc}
-                              listType="editable"
-                              that={this}
+                              onEdit={() =>
+                                this.props.showModalSecondary({
+                                  modalType: ASBESTOS_SAMPLE_EDIT_COC,
+                                  modalProps: {
+                                    doc,
+                                    sample,
+                                    names,
+                                    onExit: (modified) =>
+                                      this.setState({
+                                        modified: modified
+                                      })
+                                  }
+                                })
+                              }
+                            />
+                          ) : (
+                            <AsbestosSampleListBulk
+                              i={i}
+                              disabled={disabled}
+                              names={names}
+                              classes={classes}
+                              sampleType='air'
+                              doc={doc}
+                              onEdit={() =>
+                                this.props.showModalSecondary({
+                                  modalType: ASBESTOS_SAMPLE_EDIT_COC,
+                                  modalProps: {
+                                    doc,
+                                    sample,
+                                    names,
+                                    onExit: (modified) =>
+                                      this.setState({
+                                        modified: modified
+                                      })
+                                  }
+                                })
+                              }
                             />
                           )
-                        }
-                      )}
+                        ) : (
+                          <AsbestosSampleListAir
+                            key={i}
+                            i={i}
+                            disabled={disabled}
+                            names={names}
+                            classes={classes}
+                            doc={doc}
+                            listType='editable'
+                            that={this}
+                          />
+                        )
+                      })}
                   <Button
                     className={classes.buttonViewMore}
                     onClick={() => {
                       this.setState({ numberOfSamples: numberOfSamples + 10 })
                     }}
                   >
-                    <Add className={classes.marginRightSmall} /> Add More
-                    Samples
+                    <Add className={classes.marginRightSmall} /> Add More Samples
                   </Button>
                 </Grid>
               </Grid>
@@ -1293,61 +1110,45 @@ class CocModal extends React.PureComponent {
                 <div style={{ fontSize: 24 }}>Create New Chain of Custody</div>
                 {this.props.me.name === 'Ben Dodd' && (
                   <div>
-                    <Tooltip title="Step 1: Select your sample type">
+                    <Tooltip title='Step 1: Select your sample type'>
                       <FormControl>
                         <RadioGroup
                           row
-                          aria-label="sampleType"
-                          name="sampleType"
+                          aria-label='sampleType'
+                          name='sampleType'
                           value={this.state.sampleType}
-                          onChange={(e) =>
-                            this.setState({ sampleType: e.target.value })
-                          }
+                          onChange={(e) => this.setState({ sampleType: e.target.value })}
                         >
-                          <FormControlLabel
-                            value="bulk"
-                            control={<Radio />}
-                            label="Bulk"
-                          />
-                          <FormControlLabel
-                            value="air"
-                            control={<Radio />}
-                            label="Air Filter"
-                          />
+                          <FormControlLabel value='bulk' control={<Radio />} label='Bulk' />
+                          <FormControlLabel value='air' control={<Radio />} label='Air Filter' />
                         </RadioGroup>
                       </FormControl>
                     </Tooltip>
                   </div>
                 )}
-                <Tooltip title="Enter the job number to get details from WorkflowMax">
+                <Tooltip title='Enter the job number to get details from WorkflowMax'>
                   <FormControl>
                     <InputLabel shrink>Job Number</InputLabel>
                     <Input
-                      id="jobNumber"
+                      id='jobNumber'
                       className={classes.bigInput}
                       value={this.state.jobNumber || ''}
                       onChange={(e) => {
                         // this.setState({ modified: true, });
                         this.setState({
-                          jobNumber: e.target.value
-                            .replace(/\s/g, '')
-                            .toUpperCase(),
+                          jobNumber: e.target.value.replace(/\s/g, '').toUpperCase()
                         })
                       }}
                       // startAdornment={<InputAdornment position="start">AS</InputAdornment>}
                     />
                   </FormControl>
                 </Tooltip>
-                <Tooltip title="Step 3: Click the button to begin adding samples">
+                <Tooltip title='Step 3: Click the button to begin adding samples'>
                   <IconButton onClick={this.wfmSync}>
                     <Go style={{ fontSize: 48 }} />
                   </IconButton>
                 </Tooltip>
-                {modalProps.error && (
-                  <div className={classes.informationBox}>
-                    {modalProps.error}
-                  </div>
-                )}
+                {modalProps.error && <div className={classes.informationBox}>{modalProps.error}</div>}
               </div>
             </DialogContent>
           )}
@@ -1358,7 +1159,7 @@ class CocModal extends React.PureComponent {
                   this.props.resetWfmJob()
                   this.props.resetModal()
                 }}
-                color="secondary"
+                color='secondary'
               >
                 Cancel
               </Button>
@@ -1366,20 +1167,14 @@ class CocModal extends React.PureComponent {
                 disabled={!this.state.modified || !wfmSynced || noSamples}
                 onClick={() => {
                   if (wfmJob.client) {
-                    doc.jobNumber = doc.jobNumber
-                      ? doc.jobNumber.toUpperCase().trim()
-                      : null
+                    doc.jobNumber = doc.jobNumber ? doc.jobNumber.toUpperCase().trim() : null
                     doc.client = wfmJob.client ? wfmJob.client.trim() : null
                     doc.address = wfmJob.address ? wfmJob.address.trim() : null
-                    doc.clientOrderNumber = wfmJob.clientOrderNumber.trim()
-                      ? wfmJob.clientOrderNumber
-                      : null
+                    doc.clientOrderNumber = wfmJob.clientOrderNumber.trim() ? wfmJob.clientOrderNumber : null
                     doc.contact = wfmJob.contact ? wfmJob.contact : null
                     doc.dueDate = wfmJob.dueDate ? wfmJob.dueDate : null
                     doc.manager = wfmJob.manager ? wfmJob.manager.trim() : null
-                    doc.managerID = wfmJob.managerID
-                      ? wfmJob.managerID.trim()
-                      : null
+                    doc.managerID = wfmJob.managerID ? wfmJob.managerID.trim() : null
                     doc.wfmType = wfmJob.wfmType ? wfmJob.wfmType : null
                     doc.wfmID = wfmJob.wfmID ? wfmJob.wfmID : null
                     doc.wfmState = wfmJob.wfmState ? wfmJob.wfmState : null
@@ -1390,14 +1185,13 @@ class CocModal extends React.PureComponent {
                     let log = {
                       type: 'Create',
                       log: `Chain of Custody created.`,
-                      chainOfCustody: doc.uid,
+                      chainOfCustody: doc.uid
                     }
                     addLog('asbestosLab', log, me)
                     doc.deleted = false
                     doc.createdDate = now
                     doc.createdBy = { id: me.uid, name: me.name }
-                    if (Object.keys(doc.samples).length === 0)
-                      doc.status = 'No Samples'
+                    if (Object.keys(doc.samples).length === 0) doc.status = 'No Samples'
                     else if (doc.historicalCoc) doc.status = 'Historical'
                     else doc.status = 'In Transit'
                   } else originalSamples = this.props.samples[doc.uid]
@@ -1417,12 +1211,12 @@ class CocModal extends React.PureComponent {
                     doc: doc,
                     me: me,
                     originalSamples,
-                    sampleType: this.state.sampleType,
+                    sampleType: this.state.sampleType
                   })
                   this.props.resetModal()
                   this.props.resetWfmJob()
                 }}
-                color="primary"
+                color='primary'
               >
                 Submit
               </Button>
@@ -1434,7 +1228,7 @@ class CocModal extends React.PureComponent {
                   this.props.resetWfmJob()
                   this.props.resetModal()
                 }}
-                color="secondary"
+                color='secondary'
               >
                 Cancel
               </Button>
@@ -1446,6 +1240,4 @@ class CocModal extends React.PureComponent {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(CocModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(CocModal))

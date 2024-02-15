@@ -31,13 +31,7 @@ import Grid from '@material-ui/core/Grid'
 
 import UploadIcon from '@material-ui/icons/CloudUpload'
 import Close from '@material-ui/icons/Close'
-import {
-  hideModal,
-  handleModalChange,
-  handleModalChangeStep,
-  handleModalSubmit,
-  onUploadFile,
-} from '../../../actions/modal'
+import { hideModal, handleModalChange, handleModalChangeStep, handleModalSubmit, onUploadFile } from '../../../actions/modal'
 import { getUserAttrs } from '../../../actions/local'
 import { sendSlackMessage, quillModules } from '../../../actions/helpers'
 import _ from 'lodash'
@@ -59,26 +53,19 @@ const mapStateToProps = (state) => {
     staff: state.local.staff,
     tags: state.modal.modalProps.tags,
     tagSuggestions: state.const.docTagSuggestions,
-    userRefName: state.local.userRefName,
+    userRefName: state.local.userRefName
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getUserAttrs: _.debounce(
-      (userPath) => dispatch(getUserAttrs(userPath)),
-      1000
-    ),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    getUserAttrs: _.debounce((userPath) => dispatch(getUserAttrs(userPath)), 1000),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300),
     handleModalChangeStep: (target) => dispatch(handleModalChangeStep(target)),
-    handleModalSubmit: (doc, pathRef) =>
-      dispatch(handleModalSubmit(doc, pathRef)),
+    handleModalSubmit: (doc, pathRef) => dispatch(handleModalSubmit(doc, pathRef)),
     handleSelectChange: (target) => dispatch(handleModalChange(target)),
     hideModal: () => dispatch(hideModal()),
-    onUploadFile: (file, pathRef) => dispatch(onUploadFile(file, pathRef)),
+    onUploadFile: (file, pathRef) => dispatch(onUploadFile(file, pathRef))
   }
 }
 
@@ -86,24 +73,19 @@ class TrainingModuleModal extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      page: 1,
+      page: 1
     }
   }
 
   getStyles = (uid, list) => {
     return {
-      fontWeight:
-        list && list.constructor === Array && list.indexOf(uid) > -1
-          ? 600
-          : 200,
+      fontWeight: list && list.constructor === Array && list.indexOf(uid) > -1 ? 600 : 200
     }
   }
 
   sendNewAttrSlack = () => {
     let message = {
-      text: `${this.props.modalProps.staffName} has added a new module.\n${
-        this.props.qualificationtypes[this.props.doc.type].name
-      }`,
+      text: `${this.props.modalProps.staffName} has added a new module.\n${this.props.qualificationtypes[this.props.doc.type].name}`
     }
     sendSlackMessage(message, true)
   }
@@ -114,7 +96,7 @@ class TrainingModuleModal extends React.Component {
     if (uid) {
       let change = {
         fileUrl: null,
-        fileRef: null,
+        fileRef: null
       }
       trainingPathsRef.doc(this.props.doc.uid).update(change)
     }
@@ -129,16 +111,16 @@ class TrainingModuleModal extends React.Component {
       <form>
         <FormGroup>
           <TextField
-            id="title"
-            label="Title"
+            id='title'
+            label='Title'
             defaultValue={doc && doc.title}
             onChange={(e) => {
               this.props.handleModalChange(e.target)
             }}
           />
           <TextField
-            id="subtitle"
-            label="Subtitle"
+            id='subtitle'
+            label='Subtitle'
             defaultValue={doc && doc.subtitle}
             onChange={(e) => {
               this.props.handleModalChange(e.target)
@@ -149,12 +131,12 @@ class TrainingModuleModal extends React.Component {
             <div>
               <img
                 src={doc.fileUrl}
-                alt=""
-                width="200px"
+                alt=''
+                width='200px'
                 style={{
                   opacity: '0.5',
                   borderStyle: 'solid',
-                  borderWidth: '2px',
+                  borderWidth: '2px'
                 }}
               />
               <IconButton
@@ -164,13 +146,10 @@ class TrainingModuleModal extends React.Component {
                   left: '-120px',
                   borderStyle: 'solid',
                   borderWidth: '2px',
-                  fontSize: 8,
+                  fontSize: 8
                 }}
                 onClick={() => {
-                  if (
-                    window.confirm('Are you sure you wish to delete the image?')
-                  )
-                    this.deleteImage(doc.fileRef, doc.uid)
+                  if (window.confirm('Are you sure you wish to delete the image?')) this.deleteImage(doc.fileRef, doc.uid)
                 }}
               >
                 <Close />
@@ -178,14 +157,12 @@ class TrainingModuleModal extends React.Component {
             </div>
           )}
 
-          <InputLabel style={{ fontSize: 12, marginTop: 4 }}>
-            Title Photo
-          </InputLabel>
+          <InputLabel style={{ fontSize: 12, marginTop: 4 }}>Title Photo</InputLabel>
           <label>
             <UploadIcon className={classes.colorAccent} />
             <input
-              id="attr_upload_file"
-              type="file"
+              id='attr_upload_file'
+              type='file'
               style={{ display: 'none' }}
               onChange={(e) => {
                 if (doc.fileUrl && e.currentTarget.files[0]) {
@@ -193,16 +170,11 @@ class TrainingModuleModal extends React.Component {
                 }
                 this.props.onUploadFile({
                   file: e.currentTarget.files[0],
-                  storagePath:
-                    'training/coverphotos/' + doc.title.replace(/\s+/g, ''),
+                  storagePath: 'training/coverphotos/' + doc.title.replace(/\s+/g, '')
                 })
               }}
             />
-            <LinearProgress
-              style={{ marginTop: 4 }}
-              variant="determinate"
-              value={modalProps.uploadProgress}
-            />
+            <LinearProgress style={{ marginTop: 4 }} variant='determinate' value={modalProps.uploadProgress} />
           </label>
         </FormGroup>
       </form>
@@ -214,35 +186,30 @@ class TrainingModuleModal extends React.Component {
         <FormControlLabel
           control={
             <Checkbox
-              checked={
-                (doc.steps && doc.steps.outline && doc.steps.outline.enabled) ||
-                false
-              }
+              checked={(doc.steps && doc.steps.outline && doc.steps.outline.enabled) || false}
               onChange={(e) => {
                 this.props.handleModalChangeStep({
                   step: 'outline',
                   id: 'enabled',
-                  value: e.target.checked,
+                  value: e.target.checked
                 })
               }}
-              value="enabled"
+              value='enabled'
             />
           }
-          label="Show this section"
+          label='Show this section'
         />
         <ReactQuill
-          value={
-            (doc.steps && doc.steps.outline && doc.steps.outline.outline) || ''
-          }
+          value={(doc.steps && doc.steps.outline && doc.steps.outline.outline) || ''}
           modules={quillModules}
-          theme="snow"
+          theme='snow'
           onChange={(content, delta, source) => {
             console.log(content)
             if (source === 'user')
               this.props.handleModalChangeStep({
                 step: 'outline',
                 id: 'outline',
-                value: content,
+                value: content
               })
           }}
           style={{ marginBottom: 16 }}
@@ -256,18 +223,14 @@ class TrainingModuleModal extends React.Component {
               onChange={(e) => {
                 this.props.handleSelectChange({
                   id: 'trainers',
-                  value: e.target.value,
+                  value: e.target.value
                 })
               }}
-              input={<Input id="trainers" />}
+              input={<Input id='trainers' />}
               renderValue={(selected) => (
                 <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                   {selected.map((value) => (
-                    <Chip
-                      key={value}
-                      label={staff[value] && staff[value].name}
-                      style={{ margin: 5 }}
-                    />
+                    <Chip key={value} label={staff[value] && staff[value].name} style={{ margin: 5 }} />
                   ))}
                 </div>
               )}
@@ -275,19 +238,15 @@ class TrainingModuleModal extends React.Component {
                 PaperProps: {
                   style: {
                     maxHeight: 48 * 4.5 + 8,
-                    width: 500,
-                  },
-                },
+                    width: 500
+                  }
+                }
               }}
             >
               {Object.values(staff)
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((staff) => (
-                  <MenuItem
-                    key={staff.uid}
-                    value={staff.uid}
-                    style={this.getStyles(staff.uid, doc.trainers)}
-                  >
+                  <MenuItem key={staff.uid} value={staff.uid} style={this.getStyles(staff.uid, doc.trainers)}>
                     {staff.name}
                   </MenuItem>
                 ))}
@@ -301,18 +260,14 @@ class TrainingModuleModal extends React.Component {
               onChange={(e) => {
                 this.props.handleSelectChange({
                   id: 'ktp',
-                  value: e.target.value,
+                  value: e.target.value
                 })
               }}
-              input={<Input id="ktp" />}
+              input={<Input id='ktp' />}
               renderValue={(selected) => (
                 <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                   {selected.map((value) => (
-                    <Chip
-                      key={value}
-                      label={staff[value] && staff[value].name}
-                      style={{ margin: 5 }}
-                    />
+                    <Chip key={value} label={staff[value] && staff[value].name} style={{ margin: 5 }} />
                   ))}
                 </div>
               )}
@@ -320,19 +275,15 @@ class TrainingModuleModal extends React.Component {
                 PaperProps: {
                   style: {
                     maxHeight: 48 * 4.5 + 8,
-                    width: 500,
-                  },
-                },
+                    width: 500
+                  }
+                }
               }}
             >
               {Object.values(staff)
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map((staff) => (
-                  <MenuItem
-                    key={staff.uid}
-                    value={staff.uid}
-                    style={this.getStyles(staff.uid, doc.ktp)}
-                  >
+                  <MenuItem key={staff.uid} value={staff.uid} style={this.getStyles(staff.uid, doc.ktp)}>
                     {staff.name}
                   </MenuItem>
                 ))}
@@ -348,56 +299,43 @@ class TrainingModuleModal extends React.Component {
         <FormControlLabel
           control={
             <Checkbox
-              checked={
-                (doc.steps &&
-                  doc.steps.bgreading &&
-                  doc.steps.bgreading.enabled) ||
-                false
-              }
+              checked={(doc.steps && doc.steps.bgreading && doc.steps.bgreading.enabled) || false}
               onChange={(e) => {
                 this.props.handleModalChangeStep({
                   step: 'bgreading',
                   id: 'enabled',
-                  value: e.target.checked,
+                  value: e.target.checked
                 })
               }}
-              value="enabled"
+              value='enabled'
             />
           }
-          label="Show this section"
+          label='Show this section'
         />
         <ReactQuill
-          value={
-            (doc.steps && doc.steps.bgreading && doc.steps.bgreading.outline) ||
-            ''
-          }
+          value={(doc.steps && doc.steps.bgreading && doc.steps.bgreading.outline) || ''}
           modules={quillModules}
-          theme="snow"
+          theme='snow'
           onChange={(content, delta, source) => {
             if (source === 'user')
               this.props.handleModalChangeStep({
                 step: 'bgreading',
                 id: 'outline',
-                value: content,
+                value: content
               })
           }}
           style={{ marginBottom: 16 }}
         />
         <FormGroup>
           <TextField
-            id="requiredcaption"
-            label="Caption"
-            value={
-              (doc.steps &&
-                doc.steps.bgreading &&
-                doc.steps.bgreading.requiredcaption) ||
-              ''
-            }
+            id='requiredcaption'
+            label='Caption'
+            value={(doc.steps && doc.steps.bgreading && doc.steps.bgreading.requiredcaption) || ''}
             onChange={(e) => {
               this.props.handleModalChangeStep({
                 step: 'bgreading',
                 id: 'requiredcaption',
-                value: e.target.value,
+                value: e.target.value
               })
             }}
             InputLabelProps={{ shrink: true }}
@@ -406,35 +344,22 @@ class TrainingModuleModal extends React.Component {
             <InputLabel>Required Readings</InputLabel>
             <Select
               multiple
-              value={
-                (doc.steps &&
-                  doc.steps.bgreading &&
-                  doc.steps.bgreading.requiredreadings) ||
-                []
-              }
+              value={(doc.steps && doc.steps.bgreading && doc.steps.bgreading.requiredreadings) || []}
               onChange={(e) => {
                 this.props.handleModalChangeStep({
                   step: 'bgreading',
                   id: 'requiredreadings',
-                  value: e.target.value,
+                  value: e.target.value
                 })
               }}
-              input={<Input id="requiredreadings" />}
+              input={<Input id='requiredreadings' />}
               renderValue={(selected) => {
                 //console.log(selected);
                 return (
                   <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                     {selected &&
                       selected.map((value) => (
-                        <Chip
-                          key={value}
-                          label={
-                            this.props.documents.filter(
-                              (doc) => doc.uid === value
-                            )[0].title
-                          }
-                          style={{ margin: 5 }}
-                        />
+                        <Chip key={value} label={this.props.documents.filter((doc) => doc.uid === value)[0].title} style={{ margin: 5 }} />
                       ))}
                   </div>
                 )
@@ -443,9 +368,9 @@ class TrainingModuleModal extends React.Component {
                 PaperProps: {
                   style: {
                     maxHeight: 48 * 4.5 + 8,
-                    width: 500,
-                  },
-                },
+                    width: 500
+                  }
+                }
               }}
             >
               {Object.values(this.props.documents)
@@ -454,12 +379,7 @@ class TrainingModuleModal extends React.Component {
                   <MenuItem
                     key={reading.uid}
                     value={reading.uid}
-                    style={this.getStyles(
-                      reading.uid,
-                      doc.steps &&
-                        doc.steps.begreading &&
-                        doc.steps.bgreading.requiredreadings
-                    )}
+                    style={this.getStyles(reading.uid, doc.steps && doc.steps.begreading && doc.steps.bgreading.requiredreadings)}
                   >
                     {reading.title}
                   </MenuItem>
@@ -467,19 +387,14 @@ class TrainingModuleModal extends React.Component {
             </Select>
           </FormControl>
           <TextField
-            id="supplementarycaption"
-            label="Caption"
-            value={
-              (doc.steps &&
-                doc.steps.bgreading &&
-                doc.steps.bgreading.supplementarycaption) ||
-              ''
-            }
+            id='supplementarycaption'
+            label='Caption'
+            value={(doc.steps && doc.steps.bgreading && doc.steps.bgreading.supplementarycaption) || ''}
             onChange={(e) => {
               this.props.handleModalChangeStep({
                 step: 'bgreading',
                 id: 'supplementarycaption',
-                value: e.target.value,
+                value: e.target.value
               })
             }}
             InputLabelProps={{ shrink: true }}
@@ -488,32 +403,19 @@ class TrainingModuleModal extends React.Component {
             <InputLabel>Supplementary Readings</InputLabel>
             <Select
               multiple
-              value={
-                (doc.steps &&
-                  doc.steps.bgreading &&
-                  doc.steps.bgreading.supplementaryreadings) ||
-                []
-              }
+              value={(doc.steps && doc.steps.bgreading && doc.steps.bgreading.supplementaryreadings) || []}
               onChange={(e) => {
                 this.props.handleModalChangeStep({
                   step: 'bgreading',
                   id: 'supplementaryreadings',
-                  value: e.target.value,
+                  value: e.target.value
                 })
               }}
-              input={<Input id="supplementaryreadings" />}
+              input={<Input id='supplementaryreadings' />}
               renderValue={(selected) => (
                 <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                   {selected.map((value) => (
-                    <Chip
-                      key={value}
-                      label={
-                        this.props.documents.filter(
-                          (doc) => doc.uid === value
-                        )[0].title
-                      }
-                      style={{ margin: 5 }}
-                    />
+                    <Chip key={value} label={this.props.documents.filter((doc) => doc.uid === value)[0].title} style={{ margin: 5 }} />
                   ))}
                 </div>
               )}
@@ -521,9 +423,9 @@ class TrainingModuleModal extends React.Component {
                 PaperProps: {
                   style: {
                     maxHeight: 48 * 4.5 + 8,
-                    width: 500,
-                  },
-                },
+                    width: 500
+                  }
+                }
               }}
             >
               {Object.values(this.props.documents)
@@ -532,12 +434,7 @@ class TrainingModuleModal extends React.Component {
                   <MenuItem
                     key={reading.uid}
                     value={reading.uid}
-                    style={this.getStyles(
-                      reading.uid,
-                      doc.steps &&
-                        doc.steps.begreading &&
-                        doc.steps.bgreading.supplementaryreadings
-                    )}
+                    style={this.getStyles(reading.uid, doc.steps && doc.steps.begreading && doc.steps.bgreading.supplementaryreadings)}
                   >
                     {reading.title}
                   </MenuItem>
@@ -551,18 +448,13 @@ class TrainingModuleModal extends React.Component {
                 this.props.handleModalChangeStep({
                   step: 'bgreading',
                   id: 'quiz',
-                  value: e.target.value,
+                  value: e.target.value
                 })
               }}
-              value={
-                (doc.steps &&
-                  doc.steps.bgreading &&
-                  doc.steps.bgreading.quiz) ||
-                ''
-              }
-              input={<Input name="quiz" id="quiz" />}
+              value={(doc.steps && doc.steps.bgreading && doc.steps.bgreading.quiz) || ''}
+              input={<Input name='quiz' id='quiz' />}
             >
-              <option value="" />
+              <option value='' />
               {this.props.quizzes &&
                 this.props.quizzes.map((quiz) => {
                   return (
@@ -583,56 +475,43 @@ class TrainingModuleModal extends React.Component {
         <FormControlLabel
           control={
             <Checkbox
-              checked={
-                (doc.steps &&
-                  doc.steps.practical &&
-                  doc.steps.practical.enabled) ||
-                false
-              }
+              checked={(doc.steps && doc.steps.practical && doc.steps.practical.enabled) || false}
               onChange={(e) => {
                 this.props.handleModalChangeStep({
                   step: 'practical',
                   id: 'enabled',
-                  value: e.target.checked,
+                  value: e.target.checked
                 })
               }}
-              value="enabled"
+              value='enabled'
             />
           }
-          label="Show this section"
+          label='Show this section'
         />
         <ReactQuill
-          value={
-            (doc.steps && doc.steps.practical && doc.steps.practical.outline) ||
-            ''
-          }
+          value={(doc.steps && doc.steps.practical && doc.steps.practical.outline) || ''}
           modules={quillModules}
-          theme="snow"
+          theme='snow'
           onChange={(content, delta, source) => {
             if (source === 'user')
               this.props.handleModalChangeStep({
                 step: 'practical',
                 id: 'outline',
-                value: content,
+                value: content
               })
           }}
           style={{ marginBottom: 16 }}
         />
         <FormGroup>
           <TextField
-            id="requiredcaption"
-            label="Caption"
-            value={
-              (doc.steps &&
-                doc.steps.practical &&
-                doc.steps.practical.requiredcaption) ||
-              ''
-            }
+            id='requiredcaption'
+            label='Caption'
+            value={(doc.steps && doc.steps.practical && doc.steps.practical.requiredcaption) || ''}
             onChange={(e) => {
               this.props.handleModalChangeStep({
                 step: 'practical',
                 id: 'requiredcaption',
-                value: e.target.value,
+                value: e.target.value
               })
             }}
             InputLabelProps={{ shrink: true }}
@@ -641,32 +520,20 @@ class TrainingModuleModal extends React.Component {
             <InputLabel>Required Methods</InputLabel>
             <Select
               multiple
-              value={
-                (doc.steps &&
-                  doc.steps.practical &&
-                  doc.steps.practical.requiredmethods) ||
-                []
-              }
+              value={(doc.steps && doc.steps.practical && doc.steps.practical.requiredmethods) || []}
               onChange={(e) => {
                 //console.log(e);
                 this.props.handleModalChangeStep({
                   step: 'practical',
                   id: 'requiredmethods',
-                  value: e.target.value,
+                  value: e.target.value
                 })
               }}
-              input={<Input id="requiredmethods" />}
+              input={<Input id='requiredmethods' />}
               renderValue={(selected) => (
                 <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                   {selected.map((value) => (
-                    <Chip
-                      key={value}
-                      label={
-                        this.props.methods.filter((doc) => doc.uid === value)[0]
-                          .title
-                      }
-                      style={{ margin: 5 }}
-                    />
+                    <Chip key={value} label={this.props.methods.filter((doc) => doc.uid === value)[0].title} style={{ margin: 5 }} />
                   ))}
                 </div>
               )}
@@ -674,9 +541,9 @@ class TrainingModuleModal extends React.Component {
                 PaperProps: {
                   style: {
                     maxHeight: 48 * 4.5 + 8,
-                    width: 500,
-                  },
-                },
+                    width: 500
+                  }
+                }
               }}
             >
               {Object.values(this.props.methods)
@@ -685,12 +552,7 @@ class TrainingModuleModal extends React.Component {
                   <MenuItem
                     key={method.uid}
                     value={method.uid}
-                    style={this.getStyles(
-                      method.uid,
-                      doc.steps &&
-                        doc.steps.practical &&
-                        doc.steps.practical.requiredmethods
-                    )}
+                    style={this.getStyles(method.uid, doc.steps && doc.steps.practical && doc.steps.practical.requiredmethods)}
                   >
                     {method.title}
                   </MenuItem>
@@ -698,19 +560,14 @@ class TrainingModuleModal extends React.Component {
             </Select>
           </FormControl>
           <TextField
-            id="supplementarycaption"
-            label="Caption"
-            value={
-              (doc.steps &&
-                doc.steps.practical &&
-                doc.steps.practical.supplementarycaption) ||
-              ''
-            }
+            id='supplementarycaption'
+            label='Caption'
+            value={(doc.steps && doc.steps.practical && doc.steps.practical.supplementarycaption) || ''}
             onChange={(e) => {
               this.props.handleModalChangeStep({
                 step: 'practical',
                 id: 'supplementarycaption',
-                value: e.target.value,
+                value: e.target.value
               })
             }}
             InputLabelProps={{ shrink: true }}
@@ -719,31 +576,19 @@ class TrainingModuleModal extends React.Component {
             <InputLabel>Supplementary Methods</InputLabel>
             <Select
               multiple
-              value={
-                (doc.steps &&
-                  doc.steps.practical &&
-                  doc.steps.practical.supplementarymethods) ||
-                []
-              }
+              value={(doc.steps && doc.steps.practical && doc.steps.practical.supplementarymethods) || []}
               onChange={(e) => {
                 this.props.handleModalChangeStep({
                   step: 'practical',
                   id: 'supplementarymethods',
-                  value: e.target.value,
+                  value: e.target.value
                 })
               }}
-              input={<Input id="supplementarymethods" />}
+              input={<Input id='supplementarymethods' />}
               renderValue={(selected) => (
                 <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                   {selected.map((value) => (
-                    <Chip
-                      key={value}
-                      label={
-                        this.props.methods.filter((doc) => doc.uid === value)[0]
-                          .title
-                      }
-                      style={{ margin: 5 }}
-                    />
+                    <Chip key={value} label={this.props.methods.filter((doc) => doc.uid === value)[0].title} style={{ margin: 5 }} />
                   ))}
                 </div>
               )}
@@ -751,9 +596,9 @@ class TrainingModuleModal extends React.Component {
                 PaperProps: {
                   style: {
                     maxHeight: 48 * 4.5 + 8,
-                    width: 500,
-                  },
-                },
+                    width: 500
+                  }
+                }
               }}
             >
               {Object.values(this.props.methods)
@@ -762,12 +607,7 @@ class TrainingModuleModal extends React.Component {
                   <MenuItem
                     key={method.uid}
                     value={method.uid}
-                    style={this.getStyles(
-                      method.uid,
-                      doc.steps &&
-                        doc.steps.practical &&
-                        doc.steps.practical.supplementarymethods
-                    )}
+                    style={this.getStyles(method.uid, doc.steps && doc.steps.practical && doc.steps.practical.supplementarymethods)}
                   >
                     {method.title}
                   </MenuItem>
@@ -784,41 +624,36 @@ class TrainingModuleModal extends React.Component {
         <FormControlLabel
           control={
             <Checkbox
-              checked={
-                (doc.steps && doc.steps.inhouse && doc.steps.inhouse.enabled) ||
-                false
-              }
+              checked={(doc.steps && doc.steps.inhouse && doc.steps.inhouse.enabled) || false}
               onChange={(e) => {
                 this.props.handleModalChangeStep({
                   step: 'inhouse',
                   id: 'enabled',
-                  value: e.target.checked,
+                  value: e.target.checked
                 })
               }}
-              value="enabled"
+              value='enabled'
             />
           }
-          label="Show this section"
+          label='Show this section'
         />
         <ReactQuill
-          value={
-            (doc.steps && doc.steps.inhouse && doc.steps.inhouse.outline) || ''
-          }
+          value={(doc.steps && doc.steps.inhouse && doc.steps.inhouse.outline) || ''}
           modules={quillModules}
-          theme="snow"
+          theme='snow'
           onChange={(content, delta, source) => {
             if (source === 'user')
               this.props.handleModalChangeStep({
                 step: 'inhouse',
                 id: 'outline',
-                value: content,
+                value: content
               })
           }}
           style={{ marginBottom: 16 }}
         />
         <TextField
-          id="checklist"
-          label="Checklist"
+          id='checklist'
+          label='Checklist'
           multiline
           fullWidth
           rows={10}
@@ -834,7 +669,7 @@ class TrainingModuleModal extends React.Component {
                 .join('\n')) ||
             ''
           }
-          helperText="Put each task on a new line."
+          helperText='Put each task on a new line.'
           onChange={(e) => {
             this.props.handleModalChangeStep({
               step: 'inhouse',
@@ -844,7 +679,7 @@ class TrainingModuleModal extends React.Component {
                 .filter(Boolean)
                 .map((option) => {
                   return { text: option }
-                }),
+                })
             })
           }}
         />
@@ -857,39 +692,29 @@ class TrainingModuleModal extends React.Component {
         <FormControlLabel
           control={
             <Checkbox
-              checked={
-                (doc.steps &&
-                  doc.steps.sitevisits &&
-                  doc.steps.sitevisits.enabled) ||
-                false
-              }
+              checked={(doc.steps && doc.steps.sitevisits && doc.steps.sitevisits.enabled) || false}
               onChange={(e) => {
                 this.props.handleModalChangeStep({
                   step: 'sitevisits',
                   id: 'enabled',
-                  value: e.target.checked,
+                  value: e.target.checked
                 })
               }}
-              value="enabled"
+              value='enabled'
             />
           }
-          label="Show this section"
+          label='Show this section'
         />
         <ReactQuill
-          value={
-            (doc.steps &&
-              doc.steps.sitevisits &&
-              doc.steps.sitevisits.outline) ||
-            ''
-          }
+          value={(doc.steps && doc.steps.sitevisits && doc.steps.sitevisits.outline) || ''}
           modules={quillModules}
-          theme="snow"
+          theme='snow'
           onChange={(content, delta, source) => {
             if (source === 'user')
               this.props.handleModalChangeStep({
                 step: 'sitevisits',
                 id: 'outline',
-                value: content,
+                value: content
               })
           }}
           style={{ marginBottom: 16 }}
@@ -907,18 +732,13 @@ class TrainingModuleModal extends React.Component {
             <Grid item xs={9}>
               <TextField
                 id={'jobdesc' + i}
-                defaultValue={
-                  doc.steps &&
-                  doc.steps.jobtypes &&
-                  doc.steps.jobtypes[i] &&
-                  doc.steps.jobtypes[i].name
-                }
+                defaultValue={doc.steps && doc.steps.jobtypes && doc.steps.jobtypes[i] && doc.steps.jobtypes[i].name}
                 fullWidth
                 onChange={(e) => {
                   this.props.handleModalChangeStep({
                     step: 'jobtypes',
                     id: [i],
-                    value: { name: e.target.value, object: true },
+                    value: { name: e.target.value, object: true }
                   })
                 }}
               />
@@ -926,20 +746,15 @@ class TrainingModuleModal extends React.Component {
             <Grid item xs={3}>
               <TextField
                 id={'number' + i}
-                type="number"
-                defaultValue={
-                  doc.steps &&
-                  doc.steps.jobtypes &&
-                  doc.steps.jobtypes[i] &&
-                  doc.steps.jobtypes[i].number
-                }
+                type='number'
+                defaultValue={doc.steps && doc.steps.jobtypes && doc.steps.jobtypes[i] && doc.steps.jobtypes[i].number}
                 fullWidth
                 onChange={(e) => {
                   this.props.handleModalChangeStep({
                     step: 'jobtypes',
                     id: [i],
                     value: { number: e.target.value },
-                    object: true,
+                    object: true
                   })
                 }}
               />
@@ -955,34 +770,29 @@ class TrainingModuleModal extends React.Component {
         <FormControlLabel
           control={
             <Checkbox
-              checked={
-                (doc.steps && doc.steps.review && doc.steps.review.enabled) ||
-                false
-              }
+              checked={(doc.steps && doc.steps.review && doc.steps.review.enabled) || false}
               onChange={(e) => {
                 this.props.handleModalChangeStep({
                   step: 'review',
                   id: 'enabled',
-                  value: e.target.checked,
+                  value: e.target.checked
                 })
               }}
-              value="enabled"
+              value='enabled'
             />
           }
-          label="Show this section"
+          label='Show this section'
         />
         <ReactQuill
-          value={
-            (doc.steps && doc.steps.review && doc.steps.outline.review) || ''
-          }
+          value={(doc.steps && doc.steps.review && doc.steps.outline.review) || ''}
           modules={quillModules}
-          theme="snow"
+          theme='snow'
           onChange={(content, delta, source) => {
             if (source === 'user')
               this.props.handleModalChangeStep({
                 step: 'review',
                 id: 'outline',
-                value: content,
+                value: content
               })
           }}
           style={{ marginBottom: 16 }}
@@ -1016,23 +826,21 @@ class TrainingModuleModal extends React.Component {
 
     return (
       <Dialog
-        key="trainingmodulemodal"
+        key='trainingmodulemodal'
         open={this.props.modalType === TRAINING}
         onEnter={() => this.setState({ page: 1 })}
         onClose={() => this.props.hideModal}
-        maxWidth="lg"
+        maxWidth='lg'
         fullWidth
       >
-        <DialogTitle>
-          {modalProps.title ? modalProps.title : 'Add New Training Module'}
-        </DialogTitle>
+        <DialogTitle>{modalProps.title ? modalProps.title : 'Add New Training Module'}</DialogTitle>
         <DialogContent>{this.getPage()}</DialogContent>
         <DialogActions>
           <Button
             onClick={() => {
               this.props.hideModal()
             }}
-            color="secondary"
+            color='secondary'
           >
             Cancel
           </Button>
@@ -1041,7 +849,7 @@ class TrainingModuleModal extends React.Component {
             onClick={() => {
               this.setState({ page: this.state.page - 1 })
             }}
-            color="default"
+            color='default'
           >
             Back
           </Button>
@@ -1050,12 +858,12 @@ class TrainingModuleModal extends React.Component {
             onClick={() => {
               this.setState({ page: this.state.page + 1 })
             }}
-            color="default"
+            color='default'
           >
             Forward
           </Button>
           {modalProps.isUploading ? (
-            <Button color="primary" disabled>
+            <Button color='primary' disabled>
               Submit
             </Button>
           ) : (
@@ -1070,11 +878,11 @@ class TrainingModuleModal extends React.Component {
                 }
                 this.props.handleModalSubmit({
                   doc: doc,
-                  pathRef: trainingPathsRef,
+                  pathRef: trainingPathsRef
                 })
                 // this.sendNewAttrSlack();
               }}
-              color="primary"
+              color='primary'
             >
               Submit
             </Button>
@@ -1085,6 +893,4 @@ class TrainingModuleModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(TrainingModuleModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(TrainingModuleModal))

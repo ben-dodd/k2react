@@ -28,32 +28,12 @@ import SuggestionField from '../../../widgets/SuggestionField'
 
 import UploadIcon from '@material-ui/icons/CloudUpload'
 import Close from '@material-ui/icons/Close'
-import {
-  hideModal,
-  handleModalChange,
-  handleModalSubmit,
-  resetModal,
-  onUploadFile,
-  setModalError,
-} from '../../../actions/modal'
+import { hideModal, handleModalChange, handleModalSubmit, resetModal, onUploadFile, setModalError } from '../../../actions/modal'
 import { fetchSites } from '../../../actions/jobs'
-import {
-  getSampleColors,
-  updateResultMap,
-  writeDescription,
-} from '../../../actions/asbestosLab'
-import {
-  getMaterialRisk,
-  getPriorityRisk,
-  getTotalRisk,
-} from '../../../actions/asbestosReportHelpers'
+import { getSampleColors, updateResultMap, writeDescription } from '../../../actions/asbestosLab'
+import { getMaterialRisk, getPriorityRisk, getTotalRisk } from '../../../actions/asbestosReportHelpers'
 import { getUserAttrs } from '../../../actions/local'
-import {
-  sendSlackMessage,
-  numericAndLessThanOnly,
-  quillModules,
-  dateOf,
-} from '../../../actions/helpers'
+import { sendSlackMessage, numericAndLessThanOnly, quillModules, dateOf } from '../../../actions/helpers'
 import { AsbButton, ScoreButton } from '../../../widgets/FormWidgets'
 import _ from 'lodash'
 import classNames from 'classnames'
@@ -70,8 +50,7 @@ const mapStateToProps = (state) => {
     materialSuggestions: state.const.asbestosMaterialSuggestions,
     asbestosManagementOptions: state.const.asbestosManagementOptions,
 
-    asbestosAccessibilitySuggestions:
-      state.const.asbestosAccessibilitySuggestions,
+    asbestosAccessibilitySuggestions: state.const.asbestosAccessibilitySuggestions,
 
     // Material Risk
     asbestosProductScores: state.const.asbestosProductScores,
@@ -80,8 +59,7 @@ const mapStateToProps = (state) => {
 
     // Activity
     asbestosPriMainActivityScores: state.const.asbestosPriMainActivityScores,
-    asbestosPriSecondaryActivityScores:
-      state.const.asbestosPriSecondaryActivityScores,
+    asbestosPriSecondaryActivityScores: state.const.asbestosPriSecondaryActivityScores,
 
     // Disturbance
     asbestosPriLocationScores: state.const.asbestosPriLocationScores,
@@ -95,7 +73,7 @@ const mapStateToProps = (state) => {
 
     // Maintenance
     asbestosPriMaintTypeScores: state.const.asbestosPriMaintTypeScores,
-    asbestosPriMaintFreqScores: state.const.asbestosPriMaintFreqScores,
+    asbestosPriMaintFreqScores: state.const.asbestosPriMaintFreqScores
   }
 }
 
@@ -105,15 +83,10 @@ const mapDispatchToProps = (dispatch) => {
     hideModal: () => dispatch(hideModal()),
     setModalError: (e) => dispatch(setModalError(e)),
     resetModal: () => dispatch(resetModal()),
-    onUploadFile: (file, pathRef, prefix, imageQuality) =>
-      dispatch(onUploadFile(file, pathRef, prefix, imageQuality)),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    onUploadFile: (file, pathRef, prefix, imageQuality) => dispatch(onUploadFile(file, pathRef, prefix, imageQuality)),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300),
     handleSelectChange: (target) => dispatch(handleModalChange(target)),
-    handleModalSubmit: (doc, pathRef) =>
-      dispatch(handleModalSubmit(doc, pathRef)),
+    handleModalSubmit: (doc, pathRef) => dispatch(handleModalSubmit(doc, pathRef))
   }
 }
 
@@ -122,8 +95,8 @@ class TemplateAcmModal extends React.Component {
     asbestosType: {
       ch: true,
       am: true,
-      cr: true,
-    },
+      cr: true
+    }
   }
 
   deleteImage = () => {
@@ -139,7 +112,7 @@ class TemplateAcmModal extends React.Component {
 
   handleAsbestosType = (res) => {
     this.setState({
-      asbestosType: updateResultMap(res, this.state.asbestosType),
+      asbestosType: updateResultMap(res, this.state.asbestosType)
     })
   }
 
@@ -147,9 +120,7 @@ class TemplateAcmModal extends React.Component {
     const { modalProps, doc, classes } = this.props
     const colors = getSampleColors({ result: this.state.asbestosType })
     const totalRisk =
-      this.state.priorityRisk &&
-      this.state.materialRisk &&
-      this.state.materialRisk.color
+      this.state.priorityRisk && this.state.materialRisk && this.state.materialRisk.color
         ? getTotalRisk(this.state.materialRisk, this.state.priorityRisk)
         : null
     return (
@@ -160,9 +131,7 @@ class TemplateAcmModal extends React.Component {
         fullWidth
         maxWidth={'sm'}
       >
-        <DialogTitle>
-          {modalProps.title ? modalProps.title : 'Add ACM Template'}
-        </DialogTitle>
+        <DialogTitle>{modalProps.title ? modalProps.title : 'Add ACM Template'}</DialogTitle>
         <DialogContent>
           <InputLabel>Template Name</InputLabel>
           <TextField
@@ -170,26 +139,24 @@ class TemplateAcmModal extends React.Component {
               this.state.templateName
                 ? this.state.templateName
                 : this.state.description && this.state.material
-                ? `${this.state.description} ${this.state.material}`
-                : this.state.description
-                ? this.state.description
-                : this.state.material
-                ? this.state.material
-                : ''
+                  ? `${this.state.description} ${this.state.material}`
+                  : this.state.description
+                    ? this.state.description
+                    : this.state.material
+                      ? this.state.material
+                      : ''
             }
             onChange={(e) => this.setState({ templateName: e.target.value })}
           />
-          <InputLabel className={classes.marginTopSmall}>
-            Item Description
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Item Description</InputLabel>
           <SuggestionField
             that={this}
-            suggestions="descriptionSuggestions"
+            suggestions='descriptionSuggestions'
             value={this.state.description || ''}
             controlled
             onModify={(value) => this.setState({ description: value })}
           />
-          <Tooltip title="Write item before material (e.g. pipework lagging), otherwise material will be written first (e.g. cement sheet soffits)">
+          <Tooltip title='Write item before material (e.g. pipework lagging), otherwise material will be written first (e.g. cement sheet soffits)'>
             <FormControlLabel
               className={classes.marginTopSmall}
               control={
@@ -198,14 +165,14 @@ class TemplateAcmModal extends React.Component {
                   onClick={(e) => {
                     this.setState({ writeItemFirst: e.target.checked })
                   }}
-                  value="writeItemFirst"
-                  color="secondary"
+                  value='writeItemFirst'
+                  color='secondary'
                 />
               }
-              label="Write Item First"
+              label='Write Item First'
             />
           </Tooltip>
-          <Tooltip title="Write item as singular (e.g. It Is instead of They Are)">
+          <Tooltip title='Write item as singular (e.g. It Is instead of They Are)'>
             <FormControlLabel
               className={classes.marginTopSmall}
               control={
@@ -214,11 +181,11 @@ class TemplateAcmModal extends React.Component {
                   onClick={(e) => {
                     this.setState({ singularItem: e.target.checked })
                   }}
-                  value="singularItem"
-                  color="secondary"
+                  value='singularItem'
+                  color='secondary'
                 />
               }
-              label="Write as Singular Item"
+              label='Write as Singular Item'
             />
           </Tooltip>
           <div className={classes.flexRow}>
@@ -230,11 +197,11 @@ class TemplateAcmModal extends React.Component {
                   onClick={(e) => {
                     this.setState({ inaccessibleItem: e.target.checked })
                   }}
-                  value="inaccessibleItem"
-                  color="secondary"
+                  value='inaccessibleItem'
+                  color='secondary'
                 />
               }
-              label="Inaccessible Item"
+              label='Inaccessible Item'
             />
 
             <FormControlLabel
@@ -245,11 +212,11 @@ class TemplateAcmModal extends React.Component {
                   onClick={(e) => {
                     this.setState({ unknownItem: e.target.checked })
                   }}
-                  value="unknownItem"
-                  color="secondary"
+                  value='unknownItem'
+                  color='secondary'
                 />
               }
-              label="Unknown Item"
+              label='Unknown Item'
             />
           </div>
 
@@ -257,56 +224,47 @@ class TemplateAcmModal extends React.Component {
             <div>
               <SuggestionField
                 that={this}
-                suggestions="materialSuggestions"
-                label="Material"
+                suggestions='materialSuggestions'
+                label='Material'
                 controlled
                 value={this.state.material ? this.state.material : ''}
                 onModify={(value) => {
                   let category = '',
-                    asbestosType = this.state.asbestosType
-                      ? this.state.asbestosType
-                      : { ch: true, am: true, cr: true },
-                    asbestosContent = this.state.asbestosContent
-                      ? this.state.asbestosContent
-                      : '',
-                    materialObj = Object.values(
-                      this.props.materialSuggestions
-                    ).filter((e) => e.label === value)
+                    asbestosType = this.state.asbestosType ? this.state.asbestosType : { ch: true, am: true, cr: true },
+                    asbestosContent = this.state.asbestosContent ? this.state.asbestosContent : '',
+                    materialObj = Object.values(this.props.materialSuggestions).filter((e) => e.label === value)
                   if (materialObj.length > 0) {
                     category = materialObj[0].category
                     if (materialObj[0].asbestosType)
                       asbestosType = {
                         ch: materialObj[0].asbestosType.includes('ch'),
                         am: materialObj[0].asbestosType.includes('am'),
-                        cr: materialObj[0].asbestosType.includes('cr'),
+                        cr: materialObj[0].asbestosType.includes('cr')
                       }
-                    if (materialObj[0].asbestosContent)
-                      asbestosContent = parseInt(materialObj[0].asbestosContent)
+                    if (materialObj[0].asbestosContent) asbestosContent = parseInt(materialObj[0].asbestosContent)
                   }
                   this.setState({
                     material: value,
                     category,
                     asbestosType,
-                    asbestosContent,
+                    asbestosContent
                   })
                 }}
               />
-              <InputLabel className={classes.marginTopSmall}>
-                Material Category
-              </InputLabel>
+              <InputLabel className={classes.marginTopSmall}>Material Category</InputLabel>
               <Select
                 className={classes.selectTight}
                 value={
                   this.state.category
                     ? {
                         value: this.state.category,
-                        label: this.state.category,
+                        label: this.state.category
                       }
                     : { value: '', label: '' }
                 }
                 options={this.props.asbestosMaterialCategories.map((e) => ({
                   value: e.label,
-                  label: e.label,
+                  label: e.label
                 }))}
                 onChange={(e) => {
                   this.setState({ category: e.value })
@@ -315,41 +273,31 @@ class TemplateAcmModal extends React.Component {
             </div>
           )}
 
-          <InputLabel className={classes.marginTopSmall}>
-            Identification
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Identification</InputLabel>
           <div className={classes.flexRow}>
             {[
               {
                 label: 'Presumed',
                 value: 'p',
                 color: 'Warning',
-                tooltip: 'Default.',
+                tooltip: 'Default.'
               },
               {
                 label: 'Strongly Presumed',
                 value: 's',
                 color: 'StrongWarning',
-                tooltip: 'Strongly presumed.',
+                tooltip: 'Strongly presumed.'
               },
               {
                 label: 'Sampled',
                 value: 'i',
                 color: 'Bad',
-                tooltip: 'Sampled.',
-              },
+                tooltip: 'Sampled.'
+              }
             ].map((res) => {
               return ScoreButton(
-                classes[
-                  `colorsButton${
-                    this.state.idKey === res.value ? res.color : 'Off'
-                  }`
-                ],
-                classes[
-                  `colorsDiv${
-                    this.state.idKey === res.value ? res.color : 'Off'
-                  }`
-                ],
+                classes[`colorsButton${this.state.idKey === res.value ? res.color : 'Off'}`],
+                classes[`colorsDiv${this.state.idKey === res.value ? res.color : 'Off'}`],
                 res.label,
                 res.tooltip,
                 () => this.setState({ idKey: res.value })
@@ -359,8 +307,8 @@ class TemplateAcmModal extends React.Component {
 
           <SuggestionField
             that={this}
-            suggestions="extentSuggestions"
-            label="Extent Description"
+            suggestions='extentSuggestions'
+            label='Extent Description'
             controlled
             value={this.state.extent || ''}
             onModify={(value) => this.setState({ extent: value })}
@@ -368,13 +316,13 @@ class TemplateAcmModal extends React.Component {
 
           <div className={classes.flexRow}>
             <TextField
-              id="extentNum"
-              label="Extent Amount"
+              id='extentNum'
+              label='Extent Amount'
               style={{ width: '60%' }}
               value={this.state.extentNum}
               onChange={(e) =>
                 this.setState({
-                  extentNum: numericAndLessThanOnly(e.target.value),
+                  extentNum: numericAndLessThanOnly(e.target.value)
                 })
               }
             />
@@ -384,13 +332,13 @@ class TemplateAcmModal extends React.Component {
                 this.state.extentNumUnits
                   ? {
                       value: this.state.extentNumUnits,
-                      label: this.state.extentNumUnits,
+                      label: this.state.extentNumUnits
                     }
                   : { value: 'm²', label: 'm²' }
               }
               options={['m²', 'm', 'lm', 'm³', 'items'].map((e) => ({
                 value: e,
-                label: e,
+                label: e
               }))}
               onChange={(e) => {
                 this.setState({ extentNumUnits: e.value })
@@ -405,45 +353,33 @@ class TemplateAcmModal extends React.Component {
                 onClick={(e) => {
                   this.setState({ acmRemoved: e.target.checked })
                 }}
-                value="acmRemoved"
-                color="secondary"
+                value='acmRemoved'
+                color='secondary'
               />
             }
-            label="ACM Removed"
+            label='ACM Removed'
           />
 
           {this.state.acmRemoved && (
             <div>
-              <InputLabel className={classes.marginTopSmall}>
-                Clearance Job
-              </InputLabel>
+              <InputLabel className={classes.marginTopSmall}>Clearance Job</InputLabel>
               <Select
                 className={classes.selectTight}
                 value={
                   this.state.acmRemovalJob
                     ? {
                         value: this.state.acmRemovalJob,
-                        label: `${this.state.acmRemovalJob.referenceNumber} ${
-                          this.state.acmRemovalJob.asbestosRemovalist
-                        } (${moment(
+                        label: `${this.state.acmRemovalJob.referenceNumber} ${this.state.acmRemovalJob.asbestosRemovalist} (${moment(
                           dateOf(this.state.acmRemovalJob.removalDate)
-                        ).format('D MMM YYYY')})`,
+                        ).format('D MMM YYYY')})`
                       }
                     : { value: '', label: '' }
                 }
                 options={
-                  this.props.sites &&
-                  this.props.sites[this.props.site] &&
-                  this.props.sites[this.props.site].clearances
-                    ? Object.values(
-                        this.props.sites[this.props.site].clearances
-                      ).map((e) => ({
+                  this.props.sites && this.props.sites[this.props.site] && this.props.sites[this.props.site].clearances
+                    ? Object.values(this.props.sites[this.props.site].clearances).map((e) => ({
                         value: e,
-                        label: `${e.referenceNumber} ${
-                          e.asbestosRemovalist
-                        } (${moment(dateOf(e.removalDate)).format(
-                          'D MMM YYYY'
-                        )})`,
+                        label: `${e.referenceNumber} ${e.asbestosRemovalist} (${moment(dateOf(e.removalDate)).format('D MMM YYYY')})`
                       }))
                     : []
                 }
@@ -454,23 +390,13 @@ class TemplateAcmModal extends React.Component {
             </div>
           )}
 
-          <InputLabel className={classes.marginTopSmall}>
-            Accessibility Score
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Accessibility Score</InputLabel>
           <div className={classes.flexRow}>
             {this.props.asbestosAccessibilitySuggestions &&
               this.props.asbestosAccessibilitySuggestions.map((res) => {
                 return ScoreButton(
-                  classes[
-                    `colorsButton${
-                      this.state.accessibility === res.label ? res.color : 'Off'
-                    }`
-                  ],
-                  classes[
-                    `colorsDiv${
-                      this.state.accessibility === res.label ? res.color : 'Off'
-                    }`
-                  ],
+                  classes[`colorsButton${this.state.accessibility === res.label ? res.color : 'Off'}`],
+                  classes[`colorsDiv${this.state.accessibility === res.label ? res.color : 'Off'}`],
                   res.label,
                   res.tooltip,
                   () => this.setState({ accessibility: res.label })
@@ -485,17 +411,15 @@ class TemplateAcmModal extends React.Component {
                 onClick={(e) => {
                   this.setState({ genericItem: e.target.checked })
                 }}
-                value="genericItem"
-                color="secondary"
+                value='genericItem'
+                color='secondary'
               />
             }
-            label="Generic Item"
+            label='Generic Item'
           />
           {this.state.genericItem && (
             <div>
-              <InputLabel className={classes.marginTopSmall}>
-                Blurb for Report
-              </InputLabel>
+              <InputLabel className={classes.marginTopSmall}>Blurb for Report</InputLabel>
               {/* <ReactQuill
                 value={this.state.genericItemBlurb || ''}
                 modules={quillModules}
@@ -511,27 +435,13 @@ class TemplateAcmModal extends React.Component {
 
           {!this.state.unknownItem && (
             <div>
-              <InputLabel className={classes.marginTopSmall}>
-                Product Score
-              </InputLabel>
+              <InputLabel className={classes.marginTopSmall}>Product Score</InputLabel>
               <div className={classes.flexRow}>
                 {this.props.asbestosProductScores &&
                   this.props.asbestosProductScores.map((res) => {
                     return ScoreButton(
-                      classes[
-                        `colorsButton${
-                          this.state.productScore === res.label
-                            ? res.color
-                            : 'Off'
-                        }`
-                      ],
-                      classes[
-                        `colorsDiv${
-                          this.state.productScore === res.label
-                            ? res.color
-                            : 'Off'
-                        }`
-                      ],
+                      classes[`colorsButton${this.state.productScore === res.label ? res.color : 'Off'}`],
+                      classes[`colorsDiv${this.state.productScore === res.label ? res.color : 'Off'}`],
                       res.label,
                       res.tooltip,
                       () =>
@@ -539,34 +449,20 @@ class TemplateAcmModal extends React.Component {
                           productScore: res.label,
                           materialRisk: getMaterialRisk({
                             ...this.state,
-                            productScore: res.label,
-                          }),
+                            productScore: res.label
+                          })
                         })
                     )
                   })}
               </div>
 
-              <InputLabel className={classes.marginTopSmall}>
-                Damage Score
-              </InputLabel>
+              <InputLabel className={classes.marginTopSmall}>Damage Score</InputLabel>
               <div className={classes.flexRow}>
                 {this.props.asbestosDamageScores &&
                   this.props.asbestosDamageScores.map((res) => {
                     return ScoreButton(
-                      classes[
-                        `colorsButton${
-                          this.state.damageScore === res.label
-                            ? res.color
-                            : 'Off'
-                        }`
-                      ],
-                      classes[
-                        `colorsDiv${
-                          this.state.damageScore === res.label
-                            ? res.color
-                            : 'Off'
-                        }`
-                      ],
+                      classes[`colorsButton${this.state.damageScore === res.label ? res.color : 'Off'}`],
+                      classes[`colorsDiv${this.state.damageScore === res.label ? res.color : 'Off'}`],
                       res.label,
                       res.tooltip,
                       () =>
@@ -574,44 +470,28 @@ class TemplateAcmModal extends React.Component {
                           damageScore: res.label,
                           materialRisk: getMaterialRisk({
                             ...this.state,
-                            damageScore: res.label,
-                          }),
+                            damageScore: res.label
+                          })
                         })
                     )
                   })}
               </div>
               <SuggestionField
                 that={this}
-                suggestions="damageSuggestions"
-                label="Damage Description"
+                suggestions='damageSuggestions'
+                label='Damage Description'
                 controlled
                 value={this.state.damageDescription || ''}
-                onModify={(value) =>
-                  this.setState({ damageDescription: value })
-                }
+                onModify={(value) => this.setState({ damageDescription: value })}
               />
 
-              <InputLabel className={classes.marginTopSmall}>
-                Surface Score
-              </InputLabel>
+              <InputLabel className={classes.marginTopSmall}>Surface Score</InputLabel>
               <div className={classes.flexRow}>
                 {this.props.asbestosSurfaceScores &&
                   this.props.asbestosSurfaceScores.map((res) => {
                     return ScoreButton(
-                      classes[
-                        `colorsButton${
-                          this.state.surfaceScore === res.label
-                            ? res.color
-                            : 'Off'
-                        }`
-                      ],
-                      classes[
-                        `colorsDiv${
-                          this.state.surfaceScore === res.label
-                            ? res.color
-                            : 'Off'
-                        }`
-                      ],
+                      classes[`colorsButton${this.state.surfaceScore === res.label ? res.color : 'Off'}`],
+                      classes[`colorsDiv${this.state.surfaceScore === res.label ? res.color : 'Off'}`],
                       res.label,
                       res.tooltip,
                       () =>
@@ -619,35 +499,28 @@ class TemplateAcmModal extends React.Component {
                           surfaceScore: res.label,
                           materialRisk: getMaterialRisk({
                             ...this.state,
-                            surfaceScore: res.label,
-                          }),
+                            surfaceScore: res.label
+                          })
                         })
                     )
                   })}
               </div>
               <SuggestionField
                 that={this}
-                suggestions="asbestosSurfaceSuggestions"
-                label="Surface Treatment Description"
+                suggestions='asbestosSurfaceSuggestions'
+                label='Surface Treatment Description'
                 controlled
                 value={this.state.surfaceDescription || ''}
-                onModify={(value) =>
-                  this.setState({ surfaceDescription: value })
-                }
+                onModify={(value) => this.setState({ surfaceDescription: value })}
               />
 
               <div className={classes.flexRowSpread}>
                 <div>
-                  <InputLabel className={classes.marginTopSmall}>
-                    Presumed Asbestos Type
-                  </InputLabel>
+                  <InputLabel className={classes.marginTopSmall}>Presumed Asbestos Type</InputLabel>
                   <div className={classes.flexRow}>
                     {['ch', 'am', 'cr'].map((res) => {
-                      return AsbButton(
-                        classes[`colorsButton${colors[res]}`],
-                        classes[`colorsDiv${colors[res]}`],
-                        res,
-                        () => this.handleAsbestosType(res)
+                      return AsbButton(classes[`colorsButton${colors[res]}`], classes[`colorsDiv${colors[res]}`], res, () =>
+                        this.handleAsbestosType(res)
                       )
                     })}
                   </div>
@@ -655,24 +528,15 @@ class TemplateAcmModal extends React.Component {
 
                 <div>
                   <TextField
-                    label="Estimated Asbestos Concentration"
-                    value={
-                      this.state.asbestosContent
-                        ? this.state.asbestosContent
-                        : ''
-                    }
+                    label='Estimated Asbestos Concentration'
+                    value={this.state.asbestosContent ? this.state.asbestosContent : ''}
                     style={{ width: '20%' }}
                     InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">%</InputAdornment>
-                      ),
+                      endAdornment: <InputAdornment position='end'>%</InputAdornment>
                     }}
                     onChange={(e) => {
                       this.setState({
-                        asbestosContent: numericAndLessThanOnly(
-                          e.target.value,
-                          1
-                        ),
+                        asbestosContent: numericAndLessThanOnly(e.target.value, 1)
                       })
                     }}
                   />
@@ -681,9 +545,7 @@ class TemplateAcmModal extends React.Component {
 
               {this.state.materialRisk && (
                 <div
-                  className={
-                    classes[`totalDiv${this.state.materialRisk.color}`]
-                  }
+                  className={classes[`totalDiv${this.state.materialRisk.color}`]}
                 >{`Material Risk: ${this.state.materialRisk.text} (${this.state.materialRisk.score})`}</div>
               )}
             </div>
@@ -692,165 +554,131 @@ class TemplateAcmModal extends React.Component {
           {this.state.idKey !== 'i' && !this.state.inaccessibleItem && (
             <SuggestionField
               that={this}
-              suggestions="asbestosWhyNotSampledSuggestions"
+              suggestions='asbestosWhyNotSampledSuggestions'
               controlled
               value={this.state.whyNotSampled || ''}
               multiline
               rows={2}
-              label="Why Not Sampled?"
+              label='Why Not Sampled?'
               onModify={(value) => this.setState({ whyNotSampled: value })}
             />
           )}
 
-          <InputLabel className={classes.marginTopSmall}>
-            Comment for Report
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Comment for Report</InputLabel>
           <ReactQuill
             value={this.state.comment || ''}
             modules={quillModules}
             className={classes.marginBottomMedium}
-            theme="snow"
+            theme='snow'
             onChange={(content, delta, source) => {
               if (source === 'user') this.setState({ comment: content })
             }}
           />
 
-          <InputLabel className={classes.marginTopSmall}>
-            Basic Primary Management
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Basic Primary Management</InputLabel>
           <Select
             className={classes.selectTight}
             value={
               this.state.managementPrimary
                 ? {
                     value: this.state.managementPrimary,
-                    label: this.state.managementPrimary,
+                    label: this.state.managementPrimary
                   }
                 : { value: '', label: '' }
             }
             options={this.props.asbestosManagementOptions.map((e) => ({
               value: e.label,
-              label: e.label,
+              label: e.label
             }))}
             onChange={(e) => {
               this.setState({ managementPrimary: e.value })
             }}
           />
 
-          <InputLabel className={classes.marginTopSmall}>
-            Basic Secondary Management
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Basic Secondary Management</InputLabel>
           <Select
             className={classes.selectTight}
             value={
               this.state.managementSecondary
                 ? {
                     value: this.state.managementSecondary,
-                    label: this.state.managementSecondary,
+                    label: this.state.managementSecondary
                   }
                 : { value: '', label: '' }
             }
             options={this.props.asbestosManagementOptions.map((e) => ({
               value: e.label,
-              label: e.label,
+              label: e.label
             }))}
             onChange={(e) => {
               this.setState({ managementSecondary: e.value })
             }}
           />
 
-          <InputLabel className={classes.marginTopSmall}>
-            Removal Licence Required
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Removal Licence Required</InputLabel>
           <Select
             className={classes.selectTight}
             value={
               this.state.removalLicenceRequired
                 ? {
                     value: this.state.removalLicenceRequired,
-                    label: this.state.removalLicenceRequired,
+                    label: this.state.removalLicenceRequired
                   }
                 : { value: '', label: '' }
             }
             options={['Class A', 'Class B', 'Unlicensed'].map((e) => ({
               value: e,
-              label: e,
+              label: e
             }))}
             onChange={(e) => {
               this.setState({ removalLicenceRequired: e.value })
             }}
           />
 
-          <InputLabel className={classes.marginTopSmall}>
-            Management Recommendations
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Management Recommendations</InputLabel>
           <ReactQuill
             value={this.state.recommendations || ''}
             modules={quillModules}
-            theme="snow"
+            theme='snow'
             className={classes.marginBottomMedium}
             onChange={(content, delta, source) => {
               if (source === 'user') this.setState({ recommendations: content })
             }}
           />
 
-          <InputLabel className={classes.marginTopSmall}>
-            Priority Risk Assessment
-          </InputLabel>
-          <InputLabel className={classes.marginTopSmall}>
-            Normal Occupant Activity
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Priority Risk Assessment</InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Normal Occupant Activity</InputLabel>
 
           {[
             {
               label: 'Main type of activity in area',
               options: 'asbestosPriMainActivityScores',
-              stateVar: 'priMainActivityScore',
+              stateVar: 'priMainActivityScore'
             },
             {
               label: 'Secondary activities for area',
               options: 'asbestosPriSecondaryActivityScores',
-              stateVar: 'priSecondaryActivityScore',
-            },
+              stateVar: 'priSecondaryActivityScore'
+            }
           ].map((e) => {
             return (
               <div>
-                <InputLabel className={classes.marginTopSmall}>
-                  {e.label}
-                </InputLabel>
+                <InputLabel className={classes.marginTopSmall}>{e.label}</InputLabel>
                 <div className={classes.flexRow}>
                   {this.props[e.options] &&
                     this.props[e.options].map((res) => {
                       return ScoreButton(
-                        classes[
-                          `colorsButton${
-                            this.state[e.stateVar] === res.label
-                              ? res.color
-                              : 'Off'
-                          }`
-                        ],
-                        classes[
-                          `colorsDiv${
-                            this.state[e.stateVar] === res.label
-                              ? res.color
-                              : 'Off'
-                          }`
-                        ],
+                        classes[`colorsButton${this.state[e.stateVar] === res.label ? res.color : 'Off'}`],
+                        classes[`colorsDiv${this.state[e.stateVar] === res.label ? res.color : 'Off'}`],
                         res.label,
                         res.tooltip,
                         () =>
                           this.setState({
-                            [e.stateVar]:
-                              this.state[e.stateVar] === res.label
-                                ? null
-                                : res.label,
+                            [e.stateVar]: this.state[e.stateVar] === res.label ? null : res.label,
                             priorityRisk: getPriorityRisk({
                               ...this.state,
-                              [e.stateVar]:
-                                this.state[e.stateVar] === res.label
-                                  ? null
-                                  : res.label,
-                            }),
+                              [e.stateVar]: this.state[e.stateVar] === res.label ? null : res.label
+                            })
                           })
                       )
                     })}
@@ -859,65 +687,43 @@ class TemplateAcmModal extends React.Component {
             )
           })}
 
-          <InputLabel className={classes.marginTopSmall}>
-            Likelihood of Disturbance
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Likelihood of Disturbance</InputLabel>
 
           {[
             {
               label: 'Location',
               options: 'asbestosPriLocationScores',
-              stateVar: 'priLocationScore',
+              stateVar: 'priLocationScore'
             },
             {
               label: 'Accessibility',
               options: 'asbestosPriAccessibilityScores',
-              stateVar: 'priAccessibilityScore',
+              stateVar: 'priAccessibilityScore'
             },
             {
               label: 'Extent/amount',
               options: 'asbestosPriExtentScores',
-              stateVar: 'priExtentScore',
-            },
+              stateVar: 'priExtentScore'
+            }
           ].map((e) => {
             return (
               <div>
-                <InputLabel className={classes.marginTopSmall}>
-                  {e.label}
-                </InputLabel>
+                <InputLabel className={classes.marginTopSmall}>{e.label}</InputLabel>
                 <div className={classes.flexRow}>
                   {this.props[e.options] &&
                     this.props[e.options].map((res) => {
                       return ScoreButton(
-                        classes[
-                          `colorsButton${
-                            this.state[e.stateVar] === res.label
-                              ? res.color
-                              : 'Off'
-                          }`
-                        ],
-                        classes[
-                          `colorsDiv${
-                            this.state[e.stateVar] === res.label
-                              ? res.color
-                              : 'Off'
-                          }`
-                        ],
+                        classes[`colorsButton${this.state[e.stateVar] === res.label ? res.color : 'Off'}`],
+                        classes[`colorsDiv${this.state[e.stateVar] === res.label ? res.color : 'Off'}`],
                         res.label,
                         res.tooltip,
                         () =>
                           this.setState({
-                            [e.stateVar]:
-                              this.state[e.stateVar] === res.label
-                                ? null
-                                : res.label,
+                            [e.stateVar]: this.state[e.stateVar] === res.label ? null : res.label,
                             priorityRisk: getPriorityRisk({
                               ...this.state,
-                              [e.stateVar]:
-                                this.state[e.stateVar] === res.label
-                                  ? null
-                                  : res.label,
-                            }),
+                              [e.stateVar]: this.state[e.stateVar] === res.label ? null : res.label
+                            })
                           })
                       )
                     })}
@@ -926,65 +732,43 @@ class TemplateAcmModal extends React.Component {
             )
           })}
 
-          <InputLabel className={classes.marginTopSmall}>
-            Human Exposure Potential
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Human Exposure Potential</InputLabel>
 
           {[
             {
               label: 'Number of occupants',
               options: 'asbestosPriOccupantsScores',
-              stateVar: 'priOccupantScore',
+              stateVar: 'priOccupantScore'
             },
             {
               label: 'Frequency of use of area',
               options: 'asbestosPriUseFreqScores',
-              stateVar: 'priUseFreqScore',
+              stateVar: 'priUseFreqScore'
             },
             {
               label: 'Average daily time area is in use',
               options: 'asbestosPriAvgTimeScores',
-              stateVar: 'priAvgTimeScore',
-            },
+              stateVar: 'priAvgTimeScore'
+            }
           ].map((e) => {
             return (
               <div>
-                <InputLabel className={classes.marginTopSmall}>
-                  {e.label}
-                </InputLabel>
+                <InputLabel className={classes.marginTopSmall}>{e.label}</InputLabel>
                 <div className={classes.flexRow}>
                   {this.props[e.options] &&
                     this.props[e.options].map((res) => {
                       return ScoreButton(
-                        classes[
-                          `colorsButton${
-                            this.state[e.stateVar] === res.label
-                              ? res.color
-                              : 'Off'
-                          }`
-                        ],
-                        classes[
-                          `colorsDiv${
-                            this.state[e.stateVar] === res.label
-                              ? res.color
-                              : 'Off'
-                          }`
-                        ],
+                        classes[`colorsButton${this.state[e.stateVar] === res.label ? res.color : 'Off'}`],
+                        classes[`colorsDiv${this.state[e.stateVar] === res.label ? res.color : 'Off'}`],
                         res.label,
                         res.tooltip,
                         () =>
                           this.setState({
-                            [e.stateVar]:
-                              this.state[e.stateVar] === res.label
-                                ? null
-                                : res.label,
+                            [e.stateVar]: this.state[e.stateVar] === res.label ? null : res.label,
                             priorityRisk: getPriorityRisk({
                               ...this.state,
-                              [e.stateVar]:
-                                this.state[e.stateVar] === res.label
-                                  ? null
-                                  : res.label,
-                            }),
+                              [e.stateVar]: this.state[e.stateVar] === res.label ? null : res.label
+                            })
                           })
                       )
                     })}
@@ -993,60 +777,38 @@ class TemplateAcmModal extends React.Component {
             )
           })}
 
-          <InputLabel className={classes.marginTopSmall}>
-            Maintenance
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Maintenance</InputLabel>
 
           {[
             {
               label: 'Type of maintenance activity',
               options: 'asbestosPriMaintTypeScores',
-              stateVar: 'priMaintTypeScore',
+              stateVar: 'priMaintTypeScore'
             },
             {
               label: 'Frequency of maintenance activity',
               options: 'asbestosPriMaintFreqScores',
-              stateVar: 'priMaintFreqScore',
-            },
+              stateVar: 'priMaintFreqScore'
+            }
           ].map((e) => {
             return (
               <div>
-                <InputLabel className={classes.marginTopSmall}>
-                  {e.label}
-                </InputLabel>
+                <InputLabel className={classes.marginTopSmall}>{e.label}</InputLabel>
                 <div className={classes.flexRow}>
                   {this.props[e.options] &&
                     this.props[e.options].map((res) => {
                       return ScoreButton(
-                        classes[
-                          `colorsButton${
-                            this.state[e.stateVar] === res.label
-                              ? res.color
-                              : 'Off'
-                          }`
-                        ],
-                        classes[
-                          `colorsDiv${
-                            this.state[e.stateVar] === res.label
-                              ? res.color
-                              : 'Off'
-                          }`
-                        ],
+                        classes[`colorsButton${this.state[e.stateVar] === res.label ? res.color : 'Off'}`],
+                        classes[`colorsDiv${this.state[e.stateVar] === res.label ? res.color : 'Off'}`],
                         res.label,
                         res.tooltip,
                         () =>
                           this.setState({
-                            [e.stateVar]:
-                              this.state[e.stateVar] === res.label
-                                ? null
-                                : res.label,
+                            [e.stateVar]: this.state[e.stateVar] === res.label ? null : res.label,
                             priorityRisk: getPriorityRisk({
                               ...this.state,
-                              [e.stateVar]:
-                                this.state[e.stateVar] === res.label
-                                  ? null
-                                  : res.label,
-                            }),
+                              [e.stateVar]: this.state[e.stateVar] === res.label ? null : res.label
+                            })
                           })
                       )
                     })}
@@ -1060,34 +822,28 @@ class TemplateAcmModal extends React.Component {
               control={
                 <Checkbox
                   checked={this.state.immediateRisk || false}
-                  onChange={(e) =>
-                    this.setState({ immediateRisk: e.target.checked })
-                  }
+                  onChange={(e) => this.setState({ immediateRisk: e.target.checked })}
                 />
               }
-              label="Material is immediate health risk"
+              label='Material is immediate health risk'
             />
             <FormControlLabel
               control={
                 <Checkbox
                   checked={this.state.labelImmediately || false}
-                  onChange={(e) =>
-                    this.setState({ labelImmediately: e.target.checked })
-                  }
+                  onChange={(e) => this.setState({ labelImmediately: e.target.checked })}
                 />
               }
-              label="Material must be labelled"
+              label='Material must be labelled'
             />
             <FormControlLabel
               control={
                 <Checkbox
                   checked={this.state.sealImmediately || false}
-                  onChange={(e) =>
-                    this.setState({ sealImmediately: e.target.checked })
-                  }
+                  onChange={(e) => this.setState({ sealImmediately: e.target.checked })}
                 />
               }
-              label="Material must be sealed/encapsulated immediately"
+              label='Material must be sealed/encapsulated immediately'
             />
           </div>
 
@@ -1104,24 +860,20 @@ class TemplateAcmModal extends React.Component {
           )}
 
           {totalRisk && (
-            <div
-              className={classes[`totalDiv${totalRisk.color}`]}
-            >{`Combined Risk: ${totalRisk.text} (${totalRisk.score})`}</div>
+            <div className={classes[`totalDiv${totalRisk.color}`]}>{`Combined Risk: ${totalRisk.text} (${totalRisk.score})`}</div>
           )}
 
-          <InputLabel className={classes.marginTopSmall}>
-            Thumbnail Image
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Thumbnail Image</InputLabel>
           {this.state.acmImageUrl && (
             <div className={classes.marginTopSmall}>
               <img
                 src={this.state.acmImageUrl}
-                alt=""
-                width="200px"
+                alt=''
+                width='200px'
                 style={{
                   opacity: '0.5',
                   borderStyle: 'solid',
-                  borderWidth: '2px',
+                  borderWidth: '2px'
                 }}
               />
               <IconButton
@@ -1131,13 +883,10 @@ class TemplateAcmModal extends React.Component {
                   left: '-120px',
                   borderStyle: 'solid',
                   borderWidth: '2px',
-                  fontSize: 8,
+                  fontSize: 8
                 }}
                 onClick={() => {
-                  if (
-                    window.confirm('Are you sure you wish to delete the image?')
-                  )
-                    this.deleteImage()
+                  if (window.confirm('Are you sure you wish to delete the image?')) this.deleteImage()
                 }}
               >
                 <Close />
@@ -1145,12 +894,10 @@ class TemplateAcmModal extends React.Component {
             </div>
           )}
           <label>
-            <UploadIcon
-              className={classNames(classes.hoverCursor, classes.colorAccent)}
-            />
+            <UploadIcon className={classNames(classes.hoverCursor, classes.colorAccent)} />
             <input
-              id="attr_upload_file"
-              type="file"
+              id='attr_upload_file'
+              type='file'
               style={{ display: 'none' }}
               onChange={(e) => {
                 if (this.state.acmImageUrl) {
@@ -1161,19 +908,15 @@ class TemplateAcmModal extends React.Component {
                   storagePath: 'sites/',
                   prefix: 'siteImage',
                   imageQuality: 30,
-                  imageHeight: 100,
+                  imageHeight: 100
                 })
               }}
             />
-            <LinearProgress
-              className={classes.formInputLarge}
-              variant="determinate"
-              value={modalProps.uploadProgress}
-            />
+            <LinearProgress className={classes.formInputLarge} variant='determinate' value={modalProps.uploadProgress} />
           </label>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.resetModal} color="secondary">
+          <Button onClick={this.props.resetModal} color='secondary'>
             Cancel
           </Button>
           <Button
@@ -1181,10 +924,10 @@ class TemplateAcmModal extends React.Component {
               this.props.handleModalSubmit({
                 doc: this.state,
                 pathRef: templateAcmRef,
-                docid: 'random',
+                docid: 'random'
               })
             }
-            color="primary"
+            color='primary'
           >
             Submit
           </Button>
@@ -1194,6 +937,4 @@ class TemplateAcmModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(TemplateAcmModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(TemplateAcmModal))

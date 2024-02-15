@@ -1,12 +1,6 @@
 import React, { lazy, Suspense } from 'react'
 
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Switch,
-  withRouter,
-} from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link, Switch, withRouter } from 'react-router-dom'
 import { auth } from '../config/firebase'
 import { connect } from 'react-redux'
 import { APP_SETTINGS, UPDATE_DATA } from '../constants/modal-types'
@@ -82,23 +76,8 @@ import UpdateData from './settings/UpdateData'
 
 import store from '../store'
 
-import {
-  fetchMe,
-  resetLocal,
-  copyStaff,
-  fetchStaff,
-  fetchAssets,
-  onSearchChange,
-  onCatChange,
-} from '../actions/local'
-import {
-  fetchGeocodes,
-  analyseJobHistory,
-  fetchWFMClients,
-  authoriseWFM,
-  fetchWFMStaff,
-  fetchWFMAuth,
-} from '../actions/jobs'
+import { fetchMe, resetLocal, copyStaff, fetchStaff, fetchAssets, onSearchChange, onCatChange } from '../actions/local'
+import { fetchGeocodes, analyseJobHistory, fetchWFMClients, authoriseWFM, fetchWFMStaff, fetchWFMAuth } from '../actions/jobs'
 import { sendSlackMessage, dateOf } from '../actions/helpers'
 import { resetModal, showModal } from '../actions/modal'
 import { resetDisplay } from '../actions/display'
@@ -113,7 +92,7 @@ import {
   fixSamples,
   renameAnalysisLog,
   splitWFMStates,
-  fixNoticeReads,
+  fixNoticeReads
 } from '../actions/temp'
 
 // Pages
@@ -121,9 +100,7 @@ const Noticeboard = lazy(() => import('./noticeboard/Noticeboard'))
 
 const AsbestosLab = lazy(() => import('./asbestoslab/AsbestosLab'))
 const AsbestosLog = lazy(() => import('./asbestoslab/AsbestosLog'))
-const AsbestosQualityControl = lazy(() =>
-  import('./asbestoslab/AsbestosQualityControl')
-)
+const AsbestosQualityControl = lazy(() => import('./asbestoslab/AsbestosQualityControl'))
 const AsbestosStats = lazy(() => import('./asbestoslab/AsbestosStats'))
 
 const JobMap = lazy(() => import('./jobs/JobMap'))
@@ -165,7 +142,7 @@ const mapStateToProps = (state) => {
     wfmAccessToken: state.local.wfmAccessToken,
     wfmRefreshToken: state.local.wfmRefreshToken,
     wfmAccessExpiry: state.local.wfmAccessExpiry,
-    wfmAuthLoaded: state.local.wfmAuthLoaded,
+    wfmAuthLoaded: state.local.wfmAuthLoaded
   }
 }
 
@@ -178,16 +155,14 @@ const mapDispatchToProps = (dispatch) => {
     resetDisplay: () => dispatch(resetDisplay()),
     copyStaff: (oldId, newId) => dispatch(copyStaff(oldId, newId)),
     fetchWFMAuth: () => dispatch(fetchWFMAuth()),
-    fetchWFMClients: (accessToken, refreshToken) =>
-      dispatch(fetchWFMClients(accessToken, refreshToken)),
-    fetchWFMStaff: (accessToken, refreshToken) =>
-      dispatch(fetchWFMStaff(accessToken, refreshToken)),
+    fetchWFMClients: (accessToken, refreshToken) => dispatch(fetchWFMClients(accessToken, refreshToken)),
+    fetchWFMStaff: (accessToken, refreshToken) => dispatch(fetchWFMStaff(accessToken, refreshToken)),
 
     initConstants: () => dispatch(initConstants()),
     showModal: (modal) => dispatch(showModal(modal)),
     fetchStaff: () => dispatch(fetchStaff()),
     fetchAssets: (update) => dispatch(fetchAssets(update)),
-    authoriseWFM: (params) => dispatch(authoriseWFM(params)),
+    authoriseWFM: (params) => dispatch(authoriseWFM(params))
     // fixIds: () => dispatch(fixIds())
   }
 }
@@ -208,23 +183,20 @@ class MainScreen extends React.PureComponent {
       // openRef: false,
       // openStaff: false,
       // openMyDetails: false,
-      openTraining: false,
+      openTraining: false
       // openHelp: false,
     }
   }
 
   UNSAFE_componentWillMount() {
-    sendSlackMessage(
-      `${auth.currentUser.displayName} is triggering MainScreen componentWillMount`
-    )
+    sendSlackMessage(`${auth.currentUser.displayName} is triggering MainScreen componentWillMount`)
     // if (!this.props.wfmAccessToken) this.props.authoriseWFM();
     if (this.props.me && this.props.me.uid === undefined) this.props.fetchMe()
     if (this.props.menuItems === undefined) this.props.initConstants()
     this.props.fetchGeocodes()
     // this.props.fetchAssets();
     // splitWFMStates();
-    if (this.props.staff && Object.keys(this.props.staff).length === 0)
-      this.props.fetchStaff()
+    if (this.props.staff && Object.keys(this.props.staff).length === 0) this.props.fetchStaff()
     this.props.fetchWFMAuth()
     // this.props.fixIds();
     // fixNoticeReads();
@@ -244,7 +216,7 @@ class MainScreen extends React.PureComponent {
     setTimeout(
       () =>
         this.setState({
-          hidden: false,
+          hidden: false
         }),
       2000
     )
@@ -253,10 +225,7 @@ class MainScreen extends React.PureComponent {
   getWFMData = () => {
     if (this.props.wfmAccessToken && this.props.wfmRefreshToken) {
       if (!this.props.clients || this.props.clients.length === 0) {
-        this.props.fetchWFMClients(
-          this.props.wfmAccessToken,
-          this.props.wfmRefreshToken
-        )
+        this.props.fetchWFMClients(this.props.wfmAccessToken, this.props.wfmRefreshToken)
       }
       // this.props.fetchWFMStaff(
       //   this.props.wfmAccessToken,
@@ -271,26 +240,19 @@ class MainScreen extends React.PureComponent {
   checkWFMAuthorised = () => {
     console.log('CHECK AUTH CALLED')
     if (this.props.wfmAuthLoaded) {
-      if (
-        this.props.wfmAccessToken &&
-        moment().isBefore(moment(dateOf(this.props.wfmAccessExpiry)))
-      ) {
-        console.log(
-          `Access Expires on ${moment(
-            dateOf(this.props.wfmAccessExpiry)
-          ).format('lll')}`
-        )
+      if (this.props.wfmAccessToken && moment().isBefore(moment(dateOf(this.props.wfmAccessExpiry)))) {
+        console.log(`Access Expires on ${moment(dateOf(this.props.wfmAccessExpiry)).format('lll')}`)
         // All good
       } else if (this.props.wfmRefreshToken) {
         // Use refresh token to get a new access token
         // console.log(this.props.wfmRefreshToken);
         this.props.authoriseWFM({
-          refreshToken: this.props.wfmRefreshToken,
+          refreshToken: this.props.wfmRefreshToken
         })
       } else {
         // Authenticate user and authorize MyK2 to use WFM
         let code = qs.parse(this.props.location.search, {
-          ignoreQueryPrefix: true,
+          ignoreQueryPrefix: true
         }).code
         if (!code) {
           let path = `${process.env.REACT_APP_WFM_AUTH_ROOT}${process.env.REACT_APP_WFM_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}&scope=workflowmax offline_access&state=${process.env.REACT_APP_WFM_STATE_KEY}`
@@ -333,7 +295,7 @@ class MainScreen extends React.PureComponent {
       openDrawer: false,
       openRef: false,
       openStaff: false,
-      openMyDetails: false,
+      openMyDetails: false
     })
   }
 
@@ -347,14 +309,14 @@ class MainScreen extends React.PureComponent {
   handleAsbestosClick = () => {
     this.setState({
       // openDrawer: true,
-      openAsbestos: !this.state.openAsbestos,
+      openAsbestos: !this.state.openAsbestos
     })
   }
 
   handleDevClick = () => {
     this.setState({
       openDrawer: true,
-      openDev: !this.state.openDev,
+      openDev: !this.state.openDev
     })
   }
 
@@ -368,7 +330,7 @@ class MainScreen extends React.PureComponent {
   handleJobsClick = () => {
     this.setState({
       // openDrawer: true,
-      openJobs: !this.state.openJobs,
+      openJobs: !this.state.openJobs
     })
   }
 
@@ -382,7 +344,7 @@ class MainScreen extends React.PureComponent {
   handleTrainingClick = () => {
     this.setState({
       openDrawer: true,
-      openTraining: !this.state.openTraining,
+      openTraining: !this.state.openTraining
     })
   }
 
@@ -401,21 +363,14 @@ class MainScreen extends React.PureComponent {
     // Edit navigation drawer here
     const drawer = (
       <Drawer
-        variant="permanent"
+        variant='permanent'
         classes={{
-          paper: classNames(
-            classes.drawerPaper,
-            classes.colorAccent,
-            !this.state.openDrawer && classes.drawerPaperClose
-          ),
+          paper: classNames(classes.drawerPaper, classes.colorAccent, !this.state.openDrawer && classes.drawerPaperClose)
         }}
         open={this.state.openDrawer}
       >
         <div className={classes.toolbarIcon}>
-          <IconButton
-            onClick={this.handleDrawerClose}
-            className={classes.colorAccent}
-          >
+          <IconButton onClick={this.handleDrawerClose} className={classes.colorAccent}>
             <ChevronLeftIcon />
           </IconButton>
         </div>
@@ -423,11 +378,11 @@ class MainScreen extends React.PureComponent {
         <List>
           {menuItems.includes('Noticeboard') && (
             <div>
-              <ListItem button component={Link} to="/noticeboard">
+              <ListItem button component={Link} to='/noticeboard'>
                 <ListItemIcon>
                   <NoticeboardIcon className={classes.colorAccent} />
                 </ListItemIcon>
-                <ListItemText primary="Noticeboard" />
+                <ListItemText primary='Noticeboard' />
               </ListItem>
 
               <Divider />
@@ -435,21 +390,21 @@ class MainScreen extends React.PureComponent {
           )}
 
           {menuItems.includes('Staff') && (
-            <ListItem button component={Link} to="/staff">
+            <ListItem button component={Link} to='/staff'>
               <ListItemIcon>
                 <StaffIcon className={classes.colorAccent} />
               </ListItemIcon>
-              <ListItemText primary="Staff" />
+              <ListItemText primary='Staff' />
             </ListItem>
           )}
 
           {menuItems.includes('My Details') && (
             <div>
-              <ListItem button component={Link} to="/mydetails">
+              <ListItem button component={Link} to='/mydetails'>
                 <ListItemIcon>
                   <MyDetailsIcon className={classes.colorAccent} />
                 </ListItemIcon>
-                <ListItemText primary="My Details" />
+                <ListItemText primary='My Details' />
                 {/*{this.state.openMyDetails ? <ExpandLess /> : <ExpandMore /> }*/}
               </ListItem>
               <Divider />
@@ -457,17 +412,17 @@ class MainScreen extends React.PureComponent {
           )}
           {menuItems.includes('Jobs') && (
             <div>
-              <ListItem button component={Link} to="/jobs">
+              <ListItem button component={Link} to='/jobs'>
                 <ListItemIcon>
                   <JobsIcon className={classes.colorAccent} />
                 </ListItemIcon>
-                <ListItemText primary="Jobs" />
+                <ListItemText primary='Jobs' />
               </ListItem>
-              <ListItem button component={Link} to="/sites">
+              <ListItem button component={Link} to='/sites'>
                 <ListItemIcon>
                   <SitesIcon className={classes.colorAccent} />
                 </ListItemIcon>
-                <ListItemText primary="Sites" />
+                <ListItemText primary='Sites' />
               </ListItem>
               <Divider />
             </div>
@@ -542,11 +497,11 @@ class MainScreen extends React.PureComponent {
         </div>}*/}
           {menuItems.includes('Asbestos Lab') && (
             <div>
-              <ListItem button component={Link} to="/asbestoslab">
+              <ListItem button component={Link} to='/asbestoslab'>
                 <ListItemIcon>
                   <LabIcon className={classes.colorAccent} />
                 </ListItemIcon>
-                <ListItemText primary="Asbestos Lab" />
+                <ListItemText primary='Asbestos Lab' />
               </ListItem>
 
               <Divider />
@@ -621,62 +576,35 @@ class MainScreen extends React.PureComponent {
                 <ListItemIcon>
                   <TrainingIcon className={classes.colorAccent} />
                 </ListItemIcon>
-                <ListItemText primary="Training" />
+                <ListItemText primary='Training' />
                 {this.state.openTraining ? <ExpandLess /> : <ExpandMore />}
               </ListItem>
-              <Collapse
-                in={this.state.openTraining}
-                timeout="auto"
-                unmountOnExit
-              >
-                <List component="div" disablePadding>
-                  <ListItem
-                    button
-                    component={Link}
-                    to="/training/overview"
-                    className={classes.drawerNested}
-                  >
+              <Collapse in={this.state.openTraining} timeout='auto' unmountOnExit>
+                <List component='div' disablePadding>
+                  <ListItem button component={Link} to='/training/overview' className={classes.drawerNested}>
                     <ListItemIcon>
                       <TrainingOverviewIcon className={classes.colorAccent} />
                     </ListItemIcon>
-                    <ListItemText primary="Overview" />
+                    <ListItemText primary='Overview' />
                   </ListItem>
-                  <ListItem
-                    button
-                    component={Link}
-                    to="/training/paths"
-                    className={classes.drawerNested}
-                  >
+                  <ListItem button component={Link} to='/training/paths' className={classes.drawerNested}>
                     <ListItemIcon>
                       <TrainingPathIcon className={classes.colorAccent} />
                     </ListItemIcon>
-                    <ListItemText primary="Training Paths" />
+                    <ListItemText primary='Training Paths' />
                   </ListItem>
                 </List>
-                <ListItem
-                  button
-                  component={Link}
-                  to="/quizzes"
-                  className={classes.drawerNested}
-                >
+                <ListItem button component={Link} to='/quizzes' className={classes.drawerNested}>
                   <ListItemIcon>
                     <QuizIcon className={classes.colorAccent} />
                   </ListItemIcon>
-                  <ListItemText primary="Quizzes" />
+                  <ListItemText primary='Quizzes' />
                 </ListItem>
-                <ListItem
-                  button
-                  component={Link}
-                  to="/training/readinglog"
-                  className={classes.drawerNested}
-                >
+                <ListItem button component={Link} to='/training/readinglog' className={classes.drawerNested}>
                   <ListItemIcon>
                     <ReadingLogIcon className={classes.colorAccent} />
                   </ListItemIcon>
-                  <ListItemText
-                    primary="Reading Log"
-                    className={classes.mainMenuText}
-                  />
+                  <ListItemText primary='Reading Log' className={classes.mainMenuText} />
                 </ListItem>
               </Collapse>
               <Divider />
@@ -685,11 +613,11 @@ class MainScreen extends React.PureComponent {
 
           {menuItems.includes('Library') && (
             <div>
-              <ListItem button component={Link} to="/library">
+              <ListItem button component={Link} to='/library'>
                 <ListItemIcon>
                   <LibraryIcon className={classes.colorAccent} />
                 </ListItemIcon>
-                <ListItemText primary="Library" />
+                <ListItemText primary='Library' />
               </ListItem>
               <Divider />
             </div>
@@ -702,14 +630,14 @@ class MainScreen extends React.PureComponent {
                 button
                 onClick={() => {
                   this.props.showModal({
-                    modalType: APP_SETTINGS,
+                    modalType: APP_SETTINGS
                   })
                 }}
               >
                 <ListItemIcon>
                   <SettingsIcon className={classes.colorAccent} />
                 </ListItemIcon>
-                <ListItemText primary="App Settings" />
+                <ListItemText primary='App Settings' />
               </ListItem>
               <ListItem
                 button
@@ -720,18 +648,12 @@ class MainScreen extends React.PureComponent {
                 <ListItemIcon>
                   <UpdateIcon className={classes.colorAccent} />
                 </ListItemIcon>
-                <ListItemText primary="Update Data" />
+                <ListItemText primary='Update Data' />
               </ListItem>
             </div>
           )}
           <div className={classes.version}>{`v${thisVersion}`}</div>
-          <div
-            className={
-              latestVersion == thisVersion
-                ? classes.version
-                : classes.versionOld
-            }
-          >
+          <div className={latestVersion == thisVersion ? classes.version : classes.versionOld}>
             {latestVersion == thisVersion
               ? `Your version is up to date.`
               : `You are using an old version of MyK2. Hold the shift key and press F5 to force your browser to use the latest version (v${latestVersion})`}
@@ -838,427 +760,384 @@ class MainScreen extends React.PureComponent {
     return (
       <React.Fragment>
         {this.state.hidden ? (
-          <Suspense
-            fallback={<CircularProgress className={classes.signInCircle} />}
-          >
-            <K2SignInScreen mode="loading" />
+          <Suspense fallback={<CircularProgress className={classes.signInCircle} />}>
+            <K2SignInScreen mode='loading' />
           </Suspense>
         ) : (
           <div>
             <CssBaseline />
-            {this.props.me &&
-            this.props.me.key == process.env.REACT_APP_K2_STAFF_KEY ? (
+            {this.props.me && this.props.me.key == process.env.REACT_APP_K2_STAFF_KEY ? (
               // && this.props.state.local.staff[auth.currentUser.uid].gmail == auth.currentUser.email)
               <div className={classes.root}>
-                {this.props.location.pathname &&
-                  !this.props.location.pathname.includes('/site/') && (
-                    <AppBar
-                      position="absolute"
-                      className={classNames(
-                        classes.appBar,
-                        this.state.openDrawer && classes.appBarShift
-                      )}
-                    >
-                      <Toolbar
-                        variant="dense"
-                        disableGutters={!this.state.openDrawer}
-                        className={classes.toolbar}
+                {this.props.location.pathname && !this.props.location.pathname.includes('/site/') && (
+                  <AppBar position='absolute' className={classNames(classes.appBar, this.state.openDrawer && classes.appBarShift)}>
+                    <Toolbar variant='dense' disableGutters={!this.state.openDrawer} className={classes.toolbar}>
+                      <IconButton
+                        color='inherit'
+                        aria-label='openDrawer drawer'
+                        onClick={this.handleDrawerOpen}
+                        className={classNames(classes.menuButton, this.state.openDrawer && classes.menuButtonHidden)}
                       >
-                        <IconButton
-                          color="inherit"
-                          aria-label="openDrawer drawer"
-                          onClick={this.handleDrawerOpen}
-                          className={classNames(
-                            classes.menuButton,
-                            this.state.openDrawer && classes.menuButtonHidden
-                          )}
-                        >
-                          <MenuIcon />
-                        </IconButton>
-                        {/*<IconButton
+                        <MenuIcon />
+                      </IconButton>
+                      {/*<IconButton
                             color="inherit"
                             onClick={ () => this.props.history.goBack() }
                             className={classes.menuButton}
                             >
                             <BackIcon />
                           </IconButton>*/}
-                        {/* Toolbar heading and breadcrumbs go here */}
-                        <Typography
-                          color="inherit"
-                          noWrap
-                          className={classes.pageTitle}
-                        >
-                          <Switch>
-                            <Route
-                              exact
-                              path="/"
-                              render={() => (
-                                <span>
-                                  <NoticeboardIcon /> Noticeboard
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/dashboard"
-                              render={() => (
-                                <span>
-                                  <DashboardIcon /> Dashboard
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/noticeboard"
-                              render={() => (
-                                <span>
-                                  <NoticeboardIcon /> Noticeboard
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/incidents"
-                              render={() => (
-                                <span>
-                                  <IncidentIcon /> Incidents
-                                </span>
-                              )}
-                            />
-                            <Route
-                              exact
-                              path="/jobs"
-                              render={() => (
-                                <span>
-                                  <JobsIcon /> Jobs
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/jobs/current"
-                              render={() => (
-                                <span>
-                                  <CurrentJobsIcon /> Current Jobs
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/jobs/leads"
-                              render={() => (
-                                <span>
-                                  <LeadsIcon /> Leads
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/jobs/stats"
-                              render={() => (
-                                <span>
-                                  <StatsIcon /> Job Stats
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/jobs/map"
-                              render={() => (
-                                <span>
-                                  <MapIcon /> Jobs Map
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/sites"
-                              render={() => (
-                                <span>
-                                  <SitesIcon /> Sites
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/asbestoslab"
-                              render={() => (
-                                <span>
-                                  <CocIcon /> Asbestos Lab
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/asbestossamplelog"
-                              render={() => (
-                                <span>
-                                  <LogIcon /> Asbestos Lab: Sample Log
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/asbestosqc"
-                              render={() => (
-                                <span>
-                                  <QCIcon /> Asbestos Lab: Quality Control
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/asbestosstats"
-                              render={() => (
-                                <span>
-                                  <StatsIcon /> Asbestos Lab: Stats
-                                </span>
-                              )}
-                            />
-                            <Route
-                              exact
-                              path="/staff"
-                              render={() => (
-                                <span>
-                                  <StaffIcon /> Staff
-                                </span>
-                              )}
-                            />
-                            <Route
-                              exact
-                              path="/inventory"
-                              render={() => (
-                                <span>
-                                  <InventoryIcon /> Inventory
-                                </span>
-                              )}
-                            />
-                            <Route
-                              exact
-                              path="/vehicles"
-                              render={() => (
-                                <span>
-                                  <VehiclesIcon /> Vehicles
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/staff/details"
-                              render={() => (
-                                <span>
-                                  <StaffIcon /> Staff Details
-                                </span>
-                              )}
-                            />
-                            <Route
-                              exact
-                              path="/staff/jobs"
-                              render={() => (
-                                <span>
-                                  <StaffIcon /> Staff Jobs
-                                </span>
-                              )}
-                            />
-                            <Route
-                              exact
-                              path="/staff/training"
-                              render={() => (
-                                <span>
-                                  <TrainingIcon /> Staff Training
-                                </span>
-                              )}
-                            />
-                            <Route
-                              exact
-                              path="/mydetails"
-                              render={() => (
-                                <span>
-                                  <MyDetailsIcon /> My Details
-                                </span>
-                              )}
-                            />
-                            <Route
-                              exact
-                              path="/mydetails/training"
-                              render={() => (
-                                <span>
-                                  <TrainingIcon /> My Training
-                                </span>
-                              )}
-                            />
-                            <Route
-                              exact
-                              path="/mydetails/jobs"
-                              render={() => (
-                                <span>
-                                  <JobsIcon /> My Job History
-                                </span>
-                              )}
-                            />
-                            <Route
-                              exact
-                              path="/mydetails/readinglog"
-                              render={() => (
-                                <span>
-                                  <ReadingLogIcon /> My Reading Log
-                                </span>
-                              )}
-                            />
-                            <Route
-                              exact
-                              path="/mydetails/preferences"
-                              render={() => <span>App Preferences</span>}
-                            />
-                            <Route
-                              exact
-                              path="/training"
-                              render={() => (
-                                <span>
-                                  <TrainingPathIcon /> Training Paths
-                                </span>
-                              )}
-                            />
-                            <Route
-                              exact
-                              path="/training/paths"
-                              render={() => (
-                                <span>
-                                  <TrainingPathIcon /> Training Paths
-                                </span>
-                              )}
-                            />
-                            <Route
-                              exact
-                              path="/training/overview"
-                              render={() => (
-                                <span>
-                                  <TrainingOverviewIcon /> Training Overview
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/training/path"
-                              render={() => (
-                                <span>
-                                  <TrainingPathIcon /> Training Path
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/training/readinglog"
-                              render={() => (
-                                <span>
-                                  <ReadingLogIcon /> Reading Log
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/method"
-                              render={() => <span>Method</span>}
-                            />
-                            <Route
-                              path="/quizzes"
-                              render={() => (
-                                <span>
-                                  <QuizIcon /> Quizzes
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/questions"
-                              render={() => (
-                                <span>
-                                  <QuizIcon /> Questions
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/quiz/"
-                              render={() => (
-                                <span>
-                                  <QuizIcon /> Quiz
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/tools"
-                              render={() => (
-                                <span>
-                                  <ToolsIcon /> Tools
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/library"
-                              render={() => (
-                                <span>
-                                  <LibraryIcon /> Library
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/document"
-                              render={() => (
-                                <span>
-                                  <LibraryIcon /> Library
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/help"
-                              render={() => (
-                                <span>
-                                  <HelpIcon /> Help
-                                </span>
-                              )}
-                            />
-                            <Route
-                              path="/updates"
-                              render={() => (
-                                <span>
-                                  <UpdatesIcon /> Version Updates
-                                </span>
-                              )}
-                            />
-                          </Switch>
-                        </Typography>
-                        <Route
-                          exact
-                          path="/(|library|training|modules|noticeboard|inventory|jobs|sites|asbestoslab|asbestossamplelog|tools|noticeboard|help|staff|incidents|vehicles|quizzes|questions)"
-                          render={() => (
-                            <div className={classes.search}>
-                              <div className={classes.searchIcon}>
-                                <SearchIcon />
-                              </div>
-                              <InputBase
-                                value={this.props.search}
-                                onChange={(e) => {
-                                  store.dispatch(onSearchChange(e.target.value))
-                                  if (e.target.value !== null) {
-                                    store.dispatch(onCatChange(null))
-                                  }
-                                }}
-                                placeholder="Search…"
-                                classes={{
-                                  root: classes.inputRoot,
-                                  input: classes.inputInput,
-                                }}
-                              />
-                            </div>
-                          )}
-                        />
-                        <Button
-                          aria-owns={anchorEl ? 'google-menu' : null}
-                          aria-haspopup="true"
-                          onClick={this.handleGoogleMenuToggle}
-                        >
-                          <Avatar
-                            alt={auth.currentUser.displayName}
-                            src={auth.currentUser.photoURL}
-                            className={classes.avatar}
+                      {/* Toolbar heading and breadcrumbs go here */}
+                      <Typography color='inherit' noWrap className={classes.pageTitle}>
+                        <Switch>
+                          <Route
+                            exact
+                            path='/'
+                            render={() => (
+                              <span>
+                                <NoticeboardIcon /> Noticeboard
+                              </span>
+                            )}
                           />
-                        </Button>
-                        <Menu
-                          id="google-menu"
-                          anchorEl={anchorEl}
-                          open={Boolean(anchorEl)}
-                          onClose={this.handleGoogleMenuClose}
-                        >
-                          <MenuItem onClick={this.handleLogOut}>
-                            Log Out {displayName}
-                          </MenuItem>
-                        </Menu>
-                      </Toolbar>
-                    </AppBar>
-                  )}
+                          <Route
+                            path='/dashboard'
+                            render={() => (
+                              <span>
+                                <DashboardIcon /> Dashboard
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/noticeboard'
+                            render={() => (
+                              <span>
+                                <NoticeboardIcon /> Noticeboard
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/incidents'
+                            render={() => (
+                              <span>
+                                <IncidentIcon /> Incidents
+                              </span>
+                            )}
+                          />
+                          <Route
+                            exact
+                            path='/jobs'
+                            render={() => (
+                              <span>
+                                <JobsIcon /> Jobs
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/jobs/current'
+                            render={() => (
+                              <span>
+                                <CurrentJobsIcon /> Current Jobs
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/jobs/leads'
+                            render={() => (
+                              <span>
+                                <LeadsIcon /> Leads
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/jobs/stats'
+                            render={() => (
+                              <span>
+                                <StatsIcon /> Job Stats
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/jobs/map'
+                            render={() => (
+                              <span>
+                                <MapIcon /> Jobs Map
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/sites'
+                            render={() => (
+                              <span>
+                                <SitesIcon /> Sites
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/asbestoslab'
+                            render={() => (
+                              <span>
+                                <CocIcon /> Asbestos Lab
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/asbestossamplelog'
+                            render={() => (
+                              <span>
+                                <LogIcon /> Asbestos Lab: Sample Log
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/asbestosqc'
+                            render={() => (
+                              <span>
+                                <QCIcon /> Asbestos Lab: Quality Control
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/asbestosstats'
+                            render={() => (
+                              <span>
+                                <StatsIcon /> Asbestos Lab: Stats
+                              </span>
+                            )}
+                          />
+                          <Route
+                            exact
+                            path='/staff'
+                            render={() => (
+                              <span>
+                                <StaffIcon /> Staff
+                              </span>
+                            )}
+                          />
+                          <Route
+                            exact
+                            path='/inventory'
+                            render={() => (
+                              <span>
+                                <InventoryIcon /> Inventory
+                              </span>
+                            )}
+                          />
+                          <Route
+                            exact
+                            path='/vehicles'
+                            render={() => (
+                              <span>
+                                <VehiclesIcon /> Vehicles
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/staff/details'
+                            render={() => (
+                              <span>
+                                <StaffIcon /> Staff Details
+                              </span>
+                            )}
+                          />
+                          <Route
+                            exact
+                            path='/staff/jobs'
+                            render={() => (
+                              <span>
+                                <StaffIcon /> Staff Jobs
+                              </span>
+                            )}
+                          />
+                          <Route
+                            exact
+                            path='/staff/training'
+                            render={() => (
+                              <span>
+                                <TrainingIcon /> Staff Training
+                              </span>
+                            )}
+                          />
+                          <Route
+                            exact
+                            path='/mydetails'
+                            render={() => (
+                              <span>
+                                <MyDetailsIcon /> My Details
+                              </span>
+                            )}
+                          />
+                          <Route
+                            exact
+                            path='/mydetails/training'
+                            render={() => (
+                              <span>
+                                <TrainingIcon /> My Training
+                              </span>
+                            )}
+                          />
+                          <Route
+                            exact
+                            path='/mydetails/jobs'
+                            render={() => (
+                              <span>
+                                <JobsIcon /> My Job History
+                              </span>
+                            )}
+                          />
+                          <Route
+                            exact
+                            path='/mydetails/readinglog'
+                            render={() => (
+                              <span>
+                                <ReadingLogIcon /> My Reading Log
+                              </span>
+                            )}
+                          />
+                          <Route exact path='/mydetails/preferences' render={() => <span>App Preferences</span>} />
+                          <Route
+                            exact
+                            path='/training'
+                            render={() => (
+                              <span>
+                                <TrainingPathIcon /> Training Paths
+                              </span>
+                            )}
+                          />
+                          <Route
+                            exact
+                            path='/training/paths'
+                            render={() => (
+                              <span>
+                                <TrainingPathIcon /> Training Paths
+                              </span>
+                            )}
+                          />
+                          <Route
+                            exact
+                            path='/training/overview'
+                            render={() => (
+                              <span>
+                                <TrainingOverviewIcon /> Training Overview
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/training/path'
+                            render={() => (
+                              <span>
+                                <TrainingPathIcon /> Training Path
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/training/readinglog'
+                            render={() => (
+                              <span>
+                                <ReadingLogIcon /> Reading Log
+                              </span>
+                            )}
+                          />
+                          <Route path='/method' render={() => <span>Method</span>} />
+                          <Route
+                            path='/quizzes'
+                            render={() => (
+                              <span>
+                                <QuizIcon /> Quizzes
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/questions'
+                            render={() => (
+                              <span>
+                                <QuizIcon /> Questions
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/quiz/'
+                            render={() => (
+                              <span>
+                                <QuizIcon /> Quiz
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/tools'
+                            render={() => (
+                              <span>
+                                <ToolsIcon /> Tools
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/library'
+                            render={() => (
+                              <span>
+                                <LibraryIcon /> Library
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/document'
+                            render={() => (
+                              <span>
+                                <LibraryIcon /> Library
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/help'
+                            render={() => (
+                              <span>
+                                <HelpIcon /> Help
+                              </span>
+                            )}
+                          />
+                          <Route
+                            path='/updates'
+                            render={() => (
+                              <span>
+                                <UpdatesIcon /> Version Updates
+                              </span>
+                            )}
+                          />
+                        </Switch>
+                      </Typography>
+                      <Route
+                        exact
+                        path='/(|library|training|modules|noticeboard|inventory|jobs|sites|asbestoslab|asbestossamplelog|tools|noticeboard|help|staff|incidents|vehicles|quizzes|questions)'
+                        render={() => (
+                          <div className={classes.search}>
+                            <div className={classes.searchIcon}>
+                              <SearchIcon />
+                            </div>
+                            <InputBase
+                              value={this.props.search}
+                              onChange={(e) => {
+                                store.dispatch(onSearchChange(e.target.value))
+                                if (e.target.value !== null) {
+                                  store.dispatch(onCatChange(null))
+                                }
+                              }}
+                              placeholder='Search…'
+                              classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput
+                              }}
+                            />
+                          </div>
+                        )}
+                      />
+                      <Button aria-owns={anchorEl ? 'google-menu' : null} aria-haspopup='true' onClick={this.handleGoogleMenuToggle}>
+                        <Avatar alt={auth.currentUser.displayName} src={auth.currentUser.photoURL} className={classes.avatar} />
+                      </Button>
+                      <Menu id='google-menu' anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleGoogleMenuClose}>
+                        <MenuItem onClick={this.handleLogOut}>Log Out {displayName}</MenuItem>
+                      </Menu>
+                    </Toolbar>
+                  </AppBar>
+                )}
                 {drawer}
                 <main className={classes.content}>
                   <AppSettings />
@@ -1267,87 +1146,35 @@ class MainScreen extends React.PureComponent {
                   <Suspense
                     fallback={
                       <div className={classes.marginTopLarge}>
-                        <LinearProgress color="secondary" />
+                        <LinearProgress color='secondary' />
                       </div>
                     }
                   >
                     <Switch>
-                      <Route
-                        exact
-                        path="/staff"
-                        render={(props) => <Staff {...props} />}
-                      />
-                      <Route
-                        exact
-                        path="/mydetails"
-                        render={(props) => <MyDetails {...props} />}
-                        key="mydetails"
-                      />
-                      <Route
-                        exact
-                        path="/"
-                        render={(props) => <Noticeboard {...props} />}
-                        key="noticeboard"
-                      />
-                      <Route
-                        exact
-                        path="/staff/details/:user"
-                        render={(props) => <MyDetails {...props} />}
-                        key="staffdetails"
-                      />
+                      <Route exact path='/staff' render={(props) => <Staff {...props} />} />
+                      <Route exact path='/mydetails' render={(props) => <MyDetails {...props} />} key='mydetails' />
+                      <Route exact path='/' render={(props) => <Noticeboard {...props} />} key='noticeboard' />
+                      <Route exact path='/staff/details/:user' render={(props) => <MyDetails {...props} />} key='staffdetails' />
                       {/*<Route exact path="/vehicles" component={Vehicles} />*/}
                       {/* <Route path="/help" component={Help} />*/}
                       {/*<Route path="/updates" component={Updates} />*/}
                       {/*<Route path="/dashboard" component={Dashboard} />*/}
-                      <Route
-                        path="/noticeboard"
-                        render={(props) => <Noticeboard {...props} />}
-                      />
+                      <Route path='/noticeboard' render={(props) => <Noticeboard {...props} />} />
                       {/*<Route path="/incidents" component={Incidents} />*/}
                       {/*<Route exact path="/jobs" component={Jobs} />*/}
-                      <Route
-                        path="/inventory"
-                        render={(props) => <Inventory {...props} />}
-                      />
+                      <Route path='/inventory' render={(props) => <Inventory {...props} />} />
+                      <Route exact path='/jobs' render={(props) => <Jobs {...props} />} />
                       <Route
                         exact
-                        path="/jobs"
-                        render={(props) => <Jobs {...props} />}
+                        path='/site/:site'
+                        render={(props) => <Site {...props} handleDrawerClose={this.handleDrawerClose} />}
+                        key='site'
                       />
-                      <Route
-                        exact
-                        path="/site/:site"
-                        render={(props) => (
-                          <Site
-                            {...props}
-                            handleDrawerClose={this.handleDrawerClose}
-                          />
-                        )}
-                        key="site"
-                      />
-                      <Route
-                        exact
-                        path="/sites"
-                        render={(props) => <Sites {...props} />}
-                      />
-                      <Route
-                        path="/asbestoslab"
-                        render={(props) => <AsbestosLab {...props} />}
-                      />
-                      <Route
-                        path="/asbestossamplelog"
-                        render={(props) => <AsbestosLog {...props} />}
-                      />
-                      <Route
-                        path="/asbestosqc"
-                        render={(props) => (
-                          <AsbestosQualityControl {...props} />
-                        )}
-                      />
-                      <Route
-                        path="/asbestosstats"
-                        render={(props) => <AsbestosStats {...props} />}
-                      />
+                      <Route exact path='/sites' render={(props) => <Sites {...props} />} />
+                      <Route path='/asbestoslab' render={(props) => <AsbestosLab {...props} />} />
+                      <Route path='/asbestossamplelog' render={(props) => <AsbestosLog {...props} />} />
+                      <Route path='/asbestosqc' render={(props) => <AsbestosQualityControl {...props} />} />
+                      <Route path='/asbestosstats' render={(props) => <AsbestosStats {...props} />} />
                       {/*<Route
                         exact
                         path="/staff/training/:user"
@@ -1366,73 +1193,31 @@ class MainScreen extends React.PureComponent {
                         component={UserTraining}
                         key="mytraining"
                       />*/}
-                      <Route
-                        exact
-                        path="/training"
-                        render={(props) => <TrainingPaths {...props} />}
-                      />
-                      <Route
-                        exact
-                        path="/training/overview"
-                        render={(props) => <TrainingOverview {...props} />}
-                      />
-                      <Route
-                        exact
-                        path="/training/paths"
-                        render={(props) => <TrainingPaths {...props} />}
-                      />
-                      <Route
-                        path="/training/path/:uid"
-                        render={(props) => <TrainingPath {...props} />}
-                      />
+                      <Route exact path='/training' render={(props) => <TrainingPaths {...props} />} />
+                      <Route exact path='/training/overview' render={(props) => <TrainingOverview {...props} />} />
+                      <Route exact path='/training/paths' render={(props) => <TrainingPaths {...props} />} />
+                      <Route path='/training/path/:uid' render={(props) => <TrainingPath {...props} />} />
                       {/*<Route path="/method/:uid" component={Method} />*/}
+                      <Route exact path='/quizzes' render={(props) => <Quizzes {...props} />} />
+                      <Route exact path='/training/readinglog' render={(props) => <TrainingReadingLog {...props} />} key='myreadinglog' />
                       <Route
                         exact
-                        path="/quizzes"
-                        render={(props) => <Quizzes {...props} />}
-                      />
-                      <Route
-                        exact
-                        path="/training/readinglog"
+                        path='/training/readinglog/:user'
                         render={(props) => <TrainingReadingLog {...props} />}
-                        key="myreadinglog"
+                        key='staffreadinglog'
                       />
-                      <Route
-                        exact
-                        path="/training/readinglog/:user"
-                        render={(props) => <TrainingReadingLog {...props} />}
-                        key="staffreadinglog"
-                      />
-                      <Route
-                        exact
-                        path="/questions"
-                        render={(props) => <Questions {...props} />}
-                      />
-                      <Route
-                        path="/quiz/:quiz"
-                        render={(props) => <Quiz {...props} />}
-                      />
+                      <Route exact path='/questions' render={(props) => <Questions {...props} />} />
+                      <Route path='/quiz/:quiz' render={(props) => <Quiz {...props} />} />
                       {/*<Route path="/tools" component={Tools} />*/}
-                      <Route
-                        path="/library"
-                        render={(props) => <Library {...props} />}
-                      />
-                      <Route
-                        path="/document/:uid"
-                        render={(props) => <DocumentViewer {...props} />}
-                      />
+                      <Route path='/library' render={(props) => <Library {...props} />} />
+                      <Route path='/document/:uid' render={(props) => <DocumentViewer {...props} />} />
                     </Switch>
                   </Suspense>
                 </main>
               </div>
             ) : (
-              <Suspense
-                fallback={<CircularProgress className={classes.signInCircle} />}
-              >
-                <K2SignInScreen
-                  mode="loginFailed"
-                  handleLogOut={this.handleLogOut}
-                />
+              <Suspense fallback={<CircularProgress className={classes.signInCircle} />}>
+                <K2SignInScreen mode='loginFailed' handleLogOut={this.handleLogOut} />
               </Suspense>
             )}
           </div>
@@ -1446,6 +1231,4 @@ class MainScreen extends React.PureComponent {
 //   classes: PropTypes.object.isRequired,
 // };
 
-export default withRouter(
-  withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(MainScreen))
-)
+export default withRouter(withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(MainScreen)))

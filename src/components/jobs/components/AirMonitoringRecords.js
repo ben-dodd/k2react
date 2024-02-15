@@ -1,10 +1,10 @@
-import "react-table/react-table.css";
+import 'react-table/react-table.css'
 
-import React from "react";
-import ReactTable from "react-table";
+import React from 'react'
+import ReactTable from 'react-table'
 
 function AsbestosRegisterTable(props) {
-  const { loading, airMonitoringRecords, classes } = props;
+  const { loading, airMonitoringRecords, classes } = props
   // console.log(airMonitoringRecords);
   return (
     <div>
@@ -16,59 +16,49 @@ function AsbestosRegisterTable(props) {
         minRows={1}
         columns={[
           {
-            Header: "Date",
-            accessor: "date"
+            Header: 'Date',
+            accessor: 'date'
           },
           {
-            Header: "Sample Number",
-            accessor: "sample",
+            Header: 'Sample Number',
+            accessor: 'sample',
             maxWidth: 120
           },
           {
-            Header: "Location",
-            accessor: "location"
+            Header: 'Location',
+            accessor: 'location'
           },
           {
-            Header: "Sample Volume (L)",
-            accessor: "sampleVolume",
+            Header: 'Sample Volume (L)',
+            accessor: 'sampleVolume',
             maxWidth: 120
           },
           {
-            Header: "Start Time",
-            accessor: "startTime",
+            Header: 'Start Time',
+            accessor: 'startTime',
             maxWidth: 120
           },
           {
-            Header: "Total Time (mins)",
-            accessor: "totalTime",
+            Header: 'Total Time (mins)',
+            accessor: 'totalTime',
             maxWidth: 120
           },
           {
-            id: "fibreResult",
-            Header: "Fibre Count",
-            accessor: d => d.fibreResult,
+            id: 'fibreResult',
+            Header: 'Fibre Count',
+            accessor: (d) => d.fibreResult,
             maxWidth: 120
           },
           {
-            id: "reportConcentration",
-            Header: "Concentration (fibres/mL)",
-            accessor: d => d.reportConcentration,
-            Cell: c => (
-              <span
-                className={
-                  c.value && c.value.includes("<")
-                    ? classes.colorsCellOk
-                    : classes.colorsCellBad
-                }
-              >
-                {c.value}
-              </span>
-            )
+            id: 'reportConcentration',
+            Header: 'Concentration (fibres/mL)',
+            accessor: (d) => d.reportConcentration,
+            Cell: (c) => <span className={c.value && c.value.includes('<') ? classes.colorsCellOk : classes.colorsCellBad}>{c.value}</span>
           }
         ]}
       />
     </div>
-  );
+  )
 }
 
-export default AsbestosRegisterTable;
+export default AsbestosRegisterTable

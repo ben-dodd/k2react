@@ -17,19 +17,8 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
 import TextField from '@material-ui/core/TextField'
 
-import {
-  hideModal,
-  handleModalChange,
-  handleModalSubmit,
-  onUploadFile,
-  handleTagDelete,
-  handleTagAddition,
-} from '../../../actions/modal'
-import {
-  getUserAttrs,
-  fetchNotices,
-  removeNoticeReads,
-} from '../../../actions/local'
+import { hideModal, handleModalChange, handleModalSubmit, onUploadFile, handleTagDelete, handleTagAddition } from '../../../actions/modal'
+import { getUserAttrs, fetchNotices, removeNoticeReads } from '../../../actions/local'
 import { sendSlackMessage } from '../../../actions/helpers'
 import _ from 'lodash'
 
@@ -41,7 +30,7 @@ const mapStateToProps = (state) => {
     me: state.local.me,
     categories: state.const.noticeCategories,
     questions: state.local.questions,
-    noticeReads: state.local.noticeReads,
+    noticeReads: state.local.noticeReads
   }
 }
 
@@ -49,20 +38,13 @@ const mapDispatchToProps = (dispatch) => {
   return {
     hideModal: () => dispatch(hideModal()),
     onUploadFile: (file, pathRef) => dispatch(onUploadFile(file, pathRef)),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300),
     handleSelectChange: (target) => dispatch(handleModalChange(target)),
-    handleModalSubmit: (doc, pathRef) =>
-      dispatch(handleModalSubmit(doc, pathRef)),
+    handleModalSubmit: (doc, pathRef) => dispatch(handleModalSubmit(doc, pathRef)),
     handleTagDelete: (tag) => dispatch(handleTagDelete(tag)),
     handleTagAddition: (tag) => dispatch(handleTagAddition(tag)),
-    getUserAttrs: _.debounce(
-      (userPath) => dispatch(getUserAttrs(userPath)),
-      1000
-    ),
-    fetchNotices: (update) => dispatch(fetchNotices(update)),
+    getUserAttrs: _.debounce((userPath) => dispatch(getUserAttrs(userPath)), 1000),
+    fetchNotices: (update) => dispatch(fetchNotices(update))
   }
 }
 
@@ -71,27 +53,20 @@ class CommentModal extends React.Component {
     const { modalProps, doc, classes } = this.props
 
     return (
-      <Dialog
-        open={this.props.modalType === COMMENT}
-        onClose={() => this.props.hideModal}
-      >
-        <DialogTitle>
-          {modalProps.title ? modalProps.title : 'Add New Comment'}
-        </DialogTitle>
+      <Dialog open={this.props.modalType === COMMENT} onClose={() => this.props.hideModal}>
+        <DialogTitle>{modalProps.title ? modalProps.title : 'Add New Comment'}</DialogTitle>
         <DialogContent>
           <TextField
-            id="text"
-            label="Comment"
-            defaultValue={
-              doc && doc.comment && doc.comment.text ? doc.comment.text : null
-            }
+            id='text'
+            label='Comment'
+            defaultValue={doc && doc.comment && doc.comment.text ? doc.comment.text : null}
             className={classes.dialogField}
             multiline
             rows={5}
             onChange={(e) => {
               this.props.handleModalChange({
                 id: 'comment',
-                value: e.target.value,
+                value: e.target.value
               })
             }}
           />
@@ -101,12 +76,12 @@ class CommentModal extends React.Component {
             onClick={() => {
               this.props.hideModal()
             }}
-            color="secondary"
+            color='secondary'
           >
             Cancel
           </Button>
           {modalProps.isUploading ? (
-            <Button color="primary" disabled>
+            <Button color='primary' disabled>
               Submit
             </Button>
           ) : (
@@ -114,12 +89,7 @@ class CommentModal extends React.Component {
               onClick={() => {
                 let comment = doc.comment
                 let newComment = comment && !comment.uid
-                if (
-                  comment &&
-                  !comment.uid &&
-                  comment.text &&
-                  comment.text !== ''
-                ) {
+                if (comment && !comment.uid && comment.text && comment.text !== '') {
                   comment.uid = moment().format('x')
                 }
                 let newDoc = {}
@@ -129,7 +99,7 @@ class CommentModal extends React.Component {
                   delete comments[comment.uid]
                   newDoc = {
                     ...doc.notice,
-                    comments,
+                    comments
                   }
                 } else {
                   if (!comments) {
@@ -137,21 +107,19 @@ class CommentModal extends React.Component {
                   } else {
                     comments = {
                       ...comments,
-                      [comment.uid]: comment,
+                      [comment.uid]: comment
                     }
                   }
 
                   let message = {
-                    text: `${this.props.me.name} has ${
-                      newComment ? 'added a new' : 'edited a'
-                    } comment.`,
+                    text: `${this.props.me.name} has ${newComment ? 'added a new' : 'edited a'} comment.`
                   }
                   sendSlackMessage(message, true)
 
                   // Reset all staff read if a new or edited comment
                   newDoc = {
                     ...doc.notice,
-                    comments,
+                    comments
                   }
                   removeNoticeReads(doc.notice, this.props.noticeReads)
                 }
@@ -159,11 +127,11 @@ class CommentModal extends React.Component {
                 //console.log(newDoc);
                 this.props.handleModalSubmit({
                   doc: newDoc,
-                  pathRef: noticesRef,
+                  pathRef: noticesRef
                 })
                 this.props.fetchNotices(true)
               }}
-              color="primary"
+              color='primary'
             >
               Submit
             </Button>
@@ -174,6 +142,4 @@ class CommentModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(CommentModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(CommentModal))

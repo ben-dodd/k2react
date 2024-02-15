@@ -32,13 +32,7 @@ import AttrModal from './modals/AttrModal'
 import AttrList from './components/MyDetailsAttrListItem'
 import { USER_ATTR, EDITSTAFF } from '../../constants/modal-types'
 import { showModal } from '../../actions/modal'
-import {
-  getUserAttrs,
-  getEditStaff,
-  fetchStaff,
-  getEmailSignature,
-  clearEditStaff,
-} from '../../actions/local'
+import { getUserAttrs, getEditStaff, fetchStaff, getEmailSignature, clearEditStaff } from '../../actions/local'
 import { displayTimeDifference } from '../../actions/helpers'
 import { tabMyDetails } from '../../actions/display'
 import _ from 'lodash'
@@ -50,7 +44,7 @@ const mapStateToProps = (state) => {
     offices: state.const.offices,
     jobDescriptions: state.const.jobDescriptions,
     permissions: state.const.permissions,
-    tab: state.display.tabMyDetails,
+    tab: state.display.tabMyDetails
   }
 }
 
@@ -61,7 +55,7 @@ const mapDispatchToProps = (dispatch) => {
     clearEditStaff: () => dispatch(clearEditStaff()),
     fetchStaff: (update) => dispatch(fetchStaff(update)),
     getUserAttrs: (userPath) => dispatch(getUserAttrs(userPath)),
-    tabMyDetails: (tab) => dispatch(tabMyDetails(tab)),
+    tabMyDetails: (tab) => dispatch(tabMyDetails(tab))
   }
 }
 
@@ -73,7 +67,7 @@ class UserDetails extends React.Component {
     this.state = {
       userPath: userPath,
       isLoading: true,
-      edited: false,
+      edited: false
     }
     // this.onEditUser = _.debounce(this.onEditUser, 300);
   }
@@ -83,11 +77,7 @@ class UserDetails extends React.Component {
   }
 
   UNSAFE_componentWillMount() {
-    if (
-      this.props.match.params.user &&
-      this.props.me.auth &&
-      this.props.me.auth['Admin']
-    ) {
+    if (this.props.match.params.user && this.props.me.auth && this.props.me.auth['Admin']) {
       this.props.getEditStaff(this.props.match.params.user)
     } else if (!this.props.match.params.user && !this.props.me.attrs) {
       this.props.getUserAttrs(auth.currentUser.uid)
@@ -106,8 +96,8 @@ class UserDetails extends React.Component {
       this.setState({
         user: {
           ...this.state.user,
-          ...change,
-        },
+          ...change
+        }
       })
     }
     usersRef.doc(this.state.userPath).update(change)
@@ -122,8 +112,8 @@ class UserDetails extends React.Component {
       this.setState({
         user: {
           ...this.state.user,
-          auth: change,
-        },
+          auth: change
+        }
       })
       usersRef.doc(this.state.userPath).update({ auth: change })
       if (!this.state.edited) this.setState({ edited: true })
@@ -167,8 +157,7 @@ class UserDetails extends React.Component {
 
     if (
       this.state.isLoading &&
-      ((this.props.match.params.user && this.props.editstaff != undefined) ||
-        (!this.props.match.params.user && this.props.me != undefined))
+      ((this.props.match.params.user && this.props.editstaff != undefined) || (!this.props.match.params.user && this.props.me != undefined))
     )
       this.setState({ isLoading: false })
 
@@ -192,18 +181,12 @@ class UserDetails extends React.Component {
         <AttrModal />
         {/* <Paper style={{ padding: 20, }}>*/}
         <div style={{ marginBottom: 20 }}>
-          <Tabs
-            value={tab}
-            onChange={this.handleTabChange}
-            indicatorColor="secondary"
-            textColor="secondary"
-            centered
-          >
-            <Tab label="General Detals" />
-            <Tab label="Certificates" />
-            <Tab label="Personal Gear" />
-            <Tab label="Emergency Contacts" />
-            <Tab label="Permissions" />
+          <Tabs value={tab} onChange={this.handleTabChange} indicatorColor='secondary' textColor='secondary' centered>
+            <Tab label='General Detals' />
+            <Tab label='Certificates' />
+            <Tab label='Personal Gear' />
+            <Tab label='Emergency Contacts' />
+            <Tab label='Permissions' />
           </Tabs>
         </div>
         <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -214,13 +197,13 @@ class UserDetails extends React.Component {
                   <CircularProgress />
                 </div>
               ) : (
-                <Grid container justify="center" direction="row">
+                <Grid container justify='center' direction='row'>
                   <Grid item xs={12} sm={9} md={8} lg={7} xl={6}>
                     <ListItem>
                       <TextField
-                        label="Preferred Name"
-                        id="name"
-                        helperText="This is the name that will be displayed on reports and test certificates."
+                        label='Preferred Name'
+                        id='name'
+                        helperText='This is the name that will be displayed on reports and test certificates.'
                         className={classes.textField}
                         value={user.name ? user.name : ''}
                         onChange={(e) => this.onEditUser(e.target)}
@@ -230,59 +213,39 @@ class UserDetails extends React.Component {
                     <div className={classes.textLabel}>Job Description</div>
                     <ListItem>
                       <Select
-                        className={classNames(
-                          classes.select,
-                          classes.textField
-                        )}
+                        className={classNames(classes.select, classes.textField)}
                         value={
                           user.jobdescription
                             ? {
                                 label: user.jobdescription,
-                                id: user.jobdescription,
+                                id: user.jobdescription
                               }
                             : { label: '', id: '' }
                         }
                         options={this.props.jobDescriptions.map((e) => ({
                           value: e,
-                          label: e,
+                          label: e
                         }))}
-                        onChange={(e) =>
-                          this.onEditUser(
-                            { id: 'jobdescription', value: e ? e.value : e },
-                            true
-                          )
-                        }
+                        onChange={(e) => this.onEditUser({ id: 'jobdescription', value: e ? e.value : e }, true)}
                       />
                     </ListItem>
                     <div className={classes.textLabel}>Office</div>
                     <ListItem>
                       <Select
-                        className={classNames(
-                          classes.select,
-                          classes.textField
-                        )}
-                        value={
-                          user.office
-                            ? { label: user.office, id: user.office }
-                            : { label: '', id: '' }
-                        }
+                        className={classNames(classes.select, classes.textField)}
+                        value={user.office ? { label: user.office, id: user.office } : { label: '', id: '' }}
                         options={this.props.offices.map((e) => ({
                           value: e,
-                          label: e,
+                          label: e
                         }))}
-                        onChange={(e) =>
-                          this.onEditUser(
-                            { id: 'office', value: e ? e.value : e },
-                            true
-                          )
-                        }
+                        onChange={(e) => this.onEditUser({ id: 'office', value: e ? e.value : e }, true)}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Start Date At K2"
-                        id="startdate"
-                        type="date"
+                        label='Start Date At K2'
+                        id='startdate'
+                        type='date'
                         className={classes.textField}
                         value={user.startdate ? user.startdate : ''}
                         onChange={(e) => this.onEditUser(e.target)}
@@ -297,16 +260,14 @@ class UserDetails extends React.Component {
                       </div>
                     </ListItem>
                     <ListItem>
-                      <Typography className={classes.subHeading}>
-                        Contact Information
-                      </Typography>
+                      <Typography className={classes.subHeading}>Contact Information</Typography>
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Work Phone"
-                        id="workphone"
+                        label='Work Phone'
+                        id='workphone'
                         className={classes.textField}
-                        type="tel"
+                        type='tel'
                         value={user.workphone ? user.workphone : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
@@ -314,9 +275,9 @@ class UserDetails extends React.Component {
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="K2 Email"
-                        id="email"
-                        type="email"
+                        label='K2 Email'
+                        id='email'
+                        type='email'
                         helperText="Enter your '@k2.co.nz' email address."
                         className={classes.textField}
                         value={user.email ? user.email : ''}
@@ -326,9 +287,9 @@ class UserDetails extends React.Component {
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Gmail"
-                        id="gmail"
-                        type="email"
+                        label='Gmail'
+                        id='gmail'
+                        type='email'
                         helperText="Enter your '@gmail.com' email address."
                         className={classes.textField}
                         value={user.gmail ? user.gmail : ''}
@@ -338,14 +299,12 @@ class UserDetails extends React.Component {
                     </ListItem>
                   </Grid>
                   <Grid item xs={12} sm={9} md={8} lg={7} xl={6}>
-                    <div className={classes.subHeading}>
-                      Personal Contact Information
-                    </div>
+                    <div className={classes.subHeading}>Personal Contact Information</div>
                     <div>
                       <TextField
-                        label="Personal Phone"
-                        id="personalphone"
-                        type="tel"
+                        label='Personal Phone'
+                        id='personalphone'
+                        type='tel'
                         className={classes.textField}
                         value={user.personalphone ? user.personalphone : ''}
                         onChange={(e) => this.onEditUser(e.target)}
@@ -354,10 +313,10 @@ class UserDetails extends React.Component {
                     </div>
                     <div>
                       <TextField
-                        label="Home Address"
-                        id="address"
+                        label='Home Address'
+                        id='address'
                         multiline
-                        rowsMax="4"
+                        rowsMax='4'
                         className={classes.textField}
                         value={user.address ? user.address : ''}
                         onChange={(e) => this.onEditUser(e.target)}
@@ -394,7 +353,7 @@ class UserDetails extends React.Component {
                   <div>
                     <Button
                       className={classes.IconButton}
-                      variant="outlined"
+                      variant='outlined'
                       onClick={() => {
                         if (!this.state.edited) this.setState({ edited: true })
                         this.props.showModal({
@@ -403,8 +362,8 @@ class UserDetails extends React.Component {
                             userPath: this.state.userPath,
                             title: 'Add New Item',
                             staffName: user.name,
-                            doc: { type: 'Tertiary' },
-                          },
+                            doc: { type: 'Tertiary' }
+                          }
                         })
                       }}
                     >
@@ -414,21 +373,11 @@ class UserDetails extends React.Component {
                   {user.attrs && Object.keys(user.attrs).length > 0 ? (
                     <div>
                       {Object.keys(user.attrs).map((key) => {
-                        return (
-                          <AttrList
-                            key={key}
-                            attr={user.attrs[key]}
-                            userPath={this.state.userPath}
-                            staffName={user.name}
-                          />
-                        )
+                        return <AttrList key={key} attr={user.attrs[key]} userPath={this.state.userPath} staffName={user.name} />
                       })}
                     </div>
                   ) : (
-                    <ListItem>
-                      Click the button to add your qualifications, training and
-                      health & safety records.
-                    </ListItem>
+                    <ListItem>Click the button to add your qualifications, training and health & safety records.</ListItem>
                   )}
                 </div>
               )}
@@ -441,12 +390,10 @@ class UserDetails extends React.Component {
                   <CircularProgress />
                 </div>
               ) : (
-                <Grid container justify="center" direction="row">
+                <Grid container justify='center' direction='row'>
                   <Grid item xs={12} sm={9} md={8} lg={7} xl={6}>
                     <ListItem>
-                      <Typography className={classes.subHeading}>
-                        Mask
-                      </Typography>
+                      <Typography className={classes.subHeading}>Mask</Typography>
                     </ListItem>
                     <ListItem>
                       {user.maskfit === 'OK' ? (
@@ -455,23 +402,20 @@ class UserDetails extends React.Component {
                         </div>
                       ) : (
                         <div className={classes.boldGreen}>
-                          {user.maskfit === 'Expired'
-                            ? 'Mask Fit Test Expired!'
-                            : 'Mask Fit Not Tested'}
+                          {user.maskfit === 'Expired' ? 'Mask Fit Test Expired!' : 'Mask Fit Not Tested'}
                           <Error />
                         </div>
                       )}
                     </ListItem>
                     <ListItem>
                       <div>
-                        Enter your mask fit certificate into your{' '}
-                        <i>Certificates</i> list.
+                        Enter your mask fit certificate into your <i>Certificates</i> list.
                       </div>
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Model"
-                        id="maskfitmodel"
+                        label='Model'
+                        id='maskfitmodel'
                         className={classes.textField}
                         value={user.maskfitmodel ? user.maskfitmodel : ''}
                         onChange={(e) => this.onEditUser(e.target)}
@@ -487,28 +431,23 @@ class UserDetails extends React.Component {
                             user.maskfitsize
                               ? {
                                   label: user.maskfitsize,
-                                  id: user.maskfitsize,
+                                  id: user.maskfitsize
                                 }
                               : { label: '', id: '' }
                           }
                           options={['S', 'M', 'L'].map((e) => ({
                             value: e,
-                            label: e,
+                            label: e
                           }))}
-                          onChange={(e) =>
-                            this.onEditUser(
-                              { id: 'maskfitsize', value: e ? e.value : e },
-                              true
-                            )
-                          }
+                          onChange={(e) => this.onEditUser({ id: 'maskfitsize', value: e ? e.value : e }, true)}
                           isClearable
                         />
                       </FormControl>
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Fit Factor"
-                        id="maskfitfactor"
+                        label='Fit Factor'
+                        id='maskfitfactor'
                         className={classes.textField}
                         value={user.maskfitfactor ? user.maskfitfactor : ''}
                         onChange={(e) => this.onEditUser(e.target)}
@@ -517,46 +456,37 @@ class UserDetails extends React.Component {
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Particulate Filters Replaced On"
-                        id="maskparticulatefilters"
+                        label='Particulate Filters Replaced On'
+                        id='maskparticulatefilters'
                         className={classes.textField}
-                        type="date"
-                        value={
-                          user.maskparticulatefilters
-                            ? user.maskparticulatefilters
-                            : ''
-                        }
+                        type='date'
+                        value={user.maskparticulatefilters ? user.maskparticulatefilters : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Organic Filters Replaced On"
-                        id="maskorganicfilters"
+                        label='Organic Filters Replaced On'
+                        id='maskorganicfilters'
                         className={classes.textField}
-                        type="date"
-                        value={
-                          user.maskorganicfilters ? user.maskorganicfilters : ''
-                        }
+                        type='date'
+                        value={user.maskorganicfilters ? user.maskorganicfilters : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
-                    {user.maskorganicfilters &&
-                      new Date(user.maskorganicfilters) <= sixmonths && (
-                        <ListItem>
-                          <div className={classes.boldRed}>
-                            Replace organic filters! <Error />
-                          </div>
-                        </ListItem>
-                      )}
+                    {user.maskorganicfilters && new Date(user.maskorganicfilters) <= sixmonths && (
+                      <ListItem>
+                        <div className={classes.boldRed}>
+                          Replace organic filters! <Error />
+                        </div>
+                      </ListItem>
+                    )}
                   </Grid>
                   <Grid item xs={12} sm={9} md={8} lg={7} xl={6}>
                     <ListItem>
-                      <Typography className={classes.subHeading}>
-                        Other PPE
-                      </Typography>
+                      <Typography className={classes.subHeading}>Other PPE</Typography>
                     </ListItem>
                     <ListItem>
                       <FormControlLabel
@@ -564,16 +494,11 @@ class UserDetails extends React.Component {
                         control={
                           <Checkbox
                             checked={user.ppeHighVis}
-                            onChange={(e) =>
-                              this.onEditUser(
-                                { id: 'ppeHighVis', value: e.target.checked },
-                                true
-                              )
-                            }
-                            value="ppeHighVis"
+                            onChange={(e) => this.onEditUser({ id: 'ppeHighVis', value: e.target.checked }, true)}
+                            value='ppeHighVis'
                           />
                         }
-                        label="High-Vis"
+                        label='High-Vis'
                       />
                     </ListItem>
                     <ListItem>
@@ -582,16 +507,11 @@ class UserDetails extends React.Component {
                         control={
                           <Checkbox
                             checked={user.ppeHardHat}
-                            onChange={(e) =>
-                              this.onEditUser(
-                                { id: 'ppeHardHat', value: e.target.checked },
-                                true
-                              )
-                            }
-                            value="ppeHardHat"
+                            onChange={(e) => this.onEditUser({ id: 'ppeHardHat', value: e.target.checked }, true)}
+                            value='ppeHardHat'
                           />
                         }
-                        label="Hard Hat"
+                        label='Hard Hat'
                       />
                     </ListItem>
                     <ListItem>
@@ -600,16 +520,11 @@ class UserDetails extends React.Component {
                         control={
                           <Checkbox
                             checked={user.ppeBoots}
-                            onChange={(e) =>
-                              this.onEditUser(
-                                { id: 'ppeBoots', value: e.target.checked },
-                                true
-                              )
-                            }
-                            value="ppeBoots"
+                            onChange={(e) => this.onEditUser({ id: 'ppeBoots', value: e.target.checked }, true)}
+                            value='ppeBoots'
                           />
                         }
-                        label="Steel-Cap Boots"
+                        label='Steel-Cap Boots'
                       />
                     </ListItem>
                     <ListItem>
@@ -618,16 +533,11 @@ class UserDetails extends React.Component {
                         control={
                           <Checkbox
                             checked={user.ppeGlasses}
-                            onChange={(e) =>
-                              this.onEditUser(
-                                { id: 'ppeGlasses', value: e.target.checked },
-                                true
-                              )
-                            }
-                            value="ppeGlasses"
+                            onChange={(e) => this.onEditUser({ id: 'ppeGlasses', value: e.target.checked }, true)}
+                            value='ppeGlasses'
                           />
                         }
-                        label="Safety Glasses"
+                        label='Safety Glasses'
                       />
                     </ListItem>
                   </Grid>
@@ -642,107 +552,77 @@ class UserDetails extends React.Component {
                   <CircularProgress />
                 </div>
               ) : (
-                <Grid container justify="center" direction="row">
+                <Grid container justify='center' direction='row'>
                   <Grid item xs={12} sm={9} md={8} lg={7} xl={6}>
                     <ListItem>
-                      <Typography className={classes.subHeading}>
-                        Primary Emergency Contact
-                      </Typography>
+                      <Typography className={classes.subHeading}>Primary Emergency Contact</Typography>
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Name"
-                        id="emergencyprimaryname"
+                        label='Name'
+                        id='emergencyprimaryname'
                         className={classes.textField}
-                        value={
-                          user.emergencyprimaryname
-                            ? user.emergencyprimaryname
-                            : ''
-                        }
+                        value={user.emergencyprimaryname ? user.emergencyprimaryname : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Relation"
-                        id="emergencyprimaryrelation"
+                        label='Relation'
+                        id='emergencyprimaryrelation'
                         className={classes.textField}
-                        value={
-                          user.emergencyprimaryrelation
-                            ? user.emergencyprimaryrelation
-                            : ''
-                        }
+                        value={user.emergencyprimaryrelation ? user.emergencyprimaryrelation : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Home Phone"
-                        id="emergencyprimaryhomephone"
+                        label='Home Phone'
+                        id='emergencyprimaryhomephone'
                         className={classes.textField}
-                        value={
-                          user.emergencyprimaryhomephone
-                            ? user.emergencyprimaryhomephone
-                            : ''
-                        }
+                        value={user.emergencyprimaryhomephone ? user.emergencyprimaryhomephone : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Work Phone"
-                        id="emergencyprimaryworkphone"
+                        label='Work Phone'
+                        id='emergencyprimaryworkphone'
                         className={classes.textField}
-                        value={
-                          user.emergencyprimaryworkphone
-                            ? user.emergencyprimaryworkphone
-                            : ''
-                        }
+                        value={user.emergencyprimaryworkphone ? user.emergencyprimaryworkphone : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Mobile"
-                        id="emergencyprimarymobile"
+                        label='Mobile'
+                        id='emergencyprimarymobile'
                         className={classes.textField}
-                        value={
-                          user.emergencyprimarymobile
-                            ? user.emergencyprimarymobile
-                            : ''
-                        }
+                        value={user.emergencyprimarymobile ? user.emergencyprimarymobile : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Email"
-                        id="emergencyprimaryemail"
+                        label='Email'
+                        id='emergencyprimaryemail'
                         className={classes.textField}
-                        value={
-                          user.emergencyprimaryemail
-                            ? user.emergencyprimaryemail
-                            : ''
-                        }
+                        value={user.emergencyprimaryemail ? user.emergencyprimaryemail : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Home Address"
-                        id="emergencyprimaryhomeaddress"
+                        label='Home Address'
+                        id='emergencyprimaryhomeaddress'
                         className={classes.textField}
-                        value={
-                          user.emergencyprimaryhomeaddress
-                            ? user.emergencyprimaryhomeaddress
-                            : ''
-                        }
+                        value={user.emergencyprimaryhomeaddress ? user.emergencyprimaryhomeaddress : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
@@ -750,104 +630,74 @@ class UserDetails extends React.Component {
                   </Grid>
                   <Grid item xs={12} sm={9} md={8} lg={7} xl={6}>
                     <ListItem>
-                      <Typography className={classes.subHeading}>
-                        Secondary Emergency Contact
-                      </Typography>
+                      <Typography className={classes.subHeading}>Secondary Emergency Contact</Typography>
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Name"
-                        id="emergencysecondaryname"
+                        label='Name'
+                        id='emergencysecondaryname'
                         className={classes.textField}
-                        value={
-                          user.emergencysecondaryname
-                            ? user.emergencysecondaryname
-                            : ''
-                        }
+                        value={user.emergencysecondaryname ? user.emergencysecondaryname : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Relation"
-                        id="emergencysecondaryrelation"
+                        label='Relation'
+                        id='emergencysecondaryrelation'
                         className={classes.textField}
-                        value={
-                          user.emergencysecondaryrelation
-                            ? user.emergencysecondaryrelation
-                            : ''
-                        }
+                        value={user.emergencysecondaryrelation ? user.emergencysecondaryrelation : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Home Phone"
-                        id="emergencysecondaryhomephone"
+                        label='Home Phone'
+                        id='emergencysecondaryhomephone'
                         className={classes.textField}
-                        value={
-                          user.emergencysecondaryhomephone
-                            ? user.emergencysecondaryhomephone
-                            : ''
-                        }
+                        value={user.emergencysecondaryhomephone ? user.emergencysecondaryhomephone : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Work Phone"
-                        id="emergencysecondaryworkphone"
+                        label='Work Phone'
+                        id='emergencysecondaryworkphone'
                         className={classes.textField}
-                        value={
-                          user.emergencysecondaryworkphone
-                            ? user.emergencysecondaryworkphone
-                            : ''
-                        }
+                        value={user.emergencysecondaryworkphone ? user.emergencysecondaryworkphone : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Mobile"
-                        id="emergencysecondarymobile"
+                        label='Mobile'
+                        id='emergencysecondarymobile'
                         className={classes.textField}
-                        value={
-                          user.emergencysecondarymobile
-                            ? user.emergencysecondarymobile
-                            : ''
-                        }
+                        value={user.emergencysecondarymobile ? user.emergencysecondarymobile : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Email"
-                        id="emergencysecondaryemail"
+                        label='Email'
+                        id='emergencysecondaryemail'
                         className={classes.textField}
-                        value={
-                          user.emergencysecondaryemail
-                            ? user.emergencysecondaryemail
-                            : ''
-                        }
+                        value={user.emergencysecondaryemail ? user.emergencysecondaryemail : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
                     </ListItem>
                     <ListItem>
                       <TextField
-                        label="Home Address"
-                        id="emergencysecondaryhomeaddress"
+                        label='Home Address'
+                        id='emergencysecondaryhomeaddress'
                         className={classes.textField}
-                        value={
-                          user.emergencysecondaryhomeaddress
-                            ? user.emergencysecondaryhomeaddress
-                            : ''
-                        }
+                        value={user.emergencysecondaryhomeaddress ? user.emergencysecondaryhomeaddress : ''}
                         onChange={(e) => this.onEditUser(e.target)}
                         InputLabelProps={{ shrink: true }}
                       />
@@ -864,12 +714,7 @@ class UserDetails extends React.Component {
                   <CircularProgress />
                 </div>
               ) : (
-                <Grid
-                  container
-                  justify="flex-start"
-                  direction="row"
-                  style={{ width: 800 }}
-                >
+                <Grid container justify='flex-start' direction='row' style={{ width: 800 }}>
                   <Grid item>
                     {this.props.permissions.map((permission) => {
                       return (
@@ -879,16 +724,12 @@ class UserDetails extends React.Component {
                               control={
                                 <Checkbox
                                   disabled={!admin}
-                                  checked={
-                                    user.auth
-                                      ? user.auth[permission.name]
-                                      : false
-                                  }
+                                  checked={user.auth ? user.auth[permission.name] : false}
                                   onChange={(e) =>
                                     this.onEditAuth(
                                       {
                                         id: permission.name,
-                                        value: e.target.checked,
+                                        value: e.target.checked
                                       },
                                       user.auth
                                     )
@@ -917,6 +758,4 @@ class UserDetails extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(UserDetails)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(UserDetails))

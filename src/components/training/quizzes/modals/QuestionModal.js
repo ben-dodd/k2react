@@ -28,7 +28,7 @@ import {
   handleModalSubmit,
   onUploadFile,
   handleTagDelete,
-  handleTagAddition,
+  handleTagAddition
 } from '../../../../actions/modal'
 import { getUserAttrs } from '../../../../actions/local'
 import _ from 'lodash'
@@ -42,7 +42,7 @@ const mapStateToProps = (state) => {
     tags: state.modal.modalProps.tags,
     tagSuggestions: state.const.quiztags,
     questiontypes: state.const.questiontypes,
-    delimiters: state.const.tagDelimiters,
+    delimiters: state.const.tagDelimiters
   }
 }
 
@@ -50,19 +50,12 @@ const mapDispatchToProps = (dispatch) => {
   return {
     hideModal: () => dispatch(hideModal()),
     onUploadFile: (file, pathRef) => dispatch(onUploadFile(file, pathRef)),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300),
     handleSelectChange: (target) => dispatch(handleModalChange(target)),
-    handleModalSubmit: (doc, pathRef) =>
-      dispatch(handleModalSubmit(doc, pathRef)),
+    handleModalSubmit: (doc, pathRef) => dispatch(handleModalSubmit(doc, pathRef)),
     handleTagDelete: (tag) => dispatch(handleTagDelete(tag)),
     handleTagAddition: (tag) => dispatch(handleTagAddition(tag)),
-    getUserAttrs: _.debounce(
-      (userPath) => dispatch(getUserAttrs(userPath)),
-      1000
-    ),
+    getUserAttrs: _.debounce((userPath) => dispatch(getUserAttrs(userPath)), 1000)
   }
 }
 
@@ -83,17 +76,10 @@ class QuestionModal extends React.Component {
   render() {
     const { modalProps, doc, classes, questiontypes } = this.props
     return (
-      <Dialog
-        open={this.props.modalType === QUESTION}
-        onClose={() => this.props.hideModal}
-      >
-        <DialogTitle>
-          {modalProps.title ? modalProps.title : 'Add New Question'}
-        </DialogTitle>
+      <Dialog open={this.props.modalType === QUESTION} onClose={() => this.props.hideModal}>
+        <DialogTitle>{modalProps.title ? modalProps.title : 'Add New Question'}</DialogTitle>
         <DialogContent>
-          {!questiontypes[doc.type] && (
-            <div>This question is not able to be edited.</div>
-          )}
+          {!questiontypes[doc.type] && <div>This question is not able to be edited.</div>}
           {doc.type && questiontypes && questiontypes[doc.type] && (
             <form>
               <FormGroup>
@@ -103,13 +89,13 @@ class QuestionModal extends React.Component {
                     onChange={(e) => {
                       this.props.handleSelectChange({
                         id: 'type',
-                        value: e.target.value,
+                        value: e.target.value
                       })
                     }}
                     value={doc.type}
-                    input={<Input name="type" id="type" />}
+                    input={<Input name='type' id='type' />}
                   >
-                    <option value="" />
+                    <option value='' />
                     {questiontypes &&
                       Object.keys(questiontypes).map((key) => {
                         return (
@@ -121,8 +107,8 @@ class QuestionModal extends React.Component {
                   </Select>
                 </FormControl>
                 <TextField
-                  id="question"
-                  label="Question"
+                  id='question'
+                  label='Question'
                   defaultValue={doc && doc.question}
                   multiline
                   className={classes.dialogField}
@@ -138,11 +124,11 @@ class QuestionModal extends React.Component {
                       onChange={(e) =>
                         this.props.handleSelectChange({
                           id: 'truefalse',
-                          value: e.target.value,
+                          value: e.target.value
                         })
                       }
                       value={doc.truefalse}
-                      input={<Input name="truefalse" id="truefalse" />}
+                      input={<Input name='truefalse' id='truefalse' />}
                     >
                       {['True', 'False'].map((key) => {
                         return (
@@ -157,8 +143,8 @@ class QuestionModal extends React.Component {
 
                 {questiontypes[doc.type].answer && (
                   <TextField
-                    id="answer"
-                    label="Answer"
+                    id='answer'
+                    label='Answer'
                     defaultValue={doc && doc.answer}
                     className={classes.dialogField}
                     helperText="Enter an exact answer or use regular expressions (https://regex101.com/) to add some leeway (e.g. '\b(christchurch|chch|otautahi)\b' will allow either of those three answers, '^(?=.*\bimmunocompromised\b)(?=.*\bcarcinogenic\b).*$' will require both of those words in any order.)"
@@ -170,8 +156,8 @@ class QuestionModal extends React.Component {
 
                 {questiontypes[doc.type].correct && (
                   <TextField
-                    id="correct"
-                    label="Correct Answer(s)"
+                    id='correct'
+                    label='Correct Answer(s)'
                     multiline
                     defaultValue={
                       doc &&
@@ -182,11 +168,7 @@ class QuestionModal extends React.Component {
                         })
                         .join('\n')
                     }
-                    helperText={
-                      doc.type.includes('single')
-                        ? ''
-                        : 'Put each correct option on a new line.'
-                    }
+                    helperText={doc.type.includes('single') ? '' : 'Put each correct option on a new line.'}
                     className={classes.dialogField}
                     onChange={(e) => {
                       this.props.handleModalChange({
@@ -196,7 +178,7 @@ class QuestionModal extends React.Component {
                           .filter(Boolean)
                           .map((option) => {
                             return { text: option }
-                          }),
+                          })
                       })
                     }}
                   />
@@ -204,8 +186,8 @@ class QuestionModal extends React.Component {
 
                 {questiontypes[doc.type].incorrect && (
                   <TextField
-                    id="incorrect"
-                    label="Incorrect Answers"
+                    id='incorrect'
+                    label='Incorrect Answers'
                     multiline
                     defaultValue={
                       doc &&
@@ -216,7 +198,7 @@ class QuestionModal extends React.Component {
                         })
                         .join('\n')
                     }
-                    helperText="Put each incorrect option on a new line."
+                    helperText='Put each incorrect option on a new line.'
                     className={classes.dialogField}
                     onChange={(e) => {
                       this.props.handleModalChange({
@@ -226,7 +208,7 @@ class QuestionModal extends React.Component {
                           .filter(Boolean)
                           .map((option) => {
                             return { text: option }
-                          }),
+                          })
                       })
                     }}
                   />
@@ -234,8 +216,8 @@ class QuestionModal extends React.Component {
 
                 {questiontypes[doc.type].answers && (
                   <TextField
-                    id="answers"
-                    label="Answers"
+                    id='answers'
+                    label='Answers'
                     multiline
                     defaultValue={
                       doc &&
@@ -246,7 +228,7 @@ class QuestionModal extends React.Component {
                         })
                         .join('\n')
                     }
-                    helperText="Put each option on a new line in the correct order."
+                    helperText='Put each option on a new line in the correct order.'
                     className={classes.dialogField}
                     onChange={(e) => {
                       this.props.handleModalChange({
@@ -256,7 +238,7 @@ class QuestionModal extends React.Component {
                           .filter(Boolean)
                           .map((option) => {
                             return { text: option }
-                          }),
+                          })
                       })
                     }}
                   />
@@ -264,8 +246,8 @@ class QuestionModal extends React.Component {
 
                 {questiontypes[doc.type].buckets && (
                   <TextField
-                    id="buckets"
-                    label="Buckets"
+                    id='buckets'
+                    label='Buckets'
                     multiline
                     defaultValue={
                       doc &&
@@ -276,12 +258,12 @@ class QuestionModal extends React.Component {
                             bucket.label,
                             ...bucket.answers.map((obj) => {
                               return obj.text
-                            }),
+                            })
                           ].join('\n')
                         })
                         .join('\n\n|')
                     }
-                    helperText="Put the bucket label on the first line. Put each option on a new line below it. Separate each bucket with a pipe (|) symbol."
+                    helperText='Put the bucket label on the first line. Put each option on a new line below it. Separate each bucket with a pipe (|) symbol.'
                     className={classes.dialogField}
                     onChange={(e) => {
                       this.props.handleModalChange({
@@ -295,9 +277,9 @@ class QuestionModal extends React.Component {
                               .filter(Boolean)
                               .map((option) => {
                                 return { text: option }
-                              }),
+                              })
                           }
-                        }),
+                        })
                       })
                     }}
                   />
@@ -305,15 +287,15 @@ class QuestionModal extends React.Component {
 
                 {questiontypes[doc.type].correctmax && (
                   <TextField
-                    id="correctmax"
-                    type="number"
+                    id='correctmax'
+                    type='number'
                     InputProps={{
                       inputProps: {
                         min: 1,
-                        max: doc.correct && doc.correct.length,
-                      },
+                        max: doc.correct && doc.correct.length
+                      }
                     }}
-                    label="Max Number of Correct Answers to Show"
+                    label='Max Number of Correct Answers to Show'
                     defaultValue={doc && doc.correctmax}
                     className={classes.dialogField}
                     onChange={(e) => {
@@ -324,15 +306,15 @@ class QuestionModal extends React.Component {
 
                 {questiontypes[doc.type].correctmin && (
                   <TextField
-                    id="correctmin"
-                    type="number"
+                    id='correctmin'
+                    type='number'
                     InputProps={{
                       inputProps: {
                         min: 1,
-                        max: doc.correct && doc.correct.length,
-                      },
+                        max: doc.correct && doc.correct.length
+                      }
                     }}
-                    label="Min Number of Correct Answers to Show"
+                    label='Min Number of Correct Answers to Show'
                     defaultValue={doc && doc.correctmin}
                     className={classes.dialogField}
                     onChange={(e) => {
@@ -343,17 +325,15 @@ class QuestionModal extends React.Component {
 
                 {questiontypes[doc.type].numberofoptions && (
                   <TextField
-                    id="numberofoptions"
-                    type="number"
+                    id='numberofoptions'
+                    type='number'
                     InputProps={{
                       inputProps: {
                         min: 2,
-                        max:
-                          (doc.correct && doc.correct.length) +
-                          (doc.incorrect + doc.incorrect.length),
-                      },
+                        max: (doc.correct && doc.correct.length) + (doc.incorrect + doc.incorrect.length)
+                      }
                     }}
-                    label="Total Number of Options to Show"
+                    label='Total Number of Options to Show'
                     defaultValue={doc && doc.numberofoptions}
                     className={classes.dialogField}
                     onChange={(e) => {
@@ -363,24 +343,24 @@ class QuestionModal extends React.Component {
                 )}
 
                 <TextField
-                  id="hint"
-                  label="Hint"
+                  id='hint'
+                  label='Hint'
                   defaultValue={doc && doc.hint}
                   className={classes.dialogField}
                   multiline
-                  helperText="Add a hint that can be viewed when doing the quiz."
+                  helperText='Add a hint that can be viewed when doing the quiz.'
                   onChange={(e) => {
                     this.props.handleModalChange(e.target)
                   }}
                 />
 
                 <TextField
-                  id="note"
-                  label="Note"
+                  id='note'
+                  label='Note'
                   defaultValue={doc && doc.note}
                   className={classes.dialogField}
                   multiline
-                  helperText="Add a note that can be displayed in the quiz results to aid understanding."
+                  helperText='Add a note that can be displayed in the quiz results to aid understanding.'
                   onChange={(e) => {
                     this.props.handleModalChange(e.target)
                   }}
@@ -395,15 +375,10 @@ class QuestionModal extends React.Component {
                       handleDelete={this.props.handleTagDelete}
                       handleAddition={this.props.handleTagAddition}
                       delimiters={this.props.delimiters}
-                      handleFilterSuggestions={(
-                        textInputValue,
-                        possibleSuggestionsArray
-                      ) => {
+                      handleFilterSuggestions={(textInputValue, possibleSuggestionsArray) => {
                         var lowerCaseQuery = textInputValue.toLowerCase()
                         return possibleSuggestionsArray.filter((suggestion) => {
-                          return suggestion.text
-                            .toLowerCase()
-                            .includes(lowerCaseQuery)
+                          return suggestion.text.toLowerCase().includes(lowerCaseQuery)
                         })
                       }}
                       minQueryLength={1}
@@ -454,12 +429,12 @@ class QuestionModal extends React.Component {
             onClick={() => {
               this.props.hideModal()
             }}
-            color="secondary"
+            color='secondary'
           >
             Cancel
           </Button>
           {modalProps.isUploading ? (
-            <Button color="primary" disabled>
+            <Button color='primary' disabled>
               Submit
             </Button>
           ) : (
@@ -467,10 +442,10 @@ class QuestionModal extends React.Component {
               onClick={() => {
                 this.props.handleModalSubmit({
                   doc: doc,
-                  pathRef: questionsRef,
+                  pathRef: questionsRef
                 })
               }}
-              color="primary"
+              color='primary'
             >
               Submit
             </Button>
@@ -481,6 +456,4 @@ class QuestionModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(QuestionModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(QuestionModal))

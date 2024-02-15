@@ -1,8 +1,8 @@
-import { MARK_FOOTPRINT } from "../constants/action-types";
+import { MARK_FOOTPRINT } from '../constants/action-types'
 
 const footprintsInit = {
   footprints: {}
-};
+}
 
 // Properties related to local data retrieved from firebase
 export default function footprintsReducer(state = footprintsInit, action) {
@@ -14,8 +14,8 @@ export default function footprintsReducer(state = footprintsInit, action) {
           ...state.footprints,
           ...action.payload
         }
-      };
+      }
     default:
-      return state;
+      return state
   }
 }

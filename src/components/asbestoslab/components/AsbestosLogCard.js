@@ -1,26 +1,31 @@
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../../config/styles";
-import { connect } from "react-redux";
-import { writeShorthandResult, } from "../../../actions/asbestosLab";
+import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../../config/styles'
+import { connect } from 'react-redux'
+import { writeShorthandResult } from '../../../actions/asbestosLab'
 
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import Grid from "@material-ui/core/Grid";
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
+import Grid from '@material-ui/core/Grid'
 
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import Flag from "@material-ui/icons/Flag";
+import ExpandMore from '@material-ui/icons/ExpandMore'
+import Flag from '@material-ui/icons/Flag'
 
 class AsbestosLogCard extends React.Component {
   render() {
-    const { log } = this.props;
+    const { log } = this.props
     return (
-      <ExpansionPanel style={{ width: '100%'}}>
+      <ExpansionPanel style={{ width: '100%' }}>
         <ExpansionPanelSummary expandIcon={<ExpandMore />}>
           <Grid container>
             <Grid item xs={6}>
-              <div><b>{log.jobNumber}-{log.sampleNumber}</b> {log.client} ({log.address}) {log.priority === 1 && <Flag color='secondary' />}</div>
+              <div>
+                <b>
+                  {log.jobNumber}-{log.sampleNumber}
+                </b>{' '}
+                {log.client} ({log.address}) {log.priority === 1 && <Flag color='secondary' />}
+              </div>
             </Grid>
             <Grid item xs={6}>
               {writeShorthandResult(log.result)}
@@ -100,8 +105,8 @@ class AsbestosLogCard extends React.Component {
           </Grid>*/}
         </ExpansionPanelDetails>
       </ExpansionPanel>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(AsbestosLogCard);
+export default withStyles(styles)(AsbestosLogCard)

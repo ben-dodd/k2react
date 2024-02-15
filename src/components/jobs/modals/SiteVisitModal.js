@@ -30,34 +30,32 @@ const mapStateToProps = (state) => {
     doc: state.modal.modalProps.doc,
     userRefName: state.local.userRefName,
     siteJobs: state.jobs.siteJobs,
-    siteVisitTypeAsbestos: state.const.siteVisitTypeAsbestos,
+    siteVisitTypeAsbestos: state.const.siteVisitTypeAsbestos
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     resetModal: () => dispatch(resetModal()),
-    hideModal: () => dispatch(hideModal()),
+    hideModal: () => dispatch(hideModal())
   }
 }
 
 class SiteVisitModal extends React.Component {
   state = {
-    date: null,
+    date: null
   }
 
   loadProps = () => {
     this.setState({
-      ...this.props.doc,
+      ...this.props.doc
     })
   }
 
   render() {
     const { modalProps, classes } = this.props
     const names = [{ name: '3rd Party', uid: '3rd Party' }].concat(
-      Object.values(this.props.staff).sort((a, b) =>
-        a.name.localeCompare(b.name)
-      )
+      Object.values(this.props.staff).sort((a, b) => a.name.localeCompare(b.name))
     )
     console.log(this.state)
     return (
@@ -68,25 +66,21 @@ class SiteVisitModal extends React.Component {
         fullWidth={true}
         maxWidth={'xs'}
       >
-        <DialogTitle>
-          {modalProps.title ? modalProps.title : 'Add New Site Visit'}
-        </DialogTitle>
+        <DialogTitle>{modalProps.title ? modalProps.title : 'Add New Site Visit'}</DialogTitle>
         <DialogContent className={classes.minHeightDialog60}>
           <DatePicker
             className={classes.inputRoot}
             value={this.state.date ? dateOf(this.state.date) : null}
             autoOk
-            format="ddd, D MMMM YYYY"
+            format='ddd, D MMMM YYYY'
             label={'Date'}
             disableToolbar
-            variant="inline"
-            openTo="year"
+            variant='inline'
+            openTo='year'
             views={['year', 'month', 'date']}
             onChange={(date) => this.setState({ date: dateOf(date) })}
           />
-          <InputLabel className={classes.marginTopSmall}>
-            Site Personnel
-          </InputLabel>
+          <InputLabel className={classes.marginTopSmall}>Site Personnel</InputLabel>
           <Select
             isMulti
             className={classes.selectTight}
@@ -94,26 +88,23 @@ class SiteVisitModal extends React.Component {
               this.state.personnel
                 ? this.state.personnel.map((e) => ({
                     value: e.uid,
-                    label: e.name,
+                    label: e.name
                   }))
                 : null
             }
             options={names.map((e) => ({
               value: e.uid,
-              label: e.name,
+              label: e.name
             }))}
             onChange={(e) => this.setState({ personnel: personnelConvert(e) })}
           />
-          {this.state.personnel &&
-            this.state.personnel[0].uid === '3rd Party' && (
-              <TextField
-                label="3rd Party Company Name"
-                defaultValue={
-                  this.state.companyName ? this.state.companyName : null
-                }
-                onChange={(e) => this.setState({ companyName: e.target.value })}
-              />
-            )}
+          {this.state.personnel && this.state.personnel[0].uid === '3rd Party' && (
+            <TextField
+              label='3rd Party Company Name'
+              defaultValue={this.state.companyName ? this.state.companyName : null}
+              onChange={(e) => this.setState({ companyName: e.target.value })}
+            />
+          )}
           <InputLabel>Site Visit Type</InputLabel>
           <Select
             className={classes.selectTight}
@@ -121,26 +112,19 @@ class SiteVisitModal extends React.Component {
               this.state.type
                 ? {
                     value: this.state.type,
-                    label: this.props.siteVisitTypeAsbestos.filter(
-                      (e) => e.value === this.state.type
-                    )[0].label,
+                    label: this.props.siteVisitTypeAsbestos.filter((e) => e.value === this.state.type)[0].label
                   }
                 : null
             }
             options={this.props.siteVisitTypeAsbestos}
             onChange={(e) => this.setState({ type: e.value })}
           />
-          {this.state.personnel &&
-          this.state.personnel[0].uid === '3rd Party' ? (
+          {this.state.personnel && this.state.personnel[0].uid === '3rd Party' ? (
             <TextField
               className={classes.inputRoot}
-              label="Reference/Job Number"
-              defaultValue={
-                this.state.referenceNumber ? this.state.referenceNumber : null
-              }
-              onChange={(e) =>
-                this.setState({ referenceNumber: e.target.value })
-              }
+              label='Reference/Job Number'
+              defaultValue={this.state.referenceNumber ? this.state.referenceNumber : null}
+              onChange={(e) => this.setState({ referenceNumber: e.target.value })}
             />
           ) : (
             <div>
@@ -152,26 +136,24 @@ class SiteVisitModal extends React.Component {
                   this.state.referenceNumber
                     ? {
                         value: this.state.referenceNumber,
-                        label: this.state.referenceNumber,
+                        label: this.state.referenceNumber
                       }
                     : null
                 }
                 options={
                   this.props.siteJobs &&
                   this.props.siteJobs[modalProps.siteUid] &&
-                  Object.values(this.props.siteJobs[modalProps.siteUid]).map(
-                    (e) => ({
-                      value: e.jobNumber,
-                      label: `${e.jobNumber}: ${e.jobDescription}`,
-                    })
-                  )
+                  Object.values(this.props.siteJobs[modalProps.siteUid]).map((e) => ({
+                    value: e.jobNumber,
+                    label: `${e.jobNumber}: ${e.jobDescription}`
+                  }))
                 }
                 onChange={(e) => this.setState({ referenceNumber: e.value })}
               />
             </div>
           )}
           <TextField
-            label="Notes"
+            label='Notes'
             className={classes.inputRoot}
             defaultValue={this.state.notes ? this.state.notes : null}
             multiline
@@ -180,7 +162,7 @@ class SiteVisitModal extends React.Component {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.resetModal} color="secondary">
+          <Button onClick={this.props.resetModal} color='secondary'>
             Cancel
           </Button>
           <Button
@@ -188,7 +170,7 @@ class SiteVisitModal extends React.Component {
               modalProps.callBack(this.state)
               this.props.resetModal()
             }}
-            color="primary"
+            color='primary'
           >
             Submit
           </Button>
@@ -198,6 +180,4 @@ class SiteVisitModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(SiteVisitModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SiteVisitModal))

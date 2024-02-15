@@ -17,11 +17,7 @@ import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
 import SuggestionField from '../../../widgets/SuggestionField'
 import { hideModal, resetModal, setModalError } from '../../../actions/modal'
-import {
-  fetchSites,
-  getDetailedWFMJob,
-  resetWfmJob,
-} from '../../../actions/jobs'
+import { fetchSites, getDetailedWFMJob, resetWfmJob } from '../../../actions/jobs'
 
 import '../../../config/geosuggest.css'
 //
@@ -83,7 +79,7 @@ const mapStateToProps = (state) => {
     modalType: state.modal.modalType,
     modalProps: state.modal.modalProps,
     doc: state.modal.modalProps.doc,
-    wfmAccessToken: state.local.wfmAccessToken,
+    wfmAccessToken: state.local.wfmAccessToken
   }
 }
 
@@ -94,13 +90,13 @@ const mapDispatchToProps = (dispatch) => {
     setModalError: (error) => dispatch(setModalError(error)),
     getDetailedWFMJob: (info) => dispatch(getDetailedWFMJob(info)),
     resetWfmJob: () => dispatch(resetWfmJob()),
-    resetModal: () => dispatch(resetModal()),
+    resetModal: () => dispatch(resetModal())
   }
 }
 
 class SiteJobModal extends React.Component {
   state = {
-    jobNumber: '',
+    jobNumber: ''
   }
 
   wfmSync = () => {
@@ -121,7 +117,7 @@ class SiteJobModal extends React.Component {
         site: this.props.doc.site,
         jobDescription,
         accessToken: this.props.wfmAccessToken,
-        refreshToken: this.props.me.refreshToken,
+        refreshToken: this.props.me.refreshToken
       })
     }
   }
@@ -129,45 +125,36 @@ class SiteJobModal extends React.Component {
   render() {
     const { modalProps, classes } = this.props
     return (
-      <Dialog
-        open={this.props.modalType === SITE_JOB}
-        onClose={this.props.hideModal}
-      >
-        <DialogTitle>
-          {modalProps.title ? modalProps.title : 'Add Job to Site'}
-        </DialogTitle>
+      <Dialog open={this.props.modalType === SITE_JOB} onClose={this.props.hideModal}>
+        <DialogTitle>{modalProps.title ? modalProps.title : 'Add Job to Site'}</DialogTitle>
         <DialogContent>
           <InputLabel>Job Description</InputLabel>
           <SuggestionField
             that={this}
-            suggestions="siteJobDescriptions"
-            defaultValue={
-              this.state.jobDescription ? this.state.jobDescription : ''
-            }
+            suggestions='siteJobDescriptions'
+            defaultValue={this.state.jobDescription ? this.state.jobDescription : ''}
             onModify={(value) => this.setState({ jobDescription: value })}
           />
           <FormControl>
             <InputLabel shrink>Job Number</InputLabel>
             <Input
-              id="jobNumber"
+              id='jobNumber'
               className={classes.bigInput}
               value={this.state.jobNumber}
               onChange={(e) => {
                 this.setState({
-                  jobNumber: e.target.value.replace(/\s/g, '').toUpperCase(),
+                  jobNumber: e.target.value.replace(/\s/g, '').toUpperCase()
                 })
               }}
             />
           </FormControl>
-          {modalProps.error && (
-            <div className={classes.informationBox}>{modalProps.error}</div>
-          )}
+          {modalProps.error && <div className={classes.informationBox}>{modalProps.error}</div>}
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.resetModal} color="secondary">
+          <Button onClick={this.props.resetModal} color='secondary'>
             Cancel
           </Button>
-          <Button onClick={this.wfmSync} color="primary">
+          <Button onClick={this.wfmSync} color='primary'>
             Submit
           </Button>
         </DialogActions>
@@ -176,6 +163,4 @@ class SiteJobModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(SiteJobModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SiteJobModal))

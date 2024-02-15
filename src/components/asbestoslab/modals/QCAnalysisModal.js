@@ -16,17 +16,14 @@ import _ from 'lodash'
 const mapStateToProps = (state) => {
   return {
     modalType: state.modal.modalType,
-    modalProps: state.modal.modalProps,
+    modalProps: state.modal.modalProps
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     hideModal: () => dispatch(hideModal()),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300)
   }
 }
 
@@ -38,18 +35,15 @@ class QCAnalysisModal extends React.Component {
         <DialogTitle>{modalProps.title}</DialogTitle>
         <DialogContent>In development.</DialogContent>
         <DialogActions>
-          <Button onClick={() => this.props.hideModal()} color="secondary">
+          <Button onClick={() => this.props.hideModal()} color='secondary'>
             Cancel
           </Button>
           <Button
             onClick={() => {
-              modalProps.issueTestCertificate(
-                modalProps.doc.version,
-                modalProps.doc.changes
-              )
+              modalProps.issueTestCertificate(modalProps.doc.version, modalProps.doc.changes)
               this.props.hideModal()
             }}
-            color="primary"
+            color='primary'
           >
             Submit
           </Button>
@@ -59,6 +53,4 @@ class QCAnalysisModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(QCAnalysisModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(QCAnalysisModal))

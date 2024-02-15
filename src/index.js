@@ -16,12 +16,6 @@ import MomentUtils from '@date-io/moment'
 // MuiThemeProvider: Styles all app components
 // IntlProvider: Used for date formatting
 
-whyDidYouRender(React, {
-  onlyLogs: true,
-  titleColor: 'green',
-  diffNameColor: 'aqua',
-})
-
 ReactDOM.render(
   <MuiThemeProvider theme={theme}>
     <Provider store={store}>

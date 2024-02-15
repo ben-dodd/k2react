@@ -16,15 +16,12 @@ function AssetListItem(props) {
 
   return (
     <ListItem button>
-      <ListItemText
-        primary={`${doc.assetTag}: ${doc.name}`}
-        secondary={secondarytext}
-      />
+      <ListItemText primary={`${doc.assetTag}: ${doc.name}`} secondary={secondarytext} />
       <ListItemSecondaryAction>
-        <IconButton aria-label="Edit" onClick={null}>
+        <IconButton aria-label='Edit' onClick={null}>
           <EditIcon />
         </IconButton>
-        <IconButton aria-label="Delete" onClick={null}>
+        <IconButton aria-label='Delete' onClick={null}>
           <DeleteIcon />
         </IconButton>
       </ListItemSecondaryAction>

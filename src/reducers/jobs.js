@@ -20,10 +20,10 @@ import {
   ADD_TO_GEOCODES,
   GET_CURRENT_JOB_STATE,
   RESET_JOBS,
-  SET_LAST_TIME_SAVED,
-} from "../constants/action-types";
+  SET_LAST_TIME_SAVED
+} from '../constants/action-types'
 
-import { stateRef } from "../config/firebase";
+import { stateRef } from '../config/firebase'
 
 const jobsInit = {
   currentJobState: {},
@@ -41,96 +41,90 @@ const jobsInit = {
   jobs: {},
   jobList: {},
   jobStats: {},
-  lastTimeSaved: null,
-};
+  lastTimeSaved: null
+}
 
 // Properties related to local data retrieved from firebase
 export default function jobsReducer(state = jobsInit, action) {
   switch (action.type) {
     case GET_SITES:
-      if (action.update) stateRef.doc("sites").set({ payload: action.payload });
+      if (action.update) stateRef.doc('sites').set({ payload: action.payload })
       return {
         ...state,
-        sites: action.payload,
-      };
+        sites: action.payload
+      }
     case GET_WFM_JOBS:
       return {
         ...state,
-        wfmJobs: action.payload,
-      };
+        wfmJobs: action.payload
+      }
     case GET_WFM_JOB:
-      console.log(action.payload);
+      console.log(action.payload)
       return {
         ...state,
-        wfmJob: { ...state.wfmJob, ...action.payload },
-      };
+        wfmJob: { ...state.wfmJob, ...action.payload }
+      }
     case CLEAR_WFM_JOB:
       return {
         ...state,
-        wfmJob: null,
-      };
+        wfmJob: null
+      }
     case GET_WFM_CONTACT:
       return {
         ...state,
-        wfmJob: { ...state.wfmJob, ...action.payload },
-      };
+        wfmJob: { ...state.wfmJob, ...action.payload }
+      }
     case GET_WFM_LEADS:
       return {
         ...state,
-        wfmLeads: action.payload,
-      };
+        wfmLeads: action.payload
+      }
     case GET_WFM_CLIENTS:
       return {
         ...state,
-        wfmClients: action.payload,
-      };
+        wfmClients: action.payload
+      }
     case SAVE_WFM_ITEMS:
       return {
         ...state,
-        wfmItems: action.payload,
-      };
+        wfmItems: action.payload
+      }
     case SAVE_WFM_STATS:
       return {
         ...state,
-        wfmStats: action.payload,
-      };
+        wfmStats: action.payload
+      }
     case GET_GEOCODES:
       return {
         ...state,
-        geocodes: action.payload,
-      };
+        geocodes: action.payload
+      }
     case ADD_TO_GEOCODES:
       return {
         ...state,
         geocodes: {
           ...state.geocodes,
-          ...action.payload,
-        },
-      };
+          ...action.payload
+        }
+      }
     case GET_SITE:
       return {
         ...state,
         sites: {
           ...state.sites,
-          [action.payload.uid]: action.payload,
-        },
-      };
-    case GET_SITES:
-      if (action.update) stateRef.doc("sites").set({ payload: action.payload });
-      return {
-        ...state,
-        sites: action.payload,
-      };
+          [action.payload.uid]: action.payload
+        }
+      }
     case GET_CURRENT_JOB_STATE:
       return {
         ...state,
-        currentJobState: action.payload,
-      };
+        currentJobState: action.payload
+      }
     case GET_JOB_STATS:
       return {
         ...state,
-        jobStats: action.payload,
-      };
+        jobStats: action.payload
+      }
     case GET_SITE_JOB:
       return {
         ...state,
@@ -138,10 +132,10 @@ export default function jobsReducer(state = jobsInit, action) {
           ...state.siteJobs,
           [action.payload.siteUid]: {
             ...state.siteJobs[action.payload.siteUid],
-            [action.payload.job.uid]: action.payload.job,
-          },
-        },
-      };
+            [action.payload.job.uid]: action.payload.job
+          }
+        }
+      }
     case GET_SITE_COCS:
       return {
         ...state,
@@ -149,10 +143,10 @@ export default function jobsReducer(state = jobsInit, action) {
           ...state.siteCocs,
           [action.payload.site]: {
             ...state.siteCocs[action.payload.site],
-            ...action.payload.cocs,
-          },
-        },
-      };
+            ...action.payload.cocs
+          }
+        }
+      }
     case GET_SITE_JOBS:
       return {
         ...state,
@@ -160,10 +154,10 @@ export default function jobsReducer(state = jobsInit, action) {
           ...state.siteJobs,
           [action.payload.site]: {
             ...state.siteJobs[action.payload.site],
-            ...action.payload.jobs,
-          },
-        },
-      };
+            ...action.payload.jobs
+          }
+        }
+      }
     case GET_SITE_ACM:
       return {
         ...state,
@@ -171,34 +165,34 @@ export default function jobsReducer(state = jobsInit, action) {
           ...state.siteAcm,
           [action.payload.site]: {
             ...state.siteAcm[action.payload.site],
-            ...action.payload.acms,
-          },
-        },
-      };
+            ...action.payload.acms
+          }
+        }
+      }
     case GET_JOB_LIST:
       return {
         ...state,
         jobList: {
           ...state.jobList,
-          ...action.payload,
-        },
-      };
+          ...action.payload
+        }
+      }
     case ADD_TO_JOB_LIST:
       return {
         ...state,
         jobList: {
           ...state.jobList,
-          [action.payload.wfmID]: action.payload,
-        },
-      };
+          [action.payload.wfmID]: action.payload
+        }
+      }
     case SET_LAST_TIME_SAVED:
       return {
         ...state,
-        lastTimeSaved: action.payload,
-      };
+        lastTimeSaved: action.payload
+      }
     case RESET_JOBS:
-      return jobsInit;
+      return jobsInit
     default:
-      return state;
+      return state
   }
 }

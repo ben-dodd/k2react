@@ -1,37 +1,37 @@
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../config/styles";
-import { connect } from "react-redux";
+import React from 'react'
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../config/styles'
+import { connect } from 'react-redux'
 
 const mapStateToProps = (state) => {
   return {
     search: state.local.search,
-    me: state.local.me,
-  };
-};
+    me: state.local.me
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
     // fetchSampleLog: update => dispatch(fetchSampleLog(update)),
-  };
-};
+  }
+}
 
 class AsbestosLog extends React.Component {
   state = {
-    searchJobNumber: "",
-    searchClient: "",
-    searchStartDate: "",
-    searchEndDate: "",
-    searchDateType: "",
-    searchAnalyst: "",
-  };
+    searchJobNumber: '',
+    searchClient: '',
+    searchStartDate: '',
+    searchEndDate: '',
+    searchDateType: '',
+    searchAnalyst: ''
+  }
 
   UNSAFE_componentWillMount = () => {
     // if (this.props.sampleLog === undefined || this.props.sampleLog.length === 0) this.props.fetchSampleLog(true);
-  };
+  }
 
   render() {
-    const { sampleLog, classes } = this.props;
+    const { sampleLog, classes } = this.props
     return (
       <div style={{ marginTop: 80 }}>
         <div className={classes.paleLarge}>Under Development</div>
@@ -112,10 +112,8 @@ class AsbestosLog extends React.Component {
           }
         </div>*/}
       </div>
-    );
+    )
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(AsbestosLog)
-);
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(AsbestosLog))

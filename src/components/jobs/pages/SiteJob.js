@@ -48,7 +48,7 @@ import {
   collateJobsList,
   getJobColor,
   getStateString,
-  handleJobChange,
+  handleJobChange
 } from '../../../actions/jobs'
 
 import { filterMap, filterMapReset } from '../../../actions/display'
@@ -68,7 +68,7 @@ const mapStateToProps = (state) => {
     filter: state.display.filterMap,
     otherOptions: state.const.otherOptions,
     modalType: state.modal.modalType,
-    wfmAccessToken: state.local.wfmAccessToken,
+    wfmAccessToken: state.local.wfmAccessToken
   }
 }
 
@@ -78,12 +78,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchWFMLeads: () => dispatch(fetchWFMLeads()),
     fetchWFMClients: () => dispatch(fetchWFMClients()),
     handleJobChange: (info) => dispatch(handleJobChange(info)),
-    handleJobChangeDebounced: _.debounce(
-      (info) => dispatch(handleJobChange(info)),
-      2000
-    ),
-    fetchCurrentJobState: (ignoreCompleted) =>
-      dispatch(fetchCurrentJobState(ignoreCompleted)),
+    handleJobChangeDebounced: _.debounce((info) => dispatch(handleJobChange(info)), 2000),
+    fetchCurrentJobState: (ignoreCompleted) => dispatch(fetchCurrentJobState(ignoreCompleted)),
     clearWfmJob: () => dispatch(clearWfmJob()),
     getDetailedWFMJob: (info) => dispatch(getDetailedWFMJob(info)),
     saveCurrentJobState: (state) => dispatch(saveCurrentJobState(state)),
@@ -95,22 +91,8 @@ const mapDispatchToProps = (dispatch) => {
     filterMap: (filter) => dispatch(filterMap(filter)),
     filterMapReset: () => dispatch(filterMapReset()),
     showModal: (modal) => dispatch(showModal(modal)),
-    collateJobsList: (
-      wfmJobs,
-      wfmLeads,
-      currentJobState,
-      wfmClients,
-      geocodes
-    ) =>
-      dispatch(
-        collateJobsList(
-          wfmJobs,
-          wfmLeads,
-          currentJobState,
-          wfmClients,
-          geocodes
-        )
-      ),
+    collateJobsList: (wfmJobs, wfmLeads, currentJobState, wfmClients, geocodes) =>
+      dispatch(collateJobsList(wfmJobs, wfmLeads, currentJobState, wfmClients, geocodes))
   }
 }
 
@@ -118,39 +100,31 @@ class SiteJob extends React.Component {
   state = {
     countVersions: 1,
 
-    update: {},
+    update: {}
   }
 
   UNSAFE_componentWillMount() {
     let countVersions = 1
-    if (
-      this.props.siteJobs &&
-      this.props.siteJobs[this.props.site] &&
-      this.props.siteJobs[this.props.site][this.props.m.uid]
-    ) {
+    if (this.props.siteJobs && this.props.siteJobs[this.props.site] && this.props.siteJobs[this.props.site][this.props.m.uid]) {
       let job = this.props.siteJobs[this.props.site][this.props.m.uid]
       if (job.versions && Object.keys(job.versions).length > 0) {
-        countVersions = Math.max(
-          ...Object.keys(job.versions).map((key) => parseInt(key))
-        )
+        countVersions = Math.max(...Object.keys(job.versions).map((key) => parseInt(key)))
       }
     }
     this.setState({
-      countVersions,
+      countVersions
     })
   }
 
   toggleCollapse = (name) => {
     this.setState({
-      [`open${name}`]: !this.state[`open${name}`],
+      [`open${name}`]: !this.state[`open${name}`]
     })
   }
 
   addList = (field) => {
     this.setState({
-      [`count${field}`]: this.state[`count${field}`]
-        ? this.state[`count${field}`] + 1
-        : 2,
+      [`count${field}`]: this.state[`count${field}`] ? this.state[`count${field}`] + 1 : 2
     })
   }
 
@@ -162,23 +136,17 @@ class SiteJob extends React.Component {
         job: this.props.siteJobs[this.props.site][this.props.m.uid],
         o1: [obj],
         field: num,
-        val: 'delete',
+        val: 'delete'
       })
     this.setState({
-      [`count${field}`]: this.state[`count${field}`]
-        ? this.state[`count${field}`] > 1
-          ? this.state[`count${field}`] - 1
-          : 1
-        : 1,
+      [`count${field}`]: this.state[`count${field}`] ? (this.state[`count${field}`] > 1 ? this.state[`count${field}`] - 1 : 1) : 1
     })
   }
 
   render() {
     const { classes, that, m, site } = this.props
     const names = [{ name: '3rd Party', uid: '3rd Party' }].concat(
-      Object.values(this.props.staff).sort((a, b) =>
-        a.name.localeCompare(b.name)
-      )
+      Object.values(this.props.staff).sort((a, b) => a.name.localeCompare(b.name))
     )
 
     if (m) {
@@ -189,9 +157,7 @@ class SiteJob extends React.Component {
           <Grid item xs={12} md={5}>
             <div className={classes.informationBoxWhiteRounded}>
               <div className={classes.flexRowSpread}>
-                <div className={classNames(color, classes.expandHeading)}>
-                  {m.jobNumber}
-                </div>
+                <div className={classNames(color, classes.expandHeading)}>{m.jobNumber}</div>
                 <div className={classes.flexRow}>
                   <Tooltip title={'Re-sync with WorkflowMax'}>
                     <IconButton
@@ -200,7 +166,7 @@ class SiteJob extends React.Component {
                           jobNumber: m.jobNumber,
                           setUpJob: true,
                           accessToken: this.props.wfmAccessToken,
-                          refreshToken: this.props.me.refreshToken,
+                          refreshToken: this.props.me.refreshToken
                         })
                       }
                     >
@@ -208,13 +174,7 @@ class SiteJob extends React.Component {
                     </IconButton>
                   </Tooltip>
                   <Tooltip title={'View Job on WorkflowMax'}>
-                    <IconButton
-                      onClick={() =>
-                        window.open(
-                          `https://my.workflowmax.com/job/jobview.aspx?id=${m.wfmID}`
-                        )
-                      }
-                    >
+                    <IconButton onClick={() => window.open(`https://my.workflowmax.com/job/jobview.aspx?id=${m.wfmID}`)}>
                       <LinkIcon className={classes.iconRegular} />
                     </IconButton>
                   </Tooltip>
@@ -223,7 +183,7 @@ class SiteJob extends React.Component {
                       onClick={(e) => {
                         this.props.showModal({
                           modalType: WFM_TIME,
-                          modalProps: { job: m },
+                          modalProps: { job: m }
                         })
                       }}
                     >
@@ -235,26 +195,23 @@ class SiteJob extends React.Component {
               <InputLabel>Job Description</InputLabel>
               <SuggestionField
                 that={this}
-                suggestions="siteJobDescriptions"
+                suggestions='siteJobDescriptions'
                 defaultValue={m.jobDescription ? m.jobDescription : ''}
                 onModify={(value) =>
                   this.props.handleJobChange({
                     job: m,
                     field: 'jobDescription',
                     val: value,
-                    siteUid: site,
+                    siteUid: site
                   })
                 }
               />
-              <div className={classNames(color, classes.expandHeading)}>
-                Job Details
-              </div>
+              <div className={classNames(color, classes.expandHeading)}>Job Details</div>
               <div>
                 <b>Client:</b> {m.client ? m.client : 'Not Available'}
               </div>
               <div>
-                <b>Job Name/Address:</b>{' '}
-                {m.address ? m.address : 'Not Available'}
+                <b>Job Name/Address:</b> {m.address ? m.address : 'Not Available'}
               </div>
               {m.wfmState && (
                 <div>
@@ -282,16 +239,8 @@ class SiteJob extends React.Component {
               </div>
               {m.description && typeof m.description !== 'object' && (
                 <div>
-                  <div
-                    className={classNames(color, classes.expandHeading)}
-                    onClick={() => this.toggleCollapse('Description')}
-                  >
-                    Description{' '}
-                    {this.state.openDescription ? (
-                      <OpenArrow />
-                    ) : (
-                      <ClosedArrow />
-                    )}
+                  <div className={classNames(color, classes.expandHeading)} onClick={() => this.toggleCollapse('Description')}>
+                    Description {this.state.openDescription ? <OpenArrow /> : <ClosedArrow />}
                   </div>
                   <Collapse in={this.state.openDescription}>
                     <div className={classes.code}>{m.description}</div>
@@ -300,12 +249,8 @@ class SiteJob extends React.Component {
               )}
               {m.stateHistory && (
                 <div>
-                  <div
-                    className={classNames(color, classes.expandHeading)}
-                    onClick={() => this.toggleCollapse('History')}
-                  >
-                    State History{' '}
-                    {this.state.openHistory ? <OpenArrow /> : <ClosedArrow />}
+                  <div className={classNames(color, classes.expandHeading)} onClick={() => this.toggleCollapse('History')}>
+                    State History {this.state.openHistory ? <OpenArrow /> : <ClosedArrow />}
                   </div>
                   <Collapse in={this.state.openHistory}>
                     <div className={classes.expandBody}>
@@ -323,36 +268,23 @@ class SiteJob extends React.Component {
               )}
               {m.milestones && m.milestones.length > 0 && (
                 <div>
-                  <div
-                    className={classNames(color, classes.expandHeading)}
-                    onClick={() => this.toggleCollapse('Milestones')}
-                  >
-                    Milestones{' '}
-                    {this.state.openMilestones ? (
-                      <OpenArrow />
-                    ) : (
-                      <ClosedArrow />
-                    )}
+                  <div className={classNames(color, classes.expandHeading)} onClick={() => this.toggleCollapse('Milestones')}>
+                    Milestones {this.state.openMilestones ? <OpenArrow /> : <ClosedArrow />}
                   </div>
                   <Collapse in={this.state.openMilestones}>
                     <div className={classes.expandBody}>
                       {m.milestones.map((item) => {
                         if (item.completed === 'true') {
                           return (
-                            <span
-                              key={item.date}
-                              className={classes.linethrough}
-                            >
-                              <b>{moment(item.date).format('YYYY-MM-DD')}:</b>{' '}
-                              {item.description}
+                            <span key={item.date} className={classes.linethrough}>
+                              <b>{moment(item.date).format('YYYY-MM-DD')}:</b> {item.description}
                               <br />
                             </span>
                           )
                         } else {
                           return (
                             <span key={item.date}>
-                              <b>{moment(item.date).format('YYYY-MM-DD')}:</b>{' '}
-                              {item.description}
+                              <b>{moment(item.date).format('YYYY-MM-DD')}:</b> {item.description}
                               <br />
                             </span>
                           )
@@ -365,26 +297,17 @@ class SiteJob extends React.Component {
 
               {m.notes && m.notes.length > 0 && (
                 <div>
-                  <div
-                    className={classNames(color, classes.expandHeading)}
-                    onClick={() => this.toggleCollapse('Notes')}
-                  >
-                    Notes{' '}
-                    {this.state.openNotes ? <OpenArrow /> : <ClosedArrow />}
+                  <div className={classNames(color, classes.expandHeading)} onClick={() => this.toggleCollapse('Notes')}>
+                    Notes {this.state.openNotes ? <OpenArrow /> : <ClosedArrow />}
                   </div>
                   <Collapse in={this.state.openNotes}>
                     <div className={classes.expandBody}>
                       {m.notes.map((item) => (
                         <div key={moment(dateOf(item.date)).format('x')}>
                           <div className={color}>
-                            <b>
-                              {moment(dateOf(item.date)).format('YYYY-MM-DD')}
-                            </b>{' '}
-                            {item.title} - {item.createdBy}
+                            <b>{moment(dateOf(item.date)).format('YYYY-MM-DD')}</b> {item.title} - {item.createdBy}
                           </div>
-                          {item.text && (
-                            <div className={classes.code}>{item.text}</div>
-                          )}
+                          {item.text && <div className={classes.code}>{item.text}</div>}
                         </div>
                       ))}
                     </div>
@@ -395,37 +318,21 @@ class SiteJob extends React.Component {
           </Grid>
           <Grid item xs={12} md={7}>
             <div className={classes.informationBoxWhiteRounded}>
-              <div className={classNames(color, classes.expandHeading)}>
-                Version History
-              </div>
-              <div
-                className={classNames(
-                  classes.subHeading,
-                  classes.flexRowCenter
-                )}
-              >
-                <IconButton
-                  size="small"
-                  aria-label="add"
-                  className={classes.marginLeftSmall}
-                  onClick={() => this.addList('Versions')}
-                >
+              <div className={classNames(color, classes.expandHeading)}>Version History</div>
+              <div className={classNames(classes.subHeading, classes.flexRowCenter)}>
+                <IconButton size='small' aria-label='add' className={classes.marginLeftSmall} onClick={() => this.addList('Versions')}>
                   <AddIcon />
                 </IconButton>
                 <IconButton
-                  size="small"
-                  aria-label="remove"
+                  size='small'
+                  aria-label='remove'
                   className={classes.marginLeftSmall}
                   onClick={() => this.removeList('Versions')}
                 >
                   <RemoveIcon />
                 </IconButton>
               </div>
-              {[
-                ...Array(
-                  this.state.countVersions ? this.state.countVersions : 1
-                ).keys(),
-              ].map((i) => {
+              {[...Array(this.state.countVersions ? this.state.countVersions : 1).keys()].map((i) => {
                 let num = i + 1,
                   s = m.versions && m.versions[num] ? m.versions[num] : {}
                 return (
@@ -436,13 +343,13 @@ class SiteJob extends React.Component {
                         value={s.date ? dateOf(s.date) : null}
                         autoOk
                         className={classes.columnMed}
-                        format="ddd, D MMMM YYYY"
-                        variant="inline"
+                        format='ddd, D MMMM YYYY'
+                        variant='inline'
                         disableToolbar
                         clearable
                         label={'Date'}
                         views={['year', 'month', 'date']}
-                        openTo="year"
+                        openTo='year'
                         onChange={(date) => {
                           this.props.handleJobChange({
                             job: m,
@@ -450,13 +357,13 @@ class SiteJob extends React.Component {
                             o2: num.toString(),
                             field: 'date',
                             val: dateOf(date),
-                            siteUid: site,
+                            siteUid: site
                           })
                         }}
                       />
                       <div className={classes.spacerSmall} />
                       <TextField
-                        label="Changes"
+                        label='Changes'
                         className={classes.columnLarge}
                         defaultValue={s.changes ? s.changes : null}
                         onChange={(e) => {
@@ -466,7 +373,7 @@ class SiteJob extends React.Component {
                             o2: num.toString(),
                             field: 'changes',
                             val: e.target.value,
-                            siteUid: site,
+                            siteUid: site
                           })
                         }}
                       />
@@ -475,21 +382,18 @@ class SiteJob extends React.Component {
                       <Select
                         isMulti
                         placeholder={'Writer'}
-                        className={classNames(
-                          classes.selectTight,
-                          classes.columnMedLarge
-                        )}
+                        className={classNames(classes.selectTight, classes.columnMedLarge)}
                         value={
                           s.writer
                             ? s.writer.map((e) => ({
                                 value: e.uid,
-                                label: e.name,
+                                label: e.name
                               }))
                             : null
                         }
                         options={names.map((e) => ({
                           value: e.uid,
-                          label: e.name,
+                          label: e.name
                         }))}
                         onChange={(e) => {
                           this.props.handleJobChange({
@@ -498,28 +402,25 @@ class SiteJob extends React.Component {
                             o2: num.toString(),
                             field: 'writer',
                             val: personnelConvert(e),
-                            siteUid: site,
+                            siteUid: site
                           })
                         }}
                       />
                       <Select
                         isMulti
                         placeholder={'Checker'}
-                        className={classNames(
-                          classes.selectTight,
-                          classes.columnMedLarge
-                        )}
+                        className={classNames(classes.selectTight, classes.columnMedLarge)}
                         value={
                           s.checker
                             ? s.checker.map((e) => ({
                                 value: e.uid,
-                                label: e.name,
+                                label: e.name
                               }))
                             : null
                         }
                         options={names.map((e) => ({
                           value: e.uid,
-                          label: e.name,
+                          label: e.name
                         }))}
                         onChange={(e) => {
                           this.props.handleJobChange({
@@ -528,28 +429,25 @@ class SiteJob extends React.Component {
                             o2: num.toString(),
                             field: 'checker',
                             val: personnelConvert(e),
-                            siteUid: site,
+                            siteUid: site
                           })
                         }}
                       />
                       <Select
                         isMulti
                         placeholder={'KTP'}
-                        className={classNames(
-                          classes.selectTight,
-                          classes.columnMedLarge
-                        )}
+                        className={classNames(classes.selectTight, classes.columnMedLarge)}
                         value={
                           s.ktp
                             ? s.ktp.map((e) => ({
                                 value: e.uid,
-                                label: e.name,
+                                label: e.name
                               }))
                             : null
                         }
                         options={names.map((e) => ({
                           value: e.uid,
-                          label: e.name,
+                          label: e.name
                         }))}
                         onChange={(e) => {
                           this.props.handleJobChange({
@@ -558,7 +456,7 @@ class SiteJob extends React.Component {
                             o2: num.toString(),
                             field: 'ktp',
                             val: personnelConvert(e),
-                            siteUid: site,
+                            siteUid: site
                           })
                         }}
                       />
@@ -569,13 +467,8 @@ class SiteJob extends React.Component {
             </div>
           </Grid>
           <Grid item xs={12}>
-            {m.jobDescription === 'Asbestos Management Plan' && (
-              <AsbestosManagementPlan m={m} site={site} />
-            )}
-            {m.jobDescription.includes('Asbestos') &&
-              m.jobDescription.includes('Survey') && (
-                <AsbestosSurvey m={m} site={site} />
-              )}
+            {m.jobDescription === 'Asbestos Management Plan' && <AsbestosManagementPlan m={m} site={site} />}
+            {m.jobDescription.includes('Asbestos') && m.jobDescription.includes('Survey') && <AsbestosSurvey m={m} site={site} />}
           </Grid>
         </Grid>
       )
@@ -583,6 +476,4 @@ class SiteJob extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(SiteJob)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(SiteJob))

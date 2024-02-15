@@ -37,7 +37,7 @@ import {
   handleModalSubmit,
   onUploadFile,
   handleTagAddition,
-  handleTagDelete,
+  handleTagDelete
 } from '../../../actions/modal'
 import { getUserAttrs } from '../../../actions/local'
 import { sendSlackMessage } from '../../../actions/helpers'
@@ -58,29 +58,22 @@ const mapStateToProps = (state) => {
     tags: state.modal.modalProps.tags,
     tagSuggestions: state.const.docTagSuggestions,
     userRefName: state.local.userRefName,
-    categories: state.const.documentCategories,
+    categories: state.const.documentCategories
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getUserAttrs: _.debounce(
-      (userPath) => dispatch(getUserAttrs(userPath)),
-      1000
-    ),
-    handleModalChange: _.debounce(
-      (target) => dispatch(handleModalChange(target)),
-      300
-    ),
+    getUserAttrs: _.debounce((userPath) => dispatch(getUserAttrs(userPath)), 1000),
+    handleModalChange: _.debounce((target) => dispatch(handleModalChange(target)), 300),
     handleModalChangeStep: (target) => dispatch(handleModalChangeStep(target)),
-    handleModalSubmit: (doc, pathRef) =>
-      dispatch(handleModalSubmit(doc, pathRef)),
+    handleModalSubmit: (doc, pathRef) => dispatch(handleModalSubmit(doc, pathRef)),
     handleSelectChange: (target) => dispatch(handleModalChange(target)),
     hideModal: () => dispatch(hideModal()),
     showModal: (modal) => dispatch(showModal(modal)),
     handleTagDelete: (tag) => dispatch(handleTagDelete(tag)),
     handleTagAddition: (tag) => dispatch(handleTagAddition(tag)),
-    onUploadFile: (file, pathRef) => dispatch(onUploadFile(file, pathRef)),
+    onUploadFile: (file, pathRef) => dispatch(onUploadFile(file, pathRef))
   }
 }
 
@@ -89,7 +82,7 @@ class DocumentModal extends React.Component {
     super(props)
     this.state = {
       page: 1,
-      editorState: {},
+      editorState: {}
     }
   }
 
@@ -98,8 +91,8 @@ class DocumentModal extends React.Component {
       this.setState({
         editorState: {
           ...this.state.editorState,
-          single: this.convertToDraft(this.props.doc.content),
-        },
+          single: this.convertToDraft(this.props.doc.content)
+        }
       })
     }
   }
@@ -107,9 +100,7 @@ class DocumentModal extends React.Component {
   convertToDraft = (html) => {
     const contentBlock = htmlToDraft(html)
     if (contentBlock) {
-      const contentState = ContentState.createFromBlockArray(
-        contentBlock.contentBlocks
-      )
+      const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks)
       //console.log(EditorState.createWithContent(contentState));
       return EditorState.createWithContent(contentState)
     } else {
@@ -119,18 +110,13 @@ class DocumentModal extends React.Component {
 
   getStyles = (uid, list) => {
     return {
-      fontWeight:
-        list && list.constructor === Array && list.indexOf(uid) > -1
-          ? 600
-          : 200,
+      fontWeight: list && list.constructor === Array && list.indexOf(uid) > -1 ? 600 : 200
     }
   }
 
   sendNewAttrSlack = () => {
     let message = {
-      text: `${this.props.modalProps.staffName} has added a new module.\n${
-        this.props.qualificationtypes[this.props.doc.type].name
-      }`,
+      text: `${this.props.modalProps.staffName} has added a new module.\n${this.props.qualificationtypes[this.props.doc.type].name}`
     }
     sendSlackMessage(message, true)
   }
@@ -147,24 +133,16 @@ class DocumentModal extends React.Component {
             <InputLabel shrink>Document Type</InputLabel>
             <Select
               onChange={(e) => {
-                if (e.target.value === 'Multi Page' && !doc.steps)
-                  doc.steps = {}
+                if (e.target.value === 'Multi Page' && !doc.steps) doc.steps = {}
                 this.props.handleModalChange({
                   id: 'docType',
-                  value: e.target.value,
+                  value: e.target.value
                 })
               }}
               value={(doc && doc.docType) || 'PDF'}
-              input={<Input name="docType" id="docType" />}
+              input={<Input name='docType' id='docType' />}
             >
-              {[
-                'Link',
-                'PDF',
-                'Image',
-                'File',
-                'Single Page',
-                'Multi Page',
-              ].map((type) => {
+              {['Link', 'PDF', 'Image', 'File', 'Single Page', 'Multi Page'].map((type) => {
                 return (
                   <option key={type} value={type}>
                     {type}
@@ -179,11 +157,11 @@ class DocumentModal extends React.Component {
               onChange={(e) => {
                 this.props.handleModalChange({
                   id: 'category',
-                  value: e.target.value,
+                  value: e.target.value
                 })
               }}
               value={(doc && doc.category) || 'gen'}
-              input={<Input name="category" id="category" />}
+              input={<Input name='category' id='category' />}
             >
               {this.props.categories &&
                 this.props.categories.map((cat) => {
@@ -203,10 +181,7 @@ class DocumentModal extends React.Component {
               handleDelete={this.props.handleTagDelete}
               handleAddition={this.props.handleTagAddition}
               delimiters={this.props.delimiters}
-              handleFilterSuggestions={(
-                textInputValue,
-                possibleSuggestionsArray
-              ) => {
+              handleFilterSuggestions={(textInputValue, possibleSuggestionsArray) => {
                 var lowerCaseQuery = textInputValue.toLowerCase()
                 return possibleSuggestionsArray.filter((suggestion) => {
                   return suggestion.text.toLowerCase().includes(lowerCaseQuery)
@@ -222,20 +197,20 @@ class DocumentModal extends React.Component {
           )}
           {doc.docType === 'Link' && (
             <TextField
-              id="link"
-              label="Link"
+              id='link'
+              label='Link'
               multiline
               className={classes.dialogField}
               defaultValue={(doc && doc.link) || ''}
-              helperText="Enter the full web link."
+              helperText='Enter the full web link.'
               onChange={(e) => {
                 this.props.handleModalChange(e.target)
               }}
             />
           )}
           <TextField
-            id="title"
-            label="Title"
+            id='title'
+            label='Title'
             className={classes.dialogField}
             defaultValue={(doc && doc.title) || ''}
             onChange={(e) => {
@@ -243,8 +218,8 @@ class DocumentModal extends React.Component {
             }}
           />
           <TextField
-            id="subtitle"
-            label="Subtitle"
+            id='subtitle'
+            label='Subtitle'
             className={classes.dialogField}
             defaultValue={(doc && doc.subtitle) || ''}
             onChange={(e) => {
@@ -252,18 +227,18 @@ class DocumentModal extends React.Component {
             }}
           />
           <TextField
-            id="code"
-            label="Code"
+            id='code'
+            label='Code'
             className={classes.dialogField}
             defaultValue={(doc && doc.code) || ''}
-            helperText="Code or reference number (e.g. AS/NZS 1715:2009)"
+            helperText='Code or reference number (e.g. AS/NZS 1715:2009)'
             onChange={(e) => {
               this.props.handleModalChange(e.target)
             }}
           />
           <TextField
-            id="author"
-            label="Author"
+            id='author'
+            label='Author'
             className={classes.dialogField}
             defaultValue={(doc && doc.author) || ''}
             onChange={(e) => {
@@ -271,8 +246,8 @@ class DocumentModal extends React.Component {
             }}
           />
           <TextField
-            id="publisher"
-            label="Publisher"
+            id='publisher'
+            label='Publisher'
             className={classes.dialogField}
             defaultValue={(doc && doc.publisher) || ''}
             onChange={(e) => {
@@ -280,58 +255,58 @@ class DocumentModal extends React.Component {
             }}
           />
           <TextField
-            id="date"
-            label="Date Published"
-            type="date"
+            id='date'
+            label='Date Published'
+            type='date'
             defaultValue={doc && doc.date}
             className={classes.dialogField}
-            helperText="Enter the date of first publishing."
+            helperText='Enter the date of first publishing.'
             onChange={(e) => {
               this.props.handleModalChange(e.target)
             }}
             InputLabelProps={{ shrink: true }}
           />
           <TextField
-            id="updateDate"
-            label="Date of Last Update"
-            type="date"
+            id='updateDate'
+            label='Date of Last Update'
+            type='date'
             defaultValue={doc && doc.updateDate}
             className={classes.dialogField}
-            helperText="Enter the date of the last update."
+            helperText='Enter the date of the last update.'
             onChange={(e) => {
               this.props.handleModalChange(e.target)
             }}
             InputLabelProps={{ shrink: true }}
           />
           <TextField
-            id="desc"
-            label="Description"
+            id='desc'
+            label='Description'
             multiline
             className={classes.dialogField}
             defaultValue={(doc && doc.desc) || ''}
-            helperText="Give a description of the purpose of the document."
+            helperText='Give a description of the purpose of the document.'
             onChange={(e) => {
               this.props.handleModalChange(e.target)
             }}
           />
           <TextField
-            id="source"
-            label="Source"
+            id='source'
+            label='Source'
             multiline
             className={classes.dialogField}
             defaultValue={doc && doc.source}
-            helperText="Enter the source of the document, e.g. the website address."
+            helperText='Enter the source of the document, e.g. the website address.'
             onChange={(e) => {
               this.props.handleModalChange(e.target)
             }}
           />
           <TextField
-            id="references"
-            label="References"
+            id='references'
+            label='References'
             multiline
             className={classes.dialogField}
             defaultValue={(doc && doc.references) || ''}
-            helperText="List any links or references this document is based on."
+            helperText='List any links or references this document is based on.'
             onChange={(e) => {
               this.props.handleModalChange(e.target)
             }}
@@ -346,12 +321,10 @@ class DocumentModal extends React.Component {
                   this.setState({
                     editorState: {
                       ...editorState,
-                      single: changedState,
-                    },
+                      single: changedState
+                    }
                   })
-                  let html = draftToHtml(
-                    convertToRaw(changedState.getCurrentContent())
-                  )
+                  let html = draftToHtml(convertToRaw(changedState.getCurrentContent()))
                   this.props.handleModalChange({ id: 'content', value: html })
                 }}
               />
@@ -368,14 +341,12 @@ class DocumentModal extends React.Component {
             </div>
           )}
 
-          {(doc.docType === 'PDF' ||
-            doc.docType === 'File' ||
-            doc.docType === 'Image') && (
+          {(doc.docType === 'PDF' || doc.docType === 'File' || doc.docType === 'Image') && (
             <label>
               <UploadIcon className={classes.colorAccent} />
               <input
-                id="attr_upload_file"
-                type="file"
+                id='attr_upload_file'
+                type='file'
                 style={{ display: 'none' }}
                 onChange={(e) => {
                   if (doc.fileUrl) {
@@ -383,14 +354,11 @@ class DocumentModal extends React.Component {
                   }
                   this.props.onUploadFile({
                     file: e.currentTarget.files[0],
-                    storagePath: 'documents/',
+                    storagePath: 'documents/'
                   })
                 }}
               />
-              <LinearProgress
-                variant="determinate"
-                value={modalProps.uploadProgress}
-              />
+              <LinearProgress variant='determinate' value={modalProps.uploadProgress} />
             </label>
           )}
         </FormGroup>
@@ -401,18 +369,15 @@ class DocumentModal extends React.Component {
       <form>
         <h5>Page {page - 1}</h5>
         <TextField
-          id="title"
-          label="Title"
+          id='title'
+          label='Title'
           style={{ marginBottom: 12 }}
-          value={
-            (doc.steps && doc.steps[page - 2] && doc.steps[page - 2].title) ||
-            ''
-          }
+          value={(doc.steps && doc.steps[page - 2] && doc.steps[page - 2].title) || ''}
           onChange={(e) =>
             this.props.handleModalChangeStep({
               step: (page - 2).toString(),
               id: 'title',
-              value: e.target.value,
+              value: e.target.value
             })
           }
         />
@@ -443,10 +408,7 @@ class DocumentModal extends React.Component {
         <textarea
           readOnly
           style={{ width: 800 }}
-          value={
-            editorState[page - 2] &&
-            draftToHtml(convertToRaw(editorState[page - 2].getCurrentContent()))
-          }
+          value={editorState[page - 2] && draftToHtml(convertToRaw(editorState[page - 2].getCurrentContent()))}
         />
       </form>
     )
@@ -464,23 +426,21 @@ class DocumentModal extends React.Component {
 
     return (
       <Dialog
-        key="documentmodal"
-        maxWidth="md"
+        key='documentmodal'
+        maxWidth='md'
         fullWidth={true}
         open={this.props.modalType === DOCUMENT}
         onEnter={() => this.setState({ page: 1 })}
         onClose={() => this.props.hideModal}
       >
-        <DialogTitle>
-          {modalProps.title ? modalProps.title : 'Add New Document'}
-        </DialogTitle>
+        <DialogTitle>{modalProps.title ? modalProps.title : 'Add New Document'}</DialogTitle>
         <DialogContent>{this.getPage()}</DialogContent>
         <DialogActions>
           <Button
             onClick={() => {
               this.props.hideModal()
             }}
-            color="secondary"
+            color='secondary'
           >
             Cancel
           </Button>
@@ -491,45 +451,39 @@ class DocumentModal extends React.Component {
                 onClick={() => {
                   this.setState({ page: this.state.page - 1 })
                 }}
-                color="default"
+                color='default'
               >
                 Back
               </Button>
               <Button
                 onClick={() => {
                   if (!this.state.editorState[this.state.page - 1]) {
-                    if (
-                      doc.steps &&
-                      doc.steps[this.state.page - 1] &&
-                      doc.steps[this.state.page - 1].content
-                    ) {
+                    if (doc.steps && doc.steps[this.state.page - 1] && doc.steps[this.state.page - 1].content) {
                       this.setState({
                         editorState: {
                           ...this.state.editorState,
-                          [this.state.page - 1]: this.convertToDraft(
-                            doc.steps[this.state.page - 1].content
-                          ),
-                        },
+                          [this.state.page - 1]: this.convertToDraft(doc.steps[this.state.page - 1].content)
+                        }
                       })
                     } else {
                       this.setState({
                         editorState: {
                           ...this.state.editorState,
-                          [this.state.page - 1]: EditorState.createEmpty(),
-                        },
+                          [this.state.page - 1]: EditorState.createEmpty()
+                        }
                       })
                     }
                   }
                   this.setState({ page: this.state.page + 1 })
                 }}
-                color="default"
+                color='default'
               >
                 Forward
               </Button>
             </div>
           )}
           {modalProps.isUploading ? (
-            <Button color="primary" disabled>
+            <Button color='primary' disabled>
               Submit
             </Button>
           ) : (
@@ -551,23 +505,19 @@ class DocumentModal extends React.Component {
                 }
                 if (!doc.uid) {
                   if (doc.title) {
-                    doc.uid = doc.title
-                      .replace(/\s+|\/+|\\+\:+\;+\.+/g, '-')
-                      .toLowerCase()
+                    doc.uid = doc.title.replace(/\s+|\/+|\\+\:+\;+\.+/g, '-').toLowerCase()
                   } else {
-                    doc.uid =
-                      doc.docType +
-                      Math.round(Math.random() * 1000000).toString()
+                    doc.uid = doc.docType + Math.round(Math.random() * 1000000).toString()
                   }
                 }
                 if (doc.fileUrl) doc.link = doc.fileUrl
                 this.props.handleModalSubmit({
                   doc: doc,
-                  pathRef: docsRef,
+                  pathRef: docsRef
                 })
                 // this.sendNewAttrSlack();
               }}
-              color="primary"
+              color='primary'
             >
               Submit
             </Button>
@@ -578,6 +528,4 @@ class DocumentModal extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(DocumentModal)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(DocumentModal))

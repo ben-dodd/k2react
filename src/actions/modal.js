@@ -11,7 +11,7 @@ import {
   RESET_MODAL_SECONDARY,
   SET_MODAL_ERROR,
   SHOW_MODAL,
-  SHOW_MODAL_SECONDARY,
+  SHOW_MODAL_SECONDARY
 } from '../constants/action-types'
 
 import { storage } from '../config/firebase'
@@ -22,13 +22,13 @@ export const resetModal = () => (dispatch) => {
 
 export const hideModal = () => (dispatch) => {
   dispatch({
-    type: RESET_MODAL,
+    type: RESET_MODAL
   })
 }
 
 export const hideModalSecondary = () => (dispatch) => {
   dispatch({
-    type: RESET_MODAL_SECONDARY,
+    type: RESET_MODAL_SECONDARY
   })
 }
 
@@ -38,7 +38,7 @@ export const showModal =
     dispatch({
       type: SHOW_MODAL,
       modalType,
-      modalProps,
+      modalProps
     })
   }
 
@@ -48,7 +48,7 @@ export const showModalSecondary =
     dispatch({
       type: SHOW_MODAL_SECONDARY,
       modalType,
-      modalProps,
+      modalProps
     })
   }
 
@@ -84,15 +84,10 @@ export const onUploadFile =
       type: EDIT_MODAL,
       payload: {
         isUploading: true,
-        uploadProgress: 0,
-      },
+        uploadProgress: 0
+      }
     })
-    var path =
-      storagePath +
-      '_' +
-      parseInt(Math.floor(Math.random() * Math.floor(1000))) +
-      '_' +
-      uploadFile.name
+    var path = storagePath + '_' + parseInt(Math.floor(Math.random() * Math.floor(1000))) + '_' + uploadFile.name
     var uploadTask = storage.ref(path).put(uploadFile)
     uploadTask.on(
       'state_changed',
@@ -101,8 +96,8 @@ export const onUploadFile =
         dispatch({
           type: EDIT_MODAL,
           payload: {
-            uploadProgress: progress,
-          },
+            uploadProgress: progress
+          }
         })
       },
       (error) => {
@@ -114,15 +109,15 @@ export const onUploadFile =
             type: EDIT_MODAL_DOC,
             payload: {
               [refField]: path,
-              [urlField]: url,
-            },
+              [urlField]: url
+            }
           })
           dispatch({
             type: EDIT_MODAL,
             payload: {
               isUploading: false,
-              progress: 100,
-            },
+              progress: 100
+            }
           })
         })
       }
@@ -132,7 +127,7 @@ export const onUploadFile =
 export const setModalError = (error) => (dispatch) => {
   dispatch({
     type: SET_MODAL_ERROR,
-    payload: error,
+    payload: error
   })
 }
 
@@ -141,7 +136,7 @@ export const handleModalChange = (target) => (dispatch) => {
   if (target.id === 'samples') {
     dispatch({
       type: EDIT_MODAL_DOC_SAMPLES,
-      payload: target.value,
+      payload: target.value
     })
     // dispatch({
     //   type: GET_SAMPLES,
@@ -151,22 +146,22 @@ export const handleModalChange = (target) => (dispatch) => {
   } else if (target.id === 'comment') {
     dispatch({
       type: EDIT_MODAL_DOC_COMMENT,
-      payload: target.value,
+      payload: target.value
     })
   } else if (target.id === 'doc') {
     dispatch({
       type: EDIT_MODAL_DOC,
-      payload: target.value,
+      payload: target.value
     })
   } else if (target.id === 'modal') {
     dispatch({
       type: EDIT_MODAL,
-      payload: target.value,
+      payload: target.value
     })
   } else {
     dispatch({
       type: EDIT_MODAL_DOC,
-      payload: { [target.id]: target.value },
+      payload: { [target.id]: target.value }
     })
   }
 }
@@ -174,7 +169,7 @@ export const handleModalChange = (target) => (dispatch) => {
 export const handleModalChangeStep = (target) => (dispatch) => {
   dispatch({
     type: EDIT_MODAL_DOC_STEPS,
-    payload: target,
+    payload: target
   })
 }
 
@@ -184,8 +179,8 @@ export const handleGlossaryChange = (number, type, value) => (dispatch) => {
     payload: {
       number: number + 1,
       type: type,
-      value: value,
-    },
+      value: value
+    }
   })
 }
 
@@ -218,13 +213,13 @@ export const handleModalSubmitToDoc =
 export const handleTagAddition = (addedTag) => (dispatch) => {
   dispatch({
     type: ADD_TAG,
-    payload: addedTag,
+    payload: addedTag
   })
 }
 
 export const handleTagDelete = (removedTag) => (dispatch) => {
   dispatch({
     type: DELETE_TAG,
-    payload: removedTag,
+    payload: removedTag
   })
 }

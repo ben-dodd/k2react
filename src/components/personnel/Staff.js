@@ -49,7 +49,7 @@ const mapStateToProps = (state) => {
     permissions: state.const.permissions,
     qualificationtypes: state.const.qualificationtypes,
     tab: state.display.tabStaff,
-    filter: state.display.filterStaff,
+    filter: state.display.filterStaff
   }
 }
 
@@ -58,7 +58,7 @@ const mapDispatchToProps = (dispatch) => {
     getUserAttrs: (userPath) => dispatch(getUserAttrs(userPath)),
     fetchStaff: () => dispatch(fetchStaff()),
     tabStaff: (tab) => dispatch(tabStaff(tab)),
-    filterStaff: (filter) => dispatch(filterStaff(filter)),
+    filterStaff: (filter) => dispatch(filterStaff(filter))
   }
 }
 
@@ -70,7 +70,7 @@ class Staff extends React.Component {
       tabValue: this.props.tab,
       admin: false,
       filterStaff: this.props.filter,
-      events: {},
+      events: {}
     }
   }
 
@@ -86,7 +86,7 @@ class Staff extends React.Component {
 
     let officeFilters = {
       ...this.props.filter.officeFilters,
-      [chip]: state,
+      [chip]: state
     }
 
     Object.values(officeFilters).forEach((filter) => {
@@ -96,7 +96,7 @@ class Staff extends React.Component {
     let newFilter = {
       ...this.props.filter,
       officeFilters: officeFilters,
-      officeFilterOn: filterOn,
+      officeFilterOn: filterOn
     }
 
     this.props.filterStaff(newFilter)
@@ -110,7 +110,7 @@ class Staff extends React.Component {
 
     let attrFilters = {
       ...this.props.filter.attrFilters,
-      [chip]: state,
+      [chip]: state
     }
 
     Object.values(attrFilters).forEach((filter) => {
@@ -120,7 +120,7 @@ class Staff extends React.Component {
     let newFilters = {
       ...this.props.filter,
       attrFilters: attrFilters,
-      attrFilterOn: filterOn,
+      attrFilterOn: filterOn
     }
 
     this.props.filterStaff(newFilters)
@@ -134,7 +134,7 @@ class Staff extends React.Component {
 
     let authFilters = {
       ...this.props.filter.authFilters,
-      [chip]: state,
+      [chip]: state
     }
 
     Object.values(authFilters).forEach((filter) => {
@@ -144,7 +144,7 @@ class Staff extends React.Component {
     let newFilters = {
       ...this.props.filter,
       authFilters: authFilters,
-      authFilterOn: filterOn,
+      authFilterOn: filterOn
     }
 
     this.props.filterStaff(newFilters)
@@ -164,8 +164,8 @@ class Staff extends React.Component {
           this.setState({
             events: {
               ...this.state.events,
-              [calendarid]: result.items,
-            },
+              [calendarid]: result.items
+            }
           })
           //console.log(result.items);
         })
@@ -184,7 +184,7 @@ class Staff extends React.Component {
   setDocView = (type) => {
     let newFilter = {
       ...this.props.filter,
-      docview: type,
+      docview: type
     }
     this.props.filterStaff(newFilter)
   }
@@ -192,12 +192,7 @@ class Staff extends React.Component {
   email = (who) => {
     var list = []
     Object.values(this.props.staff).forEach((user) => {
-      if (
-        user.auth &&
-        user.auth['K2 Staff'] &&
-        user.email &&
-        user.uid !== auth.currentUser.uid
-      ) {
+      if (user.auth && user.auth['K2 Staff'] && user.email && user.uid !== auth.currentUser.uid) {
         if (who === 'all') {
           list.push(user.email)
         } else if (who === 'Christchurch' && user.office === 'Christchurch') {
@@ -213,70 +208,39 @@ class Staff extends React.Component {
 
   filterUser = (user) => {
     let filter = false
-    if (
-      this.props.filter.officeFilterOn === false ||
-      this.props.filter.officeFilters[user.office]
-    )
-      filter = true
+    if (this.props.filter.officeFilterOn === false || this.props.filter.officeFilters[user.office]) filter = true
     if (this.props.filter.attrFilterOn) {
       if (this.props.filter.attrFilters['IP402'] && !user.ip402) filter = false
-      if (this.props.filter.attrFilters['Asbestos Assessor'] && !user.aanumber)
-        filter = false
-      if (this.props.filter.attrFilters['Tertiary Degree'] && !user.tertiary)
-        filter = false
-      if (
-        this.props.filter.attrFilters['Science Degree'] &&
-        !(user.tertiary && user.tertiary.includes('Sc'))
-      )
-        filter = false
-      if (
-        this.props.filter.attrFilters['Mask Fit Tested'] &&
-        user.maskfit !== 'OK'
-      )
-        filter = false
-      if (this.props.filter.attrFilters['First Aid'] && !user.firstaid)
-        filter = false
+      if (this.props.filter.attrFilters['Asbestos Assessor'] && !user.aanumber) filter = false
+      if (this.props.filter.attrFilters['Tertiary Degree'] && !user.tertiary) filter = false
+      if (this.props.filter.attrFilters['Science Degree'] && !(user.tertiary && user.tertiary.includes('Sc'))) filter = false
+      if (this.props.filter.attrFilters['Mask Fit Tested'] && user.maskfit !== 'OK') filter = false
+      if (this.props.filter.attrFilters['First Aid'] && !user.firstaid) filter = false
     }
     if (this.props.filter.authFilterOn) {
       this.props.permissions.forEach((permission) => {
         if (!user.auth) filter = false
-        else if (
-          this.props.filter.authFilters[permission.name] &&
-          !user.auth[permission.name]
-        )
-          filter = false
+        else if (this.props.filter.authFilters[permission.name] && !user.auth[permission.name]) filter = false
       })
     }
     if (this.props.search) {
-      if (
-        !(user.name + user.office + user.jobdescription)
-          .toLowerCase()
-          .includes(this.props.search.toLowerCase())
-      )
-        filter = false
+      if (!(user.name + user.office + user.jobdescription).toLowerCase().includes(this.props.search.toLowerCase())) filter = false
     }
     return filter
   }
 
   getDocs = () => {
-    const staff = Object.values(this.props.staff).sort((a, b) =>
-      a.name.localeCompare(b.name)
-    )
+    const staff = Object.values(this.props.staff).sort((a, b) => a.name.localeCompare(b.name))
     let docs = []
     if (this.props.filter.docview !== 'none') {
       staff.forEach((e) => {
         if (e.docimages && e.docimages.length > 0) {
-          if (
-            !this.props.search ||
-            (e.name + e.office + e.jobdescription)
-              .toLowerCase()
-              .includes(this.props.search.toLowerCase())
-          ) {
+          if (!this.props.search || (e.name + e.office + e.jobdescription).toLowerCase().includes(this.props.search.toLowerCase())) {
             e.docimages.forEach((attr) => {
               if (attr.type === this.props.filter.docview) {
                 docs.push({
                   url: attr.url,
-                  name: e.name,
+                  name: e.name
                 })
               }
             })
@@ -297,9 +261,7 @@ class Staff extends React.Component {
     const docs = this.getDocs()
     const filter = (
       <ExpansionPanel>
-        <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-          Filters
-        </ExpansionPanelSummary>
+        <ExpansionPanelSummary expandIcon={<ExpandMore />}>Filters</ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <div>
             <div className={classes.flexRow}>
@@ -308,12 +270,8 @@ class Staff extends React.Component {
                   <div key={chip} className={classes.paddingAllSmall}>
                     <Chip
                       icon={<LocationCity />}
-                      variant="outlined"
-                      color={
-                        this.props.filter.officeFilters[chip]
-                          ? 'secondary'
-                          : 'default'
-                      }
+                      variant='outlined'
+                      color={this.props.filter.officeFilters[chip] ? 'secondary' : 'default'}
                       onClick={() => this.filterOffice(chip)}
                       label={chip}
                     />
@@ -322,24 +280,13 @@ class Staff extends React.Component {
               })}
             </div>
             <div className={classes.flexRow}>
-              {[
-                'IP402',
-                'Asbestos Assessor',
-                'Tertiary Degree',
-                'Science Degree',
-                'Mask Fit Tested',
-                'First Aid',
-              ].map((chip) => {
+              {['IP402', 'Asbestos Assessor', 'Tertiary Degree', 'Science Degree', 'Mask Fit Tested', 'First Aid'].map((chip) => {
                 return (
                   <div key={chip} className={classes.paddingAllSmall}>
                     <Chip
                       icon={<School />}
-                      variant="outlined"
-                      color={
-                        this.props.filter.attrFilters[chip]
-                          ? 'secondary'
-                          : 'default'
-                      }
+                      variant='outlined'
+                      color={this.props.filter.attrFilters[chip] ? 'secondary' : 'default'}
                       onClick={() => this.filterAttr(chip)}
                       label={chip}
                     />
@@ -353,12 +300,8 @@ class Staff extends React.Component {
                   <div key={chip.name} className={classes.paddingAllSmall}>
                     <Chip
                       icon={<Https />}
-                      variant="outlined"
-                      color={
-                        this.props.filter.authFilters[chip.name]
-                          ? 'secondary'
-                          : 'default'
-                      }
+                      variant='outlined'
+                      color={this.props.filter.authFilters[chip.name] ? 'secondary' : 'default'}
                       onClick={() => this.filterAuth(chip.name)}
                       label={chip.name}
                     />
@@ -374,17 +317,11 @@ class Staff extends React.Component {
     return (
       <div className={classes.marginTopStandard}>
         <div className={classes.marginBottomStandard}>
-          <Tabs
-            value={tab}
-            onChange={this.handleTabChange}
-            indicatorColor="secondary"
-            textColor="secondary"
-            centered
-          >
-            <Tab label="Overview" />
-            <Tab label="Contact List" />
-            <Tab label="Qualifications" />
-            <Tab label="Documents" />
+          <Tabs value={tab} onChange={this.handleTabChange} indicatorColor='secondary' textColor='secondary' centered>
+            <Tab label='Overview' />
+            <Tab label='Contact List' />
+            <Tab label='Qualifications' />
+            <Tab label='Documents' />
           </Tabs>
         </div>
         <div className={classes.paperFlexRow}>
@@ -412,7 +349,7 @@ class Staff extends React.Component {
                             <StaffOverviewListItem
                               staff={{
                                 ...user,
-                                events: this.state.events[user.gmail],
+                                events: this.state.events[user.gmail]
                               }}
                             />
                           </ExpansionPanelDetails>
@@ -427,26 +364,13 @@ class Staff extends React.Component {
           )}
           {tab === 1 && (
             <div className={classes.paperWidth}>
-              <Button
-                onClick={() => this.email('all')}
-                color="primary"
-                variant="outlined"
-              >
+              <Button onClick={() => this.email('all')} color='primary' variant='outlined'>
                 Email All Staff
               </Button>
-              <Button
-                onClick={() => this.email('Christchurch')}
-                color="primary"
-                variant="outlined"
-                className={classes.marginSidesSmall}
-              >
+              <Button onClick={() => this.email('Christchurch')} color='primary' variant='outlined' className={classes.marginSidesSmall}>
                 Email Christchurch Staff
               </Button>
-              <Button
-                onClick={() => this.email('Auckland')}
-                color="primary"
-                variant="outlined"
-              >
+              <Button onClick={() => this.email('Auckland')} color='primary' variant='outlined'>
                 Email North Island Staff
               </Button>
               {this.props.contacts.map((user) => {
@@ -458,18 +382,8 @@ class Staff extends React.Component {
                       </Grid>
                       <Grid item xs={3}>
                         {user.workphone ? (
-                          <Popup
-                            trigger={
-                              <a href={'tel:' + user.workphone}>
-                                {user.workphone}
-                              </a>
-                            }
-                            position="bottom center"
-                            on="hover"
-                          >
-                            <div className={classes.popupPhoneNumber}>
-                              {user.workphone}
-                            </div>
+                          <Popup trigger={<a href={'tel:' + user.workphone}>{user.workphone}</a>} position='bottom center' on='hover'>
+                            <div className={classes.popupPhoneNumber}>{user.workphone}</div>
                           </Popup>
                         ) : (
                           <div>Phone not listed.</div>
@@ -483,9 +397,7 @@ class Staff extends React.Component {
               {staff
                 .filter((user) => {
                   if (this.props.search) {
-                    return user.name
-                      .toLowerCase()
-                      .includes(this.props.search.toLowerCase())
+                    return user.name.toLowerCase().includes(this.props.search.toLowerCase())
                   } else {
                     return true
                   }
@@ -499,18 +411,8 @@ class Staff extends React.Component {
                         </Grid>
                         <Grid item xs={3}>
                           {user.workphone ? (
-                            <Popup
-                              trigger={
-                                <a href={'tel:' + user.workphone}>
-                                  {user.workphone}
-                                </a>
-                              }
-                              position="bottom center"
-                              on="hover"
-                            >
-                              <div className={classes.popupPhoneNumber}>
-                                {user.workphone}
-                              </div>
+                            <Popup trigger={<a href={'tel:' + user.workphone}>{user.workphone}</a>} position='bottom center' on='hover'>
+                              <div className={classes.popupPhoneNumber}>{user.workphone}</div>
                             </Popup>
                           ) : (
                             <div>Phone not listed.</div>
@@ -518,10 +420,7 @@ class Staff extends React.Component {
                         </Grid>
                         <Grid item xs={3}>
                           {user.email ? (
-                            <a
-                              className={classes.noTextDecoration}
-                              href={'mailto:' + user.email}
-                            >
+                            <a className={classes.noTextDecoration} href={'mailto:' + user.email}>
                               {user.email}
                             </a>
                           ) : (
@@ -530,10 +429,7 @@ class Staff extends React.Component {
                         </Grid>
                         <Grid item xs={3}>
                           {user.gmail ? (
-                            <a
-                              className={classes.noTextDecoration}
-                              href={'mailto:' + user.gmail}
-                            >
+                            <a className={classes.noTextDecoration} href={'mailto:' + user.gmail}>
                               {user.gmail}
                             </a>
                           ) : (
@@ -561,9 +457,7 @@ class Staff extends React.Component {
                     <div className={classes.flexRowCenter}>IP402</div>
                   </Grid>
                   <Grid item xs={1}>
-                    <div className={classes.flexRowCenter}>
-                      Asbestos Assessor
-                    </div>
+                    <div className={classes.flexRowCenter}>Asbestos Assessor</div>
                   </Grid>
                   <Grid item xs={1}>
                     <div className={classes.flexRowCenter}>Mask Fit</div>
@@ -591,35 +485,17 @@ class Staff extends React.Component {
                           {user.tertiary}
                         </Grid>
                         <Grid item xs={1}>
-                          {user.ip402 && (
-                            <CheckCircleOutline
-                              className={classes.iconRegularGreen}
-                            />
-                          )}
+                          {user.ip402 && <CheckCircleOutline className={classes.iconRegularGreen} />}
                         </Grid>
                         <Grid item xs={1}>
                           {user.aanumber}
                         </Grid>
                         <Grid item xs={1}>
-                          {user.maskfit && (
-                            <Face
-                              className={
-                                user.maskfit === 'OK'
-                                  ? classes.iconRegularGreen
-                                  : classes.iconRegularRed
-                              }
-                            />
-                          )}
+                          {user.maskfit && <Face className={user.maskfit === 'OK' ? classes.iconRegularGreen : classes.iconRegularRed} />}
                         </Grid>
                         <Grid item xs={1}>
                           {user.firstaid && (
-                            <LocalHospital
-                              className={
-                                user.firstaid === 'OK'
-                                  ? classes.iconRegularGreen
-                                  : classes.iconRegularRed
-                              }
-                            />
+                            <LocalHospital className={user.firstaid === 'OK' ? classes.iconRegularGreen : classes.iconRegularRed} />
                           )}
                         </Grid>
                         <Grid item xs={5}>
@@ -639,29 +515,26 @@ class Staff extends React.Component {
                   className={classes.select}
                   defaultValue={{
                     label: this.props.filter.docview,
-                    id: this.props.filter.docview,
+                    id: this.props.filter.docview
                   }}
-                  options={Object.keys(this.props.qualificationtypes).map(
-                    (e) => ({
-                      value: e,
-                      label: this.props.qualificationtypes[e].name,
-                    })
-                  )}
+                  options={Object.keys(this.props.qualificationtypes).map((e) => ({
+                    value: e,
+                    label: this.props.qualificationtypes[e].name
+                  }))}
                   onChange={(e) => this.setDocView(e ? e.value : e)}
                   isClearable
                 />
               </FormControl>
               <Button
                 className={classes.marginTopStandard}
-                variant="outlined"
-                color="primary"
+                variant='outlined'
+                color='primary'
                 onClick={() => {
                   let url =
                     'https://api.k2.co.nz/v1/doc/scripts/staff/qualification_documents.php?images=' +
                     docs.map((doc) => encodeURIComponent(doc.url)).join(';') +
                     '&doctype=' +
-                    this.props.qualificationtypes[this.props.filter.docview]
-                      .name +
+                    this.props.qualificationtypes[this.props.filter.docview].name +
                     '&format=A5'
                   window.open(url)
                 }}
@@ -670,25 +543,12 @@ class Staff extends React.Component {
               </Button>
               {this.props.filter.docview !== 'none' && (
                 <GridList
-                  cellHeight={
-                    this.props.filter.docview
-                      ? this.props.qualificationtypes[this.props.filter.docview]
-                          .cellHeight
-                      : 420
-                  }
-                  cols={
-                    this.props.filter.docview
-                      ? this.props.qualificationtypes[this.props.filter.docview]
-                          .cols
-                      : 6
-                  }
+                  cellHeight={this.props.filter.docview ? this.props.qualificationtypes[this.props.filter.docview].cellHeight : 420}
+                  cols={this.props.filter.docview ? this.props.qualificationtypes[this.props.filter.docview].cols : 6}
                 >
                   {docs.map((doc) => {
                     return (
-                      <GridListTile
-                        key={doc.url}
-                        onClick={() => window.open(doc.url)}
-                      >
+                      <GridListTile key={doc.url} onClick={() => window.open(doc.url)}>
                         <img src={doc.url} alt={doc.name} />
                         <GridListTileBar title={doc.name} />
                       </GridListTile>
@@ -705,6 +565,4 @@ class Staff extends React.Component {
   }
 }
 
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(Staff)
-)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Staff))

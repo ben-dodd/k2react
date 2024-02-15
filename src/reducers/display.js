@@ -8,8 +8,8 @@ import {
   TOGGLE_DO_NOT_RENDER,
   FILTER_STAFF,
   FILTER_MAP,
-  FILTER_MAP_RESET,
-} from "../constants/action-types";
+  FILTER_MAP_RESET
+} from '../constants/action-types'
 
 const filterStaff = {
   officeFilters: {},
@@ -18,10 +18,8 @@ const filterStaff = {
   attrFilterOn: false,
   authFilters: {},
   authFilterOn: false,
-  attrFilters: {},
-  attrFilterOn: false,
-  docview: "none",
-};
+  docview: 'none'
+}
 
 const filterMap = {
   filterViewCompleted: false,
@@ -41,7 +39,7 @@ const filterMap = {
   filterUpdatedInTheLast: false,
   updatedInTheLast: 7,
   filterActionsOverdueBy: false,
-  actionsOverdueBy: 7,
+  actionsOverdueBy: 7
 }
 
 const displayInit = {
@@ -52,19 +50,19 @@ const displayInit = {
   doNotRender: false, // HOLDS OFF ON RENDERING UNTIL SWITCHED ON
   filterStaff: filterStaff,
   filterMap: filterMap,
-  asbestosLabExpanded: null,
-};
+  asbestosLabExpanded: null
+}
 
 // Properties related to all other displays
 export default function displayReducer(state = displayInit, action) {
   switch (action.type) {
     case RESET_DISPLAY:
-      return displayInit;
+      return displayInit
     case APP_HAS_LOADED:
       return {
         ...state,
         initialLoading: false
-      };
+      }
     case ASBESTOS_SAMPLE_DISPLAY_MODE:
       return {
         ...state,
@@ -73,40 +71,40 @@ export default function displayReducer(state = displayInit, action) {
     case ASBESTOS_LAB_EXPANDED:
       return {
         ...state,
-        asbestosLabExpanded: action.payload,
+        asbestosLabExpanded: action.payload
       }
     case TAB_STAFF:
       return {
         ...state,
-        tabStaff: action.payload,
+        tabStaff: action.payload
       }
     case TAB_MY_DETAILS:
       return {
         ...state,
-        tabMyDetails: action.payload,
+        tabMyDetails: action.payload
       }
     case FILTER_STAFF:
       return {
         ...state,
-        filterStaff: action.payload,
+        filterStaff: action.payload
       }
     case FILTER_MAP:
       return {
         ...state,
-        filterMap: action.payload,
+        filterMap: action.payload
       }
     case FILTER_MAP_RESET:
       return {
         ...state,
-        filterMap: filterMap,
+        filterMap: filterMap
       }
     case TOGGLE_DO_NOT_RENDER:
-      console.log(action.payload);
-      return{
+      console.log(action.payload)
+      return {
         ...state,
-        doNotRender: action.payload,
+        doNotRender: action.payload
       }
     default:
-      return state;
+      return state
   }
 }
