@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import React from 'react';
 import { withStyles } from "@material-ui/core/styles";
@@ -29,3 +30,27 @@ export const AsbestosClickyBasic = (fgColor, bgColor, tooltip, label, toggle) =>
     </div>
   </Tooltip>);
 };
+=======
+import React from 'react'
+import Button from '@material-ui/core/Button'
+import Tooltip from '@material-ui/core/Tooltip'
+
+export const AsbestosClickyBasic = (fgColor, bgColor, tooltip, label, toggle) => {
+  return (
+    <Tooltip title={tooltip} key={label}>
+      <div className={bgColor}>
+        <Button
+          variant='outlined'
+          className={fgColor}
+          onClick={() => {
+            // event.stopPropagation();
+            toggle()
+          }}
+        >
+          {label}
+        </Button>
+      </div>
+    </Tooltip>
+  )
+}
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d

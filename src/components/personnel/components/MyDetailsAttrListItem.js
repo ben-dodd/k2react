@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import { connect } from "react-redux";
 
@@ -61,10 +62,73 @@ function AttrList(props) {
   return (
     <ListItem dense className={classes.hoverItem} key={attr.type + attr.date}>
       <Grid container direction="row" justify="flex-start" alignItems="center">
+=======
+import React from 'react'
+import { connect } from 'react-redux'
+
+import ListItem from '@material-ui/core/ListItem'
+import IconButton from '@material-ui/core/IconButton'
+import Grid from '@material-ui/core/Grid'
+
+import Edit from '@material-ui/icons/Edit'
+import Image from '@material-ui/icons/Image'
+import Delete from '@material-ui/icons/Delete'
+
+import AttrModal from '../modals/AttrModal'
+import { USER_ATTR } from '../../../constants/modal-types'
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from '../../../config/styles'
+import { showModal } from '../../../actions/modal'
+import { getUserAttrs } from '../../../actions/local'
+import Popup from 'reactjs-popup'
+import { usersRef, storage } from '../../../config/firebase'
+import moment from 'moment'
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    showModal: (modal) => dispatch(showModal(modal)),
+    getUserAttrs: (userPath) => dispatch(getUserAttrs(userPath))
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    qualificationtypes: state.const.qualificationtypes
+  }
+}
+
+function deleteAttr(uid, user, file) {
+  if (file) storage.ref(file).delete()
+  usersRef
+    .doc(user)
+    .collection('attr')
+    .doc(uid)
+    .delete()
+    .then(() => {})
+}
+
+function AttrList(props) {
+  const { classes, attr } = props
+  let cameracolor = 'lightgrey'
+  if (attr.fileUrl) cameracolor = 'green'
+
+  let qual = props.qualificationtypes[attr.type]
+
+  let expirycolor = 'black'
+  let today = new Date()
+  if (attr.expiry) {
+    let expiry = new Date(attr.expiry)
+    if (expiry <= today) expirycolor = 'red'
+  }
+  return (
+    <ListItem dense className={classes.hoverItem} key={attr.type + attr.date}>
+      <Grid container direction='row' justify='flex-start' alignItems='center'>
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
         <Grid item xs={2}>
           {attr.fileUrl ? (
             <Popup
               trigger={
+<<<<<<< HEAD
                 <span><Image
                   style={{ fontSize: 24, color: cameracolor, margin: 10 }}
                 /></span>
@@ -74,6 +138,17 @@ function AttrList(props) {
               disabled={attr.fileUrl == null}
             >
               <img alt="" src={attr.fileUrl} width={200} />
+=======
+                <span>
+                  <Image style={{ fontSize: 24, color: cameracolor, margin: 10 }} />
+                </span>
+              }
+              position='right bottom'
+              on='hover'
+              disabled={attr.fileUrl == null}
+            >
+              <img alt='' src={attr.fileUrl} width={200} />
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
             </Popup>
           ) : (
             <Image style={{ fontSize: 24, color: cameracolor, margin: 10 }} />
@@ -85,10 +160,17 @@ function AttrList(props) {
                 modalProps: {
                   doc: attr,
                   userPath: props.userPath,
+<<<<<<< HEAD
                   title: "Edit Item",
                   staffName: props.staffName
                 }
               });
+=======
+                  title: 'Edit Item',
+                  staffName: props.staffName
+                }
+              })
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
             }}
           >
             <Edit />
@@ -96,9 +178,13 @@ function AttrList(props) {
           <AttrModal />
         </Grid>
         <Grid item xs={8}>
+<<<<<<< HEAD
           <div className={classes.subHeading}>
             {qual.name}
           </div>
+=======
+          <div className={classes.subHeading}>{qual.name}</div>
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
           {qual.id && attr.id && (
             <div>
               <span className={classes.headingInline}>ID Number:</span> {attr.id}
@@ -106,8 +192,12 @@ function AttrList(props) {
           )}
           {qual.number && attr.number && (
             <div>
+<<<<<<< HEAD
               <span className={classes.headingInline}>Licence Number:</span>{" "}
               {attr.number}
+=======
+              <span className={classes.headingInline}>Licence Number:</span> {attr.number}
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
             </div>
           )}
           {qual.title && attr.title && (
@@ -125,34 +215,55 @@ function AttrList(props) {
           </div>
           {qual.class && attr.class && (
             <div>
+<<<<<<< HEAD
               <span className={classes.headingInline}>Class(es):</span>{" "}
               {attr.class.join(", ")}
+=======
+              <span className={classes.headingInline}>Class(es):</span> {attr.class.join(', ')}
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
             </div>
           )}
           {qual.unit && attr.unit && (
             <div>
+<<<<<<< HEAD
               <span className={classes.headingInline}>Unit Standard(s):</span>{" "}
               {attr.unit.join(", ")}
+=======
+              <span className={classes.headingInline}>Unit Standard(s):</span> {attr.unit.join(', ')}
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
             </div>
           )}
           {qual.course && attr.course && (
             <div>
+<<<<<<< HEAD
               <span className={classes.headingInline}>Course(s):</span>{" "}
               {attr.course.join(", ")}
+=======
+              <span className={classes.headingInline}>Course(s):</span> {attr.course.join(', ')}
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
             </div>
           )}
           {attr.date && (
             <div>
+<<<<<<< HEAD
               <span className={classes.headingInline}>Issue Date:</span>{" "}
               {moment(attr.date).format('D MMMM YYYY')}{" "}
+=======
+              <span className={classes.headingInline}>Issue Date:</span> {moment(attr.date).format('D MMMM YYYY')}{' '}
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
             </div>
           )}
           {qual.expiry && attr.expiry && (
             <div>
+<<<<<<< HEAD
               <span className={classes.headingInline}>Expiry Date:</span>{" "}
               <span style={{ color: expirycolor }}>
                 {moment(attr.expiry).format('D MMMM YYYY')}
               </span>
+=======
+              <span className={classes.headingInline}>Expiry Date:</span>{' '}
+              <span style={{ color: expirycolor }}>{moment(attr.expiry).format('D MMMM YYYY')}</span>
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
             </div>
           )}
           {qual.issuer && attr.issuer && (
@@ -169,11 +280,17 @@ function AttrList(props) {
         <Grid item xs={1}>
           <IconButton
             onClick={() => {
+<<<<<<< HEAD
               if (
                 window.confirm("Are you sure you wish to delete this item?")
               ) {
                 deleteAttr(attr.uid, props.userPath, attr.fileRef);
                 props.getUserAttrs(props.userPath);
+=======
+              if (window.confirm('Are you sure you wish to delete this item?')) {
+                deleteAttr(attr.uid, props.userPath, attr.fileRef)
+                props.getUserAttrs(props.userPath)
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
               }
             }}
           >
@@ -182,6 +299,7 @@ function AttrList(props) {
         </Grid>
       </Grid>
     </ListItem>
+<<<<<<< HEAD
   );
 }
 
@@ -191,3 +309,9 @@ export default withStyles(styles)(
     mapDispatchToProps
   )(AttrList)
 );
+=======
+  )
+}
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(AttrList))
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d

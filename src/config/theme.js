@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { createMuiTheme } from "@material-ui/core/styles";
 
 export const colorList = [
@@ -20,6 +21,22 @@ const palette = {
     dark: "#b21f00",
     main: "#FF2D00",
     light: "#ff5733"
+=======
+import { createMuiTheme } from '@material-ui/core/styles'
+
+export const colorList = ['#a2539c', '#e33714', '#6fa1b6', '#995446', '#ff0065', '#87cc14', '#7d6d26']
+
+const palette = {
+  primary: {
+    dark: '#004c2f',
+    main: '#006D44',
+    light: '#338a69'
+  },
+  secondary: {
+    dark: '#b21f00',
+    main: '#FF2D00',
+    light: '#ff5733'
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
   },
   indicators: {
     bad: 'red',
@@ -35,7 +52,11 @@ const palette = {
     benign: 'lightblue',
     benignText: 'blue',
     off: 'white',
+<<<<<<< HEAD
     offText: '#ddd',
+=======
+    offText: '#ddd'
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
   },
   jobs: {
     workplace: '#a2539c',
@@ -45,6 +66,7 @@ const palette = {
     meth: '#ff0065',
     bio: '#87cc14',
     asbestos: '#7d6d26',
+<<<<<<< HEAD
     all: '#555',
   },
   colorList: [
@@ -56,13 +78,22 @@ const palette = {
     '#87cc14',
     '#7d6d26',
   ],
+=======
+    all: '#555'
+  },
+  colorList: ['#a2539c', '#e33714', '#6fa1b6', '#995446', '#ff0065', '#87cc14', '#7d6d26'],
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
   app: {
     hover: '#eee',
     hoverHighlight: '#eec',
     highlight: '#ffd',
     disabled: '#ddd',
     shaded: '#aaa',
+<<<<<<< HEAD
     shadedHighlighted: '#004c2f',
+=======
+    shadedHighlighted: '#004c2f'
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
   },
   stages: {
     start: '#dae9ec',
@@ -74,7 +105,11 @@ const palette = {
     workComplete: '#6ea7b3',
     workCompleteText: 'white',
     readyForIssue: '#9fefff',
+<<<<<<< HEAD
     readyForIssueText: 'black',
+=======
+    readyForIssueText: 'black'
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
   },
   stagesGreen: {
     start: '#e7f1ee',
@@ -86,9 +121,15 @@ const palette = {
     workComplete: '#2e8766',
     workCompleteText: 'white',
     readyForIssue: '#006d44',
+<<<<<<< HEAD
     readyForIssueText: 'white',
   },
 };
+=======
+    readyForIssueText: 'white'
+  }
+}
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 
 export default createMuiTheme({
   typography: {
@@ -99,6 +140,7 @@ export default createMuiTheme({
   overrides: {
     MuiTooltip: {
       tooltip: {
+<<<<<<< HEAD
         fontSize: 12,
       },
     },
@@ -124,6 +166,33 @@ export default createMuiTheme({
         textColorPrimary: "white"
       }
     },
+=======
+        fontSize: 12
+      }
+    },
+    MuiFormControlLabel: {
+      label: {
+        fontSize: 12
+      }
+    },
+    MuiInputLabel: {
+      root: {
+        fontSize: 12
+      }
+    },
+    MuiListItemText: {
+      primary: {
+        fontSize: 12,
+        color: '#333'
+      }
+    },
+    MuiTab: {
+      root: {
+        indicatorColor: palette.secondary.main,
+        textColorPrimary: 'white'
+      }
+    }
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
     // MuiButton: {
     //   root: {
     //     fontSize: 12,
@@ -132,4 +201,8 @@ export default createMuiTheme({
     //   textSecondary: palette.secondary.main,
     // }
   }
+<<<<<<< HEAD
 });
+=======
+})
+>>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
