@@ -138,9 +138,8 @@ export const fetchWFMStaff = (accessToken, refreshToken) => async (dispatch) => 
       params: {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'xero-tenant-id': process.env.REACT_APP_XERO_TENANT_ID,
-          Accept: 'application/json'
+          authorization: `Bearer ${accessToken}`,
+          account_id: process.env.REACT_APP_WFM_ACCOUNT_ID
         }
       }
     })
@@ -167,9 +166,8 @@ export const fetchWFMJobs = (accessToken, refreshToken) => async (dispatch) => {
       params: {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'xero-tenant-id': process.env.REACT_APP_XERO_TENANT_ID,
-          Accept: 'application/json'
+          authorization: `Bearer ${accessToken}`,
+          account_id: process.env.REACT_APP_WFM_ACCOUNT_ID
         }
       }
     })
@@ -263,9 +261,8 @@ export const fetchWFMLeads = (accessToken, refreshToken) => async (dispatch) => 
       params: {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'xero-tenant-id': process.env.REACT_APP_XERO_TENANT_ID,
-          Accept: 'application/json'
+          authorization: `Bearer ${accessToken}`,
+          account_id: process.env.REACT_APP_WFM_ACCOUNT_ID
         }
       }
     })
@@ -411,9 +408,8 @@ export const fetchWFMClients = (accessToken, refreshToken) => async (dispatch) =
       params: {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'xero-tenant-id': process.env.REACT_APP_XERO_TENANT_ID,
-          Accept: 'application/json'
+          authorization: `Bearer ${accessToken}`,
+          account_id: process.env.REACT_APP_WFM_ACCOUNT_ID
         }
       }
     })
@@ -519,9 +515,8 @@ export const getDetailedWFMJob =
         params: {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'xero-tenant-id': process.env.REACT_APP_XERO_TENANT_ID,
-            Accept: 'application/json'
+            authorization: `Bearer ${accessToken}`,
+            account_id: process.env.REACT_APP_WFM_ACCOUNT_ID
           }
         }
       })
@@ -565,9 +560,8 @@ export const getDetailedWFMJob =
                     params: {
                       method: 'GET',
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                        'xero-tenant-id': process.env.REACT_APP_XERO_TENANT_ID,
-                        Accept: 'application/json'
+                        authorization: `Bearer ${accessToken}`,
+                        account_id: process.env.REACT_APP_WFM_ACCOUNT_ID
                       }
                     }
                   })
@@ -650,9 +644,8 @@ export const getDetailedWFMJob =
                     params: {
                       method: 'GET',
                       headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                        'xero-tenant-id': process.env.REACT_APP_XERO_TENANT_ID,
-                        Accept: 'application/json'
+                        authorization: `Bearer ${accessToken}`,
+                        account_id: process.env.REACT_APP_WFM_ACCOUNT_ID
                       }
                     }
                   })
@@ -1792,10 +1785,17 @@ export const collateJobsList = (wfmJobs, wfmLeads, currentJobState, wfmClients, 
 
 export const getWfmUrl = (m) => {
   var path
+  // if (m.isJob) {
+  //   path = `https://my.workflowmax.com/job/jobview.aspx?id=${m.wfmID}`
+  // } else {
+  //   path = `https://my.workflowmax.com/lead/view.aspx?id=${m.wfmID}`
+  // }
   if (m.isJob) {
-    path = `https://my.workflowmax.com/job/jobview.aspx?id=${m.wfmID}`
+    path = `https://app.workflowmax2.com/organizations/${process.env.REACT_APP_WFM_ACCOUNT_ID}/jobs/${m.wfmUUID}/information`
+    // path = `https://my.workflowmax.com/job/jobview.aspx?id=${m.wfmID}`
   } else {
-    path = `https://my.workflowmax.com/lead/view.aspx?id=${m.wfmID}`
+    // path = `https://my.workflowmax.com/lead/view.aspx?id=${m.wfmID}`
+    path = `https://app.workflowmax2.com/organizations/${process.env.REACT_APP_WFM_ACCOUNT_ID}/leads/${m.wfmUUID}/?tab=all_leads&current=details`
   }
   return path
 }
@@ -1863,8 +1863,8 @@ export const sendTimeSheetToWFM = (taskData, taskID, that) => {
         method: 'PUT',
         body: assignXML,
         headers: {
-          Authorization: `Bearer ${taskData.accessToken}`,
-          'xero-tenant-id': process.env.REACT_APP_XERO_TENANT_ID
+          authorization: `Bearer ${taskData.accessToken}`,
+          account_id: process.env.REACT_APP_WFM_ACCOUNT_ID
         }
       }
     })
@@ -1878,8 +1878,8 @@ export const sendTimeSheetToWFM = (taskData, taskID, that) => {
         method: 'POST',
         body: timeXML,
         headers: {
-          Authorization: `Bearer ${taskData.accessToken}`,
-          'xero-tenant-id': process.env.REACT_APP_XERO_TENANT_ID
+          authorization: `Bearer ${taskData.accessToken}`,
+          account_id: process.env.REACT_APP_WFM_ACCOUNT_ID
         }
       }
     })
@@ -1932,9 +1932,8 @@ export const getTaskID = (taskData, that) => {
       params: {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${taskData.accessToken}`,
-          'xero-tenant-id': process.env.REACT_APP_XERO_TENANT_ID,
-          Accept: 'application/json'
+          authorization: `Bearer ${taskData.accessToken}`,
+          account_id: process.env.REACT_APP_WFM_ACCOUNT_ID
         }
       }
     })
@@ -1992,9 +1991,8 @@ export const getTaskID = (taskData, that) => {
                 method: 'POST',
                 body: taskXML,
                 headers: {
-                  Authorization: `Bearer ${taskData.accessToken}`,
-                  'xero-tenant-id': process.env.REACT_APP_XERO_TENANT_ID,
-                  Accept: 'application/json'
+                  authorization: `Bearer ${taskData.accessToken}`,
+                  account_id: process.env.REACT_APP_WFM_ACCOUNT_ID
                 }
               }
             })
@@ -2030,12 +2028,7 @@ export const getTaskID = (taskData, that) => {
 
 export const gotoWFM = (m) => {
   // //console.log("GoTO");
-  var path
-  if (m.isJob) {
-    path = `https://my.workflowmax.com/job/jobview.aspx?id=${m.wfmID}`
-  } else {
-    path = `https://my.workflowmax.com/lead/view.aspx?id=${m.wfmID}`
-  }
+  var path = getWfmUrl(m)
   var win = window.open(path, '_blank')
   win.focus()
 }

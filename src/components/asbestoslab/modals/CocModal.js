@@ -42,7 +42,7 @@ import {
   showModalSecondary
 } from '../../../actions/modal'
 import { fetchStaff, addLog } from '../../../actions/local'
-import { getDetailedWFMJob, resetWfmJob, getDefaultLetterAddress } from '../../../actions/jobs'
+import { getDetailedWFMJob, resetWfmJob, getDefaultLetterAddress, getWfmUrl } from '../../../actions/jobs'
 import {
   fetchSamples,
   handleCocSubmit,
@@ -270,13 +270,7 @@ class CocModal extends React.PureComponent {
                                   <div className={classes.flexRow}>
                                     {((doc && doc.wfmID) || (wfmJob && wfmJob.wfmID)) && (
                                       <Tooltip title='View Job on WorkflowMax'>
-                                        <IconButton
-                                          onClick={() =>
-                                            window.open(
-                                              `https://my.workflowmax.com/job/jobview.aspx?id=${wfmJob ? wfmJob.wfmID : doc.wfmID}`
-                                            )
-                                          }
-                                        >
+                                        <IconButton onClick={() => window.open(getWfmUrl(wfmJob || doc))}>
                                           <Link className={classes.iconRegular} />
                                         </IconButton>
                                       </Tooltip>
@@ -309,13 +303,7 @@ class CocModal extends React.PureComponent {
                                       <div className={classes.flexRow}>
                                         {((doc && doc.wfmID) || (wfmJob && wfmJob.wfmID)) && (
                                           <Tooltip title='View Job on WorkflowMax'>
-                                            <IconButton
-                                              onClick={() =>
-                                                window.open(
-                                                  `https://my.workflowmax.com/job/jobview.aspx?id=${wfmJob ? wfmJob.wfmID : doc.wfmID}`
-                                                )
-                                              }
-                                            >
+                                            <IconButton onClick={() => window.open(getWfmUrl(wfmJob || doc))}>
                                               <Link className={classes.iconRegular} />
                                             </IconButton>
                                           </Tooltip>

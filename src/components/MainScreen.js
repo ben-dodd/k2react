@@ -255,7 +255,7 @@ class MainScreen extends React.PureComponent {
           ignoreQueryPrefix: true
         }).code
         if (!code) {
-          let path = `${process.env.REACT_APP_WFM_AUTH_ROOT}${process.env.REACT_APP_WFM_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}&scope=workflowmax offline_access&state=${process.env.REACT_APP_WFM_STATE_KEY}`
+          let path = `${process.env.REACT_APP_WFM_AUTH_ROOT}${process.env.REACT_APP_WFM_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}&scope=openid profile email workflowmax offline_access&state=${process.env.REACT_APP_WFM_STATE_KEY}&prompt=consent`
           window.location.assign(path)
         } else {
           // User has been sent back to MyK2 with the code
