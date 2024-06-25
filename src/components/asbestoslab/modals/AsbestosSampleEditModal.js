@@ -37,7 +37,6 @@ import {
   handleSampleChange,
   writeSoilDetails,
   getSampleColors,
-  analyticalCriteraOK,
   traceAnalysisRequired,
   recordAnalysis,
   verifySample,

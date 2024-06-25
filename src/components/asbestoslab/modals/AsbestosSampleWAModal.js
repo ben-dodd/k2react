@@ -31,12 +31,11 @@ import { DatePicker, DateTimePicker } from '@material-ui/pickers'
 import SuggestionField from '../../../widgets/SuggestionField'
 import { hideModal, showModalSecondary } from '../../../actions/modal'
 import { toggleAsbestosSampleDisplayMode } from '../../../actions/display'
-import { addLog, personnelConvert, dateOf } from '../../../actions/local'
+import { addLog, personnelConvert, dateOf, analyticalCriteraOK } from '../../../actions/local'
 import {
   handleSampleChange,
   writeSoilDetails,
   getSampleColors,
-  analyticalCriteraOK,
   traceAnalysisRequired,
   recordAnalysis,
   updateResultMap,

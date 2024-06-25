@@ -21,7 +21,6 @@ import moment from 'moment'
 import {
   writeSoilDetails,
   getSampleColors,
-  analyticalCriteraOK,
   writeShorthandResult,
   writeSampleConditioningList,
   writeSampleDimensions,

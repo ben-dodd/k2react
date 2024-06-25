@@ -29,7 +29,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import Https from '@material-ui/icons/Https'
 import CheckCircleOutline from '@material-ui/icons/CheckCircleOutline'
 
-import 'react-table/react-table.css'
+import 'react-table-6/react-table.css'
 import Popup from 'reactjs-popup'
 import ApiCalendar from 'react-google-calendar-api'
 

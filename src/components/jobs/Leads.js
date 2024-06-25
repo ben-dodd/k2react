@@ -5,8 +5,8 @@ import { connect } from 'react-redux'
 
 //Modals
 import IconButton from '@material-ui/core/IconButton'
-import ReactTable from 'react-table'
-import 'react-table/react-table.css'
+import ReactTable from 'react-table-6'
+import 'react-table-6/react-table.css'
 import NotWatchingIcon from '@material-ui/icons/BookmarkBorder'
 import WatchingIcon from '@material-ui/icons/Bookmark'
 
