@@ -88,7 +88,6 @@ const mapStateToProps = (state) => {
     wfmItems: state.jobs.wfmItems,
     wfmStats: state.jobs.wfmStats,
     jobList: state.jobs.jobList,
-    search: state.local.search,
     filter: state.display.filterMap,
     wfmAccessToken: state.local.wfmAccessToken
   }

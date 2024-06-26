@@ -23,8 +23,9 @@ import Checkbox from '@material-ui/core/Checkbox'
 import TextField from '@material-ui/core/TextField'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { hideModalSecondary, handleModalChange } from '../../../actions/modal'
-import { writeSoilDetails, getSoilSensitivity } from '../../../actions/asbestosLab'
 import { asbestosSamplesRef } from '../../../config/firebase'
+import { writeSoilDetails } from '../../../utils/asbestosLab/helpers'
+import { getSoilSensitivity } from '../../../utils/asbestosLab/getters'
 
 const mapStateToProps = (state) => {
   return {

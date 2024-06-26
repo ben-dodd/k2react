@@ -1,5 +1,8 @@
 // Air Sample Functions
 
+import moment from 'moment'
+import { writeDates } from '../../actions/helpers'
+
 export const getAverageFlowRate = (sample) => {
   if (sample.initialFlowRate && sample.finalFlowRate) {
     let averageFlowRate = (parseFloat(sample.initialFlowRate) + parseFloat(sample.finalFlowRate)) / 2,

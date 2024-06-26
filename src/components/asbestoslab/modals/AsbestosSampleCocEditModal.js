@@ -23,14 +23,6 @@ import Select from 'react-select'
 
 import SuggestionField from '../../../widgets/SuggestionField'
 import { hideModalSecondary, handleModalChange } from '../../../actions/modal'
-import {
-  handleSampleChange,
-  writeDescription,
-  getAirSampleData,
-  updateResultMap,
-  getSampleColors,
-  getBasicResult
-} from '../../../actions/asbestosLab'
 import { addLog } from '../../../actions/local'
 import { sentenceCase, titleCase, personnelConvert, numericOnly, dateOf } from '../../../actions/helpers'
 import { SampleRadioSelector } from '../../../widgets/FormWidgets'
@@ -38,6 +30,10 @@ import NumberSpinner from '../../../widgets/NumberSpinner'
 import _ from 'lodash'
 
 import { DatePicker } from '@material-ui/pickers'
+import { getBasicResult, getSampleColors, writeDescription } from '../../../utils/asbestosLab/helpers'
+import { getAirSampleData } from '../../../utils/asbestosLab/air'
+import { handleSampleChange } from '../../../utils/asbestosLab/sampleEdit'
+import { updateResultMap } from '../../../utils/asbestosLab/recordAnalysis'
 
 const mapStateToProps = (state) => {
   return {

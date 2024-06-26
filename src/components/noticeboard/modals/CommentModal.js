@@ -19,7 +19,6 @@ import TextField from '@material-ui/core/TextField'
 
 import { hideModal, handleModalChange, handleModalSubmit, onUploadFile, handleTagDelete, handleTagAddition } from '../../../actions/modal'
 import { getUserAttrs, fetchNotices, removeNoticeReads } from '../../../actions/local'
-import { sendSlackMessage } from '../../../actions/helpers'
 import _ from 'lodash'
 
 const mapStateToProps = (state) => {
@@ -88,7 +87,6 @@ class CommentModal extends React.Component {
             <Button
               onClick={() => {
                 let comment = doc.comment
-                let newComment = comment && !comment.uid
                 if (comment && !comment.uid && comment.text && comment.text !== '') {
                   comment.uid = moment().format('x')
                 }
@@ -110,11 +108,6 @@ class CommentModal extends React.Component {
                       [comment.uid]: comment
                     }
                   }
-
-                  let message = {
-                    text: `${this.props.me.name} has ${newComment ? 'added a new' : 'edited a'} comment.`
-                  }
-                  sendSlackMessage(message, true)
 
                   // Reset all staff read if a new or edited comment
                   newDoc = {

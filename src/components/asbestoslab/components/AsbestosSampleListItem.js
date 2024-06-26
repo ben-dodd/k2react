@@ -2,14 +2,6 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { styles } from '../../../config/styles'
 import { connect } from 'react-redux'
-import {
-  writeDescription,
-  getBasicResult,
-  holdSample,
-  writeShorthandResult,
-  getConfirmColor,
-  getSampleStatusCode
-} from '../../../actions/asbestosLab'
 import { AsbestosSampleStatus } from '../../../widgets/DisplayWidgets'
 import { showModal } from '../../../actions/modal'
 import { toggleAsbestosSampleDisplayMode } from '../../../actions/display'
@@ -36,6 +28,14 @@ import ConfirmIcon from '@material-ui/icons/ThumbUp'
 import ThumbsDown from '@material-ui/icons/ThumbDown'
 
 import Popup from 'reactjs-popup'
+import {
+  getBasicResult,
+  getConfirmColor,
+  getSampleStatusCode,
+  writeDescription,
+  writeShorthandResult
+} from '../../../utils/asbestosLab/helpers'
+import { holdSample } from '../../../utils/asbestosLab/sampleChanges'
 
 const mapStateToProps = (state) => {
   return {

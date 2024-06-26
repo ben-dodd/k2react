@@ -2,13 +2,21 @@
 // COC EDIT
 //
 
+import moment from 'moment'
+import { writeDescription } from './helpers'
+import { addLog } from '../../actions/local'
+import { andList, dateOf } from '../../actions/helpers'
+import { firestore, asbestosSamplesRef, cocsRef } from '../../config/firebase'
+import { DELETE_COC } from '../../constants/action-types'
+import { getAirSampleData } from './air'
+
 export const handleCocSubmit = async ({ doc, me, originalSamples, sampleType }) => {
   let sampleList = [],
     sampleCount = 0,
     batch = firestore.batch()
   if (doc.samples) {
     // //console.log(doc.samples);
-    await Object.keys(doc.samples).forEach((sampleNumber) => {
+    Object.keys(doc.samples).forEach((sampleNumber) => {
       let sample = doc.samples[sampleNumber]
       if (sample.cocUid === doc.uid) sampleCount++
       if (sampleType === 'bulk' && (sample.genericLocation || sample.specificLocation || sample.description || sample.material)) {

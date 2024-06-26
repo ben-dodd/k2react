@@ -454,7 +454,7 @@ class JobMap extends React.Component {
                     value='filterUpdatedInTheLast'
                     color='secondary'
                   />
-                  Only show jobs/leads that haven't been updated for
+                  Only show jobs/leads that haven&apos;t been updated for
                   <Input
                     className={classes.formInputNumber}
                     type='number'

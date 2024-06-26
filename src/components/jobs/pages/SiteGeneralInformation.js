@@ -20,7 +20,7 @@ import EditIcon from '@material-ui/icons/Edit'
 
 import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
 
-import { dateOf, andList, personnelConvert, numericOnly } from '../../../actions/helpers'
+import { dateOf, andList, numericOnly } from '../../../actions/helpers'
 
 import moment from 'moment'
 import classNames from 'classnames'

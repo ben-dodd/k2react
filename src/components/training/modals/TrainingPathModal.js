@@ -33,7 +33,7 @@ import UploadIcon from '@material-ui/icons/CloudUpload'
 import Close from '@material-ui/icons/Close'
 import { hideModal, handleModalChange, handleModalChangeStep, handleModalSubmit, onUploadFile } from '../../../actions/modal'
 import { getUserAttrs } from '../../../actions/local'
-import { sendSlackMessage, quillModules } from '../../../actions/helpers'
+import { quillModules } from '../../../actions/helpers'
 import _ from 'lodash'
 
 // Quill.register('modules/imageResize', ImageResize);
@@ -81,13 +81,6 @@ class TrainingModuleModal extends React.Component {
     return {
       fontWeight: list && list.constructor === Array && list.indexOf(uid) > -1 ? 600 : 200
     }
-  }
-
-  sendNewAttrSlack = () => {
-    let message = {
-      text: `${this.props.modalProps.staffName} has added a new module.\n${this.props.qualificationtypes[this.props.doc.type].name}`
-    }
-    sendSlackMessage(message, true)
   }
 
   deleteImage = (file, uid) => {

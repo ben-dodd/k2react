@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core/styles'
+import { createTheme } from '@material-ui/core/styles'
 
 export const colorList = ['#a2539c', '#e33714', '#6fa1b6', '#995446', '#ff0065', '#87cc14', '#7d6d26']
 
@@ -74,10 +74,9 @@ const palette = {
   }
 }
 
-export default createMuiTheme({
+export default createTheme({
   typography: {
-    fontSize: 11,
-    useNextVariants: true
+    fontSize: 11
   },
   palette: palette,
   overrides: {

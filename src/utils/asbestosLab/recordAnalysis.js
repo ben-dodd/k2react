@@ -1,3 +1,11 @@
+import firebase from 'firebase/compat/app'
+import { asbestosAnalysisLogRef, asbestosSamplesRef, cocsRef } from '../../config/firebase'
+import { writeDescription, writeResult, writeShorthandResult } from './helpers'
+import { addLog } from '../../actions/local'
+import moment from 'moment'
+import { dateOf } from '../../actions/helpers'
+import { startAnalysis } from './sampleChanges'
+
 export const updateResultMap = (result, map) => {
   let updatedMap = {}
 

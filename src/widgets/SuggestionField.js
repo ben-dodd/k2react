@@ -37,14 +37,14 @@ const handleSuggestionFetchRequested = (that, suggestions, value, addedSuggestio
 
 const getSuggestionValue = (suggestion) => suggestion.label
 
-const handleSuggestionsClearRequested = (that, suggestions) => {
+const handleSuggestionsClearRequested = (that) => {
   that.setState({
     suggestions: []
   })
 }
 
 const renderInputComponent = (inputProps) => {
-  const { classes, required, inputRef = () => {}, ref, ...other } = inputProps
+  const { inputRef = () => {}, ref, ...other } = inputProps
 
   return (
     <TextField
@@ -137,7 +137,7 @@ class SuggestionField extends React.PureComponent {
       <Autosuggest
         {...autosuggestProps}
         suggestions={this.state.suggestions}
-        onSuggestionSelected={(event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
+        onSuggestionSelected={(event, { suggestionValue }) => {
           this.setState({
             value: suggestionValue,
             suggestions: []

@@ -62,6 +62,7 @@ export default function asbestosLabReducer(state = asbestosLabInit, action) {
         }
       }
     case DELETE_COC:
+      // eslint-disable-next-line no-case-declarations
       let newCocs = state.cocs
       delete newCocs[action.payload]
       //console.log(newCocs);

@@ -1,6 +1,8 @@
 module.exports = {
   root: true,
+  parser: '@babel/eslint-parser',
   parserOptions: {
+    requireConfigFile: false,
     ecmaVersion: 2020,
     sourceType: 'module',
     ecmaFeatures: {
@@ -15,12 +17,15 @@ module.exports = {
   env: {
     jest: true,
     browser: true,
+    es2021: true,
     amd: true,
     node: true
   },
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
+    'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
     'plugin:prettier/recommended' // Make this the last element so prettier config overrides other formatting rules
   ],
   rules: {

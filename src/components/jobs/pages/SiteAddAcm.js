@@ -51,12 +51,10 @@ import {
   handleSiteChange,
   getRoomInLayout
 } from '../../../actions/jobs'
-
-import { writeDescription, writeSimpleResult } from '../../../actions/asbestosLab'
-
 import { getFirestoreCollection } from '../../../actions/local'
 
 import { filterMap, filterMapReset } from '../../../actions/display'
+import { writeDescription, writeSimpleResult } from '../../../utils/asbestosLab/helpers'
 
 const mapStateToProps = (state) => {
   return {

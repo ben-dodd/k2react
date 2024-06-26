@@ -23,17 +23,14 @@ import 'react-table-6/react-table.css'
 import { hideModal, showModalSecondary } from '../../../actions/modal'
 import { dateOf, milliToDHM } from '../../../actions/helpers'
 import {
-  writeShorthandResult,
-  writeDescription,
-  fetchSamples,
   fetchSampleView,
   fetchAsbestosAnalysisLogs,
   fetchAsbestosSampleIssueLogs,
-  fetchAsbestosCheckLogs,
-  compareAsbestosResult
+  fetchAsbestosCheckLogs
 } from '../../../actions/asbestosLab'
 import moment from 'moment'
 import classNames from 'classnames'
+import { compareAsbestosResult, writeDescription, writeShorthandResult } from '../../../utils/asbestosLab/helpers'
 
 const mapStateToProps = (state) => {
   return {

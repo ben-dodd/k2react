@@ -107,5 +107,5 @@ class JobsMapContainer extends React.Component {
   }
 }
 
-export default JobMapsContainer
+export default JobsMapContainer
 // export default GoogleApiWrapper({ apiKey: (process.env.REACT_APP_GOOGLE_MAPS_KEY) })(JobsMapContainer);

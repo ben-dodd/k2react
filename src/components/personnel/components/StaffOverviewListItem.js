@@ -165,11 +165,10 @@ function StaffCard(props) {
           >
             {staff.gmail ? (
               <span>
-                The user has not shared their Google Calendar with you. You can request access by entering their Gmail address into the "Add
-                a friend's calendar" field on your Google Calendar sidebar.
+                {`The user has not shared their Google Calendar with you. You can request access by entering their Gmail address into the "Add a friend's calendar" field on your Google Calendar sidebar.`}
               </span>
             ) : (
-              <span>The user has not set their Google Calendar account.</span>
+              <span>{`The user has not set their Google Calendar account.`}</span>
             )}
           </div>
         )}

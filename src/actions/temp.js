@@ -227,8 +227,7 @@ export const restructureAnalysisLog = () => {
           sessionID: logDoc.data().sessionID,
           weightReceived: logDoc.data().weightReceived,
           result: logDoc.data().result,
-          cocUid: logDoc.data().cocUID,
-          sessionID: logDoc.data().sessionID
+          cocUid: logDoc.data().cocUID
         }
         let uid = `${logDoc.data().sampleUID}-${logDoc.data().sessionID}`
         let sample = {}

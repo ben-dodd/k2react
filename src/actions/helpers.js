@@ -294,16 +294,6 @@ export const andList = (list) => {
   else return list.slice(0, -1).join(', ') + ' and ' + list.slice(-1)
 }
 
-export const sendSlackMessage = (message, json) => {
-  let text
-  if (json) text = message
-  else text = { text: message }
-  fetch(process.env.REACT_APP_SLACK_WEBHOOK, {
-    method: 'POST',
-    body: JSON.stringify(text)
-  })
-}
-
 export const writeMeasurement = (value, decimal, sigfig, symbol, notFound) => {
   if (value) {
     let prefix = ''

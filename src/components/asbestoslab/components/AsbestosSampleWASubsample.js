@@ -2,7 +2,6 @@ import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { styles } from '../../../config/styles'
 import { connect } from 'react-redux'
-import { writeDescription, getSampleColors, updateResultMap } from '../../../actions/asbestosLab'
 import classNames from 'classnames'
 
 import { SketchPicker } from 'react-color'
@@ -22,6 +21,8 @@ import FormGroup from '@material-ui/core/FormGroup'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import { addLog } from '../../../actions/local'
+import { updateResultMap } from '../../../utils/asbestosLab/recordAnalysis'
+import { getSampleColors } from '../../../utils/asbestosLab/helpers'
 
 const mapStateToProps = (state) => {
   return {

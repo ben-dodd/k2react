@@ -1,8 +1,6 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { styles } from '../../../config/styles'
-import { connect } from 'react-redux'
-import { writeShorthandResult } from '../../../actions/asbestosLab'
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
@@ -11,6 +9,7 @@ import Grid from '@material-ui/core/Grid'
 
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import Flag from '@material-ui/icons/Flag'
+import { writeShorthandResult } from '../../../utils/asbestosLab/helpers'
 
 class AsbestosLogCard extends React.Component {
   render() {

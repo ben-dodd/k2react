@@ -43,17 +43,12 @@ import {
 } from '../../../actions/modal'
 import { fetchStaff, addLog } from '../../../actions/local'
 import { getDetailedWFMJob, resetWfmJob, getDefaultLetterAddress, getWfmUrl } from '../../../actions/jobs'
-import {
-  fetchSamples,
-  handleCocSubmit,
-  handleSampleChange,
-  writeDescription,
-  getAirSampleData,
-  getSampleColors,
-  updateResultMap
-} from '../../../actions/asbestosLab'
+import { fetchSamples } from '../../../actions/asbestosLab'
 import { titleCase, sentenceCase, dateOf, personnelConvert, numericOnly } from '../../../actions/helpers'
 import _ from 'lodash'
+import { updateResultMap } from '../../../utils/asbestosLab/recordAnalysis'
+import { handleCocSubmit } from '../../../utils/asbestosLab/coc'
+import { handleSampleChange } from '../../../utils/asbestosLab/sampleEdit'
 
 const mapStateToProps = (state) => {
   return {

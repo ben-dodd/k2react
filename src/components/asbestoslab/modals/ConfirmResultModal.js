@@ -20,17 +20,13 @@ import SetIcon from '@material-ui/icons/Publish'
 import { hideModal, handleModalChange } from '../../../actions/modal'
 import { addLog } from '../../../actions/local'
 import { dateOf, numericAndLessThanOnly } from '../../../actions/helpers'
-import {
-  updateResultMap,
-  getSampleColors,
-  setAnalyst,
-  getBasicResult,
-  compareAsbestosResult,
-  setCheckAnalysis
-} from '../../../actions/asbestosLab'
+import { setAnalyst } from '../../../actions/asbestosLab'
 import { AsbButton } from '../../../widgets/FormWidgets'
 import _ from 'lodash'
 import moment from 'moment'
+import { updateResultMap } from '../../../utils/asbestosLab/recordAnalysis'
+import { compareAsbestosResult, getBasicResult, getSampleColors } from '../../../utils/asbestosLab/helpers'
+import { setCheckAnalysis } from '../../../utils/asbestosLab/sampleEdit'
 
 const mapStateToProps = (state) => {
   return {

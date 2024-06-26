@@ -1,9 +1,7 @@
 import React from 'react'
 import classNames from 'classnames'
 import moment from 'moment'
-import { writeDescription, getSampleColors, writeShorthandResult, getBasicResult } from '../../../actions/asbestosLab'
 import { dateOf, titleCase, sentenceCase, personnelConvert } from '../../../actions/helpers'
-import { ASBESTOS_SAMPLE_EDIT_COC } from '../../../constants/modal-types'
 import { AsbButton } from '../../../widgets/FormWidgets'
 import SuggestionField from '../../../widgets/SuggestionField'
 import Select from 'react-select'
@@ -11,6 +9,7 @@ import { DatePicker } from '@material-ui/pickers'
 
 import IconButton from '@material-ui/core/IconButton'
 import EditIcon from '@material-ui/icons/Edit'
+import { getBasicResult, getSampleColors, writeDescription, writeShorthandResult } from '../../../utils/asbestosLab/helpers'
 
 function AsbestoSampleListBulk(props) {
   const { classes, doc, i, disabled, names, sampleType, onEdit, listType, that } = props

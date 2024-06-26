@@ -9,10 +9,10 @@ import { docsRef, storage } from '../../../config/firebase'
 import '../../../config/tags.css'
 
 import { RichEditor } from '../../editor/RichEditor'
-// import { EditorState, ContentState, convertToRaw } from "draft-js";
+import { EditorState, ContentState, convertToRaw } from 'draft-js'
 // import ReactRichEditor from 'react-rich-text-editor'
-// import draftToHtml from 'draftjs-to-html'
-// import htmlToDraft from 'html-to-draftjs'
+import draftToHtml from 'draftjs-to-html'
+import htmlToDraft from 'html-to-draftjs'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
@@ -40,7 +40,6 @@ import {
   handleTagDelete
 } from '../../../actions/modal'
 import { getUserAttrs } from '../../../actions/local'
-import { sendSlackMessage } from '../../../actions/helpers'
 import _ from 'lodash'
 
 const mapStateToProps = (state) => {
@@ -118,7 +117,6 @@ class DocumentModal extends React.Component {
     let message = {
       text: `${this.props.modalProps.staffName} has added a new module.\n${this.props.qualificationtypes[this.props.doc.type].name}`
     }
-    sendSlackMessage(message, true)
   }
 
   getPage = () => {
@@ -505,7 +503,7 @@ class DocumentModal extends React.Component {
                 }
                 if (!doc.uid) {
                   if (doc.title) {
-                    doc.uid = doc.title.replace(/\s+|\/+|\\+\:+\;+\.+/g, '-').toLowerCase()
+                    doc.uid = doc.title.replace(/\s+|\/+|\\+:+;+\.+/g, '-').toLowerCase()
                   } else {
                     doc.uid = doc.docType + Math.round(Math.random() * 1000000).toString()
                   }

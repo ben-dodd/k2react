@@ -14,7 +14,7 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
 import { DateTimePicker } from '@material-ui/pickers'
 import { hideModalSecondary, hideModal } from '../../../actions/modal'
-import { changeActionDetails } from '../../../actions/asbestosLab'
+import { changeActionDetails } from '../../../utils/asbestosLab/sampleChanges'
 
 const mapStateToProps = (state) => {
   return {

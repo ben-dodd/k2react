@@ -20,9 +20,9 @@ function TrainingNode(props) {
       <h2 style={{ fontSize: 22, fontWeight: 600, color: '#004c2f' }}>{node.title}</h2>
       <div style={{ color: '#444' }} dangerouslySetInnerHTML={{ __html: node.text }} />
       {node.links &&
-        node.links.map((link) => {
+        node.links.map((link, i) => {
           return (
-            <div>
+            <div key={i}>
               {link ? (
                 <div key={link.title}>{link.type === 'quiz' ? <QuizListItem quiz={link} /> : <TrainingReadingListItem link={link} />}</div>
               ) : (

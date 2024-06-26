@@ -33,15 +33,15 @@ import CheckKTPIcon from '@material-ui/icons/VerifiedUser'
 import Close from '@material-ui/icons/Close'
 import { hideModal, handleModalChange, handleModalSubmit, resetModal, onUploadFile, setModalError } from '../../../actions/modal'
 import { fetchSites } from '../../../actions/jobs'
-import { getSampleColors, updateResultMap, writeDescription } from '../../../actions/asbestosLab'
-import { getUserAttrs } from '../../../actions/local'
 import { getMaterialRisk, getPriorityRisk, getTotalRisk } from '../../../actions/asbestosReportHelpers'
-import { sendSlackMessage, numericAndLessThanOnly, dateOf, quillModules } from '../../../actions/helpers'
+import { numericAndLessThanOnly, dateOf } from '../../../actions/helpers'
 import { AsbButton, ScoreButton } from '../../../widgets/FormWidgets'
 import _ from 'lodash'
 import classNames from 'classnames'
 
 import '../../../config/geosuggest.css'
+import { updateResultMap } from '../../../utils/asbestosLab/recordAnalysis'
+import { getSampleColors, writeDescription } from '../../../utils/asbestosLab/helpers'
 
 const mapStateToProps = (state) => {
   return {
@@ -938,7 +938,7 @@ class AcmCard extends React.Component {
                   }
                 ].map((e) => {
                   return (
-                    <div>
+                    <div key={e.label}>
                       <InputLabel className={classes.marginTopSmall}>{e.label}</InputLabel>
                       <div className={classes.flexRow}>
                         {this.props[e.options] &&
@@ -983,7 +983,7 @@ class AcmCard extends React.Component {
                   }
                 ].map((e) => {
                   return (
-                    <div>
+                    <div key={e.label}>
                       <InputLabel className={classes.marginTopSmall}>{e.label}</InputLabel>
                       <div className={classes.flexRow}>
                         {this.props[e.options] &&
@@ -1028,7 +1028,7 @@ class AcmCard extends React.Component {
                   }
                 ].map((e) => {
                   return (
-                    <div>
+                    <div key={e.label}>
                       <InputLabel className={classes.marginTopSmall}>{e.label}</InputLabel>
                       <div className={classes.flexRow}>
                         {this.props[e.options] &&
@@ -1068,7 +1068,7 @@ class AcmCard extends React.Component {
                   }
                 ].map((e) => {
                   return (
-                    <div>
+                    <div key={e.label}>
                       <InputLabel className={classes.marginTopSmall}>{e.label}</InputLabel>
                       <div className={classes.flexRow}>
                         {this.props[e.options] &&

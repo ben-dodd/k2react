@@ -1,7 +1,7 @@
 import React from 'react'
 
-// import { Editor } from "react-draft-wysiwyg";
-// import "./react-draft-wysiwyg.css";
+import { Editor } from 'react-draft-wysiwyg'
+import './react-draft-wysiwyg.css'
 
 import Jimp from 'jimp'
 

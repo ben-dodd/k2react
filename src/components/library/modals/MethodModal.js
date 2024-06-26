@@ -6,10 +6,10 @@ import { styles } from '../../../config/styles'
 import { connect } from 'react-redux'
 
 import { RichEditor } from '../../editor/RichEditor'
-// import { EditorState, ContentState, convertToRaw } from 'draft-js'
-// import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-// import draftToHtml from 'draftjs-to-html'
-// import htmlToDraft from 'html-to-draftjs'
+import { EditorState, ContentState, convertToRaw } from 'draft-js'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import draftToHtml from 'draftjs-to-html'
+import htmlToDraft from 'html-to-draftjs'
 
 // import store from '../../store';
 import { METHOD } from '../../../constants/modal-types'
@@ -39,7 +39,6 @@ import {
   onUploadFile,
   handleGlossaryChange
 } from '../../../actions/modal'
-import { sendSlackMessage } from '../../../actions/helpers'
 import { getUserAttrs } from '../../../actions/local'
 import _ from 'lodash'
 
@@ -99,13 +98,6 @@ class MethodModal extends React.Component {
     return {
       fontWeight: list && list.constructor === Array && list.indexOf(uid) > -1 ? 600 : 200
     }
-  }
-
-  sendNewAttrSlack = () => {
-    let message = {
-      text: `${this.props.modalProps.staffName} has added a new module.\n${this.props.qualificationtypes[this.props.doc.type].name}`
-    }
-    sendSlackMessage(message, true)
   }
 
   getPage = () => {
@@ -356,7 +348,6 @@ class MethodModal extends React.Component {
     switch (this.state.page) {
       case 1:
         return headerpage
-        break
       case 2:
         return glossarypage
       default:

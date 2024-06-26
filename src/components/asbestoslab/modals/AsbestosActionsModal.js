@@ -17,7 +17,6 @@ import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import Grid from '@material-ui/core/Grid'
-import Divider from '@material-ui/core/Divider'
 import Avatar from '@material-ui/core/Avatar'
 import CardActions from '@material-ui/core/CardActions'
 import Dialog from '@material-ui/core/Dialog'
@@ -38,28 +37,13 @@ import WAIcon from '@material-ui/icons/GroupWork'
 import { dateOf, writeDates } from '../../../actions/helpers'
 import { toggleDoNotRender } from '../../../actions/display'
 import { hideModal, showModalSecondary } from '../../../actions/modal'
-import {
-  writeDescription,
-  receiveSample,
-  receiveSamples,
-  startAnalysis,
-  startAnalyses,
-  getWATotalDetails,
-  verifySample,
-  verifySamples,
-  verifySubsample,
-  verifySubsamples,
-  writeShorthandResult,
-  writeCocDescription,
-  getBasicResult,
-  checkTestCertificateIssue,
-  issueTestCertificate,
-  getPersonnel,
-  getWASubsampleList,
-  undoIssues
-} from '../../../actions/asbestosLab'
 import _ from 'lodash'
 import moment from 'moment'
+import { receiveSample, receiveSamples, startAnalyses, startAnalysis, undoIssues } from '../../../utils/asbestosLab/sampleChanges'
+import { verifySample, verifySamples, verifySubsample, verifySubsamples } from '../../../utils/asbestosLab/verify'
+import { checkTestCertificateIssue, getPersonnel, issueTestCertificate } from '../../../utils/asbestosLab/issue'
+import { getBasicResult, getWATotalDetails, writeDescription, writeShorthandResult } from '../../../utils/asbestosLab/helpers'
+import { getWASubsampleList } from '../../../utils/asbestosLab/getters'
 
 const waMap = {
   gt7: '>7',

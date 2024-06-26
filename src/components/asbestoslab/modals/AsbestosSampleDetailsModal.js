@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { styles } from '../../../config/styles'
 import { ASBESTOS_SAMPLE_DETAILS } from '../../../constants/modal-types'
 import '../../../config/tags.css'
+import { connect } from 'react-redux'
 
 import { SampleTextyDisplay, SampleTextyLine, AsbButton } from '../../../widgets/FormWidgets'
 
@@ -18,19 +19,18 @@ import AsbestosSampleWASummary from '../components/AsbestosSampleWASummary'
 import { hideModal, hideModalSecondary, handleModalChange } from '../../../actions/modal'
 import { dateOf, milliToDHM } from '../../../actions/helpers'
 import moment from 'moment'
+import { resetSampleView } from '../../../actions/asbestosLab'
+import { asbestosSamplesRef } from '../../../config/firebase'
 import {
-  writeSoilDetails,
-  getSampleColors,
-  writeShorthandResult,
-  writeSampleConditioningList,
-  writeSampleDimensions,
+  analyticalCriteraOK,
   collateLayeredResults,
   compareAsbestosResult,
-  writeSampleMoisture,
-  writePersonnelQualFull,
-  resetSampleView
-} from '../../../actions/asbestosLab'
-import { asbestosSamplesRef } from '../../../config/firebase'
+  getSampleColors,
+  writeSampleDimensions,
+  writeShorthandResult,
+  writeSoilDetails
+} from '../../../utils/asbestosLab/helpers'
+import { getSampleStatus, writeSampleConditioningList, writeSampleMoisture } from '../../../utils/asbestosLab/getters'
 
 const mapStateToProps = (state) => {
   return {

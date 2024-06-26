@@ -74,7 +74,7 @@ class Staff extends React.Component {
     }
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (!this.state.staff) this.props.fetchStaff()
   }
 

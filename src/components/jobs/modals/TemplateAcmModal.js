@@ -30,15 +30,15 @@ import UploadIcon from '@material-ui/icons/CloudUpload'
 import Close from '@material-ui/icons/Close'
 import { hideModal, handleModalChange, handleModalSubmit, resetModal, onUploadFile, setModalError } from '../../../actions/modal'
 import { fetchSites } from '../../../actions/jobs'
-import { getSampleColors, updateResultMap, writeDescription } from '../../../actions/asbestosLab'
 import { getMaterialRisk, getPriorityRisk, getTotalRisk } from '../../../actions/asbestosReportHelpers'
-import { getUserAttrs } from '../../../actions/local'
-import { sendSlackMessage, numericAndLessThanOnly, quillModules, dateOf } from '../../../actions/helpers'
+import { numericAndLessThanOnly, dateOf } from '../../../actions/helpers'
 import { AsbButton, ScoreButton } from '../../../widgets/FormWidgets'
 import _ from 'lodash'
 import classNames from 'classnames'
 
 import '../../../config/geosuggest.css'
+import { updateResultMap } from '../../../utils/asbestosLab/recordAnalysis'
+import { getSampleColors } from '../../../utils/asbestosLab/helpers'
 
 const mapStateToProps = (state) => {
   return {
@@ -662,7 +662,7 @@ class TemplateAcmModal extends React.Component {
             }
           ].map((e) => {
             return (
-              <div>
+              <div key={e.label}>
                 <InputLabel className={classes.marginTopSmall}>{e.label}</InputLabel>
                 <div className={classes.flexRow}>
                   {this.props[e.options] &&
@@ -707,7 +707,7 @@ class TemplateAcmModal extends React.Component {
             }
           ].map((e) => {
             return (
-              <div>
+              <div key={e.label}>
                 <InputLabel className={classes.marginTopSmall}>{e.label}</InputLabel>
                 <div className={classes.flexRow}>
                   {this.props[e.options] &&
@@ -752,7 +752,7 @@ class TemplateAcmModal extends React.Component {
             }
           ].map((e) => {
             return (
-              <div>
+              <div key={e.label}>
                 <InputLabel className={classes.marginTopSmall}>{e.label}</InputLabel>
                 <div className={classes.flexRow}>
                   {this.props[e.options] &&
@@ -792,7 +792,7 @@ class TemplateAcmModal extends React.Component {
             }
           ].map((e) => {
             return (
-              <div>
+              <div key={e.label}>
                 <InputLabel className={classes.marginTopSmall}>{e.label}</InputLabel>
                 <div className={classes.flexRow}>
                   {this.props[e.options] &&

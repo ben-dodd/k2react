@@ -1,7 +1,5 @@
 import {
   EDIT_MODAL_DOC,
-  EDIT_MODAL_SAMPLE,
-  DELETE_COC,
   GET_ASBESTOS_SAMPLE_ISSUE_LOGS,
   GET_ASBESTOS_ANALYSIS_LOGS,
   GET_ASBESTOS_CHECK_LOGS,
@@ -14,11 +12,6 @@ import {
   SET_ANALYSIS_SESSION_ID,
   SET_VIEW_SAMPLE_DETAIL
 } from '../constants/action-types'
-import { DOWNLOAD_LAB_CERTIFICATE } from '../constants/modal-types'
-import { styles } from '../config/styles'
-import { addLog } from './local'
-import { sendSlackMessage, writeDates, andList, dateOf, milliToDHM, writeMeasurement } from './helpers'
-import { getDefaultLetterAddress } from './jobs'
 import moment from 'moment'
 import {
   asbestosSamplesRef,
@@ -27,12 +20,8 @@ import {
   asbestosCheckLogRef,
   asbestosMicroscopeCalibrationsRef,
   cocsRef,
-  stateRef,
-  firebase,
-  firestore,
-  auth
+  stateRef
 } from '../config/firebase'
-import React from 'react'
 const defaultLimit = 19
 
 export const resetAsbestosLab = () => (dispatch) => {
@@ -53,7 +42,6 @@ export const fetchCocs = (update) => async (dispatch) => {
       .where('versionUpToDate', '==', false)
       // .orderBy("lastModified")
       .onSnapshot((querySnapshot) => {
-        sendSlackMessage(`${auth.currentUser.displayName} ran fetchCocs (${querySnapshot.size} documents)`)
         var cocs = {}
         querySnapshot.forEach((doc) => {
           cocs[doc.id] = doc.data()
@@ -71,7 +59,6 @@ export const fetchCocs = (update) => async (dispatch) => {
       // .orderBy("lastModified")
       // .orderBy("dueDate", "desc")
       .onSnapshot((querySnapshot) => {
-        sendSlackMessage(`${auth.currentUser.displayName} ran fetchCocs (${querySnapshot.size} documents)`)
         var cocs = {}
         querySnapshot.forEach((doc) => {
           cocs[doc.id] = doc.data()
@@ -84,7 +71,6 @@ export const fetchCocs = (update) => async (dispatch) => {
       })
   } else {
     stateRef.doc('cocs').onSnapshot((doc) => {
-      sendSlackMessage(`${auth.currentUser.displayName} ran fetchCocs from state (1 document)`)
       if (doc.exists) {
         dispatch({ type: GET_COCS, payload: doc.data() })
       } else {
@@ -101,7 +87,6 @@ export const fetchCocsByJobNumber = (jobNumber) => async (dispatch) => {
     .orderBy('lastModified')
     .get()
     .then((querySnapshot) => {
-      sendSlackMessage(`${auth.currentUser.displayName} ran fetchCocsByJobNumber (${querySnapshot.size} documents)`)
       var cocs = {}
       querySnapshot.forEach((doc) => {
         cocs[doc.id] = doc.data()
@@ -134,7 +119,6 @@ export const fetchCocsBySearch = (client, startDate, endDate) => async (dispatch
       .get()
       .then((querySnapshot) => {
         var cocs = {}
-        sendSlackMessage(`${auth.currentUser.displayName} ran fetchCocsBySearch with Client (${querySnapshot.size} documents)`)
         querySnapshot.forEach((doc) => {
           cocs[doc.id] = doc.data()
         })
@@ -153,7 +137,6 @@ export const fetchCocsBySearch = (client, startDate, endDate) => async (dispatch
       .orderBy('lastModified')
       .get()
       .then((querySnapshot) => {
-        sendSlackMessage(`${auth.currentUser.displayName} ran fetchCocsBySearch (${querySnapshot.size} documents)`)
         var cocs = {}
         querySnapshot.forEach((doc) => {
           cocs[doc.id] = doc.data()
@@ -173,7 +156,6 @@ export const fetchSamples = (cocUid, jobNumber, modal) => async (dispatch) => {
     .where('jobNumber', '==', jobNumber)
     .where('deleted', '==', false)
     .onSnapshot((sampleSnapshot) => {
-      sendSlackMessage(`${auth.currentUser.displayName} ran fetchSamples (${sampleSnapshot.size} documents)`)
       let samples = {}
       sampleSnapshot.forEach((sampleDoc) => {
         let sample = sampleDoc.data()
@@ -255,105 +237,98 @@ export const fetchSampleView = (cocUid, sampleUid) => async (dispatch) => {
 
 export const fetchAsbestosSampleIssueLogs = (limit) => async (dispatch) => {
   let lim = limit ? limit : defaultLimit
-  if (true) {
-    asbestosSampleIssueLogRef
-      .orderBy('issueDate', 'desc')
-      .limit(lim)
-      .get()
-      .then((logSnapshot) => {
-        let logs = {}
-        sendSlackMessage(`${auth.currentUser.displayName} ran fetchAsbestosSampleIssueLogs (${logSnapshot.size} documents)`)
-        logSnapshot.forEach((logDoc) => {
-          let log = logDoc.data()
-          log.uid = logDoc.id
-          logs[log.uid] = log
-        })
-        dispatch({
-          type: GET_ASBESTOS_SAMPLE_ISSUE_LOGS,
-          payload: logs,
-          update: true
-        })
+  asbestosSampleIssueLogRef
+    .orderBy('issueDate', 'desc')
+    .limit(lim)
+    .get()
+    .then((logSnapshot) => {
+      let logs = {}
+      logSnapshot.forEach((logDoc) => {
+        let log = logDoc.data()
+        log.uid = logDoc.id
+        logs[log.uid] = log
       })
-  } else {
-    stateRef.doc('asbestosSampleIssueLogs').onSnapshot((doc) => {
-      sendSlackMessage(`${auth.currentUser.displayName} ran fetchAsbestosSampleIssueLogs (1 document)`)
-      if (doc.exists) {
-        dispatch({ type: GET_ASBESTOS_SAMPLE_ISSUE_LOGS, payload: doc.data() })
-      } else {
-        //console.log("Sample log doesn't exist");
-      }
+      dispatch({
+        type: GET_ASBESTOS_SAMPLE_ISSUE_LOGS,
+        payload: logs,
+        update: true
+      })
     })
-  }
+  // } else {
+  //   stateRef.doc('asbestosSampleIssueLogs').onSnapshot((doc) => {
+  //     if (doc.exists) {
+  //       dispatch({ type: GET_ASBESTOS_SAMPLE_ISSUE_LOGS, payload: doc.data() })
+  //     } else {
+  //       //console.log("Sample log doesn't exist");
+  //     }
+  //   })
+  // }
 }
 
 export const fetchAsbestosAnalysisLogs = (limit) => async (dispatch) => {
   let lim = limit ? limit : defaultLimit
-  if (true) {
-    // let startDate = moment().subtract(limit, 'days').toDate();
-    asbestosAnalysisLogRef
-      // .where("analysisDate", ">", startDate)
-      .orderBy('analysisDate', 'desc')
-      .limit(lim)
-      .get()
-      .then((logSnapshot) => {
-        let logs = {}
-        sendSlackMessage(`${auth.currentUser.displayName} ran fetchAsbestosAnalysisLogs (${logSnapshot.size} documents)`)
-        logSnapshot.forEach((logDoc) => {
-          let log = logDoc.data()
-          log.uid = logDoc.id
-          logs[log.uid] = log
-        })
-        dispatch({
-          type: GET_ASBESTOS_ANALYSIS_LOGS,
-          payload: logs,
-          update: true
-        })
+  // if (true) {
+  // let startDate = moment().subtract(limit, 'days').toDate();
+  asbestosAnalysisLogRef
+    // .where("analysisDate", ">", startDate)
+    .orderBy('analysisDate', 'desc')
+    .limit(lim)
+    .get()
+    .then((logSnapshot) => {
+      let logs = {}
+      logSnapshot.forEach((logDoc) => {
+        let log = logDoc.data()
+        log.uid = logDoc.id
+        logs[log.uid] = log
       })
-  } else {
-    stateRef.doc('asbestosAnalysisLogs').onSnapshot((doc) => {
-      sendSlackMessage(`${auth.currentUser.displayName} ran fetchAsbestosAnalysisLogs (1 document)`)
-      if (doc.exists) {
-        dispatch({ type: GET_ASBESTOS_ANALYSIS_LOGS, payload: doc.data() })
-      } else {
-        //console.log("Sample log doesn't exist");
-      }
+      dispatch({
+        type: GET_ASBESTOS_ANALYSIS_LOGS,
+        payload: logs,
+        update: true
+      })
     })
-  }
+  // } else {
+  //   stateRef.doc('asbestosAnalysisLogs').onSnapshot((doc) => {
+  //     if (doc.exists) {
+  //       dispatch({ type: GET_ASBESTOS_ANALYSIS_LOGS, payload: doc.data() })
+  //     } else {
+  //       //console.log("Sample log doesn't exist");
+  //     }
+  //   })
+  // }
 }
 
 export const fetchAsbestosCheckLogs = (limit) => async (dispatch) => {
   let lim = limit ? limit : defaultLimit
-  if (true) {
-    // let startDate = moment().subtract(limit, 'days').toDate();
-    asbestosCheckLogRef
-      // .where("checkDate", ">", startDate)
-      .orderBy('checkDate', 'desc')
-      .limit(lim)
-      .get()
-      .then((logSnapshot) => {
-        let logs = {}
-        sendSlackMessage(`${auth.currentUser.displayName} ran fetchAsbestosCheckLogs (${logSnapshot.size} documents)`)
-        logSnapshot.forEach((logDoc) => {
-          let log = logDoc.data()
-          log.uid = logDoc.id
-          logs[log.uid] = log
-        })
-        dispatch({
-          type: GET_ASBESTOS_CHECK_LOGS,
-          payload: logs,
-          update: true
-        })
+  // if (true) {
+  // let startDate = moment().subtract(limit, 'days').toDate();
+  asbestosCheckLogRef
+    // .where("checkDate", ">", startDate)
+    .orderBy('checkDate', 'desc')
+    .limit(lim)
+    .get()
+    .then((logSnapshot) => {
+      let logs = {}
+      logSnapshot.forEach((logDoc) => {
+        let log = logDoc.data()
+        log.uid = logDoc.id
+        logs[log.uid] = log
       })
-  } else {
-    stateRef.doc('asbestosCheckLogs').onSnapshot((doc) => {
-      sendSlackMessage(`${auth.currentUser.displayName} ran asbestosCheckLogs (1 document)`)
-      if (doc.exists) {
-        dispatch({ type: GET_ASBESTOS_CHECK_LOGS, payload: doc.data() })
-      } else {
-        //console.log("Sample log doesn't exist");
-      }
+      dispatch({
+        type: GET_ASBESTOS_CHECK_LOGS,
+        payload: logs,
+        update: true
+      })
     })
-  }
+  // } else {
+  //   stateRef.doc('asbestosCheckLogs').onSnapshot((doc) => {
+  //     if (doc.exists) {
+  //       dispatch({ type: GET_ASBESTOS_CHECK_LOGS, payload: doc.data() })
+  //     } else {
+  //       //console.log("Sample log doesn't exist");
+  //     }
+  //   })
+  // }
 }
 
 export const fetchMicroscopeCalibrations = () => async (dispatch) => {

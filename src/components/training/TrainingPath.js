@@ -704,7 +704,7 @@ class TrainingPath extends React.Component {
             <div style={{ marginTop: 12 }}>
               {this.allStepsCompleted() ? (
                 <div>
-                  <Typography style={{ marginBottom: 8 }}>All steps completed - you're finished</Typography>
+                  <Typography style={{ marginBottom: 8 }}>{`All steps completed - you're finished`}</Typography>
                   <Button onClick={this.handleReset}>Reset</Button>
                 </div>
               ) : (

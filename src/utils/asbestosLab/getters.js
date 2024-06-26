@@ -1,3 +1,8 @@
+import moment from 'moment'
+import { getAllConfirmResult, getBasicResult, getWATotalDetails, writeShorthandResult, writeSoilDetails } from './helpers'
+import { dateOf, milliToDHM } from '../../actions/helpers'
+import { cocsRef } from '../../config/firebase'
+
 export const getSampleData = (samples, job) => {
   let dataArray = []
   let subSampleMap = getWASubsampleList(samples)
@@ -126,7 +131,8 @@ export const getSampleData = (samples, job) => {
             if (sub === undefined) sub = {}
             midArray = midArray.concat([
               sub.containerID,
-              sub.fraction ? fractionMap[sub.fraction] : '',
+              // sub.fraction ? fractionMap[sub.fraction] : '',
+              sub.fraction,
               sub.weight,
               sub.tareWeight,
               sub.concentration,
@@ -225,13 +231,16 @@ export const getSubsampleData = (samples, job) => {
     'Multiplier',
     'Asbestos Weight'
   ])
+  // let fractionMap = getWATotalDetails(samples, this.props.acmInSoilLimit)
+
   if (subSampleMap.subsamples.length > 0) {
     subSampleMap.subsamples.forEach((sub) => {
       dataArray.push([
         sub.containerID,
         sub.sampleNumber,
         sub.tareWeight,
-        sub.fraction ? fractionMap[sub.fraction] : '',
+        // sub.fraction ? fractionMap[sub.fraction] : '',
+        sub.fraction || '',
         sub.concentration,
         sub.form ? sub.form.toUpperCase() : '',
         sub.result ? writeShorthandResult(sub.result) : '',
@@ -347,6 +356,7 @@ export const getJobStatus = (samples, job) => {
         }
         if (sample.verified) numberVerified++
         if (job.waAnalysis && !sample.waAnalysisComplete) numberWAAnalysisIncomplete++
+        // eslint-disable-next-line no-undef
         if (getBasicResult(sample) !== 'none') {
           if (sample.weightReceived) {
             let sampleTimeInAdmin = new Date() - dateOf(sample.analysisDate)

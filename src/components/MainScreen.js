@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from 'react'
 
-import { BrowserRouter as Router, Route, Link, Switch, withRouter } from 'react-router-dom'
+import { BrowserRouter as Route, Link, Switch, withRouter } from 'react-router-dom'
 import { auth } from '../config/firebase'
 import { connect } from 'react-redux'
 import { APP_SETTINGS, UPDATE_DATA } from '../constants/modal-types'
@@ -46,7 +46,6 @@ import LabIcon from '@material-ui/icons/Colorize'
 import StaffIcon from '@material-ui/icons/People'
 import MyDetailsIcon from '@material-ui/icons/Person'
 import VehiclesIcon from '@material-ui/icons/DirectionsCar'
-import DevIcon from '@material-ui/icons/HourglassEmpty'
 import TrainingIcon from '@material-ui/icons/School'
 import QuizIcon from '@material-ui/icons/ContactSupport'
 import ToolsIcon from '@material-ui/icons/Build'
@@ -77,23 +76,11 @@ import UpdateData from './settings/UpdateData'
 import store from '../store'
 
 import { fetchMe, resetLocal, copyStaff, fetchStaff, fetchAssets, onSearchChange, onCatChange } from '../actions/local'
-import { fetchGeocodes, analyseJobHistory, fetchWFMClients, authoriseWFM, fetchWFMStaff, fetchWFMAuth } from '../actions/jobs'
-import { sendSlackMessage, dateOf } from '../actions/helpers'
+import { fetchGeocodes, fetchWFMClients, authoriseWFM, fetchWFMStaff, fetchWFMAuth } from '../actions/jobs'
+import { dateOf } from '../actions/helpers'
 import { resetModal, showModal } from '../actions/modal'
 import { resetDisplay } from '../actions/display'
 import { initConstants } from '../actions/const'
-import {
-  fixIds,
-  transferNoticeboardReads,
-  restructureWAAnalysisSamples,
-  restructureAnalysisLog,
-  restructureSampleIssueLog,
-  cleanLogs,
-  fixSamples,
-  renameAnalysisLog,
-  splitWFMStates,
-  fixNoticeReads
-} from '../actions/temp'
 
 // Pages
 const Noticeboard = lazy(() => import('./noticeboard/Noticeboard'))
@@ -103,10 +90,6 @@ const AsbestosLog = lazy(() => import('./asbestoslab/AsbestosLog'))
 const AsbestosQualityControl = lazy(() => import('./asbestoslab/AsbestosQualityControl'))
 const AsbestosStats = lazy(() => import('./asbestoslab/AsbestosStats'))
 
-const JobMap = lazy(() => import('./jobs/JobMap'))
-const JobsTable = lazy(() => import('./jobs/JobsTable'))
-const Leads = lazy(() => import('./jobs/Leads'))
-const JobStats = lazy(() => import('./jobs/JobStats'))
 const Jobs = lazy(() => import('./jobs/Jobs'))
 const Site = lazy(() => import('./jobs/Site'))
 const Sites = lazy(() => import('./jobs/Sites'))
@@ -156,7 +139,7 @@ const mapDispatchToProps = (dispatch) => {
     copyStaff: (oldId, newId) => dispatch(copyStaff(oldId, newId)),
     fetchWFMAuth: () => dispatch(fetchWFMAuth()),
     fetchWFMClients: (accessToken, refreshToken) => dispatch(fetchWFMClients(accessToken, refreshToken)),
-    fetchWFMStaff: (accessToken, refreshToken) => dispatch(fetchWFMStaff(accessToken, refreshToken)),
+    fetchWFMStaff: (accessToken, refreshToken) => dispatch(fetchWFMStaff(accessToken)),
 
     initConstants: () => dispatch(initConstants()),
     showModal: (modal) => dispatch(showModal(modal)),
@@ -189,7 +172,6 @@ class MainScreen extends React.PureComponent {
   }
 
   UNSAFE_componentWillMount() {
-    sendSlackMessage(`${auth.currentUser.displayName} is triggering MainScreen componentWillMount`)
     // if (!this.props.wfmAccessToken) this.props.authoriseWFM();
     if (this.props.me && this.props.me.uid === undefined) this.props.fetchMe()
     if (this.props.menuItems === undefined) this.props.initConstants()
@@ -205,7 +187,6 @@ class MainScreen extends React.PureComponent {
     // restructureSampleIssueLog();
     // cleanLogs();
     // constRef.set(this.props.state.const);
-    // sendSlackMessage(`${auth.currentUser.displayName} has logged in.`);
     // analyseJobHistory();
     // fixSamples();
     // fixNoticeReads();
@@ -269,7 +250,6 @@ class MainScreen extends React.PureComponent {
   }
 
   handleLogOut = () => {
-    // sendSlackMessage(`${this.props.state.local.me.name} has logged out.`);
     auth.signOut().then(() => {
       this.props.resetDisplay()
       this.props.resetLocal()

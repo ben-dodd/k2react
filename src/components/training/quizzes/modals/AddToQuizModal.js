@@ -67,7 +67,7 @@ class AddToQuizModal extends React.Component {
       <Dialog open={modalType === ADD_TO_QUIZ} onClose={this.props.hideModal}>
         <DialogTitle>Add Question to Quiz</DialogTitle>
         <DialogContent>
-          Select the quiz to add the question '{modalProps.doc.question}'.
+          {`Select the quiz to add the question '${modalProps.doc.question}'.`}
           <form style={{ marginTop: 24 }}>
             <FormGroup>
               <FormControl className={classes.dialogField}>

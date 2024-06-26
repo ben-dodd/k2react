@@ -1,17 +1,13 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { styles } from '../../../config/styles'
-import { writeDescription, getSampleColors, compareAsbestosResult } from '../../../actions/asbestosLab'
 
 import { AsbButton } from '../../../widgets/FormWidgets'
-import TextField from '@material-ui/core/TextField'
-import IconButton from '@material-ui/core/IconButton'
-import Tooltip from '@material-ui/core/Tooltip'
 import ConfirmIcon from '@material-ui/icons/ThumbUp'
 import ThumbsDown from '@material-ui/icons/ThumbDown'
 import moment from 'moment'
 
-import { addLog } from '../../../actions/local'
+import { compareAsbestosResult, getSampleColors } from '../../../utils/asbestosLab/helpers'
 
 class AsbestosSampleEditConfirmRow extends React.Component {
   render() {

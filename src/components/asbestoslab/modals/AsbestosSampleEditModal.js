@@ -33,21 +33,20 @@ import { hideModal, showModalSecondary } from '../../../actions/modal'
 import { toggleAsbestosSampleDisplayMode } from '../../../actions/display'
 import { addLog } from '../../../actions/local'
 import { mapsAreEqual, dateOf, personnelConvert } from '../../../actions/helpers'
+import { asbestosSamplesRef, firestore } from '../../../config/firebase'
 import {
-  handleSampleChange,
-  writeSoilDetails,
+  analyticalCriteraOK,
   getSampleColors,
+  getWATotalDetails,
   traceAnalysisRequired,
-  recordAnalysis,
-  verifySample,
-  updateResultMap,
   writeDescription,
   writeSampleDimensions,
-  writeSampleMoisture,
-  getWATotalDetails,
-  overrideResult
-} from '../../../actions/asbestosLab'
-import { asbestosSamplesRef, firestore } from '../../../config/firebase'
+  writeSoilDetails
+} from '../../../utils/asbestosLab/helpers'
+import { writeSampleMoisture } from '../../../utils/asbestosLab/getters'
+import { verifySample } from '../../../utils/asbestosLab/verify'
+import { recordAnalysis, updateResultMap } from '../../../utils/asbestosLab/recordAnalysis'
+import { handleSampleChange, overrideResult } from '../../../utils/asbestosLab/sampleEdit'
 
 const layerNum = 3
 const waLayerNum = 3

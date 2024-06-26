@@ -10,7 +10,6 @@ import InputLabel from '@material-ui/core/InputLabel'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import IconButton from '@material-ui/core/IconButton'
-import { SketchField } from 'react-sketch'
 import UndoIcon from '@material-ui/icons/Undo'
 import RedoIcon from '@material-ui/icons/Redo'
 import MoveIcon from '@material-ui/icons/OpenWith'
@@ -213,7 +212,7 @@ class SiteMapsAndDiagrams extends React.Component {
             </IconButton>
           </Grid>
         </Grid>
-        <SketchField
+        {/* <SketchField
           name='sketch'
           ref={(c) => (this._sketch = c)}
           width='1024px'
@@ -225,7 +224,7 @@ class SiteMapsAndDiagrams extends React.Component {
           value={controlledValue}
           forceValue
           onChange={this._onSketchChange}
-        />
+        /> */}
       </div>
     )
   }

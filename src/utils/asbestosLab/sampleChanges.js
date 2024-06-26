@@ -2,6 +2,14 @@
 // SAMPLE PROGRESS CHANGES
 //
 
+import firebase from 'firebase/compat/app'
+import { addLog } from '../../actions/local'
+import { asbestosSamplesRef, cocsRef, firestore } from '../../config/firebase'
+import { writeDescription } from './helpers'
+import { verifySample } from './verify'
+import { dateOf } from '../../actions/helpers'
+import { removeResult } from './recordAnalysis'
+
 export const holdSample = (sample, job, me) => {
   //console.log('Sample on hold');
   let log = {

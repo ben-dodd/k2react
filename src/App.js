@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import { Component } from 'react'
 import MainScreen from './components/MainScreen'
 import K2SignInScreen from './components/K2SignInScreen'
 import { auth } from './config/firebase'

@@ -31,22 +31,21 @@ import { DatePicker, DateTimePicker } from '@material-ui/pickers'
 import SuggestionField from '../../../widgets/SuggestionField'
 import { hideModal, showModalSecondary } from '../../../actions/modal'
 import { toggleAsbestosSampleDisplayMode } from '../../../actions/display'
-import { addLog, personnelConvert, dateOf, analyticalCriteraOK } from '../../../actions/local'
-import {
-  handleSampleChange,
-  writeSoilDetails,
-  getSampleColors,
-  traceAnalysisRequired,
-  recordAnalysis,
-  updateResultMap,
-  writeDescription,
-  writeSampleDimensions,
-  writeSampleMoisture,
-  getConfirmColor,
-  compareAsbestosResult
-} from '../../../actions/asbestosLab'
+import { addLog } from '../../../actions/local'
 import moment from 'moment'
 import { asbestosSamplesRef } from '../../../config/firebase'
+import { recordAnalysis, updateResultMap } from '../../../utils/asbestosLab/recordAnalysis'
+import {
+  analyticalCriteraOK,
+  compareAsbestosResult,
+  getSampleColors,
+  traceAnalysisRequired,
+  writeDescription,
+  writeSampleDimensions,
+  writeSoilDetails
+} from '../../../utils/asbestosLab/helpers'
+import { writeSampleMoisture } from '../../../utils/asbestosLab/getters'
+import { dateOf } from '../../../actions/helpers'
 
 const layerNum = 3
 

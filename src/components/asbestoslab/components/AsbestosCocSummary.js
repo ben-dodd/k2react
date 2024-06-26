@@ -10,7 +10,7 @@ import { writeDates, andList } from '../../../actions/helpers'
 
 import { TickyBox } from '../../../widgets/FormWidgets'
 import Grid from '@material-ui/core/Grid'
-import { getPersonnel } from '../../../actions/asbestosLab'
+import { getPersonnel } from '../../../utils/asbestosLab/issue'
 
 const mapStateToProps = (state) => {
   return {

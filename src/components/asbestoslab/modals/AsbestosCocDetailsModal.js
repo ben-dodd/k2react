@@ -14,9 +14,9 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
 import { hideModal } from '../../../actions/modal'
-import { dateOf } from '../../../actions/local'
 import moment from 'moment'
 import _ from 'lodash'
+import { getStats } from '../../../utils/asbestosLab/getters'
 
 const mapStateToProps = (state) => {
   return {

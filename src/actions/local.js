@@ -56,7 +56,6 @@ import {
   vehiclesRef,
   firestore
 } from '../config/firebase'
-import { sendSlackMessage } from './helpers'
 
 export const resetLocal = () => (dispatch) => {
   dispatch({ type: RESET_LOCAL })
@@ -70,7 +69,6 @@ export const getFirestoreCollection =
       if (orderBy) {
         if (subscribe) {
           pathRef.orderBy(orderBy, order).onSnapshot((querySnapshot) => {
-            sendSlackMessage(`${auth.currentUser.displayName} read getFirestoreCollection ${statePath} (${querySnapshot.size} documents)`)
             var docs = []
             querySnapshot.forEach((doc) => {
               let ref = doc.data()
@@ -89,7 +87,6 @@ export const getFirestoreCollection =
             .orderBy(orderBy, order)
             .get()
             .then((querySnapshot) => {
-              sendSlackMessage(`${auth.currentUser.displayName} read getFirestoreCollection ${statePath} (${querySnapshot.size} documents)`)
               var docs = []
               querySnapshot.forEach((doc) => {
                 let ref = doc.data()
@@ -107,7 +104,6 @@ export const getFirestoreCollection =
       } else {
         if (subscribe) {
           pathRef.onSnapshot((querySnapshot) => {
-            sendSlackMessage(`${auth.currentUser.displayName} read getFirestoreCollection ${statePath} (${querySnapshot.size} documents)`)
             var docs = []
             querySnapshot.forEach((doc) => {
               let ref = doc.data()
@@ -124,7 +120,6 @@ export const getFirestoreCollection =
           })
         } else {
           pathRef.get().then((querySnapshot) => {
-            sendSlackMessage(`${auth.currentUser.displayName} read getFirestoreCollection ${statePath} (${querySnapshot.size} documents)`)
             var docs = []
             querySnapshot.forEach((doc) => {
               let ref = doc.data()
@@ -146,7 +141,6 @@ export const getFirestoreCollection =
         .doc(statePath)
         .get()
         .then((doc) => {
-          sendSlackMessage(`${auth.currentUser.displayName} read getFirestoreCollection ${statePath} from state (1 document)`)
           if (doc.exists) {
             console.log(doc.data())
             dispatch({
@@ -169,7 +163,6 @@ export const fetchMe = () => async (dispatch) => {
       if (doc.exists) {
         let user = doc.data()
         user.uid = doc.id
-        sendSlackMessage(`${auth.currentUser.displayName} read fetchMe (1 document)`)
         if (user.auth && user.auth['Asbestos Air Analysis']) {
           // dispatch({ type: GET_AIR_ANALYSTS, payload: [{uid: user.uid, name: user.name}] });
           dispatch({ type: SET_ANALYST, payload: user.name })
@@ -204,7 +197,6 @@ export const fetchStaff = (update) => async (dispatch) => {
     var users = {}
     usersRef.get().then((querySnapshot) => {
       // //console.log(querySnapshot);
-      sendSlackMessage(`${auth.currentUser.displayName} read fetchStaff (${querySnapshot.size} documents)`)
       let airAnalysts = []
       let bulkAnalysts = []
       querySnapshot.forEach((doc) => {
@@ -231,7 +223,6 @@ export const fetchStaff = (update) => async (dispatch) => {
   } else {
     // //console.log("Fetching staff from cache");
     stateRef.doc('staff').onSnapshot((doc) => {
-      sendSlackMessage(`${auth.currentUser.displayName} read fetchStaff from state (1 document)`)
       if (doc.exists) {
         // .filter((m) => m.uid !== auth.currentUser.uid)
         let staffRead = {}
@@ -256,7 +247,6 @@ export const fetchStaff = (update) => async (dispatch) => {
       .doc('airAnalysts')
       .get()
       .then((doc) => {
-        sendSlackMessage(`${auth.currentUser.displayName} read fetchStaff air analysts from state (1 document)`)
         if (doc.exists) {
           dispatch({ type: GET_AIR_ANALYSTS, payload: doc.data().payload })
         }
@@ -265,7 +255,6 @@ export const fetchStaff = (update) => async (dispatch) => {
       .doc('bulkAnalysts')
       .get()
       .then((doc) => {
-        sendSlackMessage(`${auth.currentUser.displayName} read fetchStaff bulk analysts from state (1 document)`)
         if (doc.exists) {
           dispatch({ type: GET_BULK_ANALYSTS, payload: doc.data().payload })
         }
@@ -282,7 +271,6 @@ export const getUserAttrs = (userPath, editStaff) => async (dispatch) => {
       .collection('attr')
       .get()
       .then((querySnapshot) => {
-        sendSlackMessage(`${auth.currentUser.displayName} read getUserAttrs for ${userPath} (${querySnapshot.size} documents)`)
         user = {
           attrs: {},
           aanumber: '',
@@ -389,7 +377,6 @@ export const getEditStaff = (userPath) => async (dispatch) => {
   dispatch(getUserAttrs(userPath, true))
   auth.currentUser &&
     usersRef.doc(userPath).onSnapshot((doc) => {
-      sendSlackMessage(`${auth.currentUser.displayName} read getEditStaff for ${userPath} (1 document)`)
       console.log(doc.data())
       dispatch({
         type: GET_EDIT_STAFF,
@@ -410,7 +397,6 @@ export const fetchDocuments = (update) => async (dispatch) => {
       .orderBy('title')
       .get()
       .then((querySnapshot) => {
-        sendSlackMessage(`${auth.currentUser.displayName} read fetchDocuments (${querySnapshot.size} documents)`)
         var docs = []
         querySnapshot.forEach((doc) => {
           let ref = doc.data()
@@ -428,7 +414,6 @@ export const fetchDocuments = (update) => async (dispatch) => {
       .doc('documents')
       .get()
       .then((doc) => {
-        sendSlackMessage(`${auth.currentUser.displayName} read fetchDocuments from state (1 document)`)
         if (doc.exists) {
           dispatch({ type: GET_DOCUMENTS, payload: doc.data().payload })
         } else {
@@ -478,7 +463,6 @@ export const fetchNotices = (update) => async (dispatch) => {
       .get()
       .then((querySnapshot) => {
         console.log(querySnapshot)
-        sendSlackMessage(`${auth.currentUser.displayName} read fetchNotices (${querySnapshot.size} documents)`)
         var notices = []
         querySnapshot.forEach((doc) => {
           let notice = doc.data()
@@ -493,7 +477,6 @@ export const fetchNotices = (update) => async (dispatch) => {
       })
   } else {
     stateRef.doc('notices').onSnapshot((doc) => {
-      sendSlackMessage(`${auth.currentUser.displayName} read fetchNotices from state (1 document)`)
       if (doc.exists) {
         dispatch({ type: GET_NOTICES, payload: doc.data().payload })
       } else {
@@ -510,7 +493,6 @@ export const removeNoticeReads = async (notice, reads) => {
     .doc(notice.uid)
     .get()
     .then((doc) => {
-      sendSlackMessage(`${auth.currentUser.displayName} ran removeNoticeReads (notices) (1 document)`)
       if (doc.exists) {
         doc.data().payload.forEach((user) => {
           let userArray = []
@@ -521,7 +503,6 @@ export const removeNoticeReads = async (notice, reads) => {
             .doc(user)
             .get()
             .then((doc) => {
-              sendSlackMessage(`${auth.currentUser.displayName} ran removeNoticeReads (users) (1 document)`)
               if (doc.exists && doc.data() && doc.data().payload) userArray = doc.data().payload.filter((uid) => uid !== notice.uid)
               // console.log(userArray);
               stateRef.doc('noticereads').collection('users').doc(user).set({ payload: userArray })
@@ -551,7 +532,6 @@ export const readNotice = (notice, me, reads) => {
     .doc(notice.uid)
     .get()
     .then((doc) => {
-      sendSlackMessage(`${auth.currentUser.displayName} ran readNotice (1 document)`)
       if (doc.exists) noticeArray = [...doc.data().payload]
       if (userArray.includes(notice.uid)) {
         // Remove read notice
@@ -579,7 +559,6 @@ export const fetchNoticeReads = (update) => async (dispatch) => {
     .collection('users')
     .doc(auth.currentUser.uid)
     .onSnapshot((doc) => {
-      sendSlackMessage(`${auth.currentUser.displayName} ran fetchNoticeReads (1 document)`)
       dispatch({
         type: GET_NOTICE_READS,
         payload: doc.exists ? doc.data().payload : []
@@ -618,7 +597,6 @@ export const fetchIncidents = (update) => async (dispatch) => {
 }
 
 export const fetchQuestions = (update) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchQuestions`)
   if (update) {
     questionsRef
       .orderBy('question')
@@ -648,7 +626,6 @@ export const fetchQuestions = (update) => async (dispatch) => {
 }
 
 export const fetchQuizzes = (update) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchQuizzes`)
   if (update) {
     quizzesRef
       .orderBy('title')
@@ -678,7 +655,6 @@ export const fetchQuizzes = (update) => async (dispatch) => {
 }
 
 export const fetchTools = (update) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchTools`)
   if (update) {
     toolsRef
       .orderBy('title')
@@ -708,7 +684,6 @@ export const fetchTools = (update) => async (dispatch) => {
 }
 
 export const fetchTrainingPaths = (update) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchTrainingPaths`)
   if (update) {
     trainingPathsRef
       .orderBy('title')
@@ -738,7 +713,6 @@ export const fetchTrainingPaths = (update) => async (dispatch) => {
 }
 
 export const fetchVehicles = (update) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchVehicles`)
   if (update) {
     vehiclesRef.get().then((querySnapshot) => {
       var vehicles = []
@@ -765,7 +739,6 @@ export const fetchVehicles = (update) => async (dispatch) => {
 }
 
 export const fetchAssets = (update) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchAssets`)
   if (update) {
     assetsRef.get().then((querySnapshot) => {
       var assets = []
@@ -794,7 +767,6 @@ export const fetchAssets = (update) => async (dispatch) => {
 }
 
 export const fetchReadingLog = () => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchReadingLogs`)
   usersRef
     .doc(auth.currentUser.uid)
     .collection('readinglog')
@@ -824,7 +796,6 @@ export const fetchReadingLog = () => async (dispatch) => {
 }
 
 export const fetchQuizLog = () => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchQuizLog`)
   usersRef
     .doc(auth.currentUser.uid)
     .collection('quizlog')
@@ -855,7 +826,6 @@ export const fetchQuizLog = () => async (dispatch) => {
 }
 
 export const fetchMethodLog = () => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchMethodLog`)
   usersRef
     .doc(auth.currentUser.uid)
     .collection('methodlog')
@@ -889,7 +859,6 @@ export const fetchMethodLog = () => async (dispatch) => {
 }
 
 export const fetchHelp = () => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchHelp`)
   helpRef
     .orderBy('date', 'desc')
     .get()
@@ -906,7 +875,6 @@ export const fetchHelp = () => async (dispatch) => {
 }
 
 export const fetchUpdates = () => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchUpdates`)
   updateRef
     .orderBy('date', 'desc')
     .get()
@@ -923,7 +891,6 @@ export const fetchUpdates = () => async (dispatch) => {
 }
 
 export const getUser = (userRef) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran getUser`)
   usersRef
     .doc(userRef)
     .get()
@@ -1026,7 +993,6 @@ export const fetchLogs = (collection, filter, filterValue, limit) => async (disp
     .limit(limit)
     .get()
     .then((querySnapshot) => {
-      sendSlackMessage(`${auth.currentUser.displayName} ran fetchLogs (${querySnapshot.size} documents)`)
       var logs = []
       querySnapshot.forEach((doc) => {
         let log = doc.data()

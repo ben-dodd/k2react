@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   EDIT_MODAL_DOC,
   SET_MODAL_ERROR,
@@ -45,11 +44,10 @@ import SchoolIcon from '@material-ui/icons/ChildCare'
 import OtherIcon from '@material-ui/icons/LocationCity'
 
 import moment from 'moment'
-import qs from 'qs'
 
-import { firestore, auth, authRef, stateRef, usersRef, jobsRef, sitesRef, cocsRef } from '../config/firebase'
+import { firestore, authRef, stateRef, usersRef, sitesRef, cocsRef } from '../config/firebase'
 import { xmlToJson } from '../config/XmlToJson'
-import { sendSlackMessage, dateOf, getDaysBetweenDates, getDaysSinceDate, titleCase } from './helpers'
+import { dateOf, getDaysBetweenDates, getDaysSinceDate, titleCase } from './helpers'
 import { fetchSamples } from './asbestosLab'
 // import assetData from "./assetData.json";
 
@@ -84,7 +82,7 @@ export const fetchWFMAuth = () => async (dispatch) => {
 export const authoriseWFM =
   ({ code, refreshToken }) =>
   async (dispatch) => {
-    console.log('authoriseWFM called')
+    console.log('authoriseWFM called', code, refreshToken)
     let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`
     let params = {
       method: 'POST',
@@ -112,7 +110,7 @@ export const authoriseWFM =
       .then((data) => {
         let dataObj = JSON.parse(data)
         let expiryDate = moment().add(moment.duration(dataObj.expires_in, 'seconds'))
-        // console.log(dataObj);
+        console.log('AuthorizeWFM', dataObj)
         let authObj = {
           wfmAccessToken: dataObj.access_token,
           wfmRefreshToken: dataObj.refresh_token,
@@ -126,8 +124,7 @@ export const authoriseWFM =
       })
   }
 
-export const fetchWFMStaff = (accessToken, refreshToken) => async (dispatch) => {
-  // sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMClients`);
+export const fetchWFMStaff = (accessToken) => async (dispatch) => {
   // let path = apiRoot + 'wfm/job.php?apiKey=' + apiKey;
   let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`
   let params = {
@@ -148,14 +145,13 @@ export const fetchWFMStaff = (accessToken, refreshToken) => async (dispatch) => 
     .then((results) => results.text())
     .then((data) => {
       var xmlDOM = new DOMParser().parseFromString(data, 'text/xml')
-      var json = xmlToJson(xmlDOM)
+      // var json = xmlToJson(xmlDOM)
       // console.log(json);
     })
 }
 
 export const fetchWFMJobs = (accessToken, refreshToken) => async (dispatch) => {
   // dispatch(authoriseWFM());
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMJobs`)
   // let path = apiRoot + 'wfm/job.php?apiKey=' + apiKey;
   let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`
   let params = {
@@ -251,7 +247,6 @@ export const fetchWFMJobs = (accessToken, refreshToken) => async (dispatch) => {
 }
 
 export const fetchWFMLeads = (accessToken, refreshToken) => async (dispatch) => {
-  // sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMLeads`);
   let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`
   let params = {
     method: 'POST',
@@ -373,7 +368,6 @@ export const fetchWFMLeads = (accessToken, refreshToken) => async (dispatch) => 
 }
 
 export const fetchWFMClients = (accessToken, refreshToken) => async (dispatch) => {
-  // sendSlackMessage(`${auth.currentUser.displayName} ran fetchWFMClients`);
   // let path = apiRoot + 'wfm/job.php?apiKey=' + apiKey;
   let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`
   // let taskParams = {
@@ -825,7 +819,6 @@ export const saveGeocodes = (geocodes) => (dispatch) => {
 }
 
 export const fetchGeocodes = () => (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchGeocodes`)
   stateRef
     .doc('geocodes')
     .get()
@@ -897,31 +890,30 @@ export const saveStats = (stats) => (dispatch) => {
 }
 
 export const fetchSites = (update) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchSites`)
-  if (true) {
-    sitesRef.onSnapshot((querySnapshot) => {
-      var sites = {}
-      querySnapshot.forEach((doc) => {
-        let site = doc.data()
-        site.uid = doc.id
-        sites[doc.id] = site
-      })
-      console.log(sites)
-      dispatch({
-        type: GET_SITES,
-        payload: sites,
-        update: true
-      })
+  // if (true) {
+  sitesRef.onSnapshot((querySnapshot) => {
+    var sites = {}
+    querySnapshot.forEach((doc) => {
+      let site = doc.data()
+      site.uid = doc.id
+      sites[doc.id] = site
     })
-  } else {
-    stateRef.doc('sites').onSnapshot((doc) => {
-      if (doc.exists) {
-        dispatch({ type: GET_SITES, payload: doc.data().payload })
-      } else {
-        //console.log("Sites don't exist");
-      }
+    console.log(sites)
+    dispatch({
+      type: GET_SITES,
+      payload: sites,
+      update: true
     })
-  }
+  })
+  // } else {
+  //   stateRef.doc('sites').onSnapshot((doc) => {
+  //     if (doc.exists) {
+  //       dispatch({ type: GET_SITES, payload: doc.data().payload })
+  //     } else {
+  //       //console.log("Sites don't exist");
+  //     }
+  //   })
+  // }
 }
 
 export const fetchSiteJobs = (site) => async (dispatch) => {
@@ -981,7 +973,6 @@ export const fetchSiteAcm = (site) => async (dispatch) => {
 
 // This function looks through all the daily states from the states collection and creates an up-to-date picture of the job state
 export const analyseJobHistory = () => {
-  // sendSlackMessage(`${auth.currentUser.displayName} ran analyseJobHistory`);
   // vars
   console.log('Running job history')
   var jobMap = {}
@@ -1380,7 +1371,6 @@ export const calculateJobStats = (jobList) => (dispatch) => {
 }
 
 export const fetchCurrentJobState = (ignoreCompleted) => (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchCurrentJobState`)
   var currentJobState = {}
   // Put all the buckets back together in one map
   stateRef
@@ -1412,7 +1402,6 @@ export const fetchCurrentJobState = (ignoreCompleted) => (dispatch) => {
 
 export const saveCurrentJobState = (state) => (dispatch) => {
   console.log('Running save current state')
-  sendSlackMessage(`${auth.currentUser.displayName} ran saveCurrentJobState`)
   // Sort into buckets to prevent firestore rejecting objects that are too large
   var sortedState = {}
   var allBuckets = []

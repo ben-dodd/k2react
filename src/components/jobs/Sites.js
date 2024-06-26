@@ -125,7 +125,7 @@ class Sites extends React.Component {
                         {site.jobList && (
                           <CardContent>
                             {site.jobList.map((job) => (
-                              <div>
+                              <div key={job.jobNumber}>
                                 <b>{job.jobNumber}</b> {job.jobDescription}
                               </div>
                             ))}

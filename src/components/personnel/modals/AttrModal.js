@@ -27,7 +27,6 @@ import UploadIcon from '@material-ui/icons/CloudUpload'
 import Close from '@material-ui/icons/Close'
 import { hideModal, handleModalChange, handleModalSubmit, onUploadFile } from '../../../actions/modal'
 import { getUserAttrs } from '../../../actions/local'
-import { sendSlackMessage } from '../../../actions/helpers'
 import _ from 'lodash'
 
 const mapStateToProps = (state) => {
@@ -55,13 +54,6 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class AttrModal extends React.Component {
-  sendNewAttrSlack = () => {
-    let message = {
-      text: `${this.props.modalProps.staffName} has added a new qualification.\n${this.props.qualificationtypes[this.props.doc.type].name}`
-    }
-    sendSlackMessage(message, true)
-  }
-
   deleteImage = (file, uid) => {
     this.props.handleSelectChange({ id: 'fileUrl', value: null })
     this.props.handleSelectChange({ id: 'fileRef', value: null })

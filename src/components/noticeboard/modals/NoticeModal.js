@@ -25,7 +25,7 @@ import { DatePicker } from '@material-ui/pickers'
 
 import { hideModal, handleModalChange, handleModalSubmit, onUploadFile, handleTagDelete, handleTagAddition } from '../../../actions/modal'
 import { getUserAttrs, fetchNotices } from '../../../actions/local'
-import { dateOf, sendSlackMessage } from '../../../actions/helpers'
+import { dateOf } from '../../../actions/helpers'
 import _ from 'lodash'
 
 const mapStateToProps = (state) => {
@@ -184,11 +184,6 @@ class NoticeModal extends React.Component {
                     doc: doc,
                     pathRef: noticesRef
                   })
-                  let message = {
-                    text: `${this.props.me.name} has ${doc.uid ? 'edited a' : 'added a new'} ${doc.categorydesc} notice.
-                    ${doc.text && `\n${doc.text}`}`
-                  }
-                  sendSlackMessage(message, true)
                   this.props.fetchNotices(true)
                 } else {
                   window.alert('Add a category before submitting.')

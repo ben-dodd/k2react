@@ -1,8 +1,6 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { styles } from '../../../config/styles'
-import { writeDescription, getSampleColors, getWATotalDetails, writeSoilDetails } from '../../../actions/asbestosLab'
-
 import SuggestionField from '../../../widgets/SuggestionField'
 import { AsbButton } from '../../../widgets/FormWidgets'
 import Grid from '@material-ui/core/Grid'
@@ -11,6 +9,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Switch from '@material-ui/core/Switch'
 
 import { addLog } from '../../../actions/local'
+import { getSampleColors, getWATotalDetails, writeDescription, writeSoilDetails } from '../../../utils/asbestosLab/helpers'
 
 const waMap = {
   gt7: '>7',

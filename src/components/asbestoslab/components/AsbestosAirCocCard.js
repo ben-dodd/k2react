@@ -3,19 +3,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { styles } from '../../../config/styles'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import {
-  fetchCocs,
-  fetchSamples,
-  logSample,
-  setSessionID,
-  deleteCoc,
-  printCocBulk,
-  printLabReport,
-  getJobStatus,
-  verifySamples,
-  getSampleData,
-  getSubsampleData
-} from '../../../actions/asbestosLab'
+import { fetchCocs, fetchSamples, setSessionID } from '../../../actions/asbestosLab'
 import { addLog } from '../../../actions/local'
 import { getDetailedWFMJob } from '../../../actions/jobs'
 import { setAsbestosLabExpanded, toggleAsbestosSampleDisplayMode } from '../../../actions/display'
@@ -49,6 +37,11 @@ import UrgentIcon from '@material-ui/icons/Flag'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import StartAnalysisIcon from '@material-ui/icons/Colorize'
 import AirIcon from '@material-ui/icons/AcUnit'
+import { printCocBulk, printLabReport } from '../../../utils/asbestosLab/issue'
+import { getJobStatus, getSampleData, getSubsampleData } from '../../../utils/asbestosLab/getters'
+import { verifySamples } from '../../../utils/asbestosLab/verify'
+import { logSample } from '../../../utils/asbestosLab/sampleEdit'
+import { deleteCoc } from '../../../utils/asbestosLab/coc'
 
 const mapStateToProps = (state) => {
   return {

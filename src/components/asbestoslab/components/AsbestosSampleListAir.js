@@ -1,11 +1,8 @@
 import React from 'react'
 import classNames from 'classnames'
 import moment from 'moment'
-import { writeDescription, getAirSampleData } from '../../../actions/asbestosLab'
 import { dateOf, numericOnly, titleCase } from '../../../actions/helpers'
-import { ASBESTOS_SAMPLE_EDIT_COC } from '../../../constants/modal-types'
 import SuggestionField from '../../../widgets/SuggestionField'
-import Select from 'react-select'
 
 import { DateTimePicker } from '@material-ui/pickers'
 import TextField from '@material-ui/core/TextField'
@@ -13,9 +10,10 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import EditIcon from '@material-ui/icons/Edit'
+import { getAirSampleData } from '../../../utils/asbestosLab/air'
 
 function AsbestoSampleListAir(props) {
-  const { classes, doc, i, disabled, names, sampleType, onEdit, listType, that } = props
+  const { classes, doc, i, disabled, sampleType, onEdit, listType, that } = props
   let sample = doc && doc.samples && doc.samples[i + 1] ? doc.samples[i + 1] : {}
   let calcs = {}
   if ((sample.initialFlowRate && sample.finalFlowRate) || (sample.startTime && sample.endTime)) calcs = getAirSampleData(sample)
