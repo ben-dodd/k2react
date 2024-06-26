@@ -91,14 +91,11 @@ export const authoriseWFM =
         params: {
           method: 'POST',
           headers: {
-            Authorization: `Basic ${Buffer.from(
-              `${process.env.REACT_APP_WFM_CLIENT_ID}:${process.env.REACT_APP_WFM_CLIENT_SECRET}`
-            ).toString('base64')}`,
             'Content-Type': 'application/x-www-form-urlencoded'
           },
           body: refreshToken
-            ? `grant_type=refresh_token&refresh_token=${refreshToken}`
-            : `grant_type=authorization_code&code=${code}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}`
+            ? `grant_type=refresh_token&refresh_token=${refreshToken}&client_id=${process.env.REACT_APP_WFM_CLIENT_ID}&client_secret=${process.env.REACT_APP_WFM_CLIENT_SECRET}&scope=openid profile email workflowmax offline_access`
+            : `grant_type=authorization_code&code=${code}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}&client_id=${process.env.REACT_APP_WFM_CLIENT_ID}&client_secret=${process.env.REACT_APP_WFM_CLIENT_SECRET}`
         }
       })
     }
@@ -420,7 +417,7 @@ export const fetchWFMClients = (accessToken, refreshToken) => async (dispatch) =
       // Map WFM jobs to a single level job object we can use
       if (json.Response) {
         json.Response.Clients.Client.forEach((wfmClient) => {
-          // //console.log(wfmClient);
+          // console.log(wfmClient)
           let i = wfmClient.Name.length
           if (i < len) {
             len = i
@@ -439,6 +436,11 @@ export const fetchWFMClients = (accessToken, refreshToken) => async (dispatch) =
         // console.log(clients);
       } else {
         console.log(data)
+        authRef.update({
+          wfmAccessToken: null,
+          wfmRefreshToken: null,
+          wfmAccessExpiry: null
+        })
       }
       dispatch({
         type: GET_WFM_CLIENTS,

@@ -21,12 +21,7 @@ import {
 //Modals
 import {
   ASBESTOS_COC_EDIT,
-  UPDATE_CERTIFICATE_VERSION,
-  ASBESTOS_SOIL_SUBSAMPLE_WEIGHTS,
   ASBESTOS_SAMPLE_LOG,
-  ASBESTOS_LAB_STATS,
-  ASBESTOS_LAB_MANAGER,
-  WA_ANALYSIS,
   ASBESTOS_SAMPLE_EDIT,
   DOWNLOAD_LAB_CERTIFICATE,
   COC_LOG,
@@ -63,6 +58,7 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import Input from '@material-ui/core/Input'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import moment from 'moment'
+import 'moment-timezone'
 import classNames from 'classnames'
 
 import { DatePicker } from '@material-ui/pickers'

@@ -159,7 +159,7 @@ export const getFirestoreCollection =
 export const fetchMe = () => async (dispatch) => {
   auth.currentUser &&
     usersRef.doc(auth.currentUser.uid).onSnapshot((doc) => {
-      // //console.log("Read a doc (fetchMe)!");
+      console.log('Read a doc (fetchMe)!')
       if (doc.exists) {
         let user = doc.data()
         user.uid = doc.id

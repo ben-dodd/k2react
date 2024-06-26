@@ -39,6 +39,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(auth.currentUser)
     return <div className='wrapper'>{auth.currentUser ? <MainScreen key='mainscreen' /> : <K2SignInScreen mode='initial' />}</div>
   }
 }

@@ -1,5 +1,6 @@
 import { Component } from 'react'
-import FirebaseAuth from 'react-firebaseui/FirebaseAuth'
+// import FirebaseAuth from 'react-firebaseui/FirebaseAuth'
+import { StyledFirebaseAuth } from 'react-firebaseui'
 import firebase, { auth } from '../config/firebase.js'
 import Button from '@material-ui/core/Button'
 import { withStyles } from '@material-ui/core/styles'
@@ -25,12 +26,13 @@ class K2SignInScreen extends Component {
       signInOptions: [firebase.auth.GoogleAuthProvider.PROVIDER_ID],
       callbacks: {
         signInSuccessWithAuthResult: (authResult, redirectUrl) => {
+          console.log('SUCCESS!')
           this.props.app.logIn()
           ApiCalendar.handleAuthClick()
           return false
         },
         signInFailure: (error) => {
-          console.error('** Firebase sign-in failed: ', error)
+          console.log('** Firebase sign-in failed: ', error)
           this.loginFailed(error)
           return false
         }
@@ -53,7 +55,7 @@ class K2SignInScreen extends Component {
         {mode === 'initial' && (
           <div className={classes.signInFirebase}>
             {/* <Button onClick='handleSignIn()'>Sign In</Button> */}
-            <FirebaseAuth uiConfig={this.firebaseUIConfig} firebaseAuth={auth} />
+            <StyledFirebaseAuth uiConfig={this.firebaseUIConfig} firebaseAuth={auth} />
           </div>
         )}
         {mode === 'loginFailed' && (

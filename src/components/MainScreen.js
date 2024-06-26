@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from 'react'
 
-import { BrowserRouter as Route, Link, Switch, withRouter } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link, Switch, withRouter } from 'react-router-dom'
 import { auth } from '../config/firebase'
 import { connect } from 'react-redux'
 import { APP_SETTINGS, UPDATE_DATA } from '../constants/modal-types'
@@ -150,7 +150,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const thisVersion = '1.3.3'
+const thisVersion = '2.0.0'
 
 class MainScreen extends React.PureComponent {
   // static whyDidYouRender = true;
@@ -173,6 +173,7 @@ class MainScreen extends React.PureComponent {
 
   UNSAFE_componentWillMount() {
     // if (!this.props.wfmAccessToken) this.props.authoriseWFM();
+    console.log(this.props.me)
     if (this.props.me && this.props.me.uid === undefined) this.props.fetchMe()
     if (this.props.menuItems === undefined) this.props.initConstants()
     this.props.fetchGeocodes()
