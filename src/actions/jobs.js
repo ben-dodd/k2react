@@ -45,6 +45,10 @@ import OtherIcon from '@material-ui/icons/LocationCity'
 
 import moment from 'moment'
 
+import momentbusinessdays from 'moment-business-days'
+import momenttimezone from 'moment-timezone'
+import momentbusinesstime from 'moment-business-time'
+
 import { firestore, authRef, stateRef, usersRef, sitesRef, cocsRef } from '../config/firebase'
 import { xmlToJson } from '../config/XmlToJson'
 import { dateOf, getDaysBetweenDates, getDaysSinceDate, titleCase } from './helpers'
@@ -82,7 +86,7 @@ export const fetchWFMAuth = () => async (dispatch) => {
 export const authoriseWFM =
   ({ code, refreshToken }) =>
   async (dispatch) => {
-    console.log('authoriseWFM called', code, refreshToken)
+    // console.log('authoriseWFM called', code, refreshToken)
     let path = `${process.env.REACT_APP_API_ROOT}wfm/post_api.php?apiKey=${process.env.REACT_APP_API_KEY}`
     let params = {
       method: 'POST',
@@ -107,11 +111,14 @@ export const authoriseWFM =
       .then((data) => {
         let dataObj = JSON.parse(data)
         let expiryDate = moment().add(moment.duration(dataObj.expires_in, 'seconds'))
-        console.log('AuthorizeWFM', dataObj)
         let authObj = {
           wfmAccessToken: dataObj.access_token,
           wfmRefreshToken: dataObj.refresh_token,
           wfmAccessExpiry: expiryDate.toDate()
+        }
+        console.log('AuthorizeWFM', dataObj)
+        if (authObj?.wfmAccessToken === undefined) {
+          authObj = { wfmAccessExpiry: null, wfmAccessToken: null, wfmRefreshToken: null }
         }
         authRef.update(authObj)
         dispatch({
@@ -436,11 +443,11 @@ export const fetchWFMClients = (accessToken, refreshToken) => async (dispatch) =
         // console.log(clients);
       } else {
         console.log(data)
-        authRef.update({
-          wfmAccessToken: null,
-          wfmRefreshToken: null,
-          wfmAccessExpiry: null
-        })
+        // authRef.update({
+        //   wfmAccessToken: null,
+        //   wfmRefreshToken: null,
+        //   wfmAccessExpiry: null
+        // })
       }
       dispatch({
         type: GET_WFM_CLIENTS,
@@ -706,7 +713,7 @@ export const getDetailedWFMJob =
               job.manager = null
               job.managerID = null
             }
-            if (wfmJob.Milestones.Milestone) {
+            if (wfmJob.Milestones?.Milestone) {
               job.milestones = []
               if (Array.isArray(wfmJob.Milestones.Milestone)) {
                 wfmJob.Milestones.Milestone.forEach((wfmMilestone) => {
@@ -730,7 +737,7 @@ export const getDetailedWFMJob =
                 ]
               }
             }
-            if (wfmJob.Notes.Note) {
+            if (wfmJob.Notes?.Note) {
               job.notes = []
               if (Array.isArray(wfmJob.Notes.Note)) {
                 wfmJob.Notes.Note.forEach((wfmNote) => {
@@ -758,7 +765,7 @@ export const getDetailedWFMJob =
                 ]
               }
             }
-            if (wfmJob.Assigned.Staff) {
+            if (wfmJob.Assigned?.Staff) {
               job.assigned = []
               if (Array.isArray(wfmJob.Assigned.Staff)) {
                 wfmJob.Assigned.Staff.forEach((wfmAssigned) => {
@@ -797,6 +804,7 @@ export const getDetailedWFMJob =
             if (setUpJob) dispatch(setupSiteJob(job, site))
           }
         } else {
+          console.log(Object(data).isObject())
           console.log(data)
         }
       })

@@ -27,9 +27,6 @@ import {
   GET_UPDATES,
   GET_USER,
   GET_VEHICLES,
-  GET_WFM_CLIENTS,
-  SAVE_WFM_ITEMS,
-  SAVE_WFM_STATS,
   RESET_LOCAL,
   SEARCH_CHANGE,
   SET_ANALYST,
@@ -37,6 +34,10 @@ import {
   UPDATE_STAFF
 } from '../constants/action-types'
 import moment from 'moment'
+
+import momentbusinessdays from 'moment-business-days'
+import momenttimezone from 'moment-timezone'
+import momentbusinesstime from 'moment-business-time'
 import {
   assetsRef,
   auth,

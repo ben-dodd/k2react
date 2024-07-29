@@ -11,6 +11,9 @@ import classNames from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import { styles } from '../config/styles'
 import moment from 'moment'
+import momentbusinessdays from 'moment-business-days'
+import momenttimezone from 'moment-timezone'
+import momentbusinesstime from 'moment-business-time'
 
 // Material UI;
 
@@ -150,7 +153,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const thisVersion = '2.0.0'
+const thisVersion = '2.0.1'
 
 class MainScreen extends React.PureComponent {
   // static whyDidYouRender = true;
@@ -399,12 +402,12 @@ class MainScreen extends React.PureComponent {
                 </ListItemIcon>
                 <ListItemText primary='Jobs' />
               </ListItem>
-              <ListItem button component={Link} to='/sites'>
+              {/* <ListItem button component={Link} to='/sites'>
                 <ListItemIcon>
                   <SitesIcon className={classes.colorAccent} />
                 </ListItemIcon>
                 <ListItemText primary='Sites' />
-              </ListItem>
+              </ListItem> */}
               <Divider />
             </div>
           )}
@@ -551,7 +554,7 @@ class MainScreen extends React.PureComponent {
           <ListItemText primary="Inventory" />
         </ListItem>*/}
 
-          {menuItems.includes('Training') && (
+          {/* {menuItems.includes('Training') && (
             <div>
               <ListItem button onClick={this.handleTrainingClick}>
                 <ListItemIcon>
@@ -590,7 +593,7 @@ class MainScreen extends React.PureComponent {
               </Collapse>
               <Divider />
             </div>
-          )}
+          )} */}
 
           {menuItems.includes('Library') && (
             <div>

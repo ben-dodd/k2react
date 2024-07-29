@@ -197,7 +197,12 @@ class CocModal extends React.PureComponent {
     console.log(doc)
 
     if (modalType === ASBESTOS_COC_EDIT) {
-      const names = [{ name: 'Client', uid: 'Client' }].concat(Object.values(this.props.staff).sort((a, b) => a.name.localeCompare(b.name)))
+      const names = [{ name: 'Client', uid: 'Client' }].concat(
+        Object.values(this.props.staff)
+          ?.filter((staff) => doc.historicalCoc || staff?.auth?.['K2 Staff'])
+          ?.map((staff) => ({ name: staff?.name, uid: staff?.uid }))
+          .sort((a, b) => a.name.localeCompare(b.name))
+      )
 
       let sampleNumbers = [this.state.numberOfSamples]
       if (doc && doc.samples) sampleNumbers = sampleNumbers.concat(Object.keys(doc.samples).map((key) => parseInt(key)))

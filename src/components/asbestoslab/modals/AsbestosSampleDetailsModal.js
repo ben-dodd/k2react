@@ -19,8 +19,10 @@ import AsbestosSampleWASummary from '../components/AsbestosSampleWASummary'
 import { hideModal, hideModalSecondary, handleModalChange } from '../../../actions/modal'
 import { dateOf, milliToDHM } from '../../../actions/helpers'
 import moment from 'moment'
+import momentbusinessdays from 'moment-business-days'
+import momenttimezone from 'moment-timezone'
+import momentbusinesstime from 'moment-business-time'
 import { resetSampleView } from '../../../actions/asbestosLab'
-import { asbestosSamplesRef } from '../../../config/firebase'
 import {
   analyticalCriteraOK,
   collateLayeredResults,
