@@ -27,13 +27,8 @@ export default function register() {
       return
     }
 
-<<<<<<< HEAD
-    window.addEventListener("load", () => {
-      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
-=======
     window.addEventListener('load', () => {
       const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 
       if (isLocalhost) {
         // This is running on localhost. Lets check if a service worker still exists or not.
@@ -42,16 +37,8 @@ export default function register() {
         // Add some additional logging to localhost, pointing developers to the
         // service worker/PWA documentation.
         navigator.serviceWorker.ready.then(() => {
-<<<<<<< HEAD
-          console.log(
-            "This web app is being served cache-first by a service " +
-              "worker. To learn more, visit https://goo.gl/SC7cgQ"
-          );
-        });
-=======
           console.log('This web app is being served cache-first by a service ' + 'worker. To learn more, visit https://goo.gl/SC7cgQ')
         })
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
       } else {
         // Is not local host. Just register service worker
         registerValidSW(swUrl)
@@ -87,12 +74,6 @@ function registerValidSW(swUrl) {
     .catch((error) => {
       console.error('Error during service worker registration:', error)
     })
-<<<<<<< HEAD
-    .catch(error => {
-      console.error("Error during service worker registration:", error);
-    });
-=======
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 }
 
 function checkValidServiceWorker(swUrl) {
@@ -100,14 +81,7 @@ function checkValidServiceWorker(swUrl) {
   fetch(swUrl)
     .then((response) => {
       // Ensure service worker exists, and that we really are getting a JS file.
-<<<<<<< HEAD
-      if (
-        response.status === 404 ||
-        response.headers.get("content-type").indexOf("javascript") === -1
-      ) {
-=======
       if (response.status === 404 || response.headers.get('content-type').indexOf('javascript') === -1) {
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
         // No service worker found. Probably a different app. Reload the page.
         navigator.serviceWorker.ready.then((registration) => {
           registration.unregister().then(() => {
@@ -120,19 +94,6 @@ function checkValidServiceWorker(swUrl) {
       }
     })
     .catch(() => {
-<<<<<<< HEAD
-      console.log(
-        "No internet connection found. App is running in offline mode."
-      );
-    });
-}
-
-export function unregister() {
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.ready.then(registration => {
-      registration.unregister();
-    });
-=======
       console.log('No internet connection found. App is running in offline mode.')
     })
 }
@@ -142,6 +103,5 @@ export function unregister() {
     navigator.serviceWorker.ready.then((registration) => {
       registration.unregister()
     })
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
   }
 }

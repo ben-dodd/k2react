@@ -1,46 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-import { connect } from "react-redux";
-
-import Button from "@material-ui/core/Button";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Step from "@material-ui/core/Step";
-import StepButton from "@material-ui/core/StepButton";
-import Stepper from "@material-ui/core/Stepper";
-import Typography from "@material-ui/core/Typography";
-
-import AddCircle from "@material-ui/icons/AddCircle";
-import ArrowBack from "@material-ui/icons/ArrowBack";
-import ArrowDownward from "@material-ui/icons/ArrowDownward";
-import ArrowForward from "@material-ui/icons/ArrowForward";
-import ArrowUpward from "@material-ui/icons/ArrowUpward";
-import Lock from "@material-ui/icons/Lock";
-import LockOpen from "@material-ui/icons/LockOpen";
-
-import { trainingPathsRef } from "../../config/firebase";
-import {
-  fetchStaff,
-  fetchQuizLog,
-  fetchMethodLog,
-  fetchReadingLog,
-  fetchQuizzes,
-  fetchDocuments,
-  fetchMethods
-} from "../../actions/local";
-import QuizListItem from "./components/QuizListItem";
-import TrainingNode from "./components/TrainingNode";
-import TrainingLink from "./components/TrainingLink";
-import TrainingPathReview from "./components/TrainingPathReview";
-
-const iconStyle = {
-  color: "#FF2D00",
-  fontSize: 40
-};
-
-const mapStateToProps = state => {
-=======
 import React from 'react'
 import { connect } from 'react-redux'
 
@@ -74,24 +31,16 @@ const iconStyle = {
 }
 
 const mapStateToProps = (state) => {
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
   return {
     me: state.local.me,
     staff: state.local.staff,
     quizzes: state.local.quizzes,
     methods: state.local.methods,
     documents: state.local.documents
-<<<<<<< HEAD
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-=======
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
   return {
     fetchStaff: () => dispatch(fetchStaff()),
     fetchReadingLog: () => dispatch(fetchReadingLog()),
@@ -100,21 +49,12 @@ const mapDispatchToProps = (dispatch) => {
     fetchQuizzes: () => dispatch(fetchQuizzes()),
     fetchQuizLog: () => dispatch(fetchQuizLog()),
     fetchMethodLog: () => dispatch(fetchMethodLog())
-<<<<<<< HEAD
-  };
-};
-
-class TrainingPath extends React.Component {
-  constructor(props) {
-    super(props);
-=======
   }
 }
 
 class TrainingPath extends React.Component {
   constructor(props) {
     super(props)
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 
     this.state = {
       path: {},
@@ -122,23 +62,6 @@ class TrainingPath extends React.Component {
       isLoading: true,
       activeStep: 0,
       completed: new Set()
-<<<<<<< HEAD
-    };
-  }
-
-  UNSAFE_componentWillMount() {
-    this.props.fetchStaff();
-    this.props.fetchDocuments();
-    this.props.fetchMethods();
-    this.props.fetchQuizzes();
-    this.props.fetchReadingLog();
-    this.props.fetchMethodLog();
-    this.props.fetchQuizLog();
-    trainingPathsRef
-      .doc(this.props.match.params.uid)
-      .get()
-      .then(doc => {
-=======
     }
   }
 
@@ -154,68 +77,21 @@ class TrainingPath extends React.Component {
       .doc(this.props.match.params.uid)
       .get()
       .then((doc) => {
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
         this.setState({
           totalSteps: doc.data().steps.length,
           path: doc.data(),
           isLoading: false
-<<<<<<< HEAD
-        });
-        let steps = this.getSteps();
-        this.setState({
-          steps: steps
-        });
-      });
-=======
         })
         let steps = this.getSteps()
         this.setState({
           steps: steps
         })
       })
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
   }
 
   getSteps = () => {
     let possibleStages = [
       {
-<<<<<<< HEAD
-        id: "outline",
-        label: "Outline"
-      },
-      {
-        id: "bgreading",
-        label: "Background Readings"
-      },
-      {
-        id: "practical",
-        label: "Practical Training"
-      },
-      {
-        id: "inhouse",
-        label: "In-House Training"
-      },
-      {
-        id: "sitevisits",
-        label: "Site Visits"
-      },
-      {
-        id: "review",
-        label: "Review"
-      }
-    ];
-    let steps = [];
-    possibleStages.forEach(stage => {
-      if (
-        this.state.path.steps[stage.id] &&
-        this.state.path.steps[stage.id].enabled
-      ) {
-        steps.push(stage);
-      }
-    });
-    return steps;
-  };
-=======
         id: 'outline',
         label: 'Outline'
       },
@@ -248,7 +124,6 @@ class TrainingPath extends React.Component {
     })
     return steps
   }
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 
   handleNext = () => {
     let activeStep
@@ -263,16 +138,6 @@ class TrainingPath extends React.Component {
     }
     this.setState({
       activeStep
-<<<<<<< HEAD
-    });
-  };
-
-  handleBack = () => {
-    this.setState(state => ({
-      activeStep: state.activeStep - 1
-    }));
-  };
-=======
     })
   }
 
@@ -281,29 +146,19 @@ class TrainingPath extends React.Component {
       activeStep: state.activeStep - 1
     }))
   }
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 
   handleStep = (step) => () => {
     this.setState({
       activeStep: step
-<<<<<<< HEAD
-    });
-  };
-=======
     })
   }
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 
   handleComplete = () => {
     const completed = new Set(this.state.completed)
     completed.add(this.state.activeStep)
     this.setState({
       completed
-<<<<<<< HEAD
-    });
-=======
     })
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
     if (completed.size !== this.state.totalSteps) {
       this.handleNext()
     }
@@ -313,13 +168,8 @@ class TrainingPath extends React.Component {
     this.setState({
       activeStep: 0,
       completed: new Set()
-<<<<<<< HEAD
-    });
-  };
-=======
     })
   }
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 
   isStepComplete(step) {
     return this.state.completed.has(step)
@@ -339,36 +189,6 @@ class TrainingPath extends React.Component {
 
   renderNode(node) {
     switch (node.type) {
-<<<<<<< HEAD
-      case "quiz":
-        return <QuizListItem quiz={node} />;
-      case "link":
-        return <TrainingLink link={node} />;
-      case "reading":
-        return <TrainingLink link={node} />;
-      case "method":
-        return <TrainingLink link={node} />;
-      case "review":
-        return <TrainingPathReview path={this.state.path} />;
-      case "ArrowBack":
-        return <ArrowBack style={iconStyle} />;
-      case "ArrowDownward":
-        return <ArrowDownward style={iconStyle} />;
-      case "ArrowForward":
-        return <ArrowForward style={iconStyle} />;
-      case "ArrowUpward":
-        return <ArrowUpward style={iconStyle} />;
-      case "AddCircle":
-        return <AddCircle style={iconStyle} />;
-      case "Lock":
-        return <Lock style={iconStyle} />;
-      case "LockOpen":
-        return <LockOpen style={{ color: "#444", fontSize: 40 }} />;
-      case "spacer":
-        return <Paper style={{ width: "100%", height: "100%" }}>Hello</Paper>;
-      default:
-        return <TrainingNode node={node} />;
-=======
       case 'quiz':
         return <QuizListItem quiz={node} />
       case 'link':
@@ -845,7 +665,6 @@ class TrainingPath extends React.Component {
         return review
       default:
         return outline
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
     }
   }
 
@@ -1391,11 +1210,7 @@ class TrainingPath extends React.Component {
   };
 
   render() {
-<<<<<<< HEAD
-    const { path, activeStep, totalSteps, steps } = this.state;
-=======
     const { path, activeStep, totalSteps, steps } = this.state
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 
     return (
       <div style={{ marginTop: 80 }}>
@@ -1407,17 +1222,10 @@ class TrainingPath extends React.Component {
           <div>
             <div
               style={{
-<<<<<<< HEAD
-                textAlign: "center",
-                fontSize: 24,
-                color: "white",
-                backgroundColor: "#006D44",
-=======
                 textAlign: 'center',
                 fontSize: 24,
                 color: 'white',
                 backgroundColor: '#006D44',
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
                 padding: 12
               }}
             >
@@ -1427,36 +1235,15 @@ class TrainingPath extends React.Component {
               {steps.map((step, index) => {
                 return (
                   <Step key={step.id}>
-<<<<<<< HEAD
-                    <StepButton
-                      onClick={this.handleStep(index)}
-                      completed={this.state.completed.has(index)}
-                    >
-                      {step.label}
-                    </StepButton>
-                  </Step>
-                );
-=======
                     <StepButton onClick={this.handleStep(index)} completed={this.state.completed.has(index)}>
                       {step.label}
                     </StepButton>
                   </Step>
                 )
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
               })}
             </Stepper>
             <div style={{ marginTop: 12 }}>
               {this.allStepsCompleted() ? (
-<<<<<<< HEAD
-                <div>
-                  <Typography style={{ marginBottom: 8 }}>
-                    All steps completed - you're finished
-                  </Typography>
-                  <Button onClick={this.handleReset}>Reset</Button>
-                </div>
-              ) : (
-=======
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
                 <div>
                   <Typography style={{ marginBottom: 8 }}>All steps completed - you're finished</Typography>
                   <Button onClick={this.handleReset}>Reset</Button>
@@ -1471,61 +1258,25 @@ class TrainingPath extends React.Component {
                   </Button>
                   {activeStep !== totalSteps &&
                     (this.state.completed.has(activeStep) ? (
-<<<<<<< HEAD
-                      <Typography
-                        variant="caption"
-                        style={{ display: "inline-block" }}
-                      >
-                        Step {activeStep + 1} already completed
-                      </Typography>
-                    ) : (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.handleComplete}
-                      >
-                        {this.completedSteps() === totalSteps - 1
-                          ? "Finish"
-                          : "Complete Step"}
-=======
                       <Typography variant='caption' style={{ display: 'inline-block' }}>
                         Step {activeStep + 1} already completed
                       </Typography>
                     ) : (
                       <Button variant='contained' color='primary' onClick={this.handleComplete}>
                         {this.completedSteps() === totalSteps - 1 ? 'Finish' : 'Complete Step'}
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
                       </Button>
                     ))}
                 </div>
               )}
             </div>
-<<<<<<< HEAD
-            <Grid container direction="column">
-              {steps &&
-                steps[activeStep] &&
-                this.renderPage(steps[activeStep].id)}
-=======
             <Grid container direction='column'>
               {steps && steps[activeStep] && this.renderPage(steps[activeStep].id)}
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
             </Grid>
           </div>
         )}
       </div>
-<<<<<<< HEAD
-    );
-  }
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(TrainingPath);
-=======
     )
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TrainingPath)
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d

@@ -1,52 +1,18 @@
-<<<<<<< HEAD
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../config/styles";
-import { connect } from "react-redux";
-=======
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { styles } from '../../config/styles'
 import { connect } from 'react-redux'
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 
 const mapStateToProps = (state) => {
   return {
     search: state.local.search,
-<<<<<<< HEAD
-    me: state.local.me,
-  };
-};
-=======
     me: state.local.me
   }
 }
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 
 const mapDispatchToProps = (dispatch) => {
   return {
     // fetchSampleLog: update => dispatch(fetchSampleLog(update)),
-<<<<<<< HEAD
-  };
-};
-
-class AsbestosLog extends React.Component {
-  state = {
-    searchJobNumber: "",
-    searchClient: "",
-    searchStartDate: "",
-    searchEndDate: "",
-    searchDateType: "",
-    searchAnalyst: "",
-  };
-
-  UNSAFE_componentWillMount = () => {
-    // if (this.props.sampleLog === undefined || this.props.sampleLog.length === 0) this.props.fetchSampleLog(true);
-  };
-
-  render() {
-    const { sampleLog, classes } = this.props;
-=======
   }
 }
 
@@ -66,7 +32,6 @@ class AsbestosLog extends React.Component {
 
   render() {
     const { sampleLog, classes } = this.props
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
     return (
       <div style={{ marginTop: 80 }}>
         <div className={classes.paleLarge}>Under Development</div>
@@ -147,18 +112,8 @@ class AsbestosLog extends React.Component {
           }
         </div>*/}
       </div>
-<<<<<<< HEAD
-    );
-  }
-}
-
-export default withStyles(styles)(
-  connect(mapStateToProps, mapDispatchToProps)(AsbestosLog)
-);
-=======
     )
   }
 }
 
 export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(AsbestosLog))
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d

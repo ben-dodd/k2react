@@ -1,28 +1,3 @@
-<<<<<<< HEAD
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
-import { styles } from "../../../config/styles";
-import { connect } from "react-redux";
-import { writeShorthandResult, } from "../../../actions/asbestosLab";
-
-import ExpansionPanel from "@material-ui/core/ExpansionPanel";
-import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
-import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
-import Grid from "@material-ui/core/Grid";
-
-import ExpandMore from "@material-ui/icons/ExpandMore";
-import Flag from "@material-ui/icons/Flag";
-
-class AsbestosLogCard extends React.Component {
-  render() {
-    const { log } = this.props;
-    return (
-      <ExpansionPanel style={{ width: '100%'}}>
-        <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-          <Grid container>
-            <Grid item xs={6}>
-              <div><b>{log.jobNumber}-{log.sampleNumber}</b> {log.client} ({log.address}) {log.priority === 1 && <Flag color='secondary' />}</div>
-=======
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { styles } from '../../../config/styles'
@@ -51,7 +26,6 @@ class AsbestosLogCard extends React.Component {
                 </b>{' '}
                 {log.client} ({log.address}) {log.priority === 1 && <Flag color='secondary' />}
               </div>
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
             </Grid>
             <Grid item xs={6}>
               {writeShorthandResult(log.result)}
@@ -131,16 +105,8 @@ class AsbestosLogCard extends React.Component {
           </Grid>*/}
         </ExpansionPanelDetails>
       </ExpansionPanel>
-<<<<<<< HEAD
-    );
-  }
-}
-
-export default withStyles(styles)(AsbestosLogCard);
-=======
     )
   }
 }
 
 export default withStyles(styles)(AsbestosLogCard)
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d

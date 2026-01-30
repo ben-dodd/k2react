@@ -1,17 +1,9 @@
-<<<<<<< HEAD
-import { INIT_CONSTANTS } from "../constants/action-types";
-=======
 import { INIT_CONSTANTS } from '../constants/action-types'
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 
 const KeyCodes = {
   comma: 188,
   enter: 13
-<<<<<<< HEAD
-};
-=======
 }
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 
 // const cardCols = 8;
 const cardCols = 6
@@ -142,31 +134,19 @@ const constInit = {
   },
   questiontypes: {
     truefalse: {
-<<<<<<< HEAD
-      name: "True or False",
-=======
       name: 'True or False',
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
       truefalse: true,
       image: true
     },
     multisingle: {
-<<<<<<< HEAD
-      name: "Multi-Choice, Single Answer",
-=======
       name: 'Multi-Choice, Single Answer',
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
       correct: true,
       incorrect: true,
       numberofoptions: true,
       image: true
     },
     multimulti: {
-<<<<<<< HEAD
-      name: "Multi-Choice, Multiple Answers",
-=======
       name: 'Multi-Choice, Multiple Answers',
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
       correct: true,
       correctmax: true,
       correctmin: true,
@@ -174,19 +154,11 @@ const constInit = {
       numberofoptions: true
     },
     shortstring: {
-<<<<<<< HEAD
-      name: "Short Answer",
-      answer: true
-    },
-    sort: {
-      name: "Word Sort",
-=======
       name: 'Short Answer',
       answer: true
     },
     sort: {
       name: 'Word Sort',
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
       answers: true
     },
     // sortimage: {
@@ -199,11 +171,7 @@ const constInit = {
     //   tags: true,
     // },
     sortbucket: {
-<<<<<<< HEAD
-      name: "Bucket Word Sort",
-=======
       name: 'Bucket Word Sort',
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
       buckets: true
     }
     // sortbucketimage: {
@@ -276,54 +244,6 @@ const constInit = {
         "Gives the user the ability to add fibre count results to air samples."
     },
     {
-<<<<<<< HEAD
-      name: "Asbestos Bulk Analysis",
-      desc:
-        "Gives the user the ability to add analysis results to bulk samples."
-    },
-    {
-      name: "Analysis Checker",
-      desc:
-        "Gives the user the ability to check off air and bulk analysis results so they can be issued."
-    },
-    {
-      name: "Training Editor",
-      desc: "Gives the user the ability to edit and add new training modules."
-    },
-    {
-      name: "Quiz Editor",
-      desc:
-        "Gives the user the ability to edit and add new questions and quizzes."
-    }
-  ],
-  jobDescriptions: [
-    "Administration Manager",
-    "Asbestos Administrator",
-    "Environmental Scientist",
-    "Environmental Technician",
-    "Lab Manager",
-    "Lab Technician",
-    "Managing Director",
-    "Occupational Hygienist",
-    "Operations Administrator",
-    "Operations Manager",
-    "Support",
-    "Technical Writer"
-  ],
-  quiztags: [
-    { id: "asbestos", text: "General Asbestos" },
-    { id: "asbestos-analysis", text: "Asbestos Analysis" },
-    { id: "asbestos-legislation", text: "Asbestos Legislation" },
-    { id: "asbestos-surveying", text: "Asbestos Surveying" },
-    { id: "biological-testing", text: "Biological Testing" },
-    { id: "general-biology", text: "General Biology" },
-    { id: "general-chemistry", text: "General Chemistry" },
-    { id: "construction", text: "General Construction Knowledge" },
-    { id: "safety", text: "General Safety" },
-    { id: "general-taxonomy", text: "General Taxonomy" },
-    { id: "meth-legislation", text: "Meth Legislation" },
-    { id: "meth-testing", text: "Meth Testing" }
-=======
       name: 'Asbestos Admin',
       desc: 'Gives the user the ability to report bulk and air analysis for other users.'
     },
@@ -375,7 +295,6 @@ const constInit = {
     { id: 'general-taxonomy', text: 'General Taxonomy' },
     { id: 'meth-legislation', text: 'Meth Legislation' },
     { id: 'meth-testing', text: 'Meth Testing' }
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
   ],
   trainingCategories: [
     {
@@ -427,13 +346,8 @@ const constInit = {
       desc: "Software"
     },
     {
-<<<<<<< HEAD
-      key: "haz",
-      desc: "Hazards"
-=======
       key: 'haz',
       desc: 'Hazards'
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
     }
   ],
   toolcategories: [
@@ -454,28 +368,14 @@ const constInit = {
       desc: "Asbestos"
     },
     {
-<<<<<<< HEAD
-      key: "admin",
-      desc: "Admin"
-=======
       key: 'admin',
       desc: 'Admin'
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
     }
   ],
   assetcategories: [
     {
-<<<<<<< HEAD
-      key: "gen",
-      desc: "General"
-    },
-    {
-      key: "gen",
-      desc: "General"
-=======
       key: 'gen',
       desc: 'General'
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
     },
     {
       key: 'gen',
@@ -483,53 +383,6 @@ const constInit = {
     }
   ],
   incidentcategories: [
-<<<<<<< HEAD
-    {
-      key: "injury",
-      desc: "Injury",
-    },
-    {
-      key: "damage",
-      desc: "Damage to Property",
-    },
-    {
-      key: "nearmiss",
-      desc: "Near Miss",
-    },
-  ],
-  documentCategories: [
-    {
-      key: "gen",
-      desc: "General"
-    },
-    {
-      key: "manuals",
-      desc: "Equipment Manuals"
-    },
-    {
-      key: "k2methods",
-      desc: "K2 Methods"
-    },
-    {
-      key: "refmethods",
-      desc: "Reference Methods"
-    },
-    {
-      key: "legislation",
-      desc: "Legislation"
-    },
-    {
-      key: "guidelines",
-      desc: "Guidelines"
-    },
-    {
-      key: "cheatsheets",
-      desc: "Cheatsheets"
-    },
-    {
-      key: "other",
-      desc: "Other"
-=======
     {
       key: 'injury',
       desc: 'Injury'
@@ -575,7 +428,6 @@ const constInit = {
     {
       key: 'other',
       desc: 'Other'
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
     }
   ],
   noticeCategories: [
@@ -592,94 +444,6 @@ const constInit = {
       desc: "Job Leads"
     },
     {
-<<<<<<< HEAD
-      key: "has",
-      desc: "Health and Safety"
-    },
-    {
-      key: "jqfocc",
-      desc: "Occ Health JQF"
-    },
-    {
-      key: "jqfasb",
-      desc: "Asbestos JQF"
-    },
-    {
-      key: "jqfmeth",
-      desc: "Meth JQF"
-    },
-    {
-      key: "eq",
-      desc: "Equipment"
-    }
-  ],
-  offices: ["Auckland", "Christchurch", "Hamilton", "Nelson", "Wellington"],
-  officecontacts: [
-    {
-      name: "Christchurch",
-      workphone: "03 384 8966"
-    },
-    {
-      name: "Auckland",
-      workphone: "09 275 1261"
-    }
-  ],
-  asbestosmaterials: [
-    { label: "asbestos insulation board" },
-    { label: "Bakelite" },
-    { label: "bitumen" },
-    { label: "bitumen pressed metal" },
-    { label: "brick" },
-    { label: "building paper" },
-    { label: "ceiling tile" },
-    { label: "cement" },
-    { label: "cement sheet" },
-    { label: "cement pipe" },
-    { label: "ceramic" },
-    { label: "corrugated cement sheet" },
-    { label: "dust" },
-    { label: "dust (tape sampled)" },
-    { label: "dust (swab sampled)" },
-    { label: "Decramastic tile" },
-    { label: "fabric" },
-    { label: "fibre cement" },
-    { label: "fibreglass" },
-    { label: "fibreglass insulation" },
-    { label: "Fibrolite" },
-    { label: "fibrous plaster" },
-    { label: "Galbestos" },
-    { label: "insulation" },
-    { label: "insulfluff" },
-    { label: "insulation board" },
-    { label: "jointing compound" },
-    { label: "lagging" },
-    { label: "laminate" },
-    { label: "laminated insulation board" },
-    { label: "lath and plaster" },
-    { label: "linoleum" },
-    { label: "mastic" },
-    { label: "metal" },
-    { label: "millboard" },
-    { label: "mortar" },
-    { label: "Polite" },
-    { label: "resin" },
-    { label: "rope" },
-    { label: "softboard" },
-    { label: "softboard ceiling tile" },
-    { label: "soil" },
-    { label: "stucco" },
-    { label: "textured plaster" },
-    { label: "textured paint" },
-    { label: "textured plaster over lath and plaster" },
-    { label: "tile grout" },
-    { label: "vermiculite" },
-    { label: "vinyl" },
-    { label: "vinyl tile" },
-    { label: "vinyl with paper backing" },
-    { label: "wood" },
-    { label: "window putty" },
-    { label: "Zelemite" }
-=======
       key: 'has',
       desc: 'Health and Safety'
     },
@@ -766,24 +530,10 @@ const constInit = {
     { label: 'wood' },
     { label: 'window putty' },
     { label: 'Zelemite' }
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
   ],
   buildingmaterials: [],
   asbestostypes: ["Chrysotile", "Amosite", "Crocidolite"],
   docTagSuggestions: [
-<<<<<<< HEAD
-    { id: "Meth", text: "Methamphetamine" },
-    { id: "Asb", text: "Asbestos" },
-    { id: "Stack", text: "Stack" },
-    { id: "Bio", text: "Biological" },
-    { id: "Noise", text: "Noise" },
-    { id: "Analysis", text: "Analysis" },
-    { id: "Test Method", text: "Test Method" },
-    { id: "Background Reading", text: "Background Reading" },
-    { id: "Health and Safety", text: "Health and Safety" },
-    { id: "Legislation", text: "Legislation" },
-    { id: "Cheat Sheet", text: "Cheat Sheet" }
-=======
     { id: 'Meth', text: 'Methamphetamine' },
     { id: 'Asb', text: 'Asbestos' },
     { id: 'Stack', text: 'Stack' },
@@ -795,30 +545,11 @@ const constInit = {
     { id: 'Health and Safety', text: 'Health and Safety' },
     { id: 'Legislation', text: 'Legislation' },
     { id: 'Cheat Sheet', text: 'Cheat Sheet' }
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
   ],
   tagDelimiters: [KeyCodes.comma, KeyCodes.enter],
   noAsbestosResultReasons: [
     {
       value: 'notAnalysed',
-<<<<<<< HEAD
-      label: 'Not Analysed',
-    },
-    {
-      value: 'sampleSizeTooSmall',
-      label: 'Sample Size Too Small',
-    },
-    {
-      value: 'sampleNotReceived',
-      label: 'Sample Not Received By Lab',
-    },
-    {
-      value: 'other',
-      label: 'Other',
-    },
-  ],
-};
-=======
       label: 'Not Analysed'
     },
     {
@@ -835,17 +566,12 @@ const constInit = {
     }
   ]
 }
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
 
 // Properties related to constants such as word lists
 export default function constReducer(state = constInit, action) {
   switch (action.type) {
     case INIT_CONSTANTS:
-<<<<<<< HEAD
-      return action.payload;
-=======
       return action.payload
->>>>>>> 19df57755d0c04c09358c8f67c601c2eec2f6e8d
     default:
       return state
   }
