@@ -271,58 +271,48 @@ class MainScreen extends React.PureComponent {
   getWFMData = () => {
     if (this.props.wfmAccessToken && this.props.wfmRefreshToken) {
       if (!this.props.clients || this.props.clients.length === 0) {
-        this.props.fetchWFMClients(
-          this.props.wfmAccessToken,
-          this.props.wfmRefreshToken
-        );
+        this.props.fetchWFMClients(this.props.wfmAccessToken, this.props.wfmRefreshToken)
       }
       // this.props.fetchWFMStaff(
       //   this.props.wfmAccessToken,
       //   this.props.wfmRefreshToken
       // );
     } else {
-      console.log("token not here yet");
-      setTimeout(this.getWFMData, 500);
+      console.log('token not here yet')
+      setTimeout(this.getWFMData, 500)
     }
-  };
+  }
 
   checkWFMAuthorised = () => {
-    console.log("CHECK AUTH CALLED");
+    console.log('CHECK AUTH CALLED')
     if (this.props.wfmAuthLoaded) {
-      if (
-        this.props.wfmAccessToken &&
-        moment().isBefore(moment(dateOf(this.props.wfmAccessExpiry)))
-      ) {
-        console.log(
-          `Access Expires on ${moment(
-            dateOf(this.props.wfmAccessExpiry)
-          ).format("lll")}`
-        );
+      if (this.props.wfmAccessToken && moment().isBefore(moment(dateOf(this.props.wfmAccessExpiry)))) {
+        console.log(`Access Expires on ${moment(dateOf(this.props.wfmAccessExpiry)).format('lll')}`)
         // All good
       } else if (this.props.wfmRefreshToken) {
         // Use refresh token to get a new access token
         // console.log(this.props.wfmRefreshToken);
         this.props.authoriseWFM({
-          refreshToken: this.props.wfmRefreshToken,
-        });
+          refreshToken: this.props.wfmRefreshToken
+        })
       } else {
         // Authenticate user and authorize MyK2 to use WFM
         let code = qs.parse(this.props.location.search, {
-          ignoreQueryPrefix: true,
-        }).code;
+          ignoreQueryPrefix: true
+        }).code
         if (!code) {
-          let path = `${process.env.REACT_APP_WFM_AUTH_ROOT}${process.env.REACT_APP_WFM_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}&scope=workflowmax offline_access&state=${process.env.REACT_APP_WFM_STATE_KEY}`;
-          window.location.assign(path);
+          let path = `${process.env.REACT_APP_WFM_AUTH_ROOT}${process.env.REACT_APP_WFM_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_WFM_REDIRECT_URI}&scope=workflowmax offline_access&state=${process.env.REACT_APP_WFM_STATE_KEY}`
+          window.location.assign(path)
         } else {
           // User has been sent back to MyK2 with the code
-          this.props.authoriseWFM({ code });
+          this.props.authoriseWFM({ code })
         }
       }
     } else {
-      console.log("auth not here yet");
-      setTimeout(this.checkWFMAuthorised, 500);
+      console.log('auth not here yet')
+      setTimeout(this.checkWFMAuthorised, 500)
     }
-  };
+  }
 
   handleLogOut = () => {
     // sendSlackMessage(`${this.props.state.local.me.name} has logged out.`);
@@ -811,7 +801,7 @@ class MainScreen extends React.PureComponent {
           </Collapse>*/}
         </List>
       </Drawer>
-    );
+    )
 
     return (
       <React.Fragment>

@@ -80,7 +80,7 @@ class Noticeboard extends React.PureComponent {
     })
   }
 
-  select = uid => {
+  select = (uid) => {
     this.setState({
       modPath: uid
     })

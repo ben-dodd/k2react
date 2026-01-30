@@ -306,7 +306,7 @@ export const getUserAttrs = (userPath, editStaff) => async (dispatch) => {
                 url: attr.fileUrl
               })
             }
-            if (attr.type === "NZQAUnitStandard" && attr.date) {
+            if (attr.type === 'NZQAUnitStandard' && attr.date) {
               if (attr.expiry) {
                 if (new Date(attr.expiry) > new Date()) user.nzqa = user.nzqa.concat(attr.unit)
               } else {

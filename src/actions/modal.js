@@ -221,5 +221,5 @@ export const handleTagDelete = (removedTag) => (dispatch) => {
   dispatch({
     type: DELETE_TAG,
     payload: removedTag
-  });
-};
+  })
+}

@@ -25,28 +25,28 @@ const A5Height = 300
 const constInit = {
   qualificationtypes: {
     AsbestosAssessor: {
-      name: "Asbestos Assessor",
+      name: 'Asbestos Assessor',
       number: true,
       expiry: true,
       cols: cardCols,
       cellHeight: cardHeight
     },
     AsbestosAwarenessTraining: {
-      name: "Asbestos Awareness Training",
+      name: 'Asbestos Awareness Training',
       expiry: true,
       issuer: true,
       cols: A5Cols,
       cellHeight: A5Height
     },
     AsbestosExposureHealthMonitoring: {
-      name: "Asbestos Exposure Health Monitoring",
+      name: 'Asbestos Exposure Health Monitoring',
       issuer: true,
       notes: true,
       cols: A4Cols,
       cellHeight: A4Height
     },
     DriverLicence: {
-      name: "Driver Licence",
+      name: 'Driver Licence',
       number: true,
       expiry: true,
       class: true,
@@ -54,14 +54,14 @@ const constInit = {
       cellHeight: cardHeight
     },
     FirstAid: {
-      name: "First Aid",
+      name: 'First Aid',
       issuer: true,
       expiry: true,
       cols: A5Cols,
       cellHeight: A5Height
     },
     Inductions: {
-      name: "Inductions/Company Cards",
+      name: 'Inductions/Company Cards',
       id: true,
       expiry: true,
       issuer: true,
@@ -70,26 +70,26 @@ const constInit = {
       cellHeight: cardVertHeight
     },
     IP402: {
-      name: "IP402",
+      name: 'IP402',
       cols: A4Cols,
       cellHeight: A4Height
     },
     MaskFit: {
-      name: "Mask Fit Test",
+      name: 'Mask Fit Test',
       expiry: true,
       issuer: true,
       cols: A5Cols,
       cellHeight: A5Height
     },
     Membership: {
-      name: "Membership",
+      name: 'Membership',
       expiry: true,
       issuer: true,
       cols: A5Cols,
       cellHeight: A5Height
     },
     NZQAUnitStandard: {
-      name: "NZQA Unit Standard",
+      name: 'NZQA Unit Standard',
       expiry: true,
       title: true,
       issuer: true,
@@ -98,7 +98,7 @@ const constInit = {
       cellHeight: A5Height
     },
     Training: {
-      name: "Other",
+      name: 'Other',
       title: true,
       id: true,
       issuer: true,
@@ -108,7 +108,7 @@ const constInit = {
       cellHeight: A4Height
     },
     SiteSafeCourse: {
-      name: "Site Safe Course",
+      name: 'Site Safe Course',
       id: true,
       expiry: true,
       course: true,
@@ -116,7 +116,7 @@ const constInit = {
       cellHeight: cardHeight
     },
     Tertiary: {
-      name: "Tertiary Qualification (Highest Level)",
+      name: 'Tertiary Qualification (Highest Level)',
       full: true,
       abbrev: true,
       issuer: true,
@@ -124,7 +124,7 @@ const constInit = {
       cellHeight: A4Height
     },
     TertiaryOther: {
-      name: "Tertiary Qualification (Other)",
+      name: 'Tertiary Qualification (Other)',
       full: true,
       abbrev: true,
       issuer: true,
@@ -225,23 +225,20 @@ const constInit = {
   },
   permissions: [
     {
-      name: "K2 Staff",
-      desc: "Gives the user access to view all K2 samples and jobs."
+      name: 'K2 Staff',
+      desc: 'Gives the user access to view all K2 samples and jobs.'
     },
     {
-      name: "Admin",
-      desc:
-        "Gives the user full access and the ability to edit other users including granting them permissions."
+      name: 'Admin',
+      desc: 'Gives the user full access and the ability to edit other users including granting them permissions.'
     },
     {
-      name: "Asbestos Admin",
-      desc:
-        "Gives the user the ability to report bulk and air analysis for other users."
+      name: 'Asbestos Admin',
+      desc: 'Gives the user the ability to report bulk and air analysis for other users.'
     },
     {
-      name: "Asbestos Air Analysis",
-      desc:
-        "Gives the user the ability to add fibre count results to air samples."
+      name: 'Asbestos Air Analysis',
+      desc: 'Gives the user the ability to add fibre count results to air samples.'
     },
     {
       name: 'Asbestos Admin',
@@ -298,52 +295,52 @@ const constInit = {
   ],
   trainingCategories: [
     {
-      key: "gen",
-      desc: "General"
+      key: 'gen',
+      desc: 'General'
     },
     {
-      key: "stack",
-      desc: "Stack"
+      key: 'stack',
+      desc: 'Stack'
     },
     {
-      key: "air",
-      desc: "Air Quality"
+      key: 'air',
+      desc: 'Air Quality'
     },
     {
-      key: "bio",
-      desc: "Biological"
+      key: 'bio',
+      desc: 'Biological'
     },
     {
-      key: "noise",
-      desc: "Noise"
+      key: 'noise',
+      desc: 'Noise'
     },
     {
-      key: "asb",
-      desc: "Asbestos"
+      key: 'asb',
+      desc: 'Asbestos'
     },
     {
-      key: "meth",
-      desc: "Meth"
+      key: 'meth',
+      desc: 'Meth'
     },
     {
-      key: "other",
-      desc: "Other Testing"
+      key: 'other',
+      desc: 'Other Testing'
     },
     {
-      key: "eq",
-      desc: "Equipment"
+      key: 'eq',
+      desc: 'Equipment'
     },
     {
-      key: "rep",
-      desc: "Reporting"
+      key: 'rep',
+      desc: 'Reporting'
     },
     {
-      key: "admin",
-      desc: "Admin"
+      key: 'admin',
+      desc: 'Admin'
     },
     {
-      key: "software",
-      desc: "Software"
+      key: 'software',
+      desc: 'Software'
     },
     {
       key: 'haz',
@@ -352,20 +349,20 @@ const constInit = {
   ],
   toolcategories: [
     {
-      key: "gen",
-      desc: "General"
+      key: 'gen',
+      desc: 'General'
     },
     {
-      key: "conv",
-      desc: "Conversions"
+      key: 'conv',
+      desc: 'Conversions'
     },
     {
-      key: "occ",
-      desc: "OCC Health"
+      key: 'occ',
+      desc: 'OCC Health'
     },
     {
-      key: "asb",
-      desc: "Asbestos"
+      key: 'asb',
+      desc: 'Asbestos'
     },
     {
       key: 'admin',
@@ -432,16 +429,16 @@ const constInit = {
   ],
   noticeCategories: [
     {
-      key: "fav",
-      desc: "Favourites"
+      key: 'fav',
+      desc: 'Favourites'
     },
     {
-      key: "gen",
-      desc: "General"
+      key: 'gen',
+      desc: 'General'
     },
     {
-      key: "leads",
-      desc: "Job Leads"
+      key: 'leads',
+      desc: 'Job Leads'
     },
     {
       key: 'has',
@@ -532,7 +529,7 @@ const constInit = {
     { label: 'Zelemite' }
   ],
   buildingmaterials: [],
-  asbestostypes: ["Chrysotile", "Amosite", "Crocidolite"],
+  asbestostypes: ['Chrysotile', 'Amosite', 'Crocidolite'],
   docTagSuggestions: [
     { id: 'Meth', text: 'Methamphetamine' },
     { id: 'Asb', text: 'Asbestos' },

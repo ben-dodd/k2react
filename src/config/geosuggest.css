@@ -14,9 +14,13 @@
   width: 100%;
   border: 2px solid transparent;
   box-shadow: 0 0 1px #3d464d;
-  padding: .5em 1em;
-  -webkit-transition: border 0.2s, box-shadow 0.2s;
-          transition: border 0.2s, box-shadow 0.2s;
+  padding: 0.5em 1em;
+  -webkit-transition:
+    border 0.2s,
+    box-shadow 0.2s;
+  transition:
+    border 0.2s,
+    box-shadow 0.2s;
 }
 .geosuggest__input:focus {
   border-color: #267dc0;
@@ -37,8 +41,12 @@
   overflow-y: auto;
   list-style: none;
   z-index: 5;
-  -webkit-transition: max-height 0.2s, border 0.2s;
-          transition: max-height 0.2s, border 0.2s;
+  -webkit-transition:
+    max-height 0.2s,
+    border 0.2s;
+  transition:
+    max-height 0.2s,
+    border 0.2s;
 }
 .geosuggest__suggests--hidden {
   max-height: 0;
@@ -52,7 +60,7 @@
 .geosuggest__item {
   font-size: 18px;
   font-size: 1rem;
-  padding: .5em .65em;
+  padding: 0.5em 0.65em;
   cursor: pointer;
 }
 .geosuggest__item:hover,

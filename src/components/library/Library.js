@@ -55,7 +55,7 @@ class Library extends React.Component {
     store.dispatch(onCatChange(null))
   }
 
-  handleToggle = uid => {
+  handleToggle = (uid) => {
     this.setState({
       listselect: uid
     })

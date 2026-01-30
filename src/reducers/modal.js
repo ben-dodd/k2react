@@ -184,10 +184,10 @@ export default function modalReducer(state = modalInit, action) {
           ...state.modalProps,
           doc: {
             ...state.modalProps.doc,
-            samples: action.payload,
+            samples: action.payload
           }
         }
-      };
+      }
     case EDIT_MODAL_DOC_STEPS:
       if (state.modalProps.doc && state.modalProps.doc.steps) {
         if (action.payload.object) {
@@ -202,16 +202,14 @@ export default function modalReducer(state = modalInit, action) {
                   [action.payload.step]: {
                     ...state.modalProps.doc.steps[action.payload.step],
                     [action.payload.id]: {
-                      ...state.modalProps.doc.steps[action.payload.step][
-                        action.payload.id
-                      ],
+                      ...state.modalProps.doc.steps[action.payload.step][action.payload.id],
                       ...action.payload.value
                     }
                   }
                 }
               }
             }
-          };
+          }
         } else {
           return {
             ...state,
@@ -228,9 +226,9 @@ export default function modalReducer(state = modalInit, action) {
                 }
               }
             }
-          };
+          }
         }
-      } else return state;
+      } else return state
     case EDIT_MODAL_GLOSSARY:
       return {
         ...state,
@@ -247,7 +245,7 @@ export default function modalReducer(state = modalInit, action) {
             }
           }
         }
-      };
+      }
     case EDIT_MODAL_SAMPLE:
       return {
         ...state,
@@ -259,12 +257,12 @@ export default function modalReducer(state = modalInit, action) {
               ...state.modalProps.doc.samples,
               [action.payload.number]: {
                 ...state.modalProps.doc.samples[action.payload.number],
-                ...action.payload.changes,
+                ...action.payload.changes
               }
             }
           }
         }
-      };
+      }
     case EDIT_MODAL:
       return {
         ...state,

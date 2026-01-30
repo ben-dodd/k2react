@@ -74,7 +74,7 @@ class K2SignInScreen extends Component {
         )}
         {mode === 'loading' && <CircularProgress className={classes.signInCircle} size={'330px'} thickness={2.5} />}
       </div>
-    );
+    )
   }
 }
 

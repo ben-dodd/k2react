@@ -669,198 +669,160 @@ class TrainingPath extends React.Component {
   }
 
   getTrainingHtml = () => {
-    const { path } = this.state;
-    const staff = { ...this.props.staff, [this.props.me.uid]: this.props.me };
-    if (
-      (path.trainers && path.trainers.length > 0) ||
-      (path.ktp && path.ktp.length > 0)
-    ) {
-      let trainers = [];
-      let ktp = [];
-      let html = "<b>Trainers</b><br />";
+    const { path } = this.state
+    const staff = { ...this.props.staff, [this.props.me.uid]: this.props.me }
+    if ((path.trainers && path.trainers.length > 0) || (path.ktp && path.ktp.length > 0)) {
+      let trainers = []
+      let ktp = []
+      let html = '<b>Trainers</b><br />'
       path.trainers &&
-        path.trainers.forEach(trainer => {
-          html = html + (staff[trainer] && staff[trainer].name) + "<br/>";
-        });
-      html = html + "<br /><b>KTP</b><br />";
+        path.trainers.forEach((trainer) => {
+          html = html + (staff[trainer] && staff[trainer].name) + '<br/>'
+        })
+      html = html + '<br /><b>KTP</b><br />'
       path.ktp &&
-        path.ktp.forEach(trainer => {
-          html = html + (staff[trainer] && staff[trainer].name) + "<br/>";
-        });
-      return html;
+        path.ktp.forEach((trainer) => {
+          html = html + (staff[trainer] && staff[trainer].name) + '<br/>'
+        })
+      return html
     } else {
-      return "No staff assigned.";
+      return 'No staff assigned.'
     }
-  };
+  }
 
-  getStageProgress = stage => {
-    const { path } = this.state;
-    const { me } = this.props;
-    if (stage === "bgreading") {
-      let totalReadings =
-        path.steps.bgreading &&
-        path.steps.bgreading.requiredreadings &&
-        path.steps.bgreading.requiredreadings.length;
+  getStageProgress = (stage) => {
+    const { path } = this.state
+    const { me } = this.props
+    if (stage === 'bgreading') {
+      let totalReadings = path.steps.bgreading && path.steps.bgreading.requiredreadings && path.steps.bgreading.requiredreadings.length
       let readingsCompleted =
         me.readingLog &&
         me.readingLog.filter(
-          log =>
-            path.steps.bgreading &&
-            path.steps.bgreading.requiredreadings &&
-            path.steps.bgreading.requiredreadings.includes(log.uid)
-        );
+          (log) => path.steps.bgreading && path.steps.bgreading.requiredreadings && path.steps.bgreading.requiredreadings.includes(log.uid)
+        )
       let suppTotalReadings =
-        path.steps.bgreading &&
-        path.steps.bgreading.supplementaryreadings &&
-        path.steps.bgreading.supplementaryreadings.length;
+        path.steps.bgreading && path.steps.bgreading.supplementaryreadings && path.steps.bgreading.supplementaryreadings.length
       let suppReadingsCompleted =
         me.readingLog &&
         me.readingLog.filter(
-          log =>
+          (log) =>
             path.steps.bgreading &&
             path.steps.bgreading.supplementaryreadings &&
             path.steps.bgreading.supplementaryreadings.includes(log.uid)
-        );
-      let quiztext = "";
-      let quizlog =
-        me.quizLog &&
-        me.quizLog.filter(log => log.uid === path.steps.bgreading.quiz)[0];
+        )
+      let quiztext = ''
+      let quizlog = me.quizLog && me.quizLog.filter((log) => log.uid === path.steps.bgreading.quiz)[0]
       if (!path.steps.bgreading.quiz) {
-        quiztext = "There is no quiz for this section.";
+        quiztext = 'There is no quiz for this section.'
       } else if (!quizlog) {
-        quiztext = "You have not completed the quiz.";
+        quiztext = 'You have not completed the quiz.'
       } else {
-        let hiScore = 0;
-        let totalScore = 0;
-        let totalTries = 0;
+        let hiScore = 0
+        let totalScore = 0
+        let totalTries = 0
         quizlog.scores &&
-          quizlog.scores.forEach(score => {
-            totalTries = totalTries + 1;
-            totalScore = totalScore + score.score;
-            if (score.score > hiScore) hiScore = score.score;
-          });
-        let latestScore = quizlog.scores[totalTries - 1].score;
-        let averageScore = Math.round((10 * totalScore) / totalTries) / 10;
+          quizlog.scores.forEach((score) => {
+            totalTries = totalTries + 1
+            totalScore = totalScore + score.score
+            if (score.score > hiScore) hiScore = score.score
+          })
+        let latestScore = quizlog.scores[totalTries - 1].score
+        let averageScore = Math.round((10 * totalScore) / totalTries) / 10
 
-        quiztext = `Your latest score in the quiz is ${latestScore}%, your highest score is ${hiScore}% and your average score from ${totalTries} attempts is ${averageScore}%`;
+        quiztext = `Your latest score in the quiz is ${latestScore}%, your highest score is ${hiScore}% and your average score from ${totalTries} attempts is ${averageScore}%`
       }
 
-      let readingsUpdated =
-        readingsCompleted &&
-        readingsCompleted.filter(reading => reading.date < reading.updatedate);
-      let suppReadingsUpdated =
-        suppReadingsCompleted &&
-        suppReadingsCompleted.filter(
-          reading => reading.date < reading.updatedate
-        );
-      let updatetext = "";
+      let readingsUpdated = readingsCompleted && readingsCompleted.filter((reading) => reading.date < reading.updatedate)
+      let suppReadingsUpdated = suppReadingsCompleted && suppReadingsCompleted.filter((reading) => reading.date < reading.updatedate)
+      let updatetext = ''
       if (readingsUpdated && readingsUpdated.length > 0)
-        updatetext = `<li>${
-          readingsUpdated.length
-        } required readings have had important updates since they were last read.</li>`;
+        updatetext = `<li>${readingsUpdated.length} required readings have had important updates since they were last read.</li>`
       if (suppReadingsUpdated && suppReadingsUpdated.length > 0)
         updatetext =
-          updatetext +
-          `<li>${suppReadingsUpdated} supplementary readings have had important updates since they were last read.</li>`;
+          updatetext + `<li>${suppReadingsUpdated} supplementary readings have had important updates since they were last read.</li>`
 
-      return `<ul><li>You have completed ${readingsCompleted &&
-        readingsCompleted.length} of ${totalReadings} required readings.</li><li>You have completed ${suppReadingsCompleted &&
-        suppReadingsCompleted.length} of ${suppTotalReadings} supplementary readings.</li><li>${quiztext}</li>${updatetext}`;
-    } else if (stage === "practical") {
-      let totalMethods = 5;
-      let methodsRead = [{}, {}, {}];
-      let suppTotalMethods = 2;
-      let suppMethodsRead = 2;
-      let methodsQuiz = 1;
-      let suppMethodsQuiz = 2;
-      return `<ul><li>You have read ${methodsRead &&
-        methodsRead.length} of ${totalMethods} required methods</li></ul>`;
-    } else if (stage === "inhouse") {
-      let totalCheck = 21;
-      let checkComplete = 11;
-      return `You have completed ${checkComplete} tasks out of ${totalCheck}.`;
-    } else if (stage === "sitevisits") {
+      return `<ul><li>You have completed ${
+        readingsCompleted && readingsCompleted.length
+      } of ${totalReadings} required readings.</li><li>You have completed ${
+        suppReadingsCompleted && suppReadingsCompleted.length
+      } of ${suppTotalReadings} supplementary readings.</li><li>${quiztext}</li>${updatetext}`
+    } else if (stage === 'practical') {
+      let totalMethods = 5
+      let methodsRead = [{}, {}, {}]
+      let suppTotalMethods = 2
+      let suppMethodsRead = 2
+      let methodsQuiz = 1
+      let suppMethodsQuiz = 2
+      return `<ul><li>You have read ${methodsRead && methodsRead.length} of ${totalMethods} required methods</li></ul>`
+    } else if (stage === 'inhouse') {
+      let totalCheck = 21
+      let checkComplete = 11
+      return `You have completed ${checkComplete} tasks out of ${totalCheck}.`
+    } else if (stage === 'sitevisits') {
       let jobTypes = [
         {
-          name: "Job type 1",
+          name: 'Job type 1',
           completed: 2,
           total: 3
         },
         {
-          name: "Job type 2",
+          name: 'Job type 2',
           completed: 1,
           total: 3
         },
         {
-          name: "Job type 3",
+          name: 'Job type 3',
           completed: 0,
           total: 3
         }
-      ];
-      let html = "<ul>";
-      html =
-        html +
-        jobTypes.map(
-          type =>
-            `<li>You have completed ${type.completed} of ${
-              type.total
-            } site visits for ${type.name}</li>`
-        );
-      html = html + "</ul";
-      return html;
+      ]
+      let html = '<ul>'
+      html = html + jobTypes.map((type) => `<li>You have completed ${type.completed} of ${type.total} site visits for ${type.name}</li>`)
+      html = html + '</ul'
+      return html
     } else {
-      return "No data.";
+      return 'No data.'
     }
-  };
+  }
 
-  renderPage = page => {
-    const { path } = this.state;
-    const { quizzes } = this.props;
+  renderPage = (page) => {
+    const { path } = this.state
+    const { quizzes } = this.props
 
     const outline = (
       <Grid item>
-        <Grid container direction="row">
+        <Grid container direction='row'>
           <Grid item xs={12} lg={6}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-            >
+            <Grid container direction='column' justify='center' alignItems='center'>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Training Outline",
+                  title: 'Training Outline',
                   text: path.steps.outline.outline
                 })}
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12} lg={6}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-            >
+            <Grid container direction='column' justify='center' alignItems='center'>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Training Staff",
+                  title: 'Training Staff',
                   text: this.getTrainingHtml()
                 })}
               </Grid>
@@ -868,346 +830,291 @@ class TrainingPath extends React.Component {
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
 
     const bgreading = (
       <Grid item>
-        <Grid container direction="row">
+        <Grid container direction='row'>
           <Grid item xs={12} lg={6}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-            >
+            <Grid container direction='column' justify='center' alignItems='center'>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Background Reading",
+                  title: 'Background Reading',
                   text: path.steps.bgreading.outline
                 })}
               </Grid>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Background Readings",
+                  title: 'Background Readings',
                   text: path.steps.bgreading.requiredcaption,
                   links: path.steps.bgreading.requiredreadings
-                    .map(
-                      uid =>
-                        this.props.documents.filter(doc => doc.uid === uid)[0]
-                    )
-                    .concat(
-                      quizzes.filter(
-                        quiz => quiz.uid === path.steps.bgreading.quiz
-                      )[0]
-                    )
+                    .map((uid) => this.props.documents.filter((doc) => doc.uid === uid)[0])
+                    .concat(quizzes.filter((quiz) => quiz.uid === path.steps.bgreading.quiz)[0])
                 })}
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12} lg={6}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-            >
+            <Grid container direction='column' justify='center' alignItems='center'>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Stage Progress",
-                  text: this.getStageProgress("bgreading")
+                  title: 'Stage Progress',
+                  text: this.getStageProgress('bgreading')
                 })}
               </Grid>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Supplementary Readings",
+                  title: 'Supplementary Readings',
                   text: path.steps.bgreading.supplementarycaption,
-                  links: path.steps.bgreading.supplementaryreadings.map(
-                    uid =>
-                      this.props.documents.filter(doc => doc.uid === uid)[0]
-                  )
+                  links: path.steps.bgreading.supplementaryreadings.map((uid) => this.props.documents.filter((doc) => doc.uid === uid)[0])
                 })}
               </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
 
     const practical = (
       <Grid item>
-        <Grid container direction="row">
+        <Grid container direction='row'>
           <Grid item xs={12} lg={6}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-            >
+            <Grid container direction='column' justify='center' alignItems='center'>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Practical Training",
+                  title: 'Practical Training',
                   text: path.steps.practical.outline
                 })}
               </Grid>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Required Methods",
+                  title: 'Required Methods',
                   text: path.steps.practical.requiredcaption,
-                  links: path.steps.practical.requiredmethods.map(
-                    uid => this.props.methods.filter(doc => doc.uid === uid)[0]
-                  )
+                  links: path.steps.practical.requiredmethods.map((uid) => this.props.methods.filter((doc) => doc.uid === uid)[0])
                 })}
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12} lg={6}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-            >
+            <Grid container direction='column' justify='center' alignItems='center'>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Stage Progress",
-                  text: this.getStageProgress("practical")
+                  title: 'Stage Progress',
+                  text: this.getStageProgress('practical')
                 })}
               </Grid>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Additional Training",
+                  title: 'Additional Training',
                   text: path.steps.practical.supplementarycaption,
-                  links: path.steps.practical.supplementarymethods.map(
-                    uid => this.props.methods.filter(doc => doc.uid === uid)[0]
-                  )
+                  links: path.steps.practical.supplementarymethods.map((uid) => this.props.methods.filter((doc) => doc.uid === uid)[0])
                 })}
               </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
 
     const inhouse = (
       <Grid item>
-        <Grid container direction="row">
+        <Grid container direction='row'>
           <Grid item xs={12} lg={6}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-            >
+            <Grid container direction='column' justify='center' alignItems='center'>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "In-House Training",
+                  title: 'In-House Training',
                   text: path.steps.inhouse.outline
                 })}
               </Grid>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Checklist",
-                  text: "Complete the following tasks.",
+                  title: 'Checklist',
+                  text: 'Complete the following tasks.',
                   links: path.steps.inhouse.checklist
                 })}
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12} lg={6}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-            >
+            <Grid container direction='column' justify='center' alignItems='center'>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Stage Progress",
-                  text: this.getStageProgress("inhouse")
+                  title: 'Stage Progress',
+                  text: this.getStageProgress('inhouse')
                 })}
               </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
 
     const sitevisits = (
       <Grid item>
-        <Grid container direction="row">
+        <Grid container direction='row'>
           <Grid item xs={12} lg={6}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-            >
+            <Grid container direction='column' justify='center' alignItems='center'>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Site Visits",
+                  title: 'Site Visits',
                   text: path.steps.sitevisits.outline
                 })}
               </Grid>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Required Methods",
-                  text:
-                    "The following methods must be read before starting in-house training. A short quiz follows each one to assess comprehension.",
+                  title: 'Required Methods',
+                  text: 'The following methods must be read before starting in-house training. A short quiz follows each one to assess comprehension.',
                   links: path.steps.sitevisits.requiredmethods
                 })}
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12} lg={6}>
-            <Grid
-              container
-              direction="column"
-              justify="center"
-              alignItems="center"
-            >
+            <Grid container direction='column' justify='center' alignItems='center'>
               <Grid
                 item
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "100%"
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '100%'
                 }}
               >
                 {this.renderNode({
-                  title: "Stage Progress",
-                  text: this.getStageProgress("sitevisits")
+                  title: 'Stage Progress',
+                  text: this.getStageProgress('sitevisits')
                 })}
               </Grid>
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-    );
+    )
 
-    const review = this.renderNode({ type: "review" });
+    const review = this.renderNode({ type: 'review' })
 
     switch (page) {
-      case "outline":
-        return outline;
-      case "bgreading":
-        return bgreading;
-      case "practical":
-        return practical;
-      case "inhouse":
-        return inhouse;
-      case "sitevisits":
-        return sitevisits;
-      case "review":
-        return review;
+      case 'outline':
+        return outline
+      case 'bgreading':
+        return bgreading
+      case 'practical':
+        return practical
+      case 'inhouse':
+        return inhouse
+      case 'sitevisits':
+        return sitevisits
+      case 'review':
+        return review
       default:
-        return outline;
+        return outline
     }
-  };
+  }
 
   render() {
     const { path, activeStep, totalSteps, steps } = this.state

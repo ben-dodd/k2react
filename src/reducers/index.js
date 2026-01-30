@@ -1,4 +1,4 @@
-import { combineReducers } from "redux";
+import { combineReducers } from 'redux'
 
 import asbestosLabReducer from './asbestosLab'
 import localReducer from './local'

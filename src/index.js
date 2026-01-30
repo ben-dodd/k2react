@@ -18,9 +18,9 @@ import MomentUtils from '@date-io/moment'
 
 whyDidYouRender(React, {
   onlyLogs: true,
-  titleColor: "green",
-  diffNameColor: "aqua"
-});
+  titleColor: 'green',
+  diffNameColor: 'aqua'
+})
 
 ReactDOM.render(
   <MuiThemeProvider theme={theme}>

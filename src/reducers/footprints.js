@@ -14,7 +14,7 @@ export default function footprintsReducer(state = footprintsInit, action) {
           ...state.footprints,
           ...action.payload
         }
-      };
+      }
     default:
       return state
   }
