@@ -1,27 +1,27 @@
 import React from 'react'
 
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
 import { connect } from 'react-redux'
-// import store from '../../store';
-import { ASBESTOS_CLEARANCE } from '../../../constants/modal-types'
-import '../../../config/tags.css'
+// import store from 'store';
+import 'config/tags.css'
+import { ASBESTOS_CLEARANCE } from 'constants/modal-types'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
-import TextField from '@material-ui/core/TextField'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import InputLabel from '@material-ui/core/InputLabel'
-import SuggestionField from '../../../widgets/SuggestionField'
-import Select from 'react-select'
+import TextField from '@material-ui/core/TextField'
 import { DatePicker } from '@material-ui/pickers'
+import Select from 'react-select'
+import SuggestionField from 'widgets/SuggestionField'
 
-import { resetModal } from '../../../actions/modal'
-import { dateOf, personnelConvert } from '../../../actions/helpers'
+import { dateOf, personnelConvert } from 'actions/helpers'
+import { resetModal } from 'actions/modal'
 
-import '../../../config/geosuggest.css'
+import 'config/geosuggest.css'
 
 const mapStateToProps = (state) => {
   return {

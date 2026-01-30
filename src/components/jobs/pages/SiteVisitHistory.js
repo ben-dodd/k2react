@@ -1,39 +1,39 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
 
 //Modals
-import { showModal } from '../../../actions/modal'
+import SuggestionField from '.actionsdgets/SuggestionField'
+import IconButton from '@material-ui/core/IconButton'
 import InputLabel from '@material-ui/core/InputLabel'
 import TextField from '@material-ui/core/TextField'
-import IconButton from '@material-ui/core/IconButton'
 import AddIcon from '@material-ui/icons/Add'
 import RemoveIcon from '@material-ui/icons/Remove'
+import { showModal } from 'actions/modal'
 import Select from 'react-select'
-import SuggestionField from '../../../widgets/SuggestionField'
 
 import { DatePicker } from '@material-ui/pickers'
 import _ from 'lodash'
 
+import { dateOf, personnelConvert } from 'actions/helpers'
 import classNames from 'classnames'
-import { dateOf, personnelConvert } from '../../../actions/helpers'
 
 import {
-  fetchWFMJobs,
-  fetchWFMLeads,
-  fetchWFMClients,
-  clearWfmJob,
-  saveWFMItems,
-  saveGeocodes,
-  fetchGeocodes,
-  updateGeocodes,
-  saveStats,
-  getJobColor,
-  handleSiteChange
-} from '../../../actions/jobs'
+    clearWfmJob,
+    fetchGeocodes,
+    fetchWFMClients,
+    fetchWFMJobs,
+    fetchWFMLeads,
+    getJobColor,
+    handleSiteChange,
+    saveGeocodes,
+    saveStats,
+    saveWFMItems,
+    updateGeocodes
+} from 'actions/jobs'
 
-import { filterMap, filterMapReset } from '../../../actions/display'
+import { filterMap, filterMapReset } from 'actions/display'
 
 const mapStateToProps = (state) => {
   return {

@@ -1,33 +1,33 @@
 import React from 'react'
 
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
 import { connect } from 'react-redux'
-// import store from '../../store';
-import { SITE } from '../../../constants/modal-types'
-import { sitesRef, storage } from '../../../config/firebase'
-import '../../../config/tags.css'
+// import store from 'store';
+import { sitesRef, storage } from 'config/firebase'
+import 'config/tags.css'
+import { SITE } from 'constants/modal-types'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
-import TextField from '@material-ui/core/TextField'
-import LinearProgress from '@material-ui/core/LinearProgress'
-import InputLabel from '@material-ui/core/InputLabel'
-import Select from '@material-ui/core/Select'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import IconButton from '@material-ui/core/IconButton'
+import InputLabel from '@material-ui/core/InputLabel'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Select from '@material-ui/core/Select'
+import TextField from '@material-ui/core/TextField'
 
-import UploadIcon from '@material-ui/icons/CloudUpload'
 import Close from '@material-ui/icons/Close'
-import { hideModal, handleModalChange, handleModalSubmit, onUploadFile } from '../../../actions/modal'
-import { fetchSites } from '../../../actions/jobs'
-import { numericOnly } from '../../../actions/helpers'
-import _ from 'lodash'
+import UploadIcon from '@material-ui/icons/CloudUpload'
+import { numericOnly } from 'actions/helpers'
+import { fetchSites } from 'actions/jobs'
+import { handleModalChange, handleModalSubmit, hideModal, onUploadFile } from 'actions/modal'
 import classNames from 'classnames'
+import _ from 'lodash'
 
-import '../../../config/geosuggest.css'
+import 'config/geosuggest.css'
 
 const mapStateToProps = (state) => {
   return {

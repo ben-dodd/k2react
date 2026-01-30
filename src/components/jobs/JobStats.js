@@ -1,23 +1,23 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
 
 import {
-  fetchWFMJobs,
-  fetchWFMLeads,
-  fetchWFMClients,
-  fetchCurrentJobState,
-  saveCurrentJobState,
-  saveWFMItems,
-  saveGeocodes,
-  fetchGeocodes,
-  updateGeocodes,
-  saveStats,
-  collateJobsList
-} from '../../actions/jobs'
+    collateJobsList,
+    fetchCurrentJobState,
+    fetchGeocodes,
+    fetchWFMClients,
+    fetchWFMJobs,
+    fetchWFMLeads,
+    saveCurrentJobState,
+    saveGeocodes,
+    saveStats,
+    saveWFMItems,
+    updateGeocodes
+} from 'actions/jobs'
 
-import { filterMap, filterMapReset } from '../../actions/display'
+import { filterMap, filterMapReset } from 'actions/display'
 
 const mapStateToProps = (state) => {
   return {

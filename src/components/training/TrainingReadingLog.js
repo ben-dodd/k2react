@@ -1,9 +1,9 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 
+import { fetchReadingLog } from 'actions/local'
 import { connect } from 'react-redux'
-import { fetchReadingLog } from '../../actions/local'
 import ReadingLogListItem from './components/ReadingLogListItem'
 
 const mapStateToProps = (state) => {

@@ -1,49 +1,43 @@
-import React from 'react'
-import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../config/styles'
-import classNames from 'classnames'
-import { connect } from 'react-redux'
-import ListItem from '@material-ui/core/ListItem'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel'
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
-import Grid from '@material-ui/core/Grid'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import Input from '@material-ui/core/Input'
-import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogActions from '@material-ui/core/DialogActions'
-import ExpandMore from '@material-ui/icons/ExpandMore'
 import Button from '@material-ui/core/Button'
-import moment from 'moment'
-import { auth, usersRef } from '../../config/firebase'
+import Checkbox from '@material-ui/core/Checkbox'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Grid from '@material-ui/core/Grid'
+import Input from '@material-ui/core/Input'
+import ListItem from '@material-ui/core/ListItem'
+import { withStyles } from '@material-ui/core/styles'
+import ExpandMore from '@material-ui/icons/ExpandMore'
+import { styles } from 'config/styles'
+import React from 'react'
+import { connect } from 'react-redux'
 import JobsMapContainer from './components/JobsMapContainer'
 
 import {
-  fetchWFMJobs,
-  fetchWFMLeads,
-  fetchWFMClients,
-  fetchCurrentJobState,
-  saveCurrentJobState,
-  collateJobsList,
-  saveWFMItems,
-  saveGeocodes,
-  fetchGeocodes,
-  updateGeocodes,
-  saveStats,
-  getJobColor,
-  getJobIcon,
-  getWfmUrl,
-  getNextActionType,
-  getNextActionOverdueBy,
-  getStateString
-} from '../../actions/jobs'
+    collateJobsList,
+    fetchCurrentJobState,
+    fetchGeocodes,
+    fetchWFMClients,
+    fetchWFMJobs,
+    fetchWFMLeads,
+    getJobColor,
+    getNextActionOverdueBy,
+    getStateString,
+    saveCurrentJobState,
+    saveGeocodes,
+    saveStats,
+    saveWFMItems,
+    updateGeocodes
+} from 'actions/jobs'
 
-import { getDaysSinceDate } from '../../actions/helpers'
+import { getDaysSinceDate } from 'actions/helpers'
 
-import { filterMap, filterMapReset } from '../../actions/display'
+import { filterMap, filterMapReset } from 'actions/display'
 
 const mapStyles = {
   marginTop: 20,

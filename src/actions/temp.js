@@ -1,20 +1,20 @@
+import { dateOf } from 'actions/helpers'
 import {
-  docsRef,
-  logsRef,
-  noticesRef,
-  noticeReadsRef,
-  firebase,
-  asbestosSamplesRef,
-  firestore,
-  asbestosSampleLogRef,
-  asbestosSampleIssueLogRef,
-  asbestosAnalysisLogRef,
-  asbestosCheckLogRef,
-  usersRef,
-  stateRef
-} from '../config/firebase'
-import { GRAB_JOB_DATA, GRAB_LAB_DATA } from '../constants/action-types'
-import { dateOf } from '../actions/helpers'
+    asbestosAnalysisLogRef,
+    asbestosCheckLogRef,
+    asbestosSampleIssueLogRef,
+    asbestosSampleLogRef,
+    asbestosSamplesRef,
+    docsRef,
+    firebase,
+    firestore,
+    logsRef,
+    noticeReadsRef,
+    noticesRef,
+    stateRef,
+    usersRef
+} from 'config/firebase'
+import { GRAB_JOB_DATA } from 'constants/action-types'
 import moment from 'moment'
 
 export const fixIds = () => (dispatch) => {

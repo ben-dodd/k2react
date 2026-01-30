@@ -1,12 +1,12 @@
-import React from 'react'
-import { WithContext as ReactTags } from 'react-tag-input'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
+import { WithContext as ReactTags } from 'react-tag-input'
 
-import { DOCUMENT } from '../../../constants/modal-types'
-import { docsRef, storage } from '../../../config/firebase'
-import '../../../config/tags.css'
+import { docsRef, storage } from 'config/firebase'
+import 'config/tags.css'
+import { DOCUMENT } from 'constants/modal-types'
 
 import { RichEditor } from '../../editor/RichEditor'
 // import { EditorState, ContentState, convertToRaw } from "draft-js";
@@ -16,31 +16,31 @@ import { RichEditor } from '../../editor/RichEditor'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
-import FormGroup from '@material-ui/core/FormGroup'
-import TextField from '@material-ui/core/TextField'
-import LinearProgress from '@material-ui/core/LinearProgress'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import FormControl from '@material-ui/core/FormControl'
+import FormGroup from '@material-ui/core/FormGroup'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import Select from '@material-ui/core/Select'
+import TextField from '@material-ui/core/TextField'
 
 import UploadIcon from '@material-ui/icons/CloudUpload'
 
+import { sendSlackMessage } from 'actions/helpers'
+import { getUserAttrs } from 'actions/local'
 import {
-  hideModal,
-  showModal,
-  handleModalChange,
-  handleModalChangeStep,
-  handleModalSubmit,
-  onUploadFile,
-  handleTagAddition,
-  handleTagDelete
-} from '../../../actions/modal'
-import { getUserAttrs } from '../../../actions/local'
-import { sendSlackMessage } from '../../../actions/helpers'
+    handleModalChange,
+    handleModalChangeStep,
+    handleModalSubmit,
+    handleTagAddition,
+    handleTagDelete,
+    hideModal,
+    onUploadFile,
+    showModal
+} from 'actions/modal'
 import _ from 'lodash'
 
 const mapStateToProps = (state) => {

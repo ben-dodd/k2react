@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+        "actions/*": ["actions/*"],
+        "components/*": ["components/*"],
+        "config/*": ["config/*"],
+        "constants/*": ["constants/*"],
+        "images/*": ["images/*"],
+        "reducers/*": ["reducers/*"],
+        "store/*": ["store/*"],
+        "utils/*": ["utils/*"],
+        "widgets/*": ["widgets/*"]
+    }
+  },
+  "include": ["src"]
+}

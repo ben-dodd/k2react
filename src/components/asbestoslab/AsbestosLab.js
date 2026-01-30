@@ -1,69 +1,64 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../config/styles'
-import { connect } from 'react-redux'
-import { fetchCocs, fetchCocsByJobNumber, fetchCocsBySearch, setAnalyst, setAnalysisMode, deleteCoc } from '../../actions/asbestosLab'
-import { fetchStaff } from '../../actions/local'
+import { fetchCocs, fetchCocsByJobNumber, fetchCocsBySearch, setAnalysisMode, setAnalyst } from 'actions/asbestosLab'
 import {
+  collateJobsList,
+  fetchCurrentJobState,
+  fetchGeocodes,
+  fetchWFMClients,
   fetchWFMJobs,
   fetchWFMLeads,
-  fetchWFMClients,
-  fetchCurrentJobState,
   saveCurrentJobState,
-  saveWFMItems,
   saveGeocodes,
-  fetchGeocodes,
-  updateGeocodes,
   saveStats,
-  collateJobsList
-} from '../../actions/jobs'
+  saveWFMItems,
+  updateGeocodes
+} from 'actions/jobs'
+import { fetchStaff } from 'actions/local'
+import { styles } from 'config/styles'
+import React from 'react'
+import { connect } from 'react-redux'
 
 //Modals
+import { showModal } from 'actions/modal'
 import {
-  ASBESTOS_COC_EDIT,
-  UPDATE_CERTIFICATE_VERSION,
-  ASBESTOS_SOIL_SUBSAMPLE_WEIGHTS,
-  ASBESTOS_SAMPLE_LOG,
-  ASBESTOS_LAB_STATS,
-  ASBESTOS_LAB_MANAGER,
-  WA_ANALYSIS,
-  ASBESTOS_SAMPLE_EDIT,
-  DOWNLOAD_LAB_CERTIFICATE,
-  COC_LOG,
-  SOIL_DETAILS,
-  ASBESTOS_SAMPLE_EDIT_COC,
-  CONFIRM_RESULT,
-  ASBESTOS_SAMPLE_DETAILS,
+  ASBESTOS_ACTION_DETAILS,
   ASBESTOS_ACTIONS,
+  ASBESTOS_COC_EDIT,
   ASBESTOS_LOGGED_SAMPLES,
-  ASBESTOS_ACTION_DETAILS
-} from '../../constants/modal-types'
-import { showModal } from '../../actions/modal'
-import CocModal from './modals/CocModal'
-import SoilDetailsModal from './modals/SoilDetailsModal'
-import AsbestosSampleEditModal from './modals/AsbestosSampleEditModal'
-import DownloadLabCertificateModal from './modals/DownloadLabCertificateModal'
-import AsbestosSampleDetailsModal from './modals/AsbestosSampleDetailsModal'
+  ASBESTOS_SAMPLE_DETAILS,
+  ASBESTOS_SAMPLE_EDIT,
+  ASBESTOS_SAMPLE_EDIT_COC,
+  ASBESTOS_SAMPLE_LOG,
+  COC_LOG,
+  CONFIRM_RESULT,
+  DOWNLOAD_LAB_CERTIFICATE,
+  SOIL_DETAILS
+} from 'constants/modal-types'
+import AsbestosActionDetailsModal from './modals/AsbestosActionDetailsModal'
 import AsbestosActionsModal from './modals/AsbestosActionsModal'
 import AsbestosSampleCocEditModal from './modals/AsbestosSampleCocEditModal'
-import ConfirmResultModal from './modals/ConfirmResultModal'
-import SampleLogModal from './modals/SampleLogModal'
+import AsbestosSampleDetailsModal from './modals/AsbestosSampleDetailsModal'
+import AsbestosSampleEditModal from './modals/AsbestosSampleEditModal'
 import CocLogModal from './modals/CocLogModal'
+import CocModal from './modals/CocModal'
+import ConfirmResultModal from './modals/ConfirmResultModal'
+import DownloadLabCertificateModal from './modals/DownloadLabCertificateModal'
 import LoggedSamplesModal from './modals/LoggedSamplesModal'
-import AsbestosActionDetailsModal from './modals/AsbestosActionDetailsModal'
+import SampleLogModal from './modals/SampleLogModal'
+import SoilDetailsModal from './modals/SoilDetailsModal'
 
-import AsbestosBulkCocCard from './components/AsbestosBulkCocCard'
 import AsbestosAirCocCard from './components/AsbestosAirCocCard'
+import AsbestosBulkCocCard from './components/AsbestosBulkCocCard'
 
-import Select from 'react-select'
 import Button from '@material-ui/core/Button'
 import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import LinearProgress from '@material-ui/core/LinearProgress'
 import Input from '@material-ui/core/Input'
 import InputAdornment from '@material-ui/core/InputAdornment'
-import moment from 'moment'
+import InputLabel from '@material-ui/core/InputLabel'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import classNames from 'classnames'
+import moment from 'moment'
+import Select from 'react-select'
 
 import { DatePicker } from '@material-ui/pickers'
 

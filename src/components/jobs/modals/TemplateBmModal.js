@@ -1,27 +1,27 @@
 import React from 'react'
 
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
 import { connect } from 'react-redux'
-// import store from '../../store';
-import { TEMPLATE_BUILDING_MATERIAL } from '../../../constants/modal-types'
-import '../../../config/tags.css'
+// import store from 'store';
+import 'config/tags.css'
+import { TEMPLATE_BUILDING_MATERIAL } from 'constants/modal-types'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import FormControl from '@material-ui/core/FormControl'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
-import SuggestionField from '../../../widgets/SuggestionField'
+import SuggestionField from 'widgets/SuggestionField'
 
-import { hideModal, handleModalChange, handleModalSubmit, resetModal, onUploadFile, setModalError } from '../../../actions/modal'
-import { fetchSites } from '../../../actions/jobs'
+import { fetchSites } from 'actions/jobs'
+import { handleModalChange, handleModalSubmit, hideModal, onUploadFile, resetModal, setModalError } from 'actions/modal'
 import _ from 'lodash'
 
-import '../../../config/geosuggest.css'
+import 'config/geosuggest.css'
 
 const mapStateToProps = (state) => {
   return {

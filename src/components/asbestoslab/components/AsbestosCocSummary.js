@@ -1,16 +1,15 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { andList, writeDates } from 'actions/helpers'
+import { addLog } from 'actions/local'
+import { cocsRef } from 'config/firebase'
+import { styles } from 'config/styles'
+import { ASBESTOS_COC_EDIT, ASBESTOS_SAMPLE_EDIT } from 'constants/modal-types'
+import React from 'react'
 import { connect } from 'react-redux'
-import { cocsRef } from '../../../config/firebase'
-import { ASBESTOS_COC_EDIT, ASBESTOS_SAMPLE_EDIT } from '../../../constants/modal-types'
-import moment from 'moment'
-import { addLog } from '../../../actions/local'
-import { writeDates, andList } from '../../../actions/helpers'
 
-import { TickyBox } from '../../../widgets/FormWidgets'
 import Grid from '@material-ui/core/Grid'
-import { getPersonnel } from '../../../actions/asbestosLab'
+import { getPersonnel } from 'utils/asbestosLab/issue'
+import { TickyBox } from 'widgets/FormWidgets'
 
 const mapStateToProps = (state) => {
   return {

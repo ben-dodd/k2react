@@ -1,16 +1,12 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 
-import { AsbButton } from '../../../widgets/FormWidgets'
 import TextField from '@material-ui/core/TextField'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import IconButton from '@material-ui/core/IconButton'
-import Tooltip from '@material-ui/core/Tooltip'
+import { AsbButton } from 'widgets/FormWidgets'
 
-import { writeDescription, getSampleColors } from '../../../actions/asbestosLab'
-import { addLog } from '../../../actions/local'
-import { numericAndLessThanOnly } from '../../../actions/helpers'
+import { numericAndLessThanOnly } from 'actions/helpers'
+import { getSampleColors, writeDescription } from 'utils/asbestosLab/helpers'
 
 class AsbestosSampleEditBasicResultRow extends React.PureComponent {
   render() {

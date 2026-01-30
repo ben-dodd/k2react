@@ -1,15 +1,15 @@
 import {
   APP_HAS_LOADED,
-  ASBESTOS_SAMPLE_DISPLAY_MODE,
   ASBESTOS_LAB_EXPANDED,
-  RESET_DISPLAY,
-  TOGGLE_DO_NOT_RENDER,
-  TAB_STAFF,
-  TAB_MY_DETAILS,
-  FILTER_STAFF,
+  ASBESTOS_SAMPLE_DISPLAY_MODE,
   FILTER_MAP,
-  FILTER_MAP_RESET
-} from '../constants/action-types'
+  FILTER_MAP_RESET,
+  FILTER_STAFF,
+  RESET_DISPLAY,
+  TAB_MY_DETAILS,
+  TAB_STAFF,
+  TOGGLE_DO_NOT_RENDER
+} from 'constants/action-types'
 
 export const resetDisplay = () => (dispatch) => {
   dispatch({ type: RESET_DISPLAY })

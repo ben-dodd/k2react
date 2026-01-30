@@ -1,47 +1,46 @@
 import React from 'react'
 
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
-import { connect } from 'react-redux'
 import moment from 'moment'
-// import store from '../../store';
-import { sitesRef, storage } from '../../../config/firebase'
-import '../../../config/tags.css'
+import { connect } from 'react-redux'
+import { styles } from 'config/styles'
+// import store from 'store';
+import { sitesRef, storage } from 'config/firebase'
+import 'config/tags.css'
 
-import TextField from '@material-ui/core/TextField'
-import LinearProgress from '@material-ui/core/LinearProgress'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Switch from '@material-ui/core/Switch'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Switch from '@material-ui/core/Switch'
+import TextField from '@material-ui/core/TextField'
 
+import Checkbox from '@material-ui/core/Checkbox'
+import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import InputLabel from '@material-ui/core/InputLabel'
-import Select from 'react-select'
-import IconButton from '@material-ui/core/IconButton'
-import Checkbox from '@material-ui/core/Checkbox'
 import Tooltip from '@material-ui/core/Tooltip'
-import SuggestionField from '../../../widgets/SuggestionField'
+import Select from 'react-select'
+import SuggestionField from 'widgets/SuggestionField'
 
 // import ReactQuill from 'react-quill'
 // import 'react-quill/dist/quill.snow.css'
 
+import Close from '@material-ui/icons/Close'
 import UploadIcon from '@material-ui/icons/CloudUpload'
 import CheckWriterIcon from '@material-ui/icons/Done'
 import CheckCheckerIcon from '@material-ui/icons/DoneAll'
 import CheckKTPIcon from '@material-ui/icons/VerifiedUser'
-import Close from '@material-ui/icons/Close'
-import { hideModal, handleModalChange, handleModalSubmit, resetModal, onUploadFile, setModalError } from '../../../actions/modal'
-import { fetchSites } from '../../../actions/jobs'
-import { getSampleColors, updateResultMap, writeDescription } from '../../../actions/asbestosLab'
-import { getUserAttrs } from '../../../actions/local'
-import { getMaterialRisk, getPriorityRisk, getTotalRisk } from '../../../actions/asbestosReportHelpers'
-import { sendSlackMessage, numericAndLessThanOnly, dateOf, quillModules } from '../../../actions/helpers'
-import { AsbButton, ScoreButton } from '../../../widgets/FormWidgets'
-import _ from 'lodash'
 import classNames from 'classnames'
+import _ from 'lodash'
+import { AsbButton, ScoreButton } from 'widgets/FormWidgets'actions
+import { getSampleColors, updateResultMap, writeDescription } from actionsions/asbestosLab'
+import { getMaterialRisk, getPriorityRisk, getTotalactionsm 'actions/asbestosReportHelpers'
+import { dateOf, numericAndLessactions from 'actions/helpers'
+import { fetchSites } from 'actions/jobs'actions
+import { handleModalChange, handleModalSubmit, hideModal, onUploadFile, resetModal, setModalError } from 'actions/modal'
 
-import '../../../config/geosuggest.css'
+import 'config/geosuggest.css'
 
 const mapStateToProps = (state) => {
   return {

@@ -1,31 +1,29 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
-import { REPORT_ACTIONS } from '../../../constants/modal-types'
 
 import Button from '@material-ui/core/Button'
-import InputLabel from '@material-ui/core/InputLabel'
 import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
+import InputLabel from '@material-ui/core/InputLabel'
 import PrintIcon from '@material-ui/icons/Print'
 import IssueVersionIcon from '@material-ui/icons/Send'
-import AsbestosRegisterTable from '../components/AsbestosRegisterTable'
+import AsbestosRegisterTable from 'components/AsbestosRegisterTable'
 
 import Template1Icon from '@material-ui/icons/Filter1'
 import Template2Icon from '@material-ui/icons/Filter2'
 import Template3Icon from '@material-ui/icons/Filter3'
 
+import { addLog } from 'actions/local'
 import classNames from 'classnames'
-import { addLog } from '../../../actions/local'
 
-import { getJobColor, handleJobChange } from '../../../actions/jobs'
+import { getJobColor, handleJobChange } from 'actions/jobs'
 
-import { collateSamples, issueTrainAmp } from '../../../actions/asbestosReportHelpers'
+import { collateSamples, issueTrainAmp } from 'actions/asbestosReportHelpers'
 
 import _ from 'lodash'
 
-import { filterMap, filterMapReset } from '../../../actions/display'
 
 const mapStateToProps = (state) => {
   return {

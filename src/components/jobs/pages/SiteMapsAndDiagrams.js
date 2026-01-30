@@ -1,38 +1,38 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
 
 //Modals
-import { showModal } from '../../../actions/modal'
 import Button from '@material-ui/core/Button'
-import InputLabel from '@material-ui/core/InputLabel'
 import Grid from '@material-ui/core/Grid'
-import TextField from '@material-ui/core/TextField'
 import IconButton from '@material-ui/core/IconButton'
-import { SketchField } from 'react-sketch'
-import UndoIcon from '@material-ui/icons/Undo'
-import RedoIcon from '@material-ui/icons/Redo'
-import MoveIcon from '@material-ui/icons/OpenWith'
-import ClearIcon from '@material-ui/icons/Clear'
+import InputLabel from '@material-ui/core/InputLabel'
+import TextField from '@material-ui/core/TextField'
 import AddIcon from '@material-ui/icons/Add'
+import ClearIcon from '@material-ui/icons/Clear'
+import MoveIcon from '@material-ui/icons/OpenWith'
+import RedoIcon from '@material-ui/icons/Redo'
+import UndoIcon from '@material-ui/icons/Undo'
+import { showModal } from 'actions/modal'
+import { SketchField } from 'react-sketch'
 
 import {
-  fetchWFMJobs,
-  fetchWFMLeads,
-  fetchWFMClients,
-  fetchCurrentJobState,
-  saveCurrentJobState,
-  clearWfmJob,
-  saveWFMItems,
-  saveGeocodes,
-  fetchGeocodes,
-  updateGeocodes,
-  saveStats,
-  collateJobsList
-} from '../../../actions/jobs'
+    clearWfmJob,
+    collateJobsList,
+    fetchCurrentJobState,
+    fetchGeocodes,
+    fetchWFMClients,
+    fetchWFMJobs,
+    fetchWFMLeads,
+    saveCurrentJobState,
+    saveGeocodes,
+    saveStats,
+    saveWFMItems,
+    updateGeocodes
+} from 'actions/jobs'
 
-import { filterMap, filterMapReset } from '../../../actions/display'
+import { filterMap, filterMapReset } from 'actions/display'
 
 const mapStateToProps = (state) => {
   return {

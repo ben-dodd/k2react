@@ -1,16 +1,15 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
-import { connect } from 'react-redux'
-import { getSampleColors, updateResultMap } from '../../../actions/asbestosLab'
 import classNames from 'classnames'
+import { styles } from 'config/styles'
+import React from 'react'
+import { connect } from 'react-redux'
 
-import { AsbButton } from '../../../widgets/FormWidgets'
+import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import Select from 'react-select'
-import Grid from '@material-ui/core/Grid'
-
-import { addLog } from '../../../actions/local'
+import { getSampleColors } from 'utils/asbestosLab/helpers'
+import { updateResultMap } from 'utils/asbestosLab/recordAnalysis'
+import { AsbButton } from 'widgets/FormWidgets'
 
 const mapStateToProps = (state) => {
   return {
@@ -208,7 +207,7 @@ class AsbestosSampleWASubfraction extends React.Component {
       }
     })
   }
-
+  
   toggleLayerRes = (res, num, fraction, sample, that) => {
     let newMap = updateResultMap(res, sample.waSoilAnalysis[`subfraction${fraction}-${num}`].result)
     this.setLayerVar('result', num, fraction, newMap, that)

@@ -1,4 +1,4 @@
-import { MARK_FOOTPRINT } from '../constants/action-types'
+import { MARK_FOOTPRINT } from 'constants/action-types'
 
 const footprintsInit = {
   footprints: {}

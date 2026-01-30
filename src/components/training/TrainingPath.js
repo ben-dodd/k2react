@@ -18,11 +18,11 @@ import ArrowUpward from '@material-ui/icons/ArrowUpward'
 import Lock from '@material-ui/icons/Lock'
 import LockOpen from '@material-ui/icons/LockOpen'
 
-import { trainingPathsRef } from '../../config/firebase'
-import { fetchStaff, fetchQuizLog, fetchMethodLog, fetchReadingLog, fetchQuizzes, fetchDocuments, fetchMethods } from '../../actions/local'
+import { fetchDocuments, fetchMethodLog, fetchMethods, fetchQuizLog, fetchQuizzes, fetchReadingLog, fetchStaff } from 'actions/local'
+import { trainingPathsRef } from 'config/firebase'
 import QuizListItem from './components/QuizListItem'
-import TrainingNode from './components/TrainingNode'
 import TrainingLink from './components/TrainingLink'
+import TrainingNode from './components/TrainingNode'
 import TrainingPathReview from './components/TrainingPathReview'
 
 const iconStyle = {

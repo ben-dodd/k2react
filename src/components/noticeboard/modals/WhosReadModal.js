@@ -2,21 +2,21 @@ import React from 'react'
 // import ReactDOM from 'react-dom';
 
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
 import { connect } from 'react-redux'
-// import store from '../../store';
-import { WHOS_READ } from '../../../constants/modal-types'
+// import store from 'store';
+import { WHOS_READ } from 'constants/modal-types'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import Grid from '@material-ui/core/Grid'
-import { stateRef } from '../../../config/firebase'
 import classNames from 'classnames'
+import { stateRef } from 'config/firebase'
 
-import { hideModal } from '../../../actions/modal'
+import { hideModal } from 'actions/modal'
 
 const mapStateToProps = (state) => {
   return {

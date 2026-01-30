@@ -1,8 +1,7 @@
 import React from 'react'
 // import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react";
 
-import { getJobIcon } from '../../../actions/jobs'
-
+actions
 const mapStyles = {
   marginTop: 20,
   flexGrow: 1,

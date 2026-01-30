@@ -1,23 +1,22 @@
-import React from 'react'
 import { connect } from 'react-redux'
 
-import ListItem from '@material-ui/core/ListItem'
-import IconButton from '@material-ui/core/IconButton'
 import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import ListItem from '@material-ui/core/ListItem'
 
+import Delete from '@material-ui/icons/Delete'
 import Edit from '@material-ui/icons/Edit'
 import Image from '@material-ui/icons/Image'
-import Delete from '@material-ui/icons/Delete'
 
-import AttrModal from '../modals/AttrModal'
-import { USER_ATTR } from '../../../constants/modal-types'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
-import { showModal } from '../../../actions/modal'
-import { getUserAttrs } from '../../../actions/local'
-import Popup from 'reactjs-popup'
-import { usersRef, storage } from '../../../config/firebase'
+import { getUserAttrs } from 'actions/local'
+import { showModal } from 'actions/modal'
+import { storage, usersRef } from 'config/firebase'
+import { styles } from 'config/styles'
+import { USER_ATTR } from 'constants/modal-types'
 import moment from 'moment'
+import Popup from 'reactjs-popup'
+import AttrModal from '../modals/AttrModal'
 
 const mapDispatchToProps = (dispatch) => {
   return {

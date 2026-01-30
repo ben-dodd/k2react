@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import Button from '@material-ui/core/Button'
 import GridList from '@material-ui/core/GridList'
@@ -11,13 +11,13 @@ import IconButton from '@material-ui/core/IconButton'
 
 import Edit from '@material-ui/icons/Edit'
 
-import { TRAINING } from '../../constants/modal-types'
-import { fetchTrainingPaths, fetchStaff, fetchDocuments, fetchMethods, fetchQuizzes } from '../../actions/local'
-import { showModal } from '../../actions/modal'
-import TrainingPathModal from './modals/TrainingPathModal'
-import QuizModal from './quizzes/modals/QuizModal'
-import QuestionModal from './quizzes/modals/QuestionModal'
+import { fetchDocuments, fetchMethods, fetchQuizzes, fetchStaff, fetchTrainingPaths } from 'actions/local'
+import { showModal } from 'actions/modal'
+import { TRAINING } from 'constants/modal-types'
 import DocumentModal from '../library/modals/DocumentModal'
+import TrainingPathModal from './modals/TrainingPathModal'
+import QuestionModal from './quizzes/modals/QuestionModal'
+import QuizModal from './quizzes/modals/QuizModal'
 
 const mapStateToProps = (state) => {
   return {

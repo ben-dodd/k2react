@@ -1,19 +1,19 @@
 import React from 'react'
 
 import Button from '@material-ui/core/Button'
-import List from '@material-ui/core/List'
 import Grid from '@material-ui/core/Grid'
-import { QUESTION, ADD_TO_QUIZ } from '../../../constants/modal-types'
+import List from '@material-ui/core/List'
+import { ADD_TO_QUIZ, QUESTION } from 'constants/modal-types'
 
+import { fetchQuestions, fetchQuizzes, onCatChange, onSearchChange } from 'actions/local'
+import { showModal } from 'actions/modal'
+import { questionsRef } from 'config/firebase'
 import { connect } from 'react-redux'
-import { onSearchChange, onCatChange, fetchQuestions, fetchQuizzes } from '../../../actions/local'
-import { showModal } from '../../../actions/modal'
-import store from '../../../store'
+import { withRouter } from 'react-router-dom'
+import store from 'store'
 import QuestionList from './QuestionList'
-import QuestionModal from './modals/QuestionModal'
 import AddToQuizModal from './modals/AddToQuizModal'
-import { questionsRef } from '../../../config/firebase'
-import { BrowserRouter as Router, Route, Link, Switch, withRouter } from 'react-router-dom'
+import QuestionModal from './modals/QuestionModal'
 
 const mapStateToProps = (state) => {
   return {

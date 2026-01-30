@@ -1,7 +1,7 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../config/styles'
 import classNames from 'classnames'
+import { styles } from 'config/styles'
+import React from 'react'
 
 class AsbestosSampleStatusComponent extends React.Component {
   render() {

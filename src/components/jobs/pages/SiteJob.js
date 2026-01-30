@@ -1,57 +1,57 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
 
 //Modals
-import { WFM_TIME } from '../../../constants/modal-types'
-import { showModal } from '../../../actions/modal'
-import Grid from '@material-ui/core/Grid'
-import TextField from '@material-ui/core/TextField'
+import SuggestionField from '.actionsdgets/SuggestionField'
 import Collapse from '@material-ui/core/Collapse'
-import InputLabel from '@material-ui/core/InputLabel'
+import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
+import InputLabel from '@material-ui/core/InputLabel'
+import TextField from '@material-ui/core/TextField'
 import Tooltip from '@material-ui/core/Tooltip'
+import AddIcon from '@material-ui/icons/Add'
 import ClosedArrow from '@material-ui/icons/ArrowDropDown'
 import OpenArrow from '@material-ui/icons/ArrowDropUp'
-import AddIcon from '@material-ui/icons/Add'
+import LinkIcon from '@material-ui/icons/Link'
 import RemoveIcon from '@material-ui/icons/Remove'
 import SyncIcon from '@material-ui/icons/Sync'
-import LinkIcon from '@material-ui/icons/Link'
 import TimerIcon from '@material-ui/icons/Timer'
+import { showModal } from 'actions/modal'
+import { WFM_TIME } from 'constants/modal-types'
 import Select from 'react-select'
-import SuggestionField from '../../../widgets/SuggestionField'
 import AsbestosManagementPlan from '../jobs/AsbestosManagementPlan'
 import AsbestosSurvey from '../jobs/AsbestosSurvey'
 
 import { DatePicker } from '@material-ui/pickers'
 
+import { andList, dateOf, personnelConvert } from 'actions/helpers'
 import classNames from 'classnames'
-import { dateOf, andList, personnelConvert } from '../../../actions/helpers'
 
-import moment from 'moment'
 import _ from 'lodash'
+import moment from 'moment'
 
 import {
-  fetchWFMJobs,
-  fetchWFMLeads,
-  fetchWFMClients,
-  fetchCurrentJobState,
-  saveCurrentJobState,
-  getDetailedWFMJob,
-  clearWfmJob,
-  saveWFMItems,
-  saveGeocodes,
-  fetchGeocodes,
-  updateGeocodes,
-  saveStats,
-  collateJobsList,
-  getJobColor,
-  getStateString,
-  handleJobChange
-} from '../../../actions/jobs'
+    clearWfmJob,
+    collateJobsList,
+    fetchCurrentJobState,
+    fetchGeocodes,
+    fetchWFMClients,
+    fetchWFMJobs,
+    fetchWFMLeads,
+    getDetailedWFMJob,
+    getJobColor,
+    getStateString,
+    handleJobChange,
+    saveCurrentJobState,
+    saveGeocodes,
+    saveStats,
+    saveWFMItems,
+    updateGeocodes
+} from 'actions/jobs'
 
-import { filterMap, filterMapReset } from '../../../actions/display'
+import { filterMap, filterMapReset } from 'actions/display'
 
 const mapStateToProps = (state) => {
   return {

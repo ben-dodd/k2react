@@ -2,24 +2,24 @@ import React from 'react'
 // import ReactDOM from 'react-dom';
 
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
 import { connect } from 'react-redux'
-// import store from '../../store';
-import { COMMENT } from '../../../constants/modal-types'
-import { noticesRef } from '../../../config/firebase'
-import '../../../config/tags.css'
+// import store from 'store';
+import { noticesRef } from 'config/firebase'
+import 'config/tags.css'
+import { COMMENT } from 'constants/modal-types'
 import moment from 'moment'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import TextField from '@material-ui/core/TextField'
 
-import { hideModal, handleModalChange, handleModalSubmit, onUploadFile, handleTagDelete, handleTagAddition } from '../../../actions/modal'
-import { getUserAttrs, fetchNotices, removeNoticeReads } from '../../../actions/local'
-import { sendSlackMessage } from '../../../actions/helpers'
+import { sendSlackMessage } from 'actions/helpers'
+import { fetchNotices, getUserAttrs, removeNoticeReads } from 'actions/local'
+import { handleModalChange, handleModalSubmit, handleTagAddition, handleTagDelete, hideModal, onUploadFile } from 'actions/modal'
 import _ from 'lodash'
 
 const mapStateToProps = (state) => {

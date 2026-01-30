@@ -1,5 +1,5 @@
-import { INIT_CONSTANTS } from '../constants/action-types'
-import { constRef } from '../config/firebase'
+import { constRef } from 'config/firebase'
+import { INIT_CONSTANTS } from 'constants/action-types'
 
 export const initConstants = () => (dispatch) => {
   constRef.get().then((doc) => {

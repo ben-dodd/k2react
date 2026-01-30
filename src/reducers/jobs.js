@@ -1,29 +1,29 @@
 import {
-  GET_SITES,
-  GET_SITE,
-  GET_WFM_JOBS,
-  GET_WFM_JOB,
-  CLEAR_WFM_JOB,
-  GET_WFM_CONTACT,
-  GET_WFM_LEADS,
-  GET_WFM_CLIENTS,
-  SAVE_WFM_ITEMS,
-  SAVE_WFM_STATS,
-  GET_JOB_LIST,
-  GET_SITE_JOB,
-  GET_SITE_JOBS,
-  GET_SITE_ACM,
-  GET_SITE_COCS,
-  ADD_TO_JOB_LIST,
-  GET_JOB_STATS,
-  GET_GEOCODES,
-  ADD_TO_GEOCODES,
-  GET_CURRENT_JOB_STATE,
-  RESET_JOBS,
-  SET_LAST_TIME_SAVED
-} from '../constants/action-types'
+    ADD_TO_GEOCODES,
+    ADD_TO_JOB_LIST,
+    CLEAR_WFM_JOB,
+    GET_CURRENT_JOB_STATE,
+    GET_GEOCODES,
+    GET_JOB_LIST,
+    GET_JOB_STATS,
+    GET_SITE,
+    GET_SITE_ACM,
+    GET_SITE_COCS,
+    GET_SITE_JOB,
+    GET_SITE_JOBS,
+    GET_SITES,
+    GET_WFM_CLIENTS,
+    GET_WFM_CONTACT,
+    GET_WFM_JOB,
+    GET_WFM_JOBS,
+    GET_WFM_LEADS,
+    RESET_JOBS,
+    SAVE_WFM_ITEMS,
+    SAVE_WFM_STATS,
+    SET_LAST_TIME_SAVED
+} from 'constants/action-types'
 
-import { stateRef } from '../config/firebase'
+import { stateRef } from 'config/firebase'
 
 const jobsInit = {
   currentJobState: {},

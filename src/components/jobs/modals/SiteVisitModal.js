@@ -1,26 +1,25 @@
 import React from 'react'
 
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
 import { connect } from 'react-redux'
-// import store from '../../store';
-import { SITE_VISIT } from '../../../constants/modal-types'
-import '../../../config/tags.css'
+// import store from 'store';
+import 'config/tags.css'
+import { SITE_VISIT } from 'constants/modal-types'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
-import FormGroup from '@material-ui/core/FormGroup'
-import TextField from '@material-ui/core/TextField'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import InputLabel from '@material-ui/core/InputLabel'
+import TextField from '@material-ui/core/TextField'
 import { DatePicker } from '@material-ui/pickers'
+import { dateOf, personnelConvert } from 'actions/helpers'
+import { hideModal, resetModal } from 'actions/modal'
 import Select from 'react-select'
-import { hideModal, resetModal } from '../../../actions/modal'
-import { dateOf, personnelConvert } from '../../../actions/helpers'
 
-import '../../../config/geosuggest.css'
+import 'config/geosuggest.css'
 
 const mapStateToProps = (state) => {
   return {

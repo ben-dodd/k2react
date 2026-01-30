@@ -1,53 +1,51 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
-import { connect } from 'react-redux'
 import classNames from 'classnames'
-import { ASBESTOS_SAMPLE_EDIT, SOIL_DETAILS } from '../../../constants/modal-types'
-import '../../../config/tags.css'
+import { styles } from 'config/styles'
+import 'config/tags.css'
+import { ASBESTOS_SAMPLE_EDIT, SOIL_DETAILS } from 'constants/modal-types'
+import React from 'react'
+import { connect } from 'react-redux'
 
-import { SamplesTickyBox, SamplesTextyBox, SamplesRadioSelector, SamplesTickyBoxGroup, AsbButton } from '../../../widgets/FormWidgets'
-import { AsbestosClassification } from '../../../config/strings'
+import { AsbButton, SamplesRadioSelector, SamplesTextyBox, SamplesTickyBox, SamplesTickyBoxGroup } from 'widgets/FormWidgets'
 
-import { SketchPicker } from 'react-color'
 import Button from '@material-ui/core/Button'
-import InputLabel from '@material-ui/core/InputLabel'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Divider from '@material-ui/core/Divider'
+import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
-import Divider from '@material-ui/core/Divider'
-import Dialog from '@material-ui/core/Dialog'
-import Grid from '@material-ui/core/Grid'
 import InputAdornment from '@material-ui/core/InputAdornment'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogActions from '@material-ui/core/DialogActions'
+import InputLabel from '@material-ui/core/InputLabel'
 import TextField from '@material-ui/core/TextField'
 import AddIcon from '@material-ui/icons/Add'
 import RemoveIcon from '@material-ui/icons/Remove'
-import ConfirmIcon from '@material-ui/icons/ThumbUp'
 import ThumbsDown from '@material-ui/icons/ThumbDown'
-import Select from 'react-select'
+import ConfirmIcon from '@material-ui/icons/ThumbUp'
 import { DatePicker, DateTimePicker } from '@material-ui/pickers'
-import SuggestionField from '../../../widgets/SuggestionField'
-import { hideModal, showModalSecondary } from '../../../actions/modal'
-import { toggleAsbestosSampleDisplayMode } from '../../../actions/display'
-import { addLog, personnelConvert, dateOf } from '../../../actions/local'
 import {
-  handleSampleChange,
-  writeSoilDetails,
-  getSampleColors,
-  analyticalCriteraOK,
-  traceAnalysisRequired,
-  recordAnalysis,
-  updateResultMap,
-  writeDescription,
-  writeSampleDimensions,
-  writeSampleMoisture,
-  getConfirmColor,
-  compareAsbestosResult
-} from '../../../actions/asbestosLab'
+    analyticalCriteraOK,
+    compareAsbestosResult,
+    getSampleColors,
+    handleSampleChange,
+    recordAnalysis,
+    traceAnalysisRequired,
+    updateResultMap,
+    writeDescription,
+    writeSampleDimensions,
+    writeSampleMoisture,
+    writeSoilDetails
+} from 'actions/asbestosLab'
+import { toggleAsbestosSampleDisplayMode } from 'actions/display'
+import { addLog, dateOf, personnelConvert } from 'actions/local'
+import { hideModal, showModalSecondary } from 'actions/modal'
+import { asbestosSamplesRef } from 'config/firebase'
 import moment from 'moment'
-import { asbestosSamplesRef } from '../../../config/firebase'
+import { SketchPicker } from 'react-color'
+import Select from 'react-select'
+import SuggestionField from 'widgets/SuggestionField'
 
 const layerNum = 3
 

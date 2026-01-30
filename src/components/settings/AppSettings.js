@@ -2,25 +2,25 @@ import React from 'react'
 // import ReactDOM from 'react-dom';
 
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../config/styles'
+import { styles } from 'config/styles'
 import { connect } from 'react-redux'
-// import store from '../../store';
-import { APP_SETTINGS } from '../../constants/modal-types'
-import { appSettingsRef } from '../../config/firebase'
-import '../../config/tags.css'
+// import store from 'store';
+import { appSettingsRef } from 'config/firebase'
+import 'config/tags.css'
+import { APP_SETTINGS } from 'constants/modal-types'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import FormGroup from '@material-ui/core/FormGroup'
-import TextField from '@material-ui/core/TextField'
 import InputLabel from '@material-ui/core/InputLabel'
+import TextField from '@material-ui/core/TextField'
 import Select from 'react-select'
 
-import { hideModal, handleModalChange, handleModalSubmit, handleTagDelete, handleTagAddition } from '../../actions/modal'
-import { getUserAttrs } from '../../actions/local'
+import { getUserAttrs } from 'actions/local'
+import { handleModalChange, handleModalSubmit, handleTagAddition, handleTagDelete, hideModal } from 'actions/modal'
 import _ from 'lodash'
 
 const mapStateToProps = (state) => {

@@ -1,16 +1,14 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
-import { writeDescription, getSampleColors, updateResultMap } from '../../../actions/asbestosLab'
+import { styles } from 'config/styles'
+import React from 'react'
 
-import { SketchPicker } from 'react-color'
-import SuggestionField from '../../../widgets/SuggestionField'
-import { AsbButton } from '../../../widgets/FormWidgets'
 import TextField from '@material-ui/core/TextField'
-import IconButton from '@material-ui/core/IconButton'
-import Tooltip from '@material-ui/core/Tooltip'
+import { SketchPicker } from 'react-color'
+import { getSampleColors } from 'utils/asbestosLab/helpers'
+import { updateResultMap } from 'utils/asbestosLab/recordAnalysis'
+import { AsbButton } from 'widgets/FormWidgets'
+import SuggestionField from 'widgets/SuggestionField'
 
-import { addLog } from '../../../actions/local'
 
 const defaultColor = {
   r: '150',

@@ -1,19 +1,18 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import IconButton from '@material-ui/core/IconButton'
 import InputLabel from '@material-ui/core/InputLabel'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel'
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
-import TextyBox from '../../../widgets/TextyBox'
-import AsbestosSampleWASubfraction from './AsbestosSampleWASubfraction'
 import AddIcon from '@material-ui/icons/Add'
-import RemoveIcon from '@material-ui/icons/Remove'
 import ExpandMore from '@material-ui/icons/ExpandMore'
+import RemoveIcon from '@material-ui/icons/Remove'
+import TextyBox from 'widgets/TextyBox'
+import AsbestosSampleWASubfraction from './AsbestosSampleWASubfraction'
 
-import { addLog } from '../../../actions/local'
 
 const waLayerNum = 1
 const waMap = {

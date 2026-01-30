@@ -1,41 +1,37 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
-import { connect } from 'react-redux'
 import classNames from 'classnames'
-import { ASBESTOS_SAMPLE_EDIT_COC } from '../../../constants/modal-types'
+import { styles } from 'config/styles'
+import { ASBESTOS_SAMPLE_EDIT_COC } from 'constants/modal-types'
+import React from 'react'
+import { connect } from 'react-redux'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
-import InputLabel from '@material-ui/core/InputLabel'
-import TextField from '@material-ui/core/TextField'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Switch from '@material-ui/core/Switch'
 import InputAdornment from '@material-ui/core/InputAdornment'
+import InputLabel from '@material-ui/core/InputLabel'
+import Switch from '@material-ui/core/Switch'
+import TextField from '@material-ui/core/TextField'
 import Tooltip from '@material-ui/core/Tooltip'
-import { AsbButton } from '../../../widgets/FormWidgets'
 import { DateTimePicker } from '@material-ui/pickers'
+import { AsbButton } from 'widgets/FormWidgets'
 
 import Select from 'react-select'
 
-import SuggestionField from '../../../widgets/SuggestionField'
-import { hideModalSecondary, handleModalChange } from '../../../actions/modal'
-import {
-  handleSampleChange,
-  writeDescription,
-  getAirSampleData,
-  updateResultMap,
-  getSampleColors,
-  getBasicResult
-} from '../../../actions/asbestosLab'
-import { addLog } from '../../../actions/local'
-import { sentenceCase, titleCase, personnelConvert, numericOnly, dateOf } from '../../../actions/helpers'
-import { SampleRadioSelector } from '../../../widgets/FormWidgets'
-import NumberSpinner from '../../../widgets/NumberSpinner'
+import { dateOf, numericOnly, personnelConvert, sentenceCase, titleCase } from 'actions/helpers'
+import { addLog } from 'actions/local'
+import { handleModalChange, hideModalSecondary } from 'actions/modal'
 import _ from 'lodash'
+import { getAirSampleData } from 'utils/asbestosLab/air'
+import { getBasicResult, getSampleColors, writeDescription } from 'utils/asbestosLab/helpers'
+import { updateResultMap } from 'utils/asbestosLab/recordAnalysis'
+import { handleSampleChange } from 'utils/asbestosLab/sampleEdit'
+import { SampleRadioSelector } from 'widgets/FormWidgets'
+import NumberSpinner from 'widgets/NumberSpinner'
+import SuggestionField from 'widgets/SuggestionField'
 
 import { DatePicker } from '@material-ui/pickers'
 

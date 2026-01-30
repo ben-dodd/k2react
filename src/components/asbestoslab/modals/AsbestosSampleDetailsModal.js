@@ -1,37 +1,26 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
-import { ASBESTOS_SAMPLE_DETAILS } from '../../../constants/modal-types'
-import '../../../config/tags.css'
+import { styles } from 'config/styles'
+import 'config/tags.css'
+import { ASBESTOS_SAMPLE_DETAILS } from 'constants/modal-types'
+import React from 'react'
 
-import { SampleTextyDisplay, SampleTextyLine, AsbButton } from '../../../widgets/FormWidgets'
+import { AsbButton, SampleTextyDisplay, SampleTextyLine } from 'widgets/FormWidgets'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import Grid from '@material-ui/core/Grid'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
-import Good from '@material-ui/icons/ThumbUp'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Grid from '@material-ui/core/Grid'
 import Bad from '@material-ui/icons/ThumbDown'
-import AsbestosSampleWASummary from '../components/AsbestosSampleWASummary'
-import { hideModal, hideModalSecondary, handleModalChange } from '../../../actions/modal'
-import { dateOf, milliToDHM } from '../../../actions/helpers'
+import Good from '@material-ui/icons/ThumbUp'
+import { resetSampleView } from 'actions/asbestosLab'
+import { dateOf, milliToDHM } from 'actions/helpers'
+import { handleModalChange, hideModal, hideModalSecondary } from 'actions/modal'
 import moment from 'moment'
-import {
-  writeSoilDetails,
-  getSampleColors,
-  analyticalCriteraOK,
-  writeShorthandResult,
-  writeSampleConditioningList,
-  writeSampleDimensions,
-  collateLayeredResults,
-  compareAsbestosResult,
-  writeSampleMoisture,
-  writePersonnelQualFull,
-  resetSampleView
-} from '../../../actions/asbestosLab'
-import { asbestosSamplesRef } from '../../../config/firebase'
+import { writeSampleConditioningList, writeSampleMoisture } from 'utils/asbestosLab/getters'
+import { analyticalCriteraOK, collateLayeredResults, compareAsbestosResult, getSampleColors, writeSampleDimensions, writeShorthandResult, writeSoilDetails } from 'utils/asbestosLab/helpers'
+import AsbestosSampleWASummary from '../components/AsbestosSampleWASummary'
 
 const mapStateToProps = (state) => {
   return {

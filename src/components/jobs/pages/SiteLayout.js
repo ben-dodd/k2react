@@ -1,29 +1,29 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { appSettingsRef } from 'config/firebase'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
-import { appSettingsRef } from '../../../config/firebase'
 
-import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
+import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 
 import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import ArrowIcon from '@material-ui/icons/ArrowForwardIos'
-import SelectIcon from '@material-ui/icons/Info'
 import DeleteIcon from '@material-ui/icons/Close'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import SelectIcon from '@material-ui/icons/Info'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 
+import { titleCase } from 'actions/helpers'
 import classNames from 'classnames'
-import { titleCase } from '../../../actions/helpers'
 
 import moment from 'moment'
 
-import { getJobColor, handleSiteChange } from '../../../actions/jobs'
+import { getJobColor, handleSiteChange } from 'actions/jobs'
 
-import { getFirestoreCollection } from '../../../actions/local'
+import { getFirestoreCollection } from 'actions/local'
 
 const mapStateToProps = (state) => {
   return {

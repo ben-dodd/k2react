@@ -1,16 +1,16 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
+import 'config/tags.css'
+import { QC_ANALYSIS } from 'constants/modal-types'
+import React from 'react'
 import { connect } from 'react-redux'
-import { QC_ANALYSIS } from '../../../constants/modal-types'
-import '../../../config/tags.css'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
-import { hideModal, handleModalChange } from '../../../actions/modal'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import { handleModalChange, hideModal } from 'actions/modal'
 import _ from 'lodash'
 
 const mapStateToProps = (state) => {

@@ -1,20 +1,20 @@
 import {
-  ADD_TAG,
-  DELETE_TAG,
-  EDIT_MODAL_DOC_COMMENT,
-  EDIT_MODAL_DOC,
-  EDIT_MODAL_DOC_STEPS,
-  EDIT_MODAL_DOC_SAMPLES,
-  EDIT_MODAL_GLOSSARY,
-  EDIT_MODAL,
-  RESET_MODAL,
-  RESET_MODAL_SECONDARY,
-  SET_MODAL_ERROR,
-  SHOW_MODAL,
-  SHOW_MODAL_SECONDARY
-} from '../constants/action-types'
+    ADD_TAG,
+    DELETE_TAG,
+    EDIT_MODAL,
+    EDIT_MODAL_DOC,
+    EDIT_MODAL_DOC_COMMENT,
+    EDIT_MODAL_DOC_SAMPLES,
+    EDIT_MODAL_DOC_STEPS,
+    EDIT_MODAL_GLOSSARY,
+    RESET_MODAL,
+    RESET_MODAL_SECONDARY,
+    SET_MODAL_ERROR,
+    SHOW_MODAL,
+    SHOW_MODAL_SECONDARY
+} from 'constants/action-types'
 
-import { storage } from '../config/firebase'
+import { storage } from 'config/firebase'
 
 export const resetModal = () => (dispatch) => {
   dispatch({ type: RESET_MODAL })

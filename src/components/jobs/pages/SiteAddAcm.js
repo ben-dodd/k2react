@@ -1,35 +1,31 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { appSettingsRef, sitesRef, templateAcmRef } from 'config/firebase'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
-import { appSettingsRef, sitesRef, templateAcmRef } from '../../../config/firebase'
 
 //Modals
-import { TEMPLATE_ACM } from '../../../constants/modal-types'
-import { showModal } from '../../../actions/modal'
 import Grid from '@material-ui/core/Grid'
-import TextField from '@material-ui/core/TextField'
 import IconButton from '@material-ui/core/IconButton'
+import TextField from '@material-ui/core/TextField'
 import Tooltip from '@material-ui/core/Tooltip'
-import WfmTimeModal from '../modals/WfmTimeModal'
-import AddIcon from '@material-ui/icons/AddCircleOutline'
-import EditIcon from '@material-ui/icons/Edit'
-import TimerIcon from '@material-ui/icons/Timer'
-import SelectIcon from '@material-ui/icons/Info'
-import DeleteIcon from '@material-ui/icons/Close'
-import Select from 'react-select'
-import SuggestionField from '../../../widgets/SuggestionField'
-import AcmCard from '../components/AcmCard'
-import SearchIcon from '@material-ui/icons/Search'
-import ResultIcon from '@material-ui/icons/Lens'
 import AirResultIcon from '@material-ui/icons/AcUnit'
-import RemovedIcon from '@material-ui/icons/RemoveCircle'
+import AddIcon from '@material-ui/icons/AddCircleOutline'
+import DeleteIcon from '@material-ui/icons/Close'
 import CheckWriterIcon from '@material-ui/icons/Done'
 import CheckCheckerIcon from '@material-ui/icons/DoneAll'
-import CheckKTPIcon from '@material-ui/icons/VerifiedUser'
+import EditIcon from '@material-ui/icons/Edit'
 import NotCheckedIcon from '@material-ui/icons/HourglassEmpty'
+import SelectIcon from '@material-ui/icons/Info'
+import ResultIcon from '@material-ui/icons/Lens'
+import RemovedIcon from '@material-ui/icons/RemoveCircle'
+import SearchIcon from '@material-ui/icons/Search'
+import CheckKTPIcon from '@material-ui/icons/VerifiedUser'
+import { showModal } from 'actions/modal'
+import AcmCard from 'components/AcmCard'
+import { TEMPLATE_ACM } from 'constants/modal-types'
 
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 
 import _ from 'lodash'
 
@@ -38,25 +34,24 @@ import classNames from 'classnames'
 import moment from 'moment'
 
 import {
+  clearWfmJob,
+  fetchGeocodes,
+  fetchWFMClients,
   fetchWFMJobs,
   fetchWFMLeads,
-  fetchWFMClients,
-  clearWfmJob,
-  saveWFMItems,
-  saveGeocodes,
-  fetchGeocodes,
-  updateGeocodes,
-  saveStats,
   getJobColor,
+  getRoomInLayout,
   handleSiteChange,
-  getRoomInLayout
-} from '../../../actions/jobs'
+  saveGeocodes,
+  saveStats,
+  saveWFMItems,
+  updateGeocodes
+} from 'actions/jobs'
 
-import { writeDescription, writeSimpleResult } from '../../../actions/asbestosLab'
+import { getFirestoreCollection } from 'actions/local'
 
-import { getFirestoreCollection } from '../../../actions/local'
-
-import { filterMap, filterMapReset } from '../../../actions/display'
+import { filterMap, filterMapReset } from 'actions/display'
+import { writeDescription, writeSimpleResult } from 'utils/asbestosLab/helpers'
 
 const mapStateToProps = (state) => {
   return {

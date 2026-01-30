@@ -1,54 +1,51 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
-import { connect } from 'react-redux'
-import moment from 'moment'
 import {
   fetchCocs,
   fetchSamples,
-  logSample,
   setSessionID,
-  deleteCoc,
-  printCocBulk,
-  printLabReport,
-  getJobStatus,
-  verifySamples,
-  getSampleData,
-  getSubsampleData
-} from '../../../actions/asbestosLab'
-import { addLog } from '../../../actions/local'
-import { getDetailedWFMJob } from '../../../actions/jobs'
-import { setAsbestosLabExpanded, toggleAsbestosSampleDisplayMode } from '../../../actions/display'
-import { showModal } from '../../../actions/modal'
+} from 'actions/asbestosLab'
+import { setAsbestosLabExpanded, toggleAsbestosSampleDisplayMode } from 'actions/display'
+import { getDetailedWFMJob } from 'actions/jobs'
+import { addLog } from 'actions/local'
+import { showModal } from 'actions/modal'
+import { styles } from 'config/styles'
+import { ASBESTOS_ACTIONS, ASBESTOS_COC_EDIT, ASBESTOS_SAMPLE_EDIT, COC_LOG } from 'constants/modal-types'
+import moment from 'moment'
+import React from 'react'
 import { CSVLink } from 'react-csv'
-import { ASBESTOS_SAMPLE_EDIT, ASBESTOS_COC_EDIT, ASBESTOS_ACTIONS, COC_LOG } from '../../../constants/modal-types'
+import { connect } from 'react-redux'
+import { deleteCoc } from 'utils/asbestosLab/coc'
+import { getJobStatus, getSampleData, getSubsampleData } from 'utils/asbestosLab/getters'
+import { printCocBulk, printLabReport } from 'utils/asbestosLab/issue'
+import { logSample } from 'utils/asbestosLab/sampleEdit'
+import { verifySamples } from 'utils/asbestosLab/verify'
 
-import AsbestosSampleListItem from './AsbestosSampleListItem'
 import AsbestosCocSummary from './AsbestosCocSummary'
+import AsbestosSampleListItem from './AsbestosSampleListItem'
 
+import Button from '@material-ui/core/Button'
+import Divider from '@material-ui/core/Divider'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import IconButton from '@material-ui/core/IconButton'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import Button from '@material-ui/core/Button'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import Divider from '@material-ui/core/Divider'
 import Tooltip from '@material-ui/core/Tooltip'
 
-import ExpandMore from '@material-ui/icons/ExpandMore'
-import EditIcon from '@material-ui/icons/Edit'
-import ReceiveIcon from '@material-ui/icons/Inbox'
-import DownloadIcon from '@material-ui/icons/SaveAlt'
-import PrintCocIcon from '@material-ui/icons/Print'
-import IssueVersionIcon from '@material-ui/icons/Send'
-import RecordAnalysisIcon from '@material-ui/icons/HowToVote'
-import VerifyIcon from '@material-ui/icons/CheckCircleOutline'
-import UrgentIcon from '@material-ui/icons/Flag'
-import MoreIcon from '@material-ui/icons/MoreVert'
-import StartAnalysisIcon from '@material-ui/icons/Colorize'
 import AirIcon from '@material-ui/icons/AcUnit'
+import VerifyIcon from '@material-ui/icons/CheckCircleOutline'
+import StartAnalysisIcon from '@material-ui/icons/Colorize'
+import EditIcon from '@material-ui/icons/Edit'
+import ExpandMore from '@material-ui/icons/ExpandMore'
+import UrgentIcon from '@material-ui/icons/Flag'
+import RecordAnalysisIcon from '@material-ui/icons/HowToVote'
+import ReceiveIcon from '@material-ui/icons/Inbox'
+import MoreIcon from '@material-ui/icons/MoreVert'
+import PrintCocIcon from '@material-ui/icons/Print'
+import DownloadIcon from '@material-ui/icons/SaveAlt'
+import IssueVersionIcon from '@material-ui/icons/Send'
 
 const mapStateToProps = (state) => {
   return {

@@ -1,6 +1,5 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
 
 import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
@@ -8,8 +7,8 @@ import Linkify from 'react-linkify'
 
 import DiscardIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
-import moment from 'moment'
 import classNames from 'classnames'
+import moment from 'moment'
 
 function CommentListItem(props) {
   const { classes, comment } = props

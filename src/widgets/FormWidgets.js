@@ -1,17 +1,16 @@
-import React from 'react'
 
-import Checkbox from '@material-ui/core/Checkbox'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import TextField from '@material-ui/core/TextField'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import FormControl from '@material-ui/core/FormControl'
-import FormHelperText from '@material-ui/core/FormHelperText'
-import FormGroup from '@material-ui/core/FormGroup'
-import RadioGroup from '@material-ui/core/RadioGroup'
-import Radio from '@material-ui/core/Radio'
-import Tooltip from '@material-ui/core/Tooltip'
 import Button from '@material-ui/core/Button'
-import { numericAndLessThanOnly } from '../actions/helpers'
+import Checkbox from '@material-ui/core/Checkbox'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormGroup from '@material-ui/core/FormGroup'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import Radio from '@material-ui/core/Radio'
+import RadioGroup from '@material-ui/core/RadioGroup'
+import TextField from '@material-ui/core/TextField'
+import Tooltip from '@material-ui/core/Tooltip'
+import { numericAndLessThanOnly } from 'actions/helpers'
 
 export const SampleTickyBox = (that, label, sample, field) => {
   return (

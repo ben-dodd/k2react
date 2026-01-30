@@ -1,59 +1,54 @@
 import React from 'react'
 
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
+import { ASBESTOS_COC_EDIT, ASBESTOS_SAMPLE_EDIT_COC } from 'constants/modal-types'
 import { connect } from 'react-redux'
-import { ASBESTOS_COC_EDIT, ASBESTOS_SAMPLE_EDIT_COC } from '../../../constants/modal-types'
 
 import Button from '@material-ui/core/Button'
-import Tooltip from '@material-ui/core/Tooltip'
 import Dialog from '@material-ui/core/Dialog'
-import Grid from '@material-ui/core/Grid'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
-import TextField from '@material-ui/core/TextField'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Switch from '@material-ui/core/Switch'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
-import IconButton from '@material-ui/core/IconButton'
-import RadioGroup from '@material-ui/core/RadioGroup'
 import Radio from '@material-ui/core/Radio'
+import RadioGroup from '@material-ui/core/RadioGroup'
+import Switch from '@material-ui/core/Switch'
+import TextField from '@material-ui/core/TextField'
+import Tooltip from '@material-ui/core/Tooltip'
 import Select from 'react-select'
-import SuggestionField from '../../../widgets/SuggestionField'
+import SuggestionField from 'widgets/SuggestionField'
 import AsbestosSampleListAir from '../components/AsbestosSampleListAir'
 import AsbestosSampleListBulk from '../components/AsbestosSampleListBulk'
 
 import { DatePicker } from '@material-ui/pickers'
 
 import Add from '@material-ui/icons/Add'
-import Sync from '@material-ui/icons/Sync'
-import Link from '@material-ui/icons/Link'
 import Go from '@material-ui/icons/ArrowForwardIos'
+import Link from '@material-ui/icons/Link'
+import Sync from '@material-ui/icons/Sync'
+import { fetchSamples } from 'actions/asbestosLab'
+import { dateOf, personnelConvert } from 'actions/helpers'
+import { getDefaultLetterAddress, getDetailedWFMJob, resetWfmJob } from 'actions/jobs'
+import { addLog, fetchStaff } from 'actions/local'
 import {
-  hideModal,
   handleModalChange,
   handleModalSubmit,
+  hideModal,
   onUploadFile,
-  setModalError,
   resetModal,
+  setModalError,
   showModalSecondary
-} from '../../../actions/modal'
-import { fetchStaff, addLog } from '../../../actions/local'
-import { getDetailedWFMJob, resetWfmJob, getDefaultLetterAddress } from '../../../actions/jobs'
-import {
-  fetchSamples,
-  handleCocSubmit,
-  handleSampleChange,
-  writeDescription,
-  getAirSampleData,
-  getSampleColors,
-  updateResultMap
-} from '../../../actions/asbestosLab'
-import { titleCase, sentenceCase, dateOf, personnelConvert, numericOnly } from '../../../actions/helpers'
+} from 'actions/modal'
 import _ from 'lodash'
+import { handleCocSubmit } from 'utils/asbestosLab/coc'
+import { updateResultMap } from 'utils/asbestosLab/recordAnalysis'
+import { handleSampleChange } from 'utils/asbestosLab/sampleEdit'
 
 const mapStateToProps = (state) => {
   return {

@@ -1,29 +1,29 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 
-import { BrowserRouter as Router, Route, Link, Switch, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
-import Grid from '@material-ui/core/Grid'
-import Fade from '@material-ui/core/Fade'
+import Avatar from '@material-ui/core/Avatar'
 import Card from '@material-ui/core/Card'
+import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardMedia from '@material-ui/core/CardMedia'
-import CardContent from '@material-ui/core/CardContent'
-import Tooltip from '@material-ui/core/Tooltip'
+import Fade from '@material-ui/core/Fade'
+import Grid from '@material-ui/core/Grid'
 import IconButton from '@material-ui/core/IconButton'
-import Avatar from '@material-ui/core/Avatar'
+import Tooltip from '@material-ui/core/Tooltip'
+import { SITE } from 'constants/modal-types'
 import { connect } from 'react-redux'
-import { SITE } from '../../constants/modal-types'
 
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
 
 import SiteModal from './modals/SiteModal'
 
-import { fetchStaff } from '../../actions/local'
-import { fetchSites, getJobColor, getSiteIcon } from '../../actions/jobs'
-import { showModal } from '../../actions/modal'
+import { fetchSites, getJobColor, getSiteIcon } from 'actions/jobs'
+import { fetchStaff } from 'actions/local'
+import { showModal } from 'actions/modal'
 
 const mapStateToProps = (state) => {
   return {

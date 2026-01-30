@@ -1,6 +1,6 @@
 import moment from 'moment'
-import { sentenceCase, dateOf, andList, lower, titleCase, writeDates } from './helpers'
-import { writeResult, getBasicResult } from './asbestosLab'
+import { getBasicResult, writeResult } from 'utils/asbestosLab/helpers'
+import { andList, dateOf, lower, sentenceCase, titleCase, writeDates } from './helpers'
 import { handleJobChange } from './jobs'
 
 export const collateSamples = (site, siteJobs, siteAcm, samples) => {

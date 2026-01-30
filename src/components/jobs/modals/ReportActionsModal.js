@@ -1,12 +1,12 @@
 // import React from "react";
 // import { withStyles } from "@material-ui/core/styles";
-// import { styles } from "../../../config/styles";
+// import { styles } from "config/styles";
 // import classNames from 'classnames';
 // import { connect } from "react-redux";
-// import store from "../../../store";
-// import { REPORT_ACTIONS, } from "../../../constants/modal-types";
-// import { firestore, cocsRef, } from "../../../config/firebase";
-// import "../../../config/tags.css";
+// import store from "store";
+// import { REPORT_ACTIONS, } from "constants/modal-types";
+// import { firestore, cocsRef, } from "config/firebase";
+// import "config/tags.css";
 //
 // import Button from "@material-ui/core/Button";
 // import RadioGroup from "@material-ui/core/RadioGroup";
@@ -35,9 +35,9 @@
 // import UnresolvedActionIcon from "@material-ui/icons/Report";
 // import VerifyIcon from "@material-ui/icons/CheckCircleOutline";
 // import WAIcon from "@material-ui/icons/GroupWork";
-// import { dateOf, writeDates, } from "../../../actions/helpers";
-// import { toggleDoNotRender, } from "../../../actions/display";
-// import { hideModal, showModalSecondary, } from "../../../actions/modal";
+// import { dateOf, writeDates, } from "actions/helpers";
+// import { toggleDoNotRender, } from "actions/display";
+// import { hideModal, showModalSecondary, } from "actions/modal";
 // import {
 //   writeDescription,
 //   receiveSample,
@@ -57,7 +57,7 @@
 //   getPersonnel,
 //   getWASubsampleList,
 //   undoIssues,
-// } from "../../../actions/asbestosLab";
+// } from "actions/asbestosLab";
 // import _ from "lodash";
 // import moment from "moment";
 //

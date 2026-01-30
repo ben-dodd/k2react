@@ -1,18 +1,15 @@
-import React from 'react'
+import { dateOf, numericOnly, titleCase } from 'actions/helpers'
 import classNames from 'classnames'
 import moment from 'moment'
-import { writeDescription, getAirSampleData } from '../../../actions/asbestosLab'
-import { dateOf, numericOnly, titleCase } from '../../../actions/helpers'
-import { ASBESTOS_SAMPLE_EDIT_COC } from '../../../constants/modal-types'
-import SuggestionField from '../../../widgets/SuggestionField'
-import Select from 'react-select'
+import SuggestionField from 'widgets/SuggestionField'
 
-import { DateTimePicker } from '@material-ui/pickers'
-import TextField from '@material-ui/core/TextField'
-import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import TextField from '@material-ui/core/TextField'
 import Tooltip from '@material-ui/core/Tooltip'
 import EditIcon from '@material-ui/icons/Edit'
+import { DateTimePicker } from '@material-ui/pickers'
+import { getAirSampleData } from 'utils/asbestosLab/air'
 
 function AsbestoSampleListAir(props) {
   const { classes, doc, i, disabled, names, sampleType, onEdit, listType, that } = props

@@ -3,7 +3,7 @@ import React from 'react'
 import FormControl from '@material-ui/core/FormControl'
 import FormLabel from '@material-ui/core/FormLabel'
 
-import ImageMapper from '../../../../config/ImageMapper'
+import ImageMapper from '../config/ImageMapper'
 
 class ImageMapQuestion extends React.Component {
   constructor(props) {

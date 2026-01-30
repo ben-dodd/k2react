@@ -1,23 +1,22 @@
-import React from 'react'
 
 // import ReactQuill from "react-quill";
 // import "react-quill/dist/quill.snow.css";
 
+import IconButton from '@material-ui/core/IconButton'
 import InputLabel from '@material-ui/core/InputLabel'
 import Tooltip from '@material-ui/core/Tooltip'
-import IconButton from '@material-ui/core/IconButton'
 
 import RefreshIcon from '@material-ui/icons/Sync'
 
-// import { quillModules } from '../../../../actions/helpers'
-import {
-  writeExecutiveSummary,
-  writeWhereIsTheHazard,
-  writeRiskToHealth,
-  writeBackground,
-  writeRecommendations
-} from '../../../../actions/asbestosReportHelpers'
-
+// import { quillModules } from 'actions/helpers'
+import {actions
+    writeBackground,
+    writeExecutiveSummary,
+    writeRecommendations,
+    writeRiskToHealth,
+    writeWhereIsTheHazard
+} from 'actions/asbestosReportHelpers'
+actions
 function ExecutiveSummaryAmp(props) {
   const { job, siteUid, site, staff, onChange, template, classes, siteAcm, that } = props
   return (

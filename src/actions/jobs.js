@@ -1,56 +1,54 @@
-import React from 'react'
 import {
-  EDIT_MODAL_DOC,
-  SET_MODAL_ERROR,
-  SAVE_WFM_STATS,
-  SAVE_WFM_ITEMS,
-  CLEAR_WFM_JOB,
-  GET_GEOCODES,
-  GET_WFM_JOBS,
-  GET_WFM_JOB,
-  GET_SITE_JOB,
-  GET_SITE_ACM,
-  GET_SITES,
-  GET_SITE,
-  GET_WFM_LEADS,
-  GET_WFM_CLIENTS,
-  GET_JOB_LIST,
-  GET_SITE_JOBS,
-  GET_SITE_COCS,
   ADD_TO_JOB_LIST,
+  AUTHORISE_WFM,
+  CLEAR_WFM_JOB,
+  EDIT_MODAL_DOC,
   GET_CURRENT_JOB_STATE,
+  GET_GEOCODES,
+  GET_JOB_LIST,
+  GET_SITE,
+  GET_SITE_ACM,
+  GET_SITE_COCS,
+  GET_SITE_JOB,
+  GET_SITE_JOBS,
+  GET_SITES,
+  GET_WFM_CLIENTS,
+  GET_WFM_JOB,
+  GET_WFM_JOBS,
+  GET_WFM_LEADS,
   RESET_JOBS,
+  SAVE_WFM_ITEMS,
+  SAVE_WFM_STATS,
   SET_LAST_TIME_SAVED,
-  AUTHORISE_WFM
-} from '../constants/action-types'
+  SET_MODAL_ERROR
+} from 'constants/action-types'
 
 // Lead history icons
-import ActivityIcon from '@material-ui/icons/DoneOutline'
-import EmailIcon from '@material-ui/icons/Email'
 import LeadIcon from '@material-ui/icons/Call'
 import LostIcon from '@material-ui/icons/CallEnd'
+import ActivityIcon from '@material-ui/icons/DoneOutline'
+import EmailIcon from '@material-ui/icons/Email'
 import NoteIcon from '@material-ui/icons/ListAlt'
 
 // Site icons
-import CommercialIcon from '@material-ui/icons/Store'
-import ResidentialIcon from '@material-ui/icons/Home'
-import IndustrialIcon from '@material-ui/icons/Business'
 import PublicIcon from '@material-ui/icons/AccountBalance'
-import LandIcon from '@material-ui/icons/Landscape'
-import TrainIcon from '@material-ui/icons/Train'
-import ShipIcon from '@material-ui/icons/DirectionsBoat'
 import VehicleIcon from '@material-ui/icons/AirportShuttle'
-import SubstationIcon from '@material-ui/icons/FlashOn'
+import IndustrialIcon from '@material-ui/icons/Business'
 import SchoolIcon from '@material-ui/icons/ChildCare'
+import ShipIcon from '@material-ui/icons/DirectionsBoat'
+import SubstationIcon from '@material-ui/icons/FlashOn'
+import ResidentialIcon from '@material-ui/icons/Home'
+import LandIcon from '@material-ui/icons/Landscape'
 import OtherIcon from '@material-ui/icons/LocationCity'
+import CommercialIcon from '@material-ui/icons/Store'
+import TrainIcon from '@material-ui/icons/Train'
 
 import moment from 'moment'
-import qs from 'qs'
 
-import { firestore, auth, authRef, stateRef, usersRef, jobsRef, sitesRef, cocsRef } from '../config/firebase'
-import { xmlToJson } from '../config/XmlToJson'
-import { sendSlackMessage, dateOf, getDaysBetweenDates, getDaysSinceDate, titleCase } from './helpers'
+import { auth, authRef, cocsRef, firestore, sitesRef, stateRef, usersRef } from 'config/firebase'
+import { xmlToJson } from 'config/XmlToJson'
 import { fetchSamples } from './asbestosLab'
+import { dateOf, getDaysBetweenDates, getDaysSinceDate, sendSlackMessage, titleCase } from './helpers'
 // import assetData from "./assetData.json";
 
 const buckets = [

@@ -1,17 +1,16 @@
 import React from 'react'
 
-import List from '@material-ui/core/List'
-import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
+import Grid from '@material-ui/core/Grid'
+import List from '@material-ui/core/List'
+import { ASSET } from 'constants/modal-types'
 import { connect } from 'react-redux'
-import { auth, methodsRef, docsRef } from '../../config/firebase'
-import { ASSET } from '../../constants/modal-types'
 
 import AssetListItem from './components/AssetListItem'
 
-import { onSearchChange, onCatChange, fetchAssets, fetchStaff, fetchMethods } from '../../actions/local'
-import { showModal } from '../../actions/modal'
-import store from '../../store'
+import { fetchAssets, fetchMethods, fetchStaff, onCatChange, onSearchChange } from 'actions/local'
+import { showModal } from 'actions/modal'
+import store from 'store'
 
 const mapStateToProps = (state) => {
   return {

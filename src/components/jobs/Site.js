@@ -1,48 +1,42 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
 
 //Modals
-import {
-  WFM_TIME,
-  SITE_JOB,
-  TEMPLATE_ACM,
-  TEMPLATE_BUILDING_MATERIAL,
-  ASBESTOS_COC_EDIT,
-  ASBESTOS_SAMPLE_EDIT_COC,
-  SITE_VISIT,
-  ASBESTOS_CLEARANCE
-} from '../../constants/modal-types'
-import { showModal } from '../../actions/modal'
-import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import WfmTimeModal from './modals/WfmTimeModal'
-import SiteJobModal from './modals/SiteJobModal'
-import CocModal from '../asbestoslab/modals/CocModal'
+import Tabs from '@material-ui/core/Tabs'
+import { showModal } from 'actions/modal'
+import {
+    ASBESTOS_CLEARANCE,
+    ASBESTOS_COC_EDIT,
+    ASBESTOS_SAMPLE_EDIT_COC,
+    SITE_JOB,
+    SITE_VISIT,
+    TEMPLATE_ACM,
+    TEMPLATE_BUILDING_MATERIAL,
+    WFM_TIME
+} from 'constants/modal-types'
 import AsbestosSampleCocEditModal from '../asbestoslab/modals/AsbestosSampleCocEditModal'
+import CocModal from '../asbestoslab/modals/CocModal'
 import ClearanceModal from './modals/ClearanceModal'
+import SiteJobModal from './modals/SiteJobModal'
 import SiteVisitModal from './modals/SiteVisitModal'
+import WfmTimeModal from './modals/WfmTimeModal'
 
-import moment from 'moment'
 
-import { fetchSites, clearWfmJob, getJobColor, fetchSiteJobs, fetchSiteAcm, fetchSiteCocs } from '../../actions/jobs'
+import { clearWfmJob, fetchSiteAcm, fetchSiteJobs, fetchSites, getJobColor } from 'actions/jobs'
 
-import { filterMap, filterMapReset } from '../../actions/display'
 
-import JobsTable from './JobsTable'
-import Leads from './Leads'
-import JobMap from './JobMap'
-import JobStats from './JobStats'
+import TemplateAcmModal from './modals/TemplateAcmModal'
+import TemplateBmModal from './modals/TemplateBmModal'
+import SiteAddAcm from './pages/SiteAddAcm'
+import SiteAsbestosRegister from './pages/SiteAsbestosRegister'
 import SiteGeneralInformation from './pages/SiteGeneralInformation'
-import SiteVisitHistory from './pages/SiteVisitHistory'
 import SiteJob from './pages/SiteJob'
 import SiteLayout from './pages/SiteLayout'
 import SiteMapsAndDiagrams from './pages/SiteMapsAndDiagrams'
-import SiteAsbestosRegister from './pages/SiteAsbestosRegister'
-import SiteAddAcm from './pages/SiteAddAcm'
-import TemplateBmModal from './modals/TemplateBmModal'
-import TemplateAcmModal from './modals/TemplateAcmModal'
+import SiteVisitHistory from './pages/SiteVisitHistory'
 
 const mapStateToProps = (state) => {
   return {

@@ -1,16 +1,16 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
-import { writeDescription, getSampleColors, getWATotalDetails, writeSoilDetails } from '../../../actions/asbestosLab'
+import { styles } from 'config/styles'
+import React from 'react'
+import { getSampleColors, getWATotalDetails, writeDescription, writeSoilDetails } from 'utils/asbestosLab/helpers'
 
-import SuggestionField from '../../../widgets/SuggestionField'
-import { AsbButton } from '../../../widgets/FormWidgets'
-import Grid from '@material-ui/core/Grid'
-import TextyBox from '../../../widgets/TextyBox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Grid from '@material-ui/core/Grid'
 import Switch from '@material-ui/core/Switch'
+import { AsbButton } from 'widgets/FormWidgets'
+import SuggestionField from 'widgets/SuggestionField'
+import TextyBox from 'widgets/TextyBox'
 
-import { addLog } from '../../../actions/local'
+import { addLog } from 'actions/local'
 
 const waMap = {
   gt7: '>7',

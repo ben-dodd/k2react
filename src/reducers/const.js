@@ -1,4 +1,4 @@
-import { INIT_CONSTANTS } from '../constants/action-types'
+import { INIT_CONSTANTS } from 'constants/action-types'
 
 const KeyCodes = {
   comma: 188,

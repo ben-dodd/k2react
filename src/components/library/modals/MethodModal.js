@@ -2,7 +2,7 @@ import React from 'react'
 // import ReactDOM from 'react-dom';
 
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
 import { connect } from 'react-redux'
 
 import { RichEditor } from '../../editor/RichEditor'
@@ -11,36 +11,36 @@ import { RichEditor } from '../../editor/RichEditor'
 // import draftToHtml from 'draftjs-to-html'
 // import htmlToDraft from 'html-to-draftjs'
 
-// import store from '../../store';
-import { METHOD } from '../../../constants/modal-types'
-import { methodsRef } from '../../../config/firebase'
-import '../../../config/tags.css'
+// import store from 'store';
+import { methodsRef } from 'config/firebase'
+import 'config/tags.css'
+import { METHOD } from 'constants/modal-types'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
-import FormGroup from '@material-ui/core/FormGroup'
-import TextField from '@material-ui/core/TextField'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import FormControl from '@material-ui/core/FormControl'
+import FormGroup from '@material-ui/core/FormGroup'
+import Grid from '@material-ui/core/Grid'
 import Input from '@material-ui/core/Input'
 import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
-import Grid from '@material-ui/core/Grid'
+import TextField from '@material-ui/core/TextField'
 
 import Add from '@material-ui/icons/Add'
+import { sendSlackMessage } from 'actions/helpers'
+import { getUserAttrs } from 'actions/local'
 import {
-  hideModal,
-  showModal,
-  handleModalChange,
-  handleModalChangeStep,
-  handleModalSubmit,
-  onUploadFile,
-  handleGlossaryChange
-} from '../../../actions/modal'
-import { sendSlackMessage } from '../../../actions/helpers'
-import { getUserAttrs } from '../../../actions/local'
+    handleGlossaryChange,
+    handleModalChange,
+    handleModalChangeStep,
+    handleModalSubmit,
+    hideModal,
+    onUploadFile,
+    showModal
+} from 'actions/modal'
 import _ from 'lodash'
 
 const mapStateToProps = (state) => {

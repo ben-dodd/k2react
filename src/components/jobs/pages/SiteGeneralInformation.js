@@ -1,55 +1,52 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
 
-import { showModal } from '../../../actions/modal'
-import { WFM_TIME, SITE_JOB, ASBESTOS_COC_EDIT, SITE_VISIT, ASBESTOS_CLEARANCE } from '../../../constants/modal-types'
-import InputLabel from '@material-ui/core/InputLabel'
 import Grid from '@material-ui/core/Grid'
-import Tooltip from '@material-ui/core/Tooltip'
-import TextField from '@material-ui/core/TextField'
 import IconButton from '@material-ui/core/IconButton'
+import InputLabel from '@material-ui/core/InputLabel'
+import TextField from '@material-ui/core/TextField'
+import Tooltip from '@material-ui/core/Tooltip'
 import AddIcon from '@material-ui/icons/AddCircleOutline'
-import Select from 'react-select'
-import SyncIcon from '@material-ui/icons/Sync'
-import LinkIcon from '@material-ui/icons/Link'
-import TimerIcon from '@material-ui/icons/Timer'
 import DeleteIcon from '@material-ui/icons/Close'
 import EditIcon from '@material-ui/icons/Edit'
+import LinkIcon from '@material-ui/icons/Link'
+import SyncIcon from '@material-ui/icons/Sync'
+import TimerIcon from '@material-ui/icons/Timer'
+import { showModal } from 'actions/modal'
+import { ASBESTOS_CLEARANCE, ASBESTOS_COC_EDIT, SITE_JOB, SITE_VISIT, WFM_TIME } from 'constants/modal-types'
+import Select from 'react-select'
 
-import { Map, GoogleApiWrapper, Marker } from 'google-maps-react'
+import { GoogleApiWrapper, Map, Marker } from 'google-maps-react'
 
-import { dateOf, andList, personnelConvert, numericOnly } from '../../../actions/helpers'
+import { andList, dateOf, numericOnly } from 'actions/helpers'
 
-import moment from 'moment'
 import classNames from 'classnames'
 import _ from 'lodash'
+import moment from 'moment'
 
 import {
-  fetchWFMJobs,
-  fetchWFMLeads,
-  fetchWFMClients,
-  fetchCurrentJobState,
-  saveCurrentJobState,
-  deleteSiteJob,
-  clearWfmJob,
-  saveWFMItems,
-  saveGeocodes,
-  fetchGeocodes,
-  updateGeocodes,
-  saveStats,
-  collateJobsList,
-  getJobColor,
-  getStateString,
-  getWfmUrl,
-  getJobIcon,
-  getDetailedWFMJob,
-  handleJobChange,
-  handleSiteChange
-} from '../../../actions/jobs'
+    clearWfmJob,
+    collateJobsList,
+    deleteSiteJob,
+    fetchCurrentJobState,
+    fetchGeocodes,
+    fetchWFMClients,
+    fetchWFMJobs,
+    fetchWFMLeads,
+    getDetailedWFMJob,
+    getJobColor,
+    getJobIcon,
+    handleSiteChange,
+    saveCurrentJobState,
+    saveGeocodes,
+    saveStats,
+    saveWFMItems,
+    updateGeocodes
+} from 'actions/jobs'
 
-import { filterMap, filterMapReset } from '../../../actions/display'
+import { filterMap, filterMapReset } from 'actions/display'
 
 const mapStateToProps = (state) => {
   return {

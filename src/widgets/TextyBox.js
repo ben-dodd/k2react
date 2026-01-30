@@ -2,7 +2,7 @@ import React from 'react'
 
 import InputAdornment from '@material-ui/core/InputAdornment'
 import TextField from '@material-ui/core/TextField'
-import { numericAndLessThanOnly } from '../actions/helpers'
+import { numericAndLessThanOnly } from 'actions/helpers'
 
 class TextyBox extends React.Component {
   state = {

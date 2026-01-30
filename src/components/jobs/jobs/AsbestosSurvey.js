@@ -1,14 +1,14 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
 
 //Modals
-import { showModal } from '../../../actions/modal'
-import InputLabel from '@material-ui/core/InputLabel'
 import IconButton from '@material-ui/core/IconButton'
-import AsbestosRegisterTable from '../components/AsbestosRegisterTable'
-import AirMonitoringRecords from '../components/AirMonitoringRecords'
+import InputLabel from '@material-ui/core/InputLabel'
+import { showModal } from 'actions/modal'
+import AirMonitoringRecords from 'components/AirMonitoringRecords'
+import AsbestosRegisterTable from 'components/AsbestosRegisterTable'
 
 import Template1Icon from '@material-ui/icons/Filter1'
 import Template2Icon from '@material-ui/icons/Filter2'
@@ -17,24 +17,24 @@ import Template3Icon from '@material-ui/icons/Filter3'
 import _ from 'lodash'
 
 import {
-  fetchWFMJobs,
-  fetchWFMLeads,
-  fetchWFMClients,
-  fetchCurrentJobState,
-  saveCurrentJobState,
-  clearWfmJob,
-  saveWFMItems,
-  saveGeocodes,
-  fetchGeocodes,
-  updateGeocodes,
-  saveStats,
-  collateJobsList,
-  handleJobChange
-} from '../../../actions/jobs'
+    clearWfmJob,
+    collateJobsList,
+    fetchCurrentJobState,
+    fetchGeocodes,
+    fetchWFMClients,
+    fetchWFMJobs,
+    fetchWFMLeads,
+    handleJobChange,
+    saveCurrentJobState,
+    saveGeocodes,
+    saveStats,
+    saveWFMItems,
+    updateGeocodes
+} from 'actions/jobs'
 
-import { collateSamples } from '../../../actions/asbestosReportHelpers'
+import { collateSamples } from 'actions/asbestosReportHelpers'
 
-import { filterMap, filterMapReset } from '../../../actions/display'
+import { filterMap, filterMapReset } from 'actions/display'
 
 const mapStateToProps = (state) => {
   return {

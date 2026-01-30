@@ -1,36 +1,36 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
 
 //Modals
 import IconButton from '@material-ui/core/IconButton'
+import WatchingIcon from '@material-ui/icons/Bookmark'
+import NotWatchingIcon from '@material-ui/icons/BookmarkBorder'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
-import NotWatchingIcon from '@material-ui/icons/BookmarkBorder'
-import WatchingIcon from '@material-ui/icons/Bookmark'
 
 import {
-  fetchWFMJobs,
-  fetchWFMLeads,
-  fetchWFMClients,
-  fetchCurrentJobState,
-  saveCurrentJobState,
-  saveWFMItems,
-  saveGeocodes,
-  fetchGeocodes,
-  updateGeocodes,
-  saveStats,
-  getWfmUrl,
-  getWfmClientUrl,
-  getGoogleMapsUrl,
-  getLeadHistoryDescription,
-  onWatchLead
-} from '../../actions/jobs'
+    fetchCurrentJobState,
+    fetchGeocodes,
+    fetchWFMClients,
+    fetchWFMJobs,
+    fetchWFMLeads,
+    getGoogleMapsUrl,
+    getLeadHistoryDescription,
+    getWfmClientUrl,
+    getWfmUrl,
+    onWatchLead,
+    saveCurrentJobState,
+    saveGeocodes,
+    saveStats,
+    saveWFMItems,
+    updateGeocodes
+} from 'actions/jobs'
 
-import { getDaysSinceDate, getDaysSinceDateAgo, dateOf } from '../../actions/helpers'
+import { dateOf, getDaysSinceDate, getDaysSinceDateAgo } from 'actions/helpers'
 
-import { filterMap, filterMapReset } from '../../actions/display'
+import { filterMap, filterMapReset } from 'actions/display'
 
 const mapStateToProps = (state) => {
   return {

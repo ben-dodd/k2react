@@ -1,56 +1,52 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 
 //Modals
-import { WFM_TIME } from '../../constants/modal-types'
-import { showModal } from '../../actions/modal'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContent from '@material-ui/core/DialogContent'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import TextField from '@material-ui/core/TextField'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import IconButton from '@material-ui/core/IconButton'
+import Tab from '@material-ui/core/Tab'
+import Tabs from '@material-ui/core/Tabs'
 import Tooltip from '@material-ui/core/Tooltip'
 import TimerIcon from '@material-ui/icons/Timer'
-import JobIcon from '@material-ui/icons/Assignment'
+import { showModal } from 'actions/modal'
+import { WFM_TIME } from 'constants/modal-types'
 import WfmTimeModal from './modals/WfmTimeModal'
 
-import { dateOf, getDaysSinceDate, getDaysSinceDateAgo, andList } from '../../actions/helpers'
+import { andList, dateOf, getDaysSinceDate, getDaysSinceDateAgo } from 'actions/helpers'
 
 import moment from 'moment'
 
 import {
-  fetchWFMJobs,
-  fetchWFMLeads,
-  fetchWFMClients,
-  fetchCurrentJobState,
-  saveCurrentJobState,
-  addWfmJobByNumber,
-  clearWfmJob,
-  saveWFMItems,
-  saveGeocodes,
-  fetchGeocodes,
-  updateGeocodes,
-  saveStats,
-  collateJobsList,
-  getJobColor,
-  getStateString,
-  getNextActionType,
-  getWfmUrl,
-  getLeadHistoryDescription,
-  setupSiteJob
-} from '../../actions/jobs'
+    clearWfmJob,
+    collateJobsList,
+    fetchCurrentJobState,
+    fetchGeocodes,
+    fetchWFMClients,
+    fetchWFMJobs,
+    fetchWFMLeads,
+    getJobColor,
+    getLeadHistoryDescription,
+    getNextActionType,
+    getStateString,
+    getWfmUrl,
+    saveCurrentJobState,
+    saveGeocodes,
+    saveStats,
+    saveWFMItems,
+    setupSiteJob,
+    updateGeocodes
+} from 'actions/jobs'
 
-import { filterMap, filterMapReset } from '../../actions/display'
+import { filterMap, filterMapReset } from 'actions/display'
 
+import JobMap from './JobMap'
 import JobsTable from './JobsTable'
 import Leads from './Leads'
-import JobMap from './JobMap'
 
 const mapStateToProps = (state) => {
   return {

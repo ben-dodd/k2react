@@ -1,36 +1,32 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { asbestosCheckLogRef, asbestosSamplesRef } from 'config/firebase'
+import { styles } from 'config/styles'
+import 'config/tags.css'
+import { CONFIRM_RESULT } from 'constants/modal-types'
+import React from 'react'
 import { connect } from 'react-redux'
-import { CONFIRM_RESULT } from '../../../constants/modal-types'
-import { asbestosSamplesRef, asbestosCheckLogRef } from '../../../config/firebase'
-import '../../../config/tags.css'
 
 import Button from '@material-ui/core/Button'
-import Select from 'react-select'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
-import TextField from '@material-ui/core/TextField'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import InputLabel from '@material-ui/core/InputLabel'
+import TextField from '@material-ui/core/TextField'
 import AddIcon from '@material-ui/icons/Add'
-import RemoveIcon from '@material-ui/icons/RemoveCircle'
 import SetIcon from '@material-ui/icons/Publish'
-import { hideModal, handleModalChange } from '../../../actions/modal'
-import { addLog } from '../../../actions/local'
-import { dateOf, numericAndLessThanOnly } from '../../../actions/helpers'
-import {
-  updateResultMap,
-  getSampleColors,
-  setAnalyst,
-  getBasicResult,
-  compareAsbestosResult,
-  setCheckAnalysis
-} from '../../../actions/asbestosLab'
-import { AsbButton } from '../../../widgets/FormWidgets'
+import RemoveIcon from '@material-ui/icons/RemoveCircle'
+import { setAnalyst } from 'actions/asbestosLab'
+import { dateOf, numericAndLessThanOnly } from 'actions/helpers'
+import { addLog } from 'actions/local'
+import { handleModalChange, hideModal } from 'actions/modal'
 import _ from 'lodash'
 import moment from 'moment'
+import Select from 'react-select'
+import { compareAsbestosResult, getBasicResult, getSampleColors } from 'utils/asbestosLab/helpers'
+import { updateResultMap } from 'utils/asbestosLab/recordAnalysis'
+import { setCheckAnalysis } from 'utils/asbestosLab/sampleEdit'
+import { AsbButton } from 'widgets/FormWidgets'
 
 const mapStateToProps = (state) => {
   return {

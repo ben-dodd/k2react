@@ -1,39 +1,29 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
+import 'config/tags.css'
+import { ASBESTOS_LOGGED_SAMPLES, ASBESTOS_SAMPLE_DETAILS } from 'constants/modal-types'
+import React from 'react'
 import { connect } from 'react-redux'
-import { ASBESTOS_LOGGED_SAMPLES, ASBESTOS_SAMPLE_DETAILS } from '../../../constants/modal-types'
-import { docsRef } from '../../../config/firebase'
-import '../../../config/tags.css'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
-import Tooltip from '@material-ui/core/Tooltip'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import IconButton from '@material-ui/core/IconButton'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
-import ConfirmIcon from '@material-ui/icons/ThumbUp'
-import ThumbsDown from '@material-ui/icons/ThumbDown'
+import Tooltip from '@material-ui/core/Tooltip'
 import AddIcon from '@material-ui/icons/Add'
+import ThumbsDown from '@material-ui/icons/ThumbDown'
+import ConfirmIcon from '@material-ui/icons/ThumbUp'
+import { fetchAsbestosAnalysisLogs, fetchAsbestosCheckLogs, fetchAsbestosSampleIssueLogs, fetchSampleView } from 'actions/asbestosLab'
+import { dateOf, milliToDHM } from 'actions/helpers'
+import { hideModal, showModalSecondary } from 'actions/modal'
+import moment from 'moment'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
-import { hideModal, showModalSecondary } from '../../../actions/modal'
-import { dateOf, milliToDHM } from '../../../actions/helpers'
-import {
-  writeShorthandResult,
-  writeDescription,
-  fetchSamples,
-  fetchSampleView,
-  fetchAsbestosAnalysisLogs,
-  fetchAsbestosSampleIssueLogs,
-  fetchAsbestosCheckLogs,
-  compareAsbestosResult
-} from '../../../actions/asbestosLab'
-import moment from 'moment'
-import classNames from 'classnames'
+import { compareAsbestosResult, writeDescription, writeShorthandResult } from 'utils/asbestosLab/helpers'
 
 const mapStateToProps = (state) => {
   return {

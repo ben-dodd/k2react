@@ -1,32 +1,32 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
 
 //Modals
-import { showModal } from '../../../actions/modal'
+import { showModal } from 'actions/modal'
+import AirMonitoringRecords from '../components/AirMonitoringRecords'
 import AsbestosRegisterTable from '../components/AsbestosRegisterTable'
 import NonAsbestosTable from '../components/NonAsbestosTable'
-import AirMonitoringRecords from '../components/AirMonitoringRecords'
 
 import _ from 'lodash'
 
 import {
+  clearWfmJob,
+  fetchGeocodes,
+  fetchWFMClients,
   fetchWFMJobs,
   fetchWFMLeads,
-  fetchWFMClients,
-  clearWfmJob,
-  saveWFMItems,
+  handleSiteChange,
   saveGeocodes,
-  fetchGeocodes,
-  updateGeocodes,
   saveStats,
-  handleSiteChange
-} from '../../../actions/jobs'
+  saveWFMItems,
+  updateGeocodes
+} from 'actions/jobs'
 
-import { collateSamples } from '../../../actions/asbestosReportHelpers'
+import { collateSamples } from 'actions/asbestosReportHelpers'
 
-import { filterMap, filterMapReset } from '../../../actions/display'
+import { filterMap, filterMapReset } from 'actions/display'
 
 const mapStateToProps = (state) => {
   return {

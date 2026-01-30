@@ -1,28 +1,27 @@
+import { withStyles } from '@material-ui/core/styles'
+import { styles } from 'config/styles'
 import React from 'react'
 import { connect } from 'react-redux'
-import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../config/styles'
 
 import Button from '@material-ui/core/Button'
-import Grid from '@material-ui/core/Grid'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Grid from '@material-ui/core/Grid'
 
-import NoticeCard from './components/NoticeCard'
-import NoticeModal from './modals/NoticeModal'
-import CommentModal from './modals/CommentModal'
-import WhosReadModal from './modals/WhosReadModal'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Add from '@material-ui/icons/Add'
+import NoticeCard from './components/NoticeCard'
+import CommentModal from './modals/CommentModal'
+import NoticeModal from './modals/NoticeModal'
+import WhosReadModal from './modals/WhosReadModal'
 
 // import IncidentModal from "../incidents/modals/IncidentModal";
-import { NOTICES, COMMENT, WHOS_READ } from '../../constants/modal-types'
-import { onCatChange, onSearchChange } from '../../actions/local'
-import { auth, usersRef, stateRef, firestore } from '../../config/firebase'
-import moment from 'moment'
+import { fetchNoticeReads, fetchNotices, onCatChange, onSearchChange } from 'actions/local'
+import { showModal } from 'actions/modal'
 import classNames from 'classnames'
-import { fetchNotices, fetchNoticeReads } from '../../actions/local'
-import { showModal } from '../../actions/modal'
+import { auth, usersRef } from 'config/firebase'
+import { COMMENT, NOTICES, WHOS_READ } from 'constants/modal-types'
+import moment from 'moment'
 
 const mapStateToProps = (state) => {
   return {

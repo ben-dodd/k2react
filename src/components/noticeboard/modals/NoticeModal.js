@@ -1,31 +1,31 @@
 import React from 'react'
 
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
+import { styles } from 'config/styles'
 import { connect } from 'react-redux'
-// import store from '../../store';
-import { NOTICES } from '../../../constants/modal-types'
-import { noticesRef } from '../../../config/firebase'
-import '../../../config/tags.css'
+// import store from 'store';
+import { noticesRef } from 'config/firebase'
+import 'config/tags.css'
+import { NOTICES } from 'constants/modal-types'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
-import FormGroup from '@material-ui/core/FormGroup'
-import TextField from '@material-ui/core/TextField'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import FormControl from '@material-ui/core/FormControl'
+import FormGroup from '@material-ui/core/FormGroup'
 import InputLabel from '@material-ui/core/InputLabel'
+import TextField from '@material-ui/core/TextField'
 import Select from 'react-select'
 
 import { DatePicker } from '@material-ui/pickers'
 
 // import {SketchField, Tools} from ``'react-sketch';
 
-import { hideModal, handleModalChange, handleModalSubmit, onUploadFile, handleTagDelete, handleTagAddition } from '../../../actions/modal'
-import { getUserAttrs, fetchNotices } from '../../../actions/local'
-import { dateOf, sendSlackMessage } from '../../../actions/helpers'
+import { dateOf, sendSlackMessage } from 'actions/helpers'
+import { fetchNotices, getUserAttrs } from 'actions/local'
+import { handleModalChange, handleModalSubmit, handleTagAddition, handleTagDelete, hideModal, onUploadFile } from 'actions/modal'
 import _ from 'lodash'
 
 const mapStateToProps = (state) => {

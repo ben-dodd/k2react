@@ -1,54 +1,44 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
-import { connect } from 'react-redux'
 import classNames from 'classnames'
-import { ASBESTOS_SAMPLE_EDIT, SOIL_DETAILS } from '../../../constants/modal-types'
-import '../../../config/tags.css'
+import { styles } from 'config/styles'
+import 'config/tags.css'
+import { ASBESTOS_SAMPLE_EDIT, SOIL_DETAILS } from 'constants/modal-types'
+import React from 'react'
+import { connect } from 'react-redux'
 
-import { SamplesTickyBox, SamplesRadioSelector, SamplesTickyBoxGroup, AsbButton } from '../../../widgets/FormWidgets'
-import TextyBox from '../../../widgets/TextyBox'
+import { AsbButton, SamplesRadioSelector, SamplesTickyBox, SamplesTickyBoxGroup } from 'widgets/FormWidgets'
+import TextyBox from 'widgets/TextyBox'
 
 import Button from '@material-ui/core/Button'
-import InputLabel from '@material-ui/core/InputLabel'
-import IconButton from '@material-ui/core/IconButton'
-import Divider from '@material-ui/core/Divider'
 import Dialog from '@material-ui/core/Dialog'
-import Grid from '@material-ui/core/Grid'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Divider from '@material-ui/core/Divider'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import InputLabel from '@material-ui/core/InputLabel'
 import AddIcon from '@material-ui/icons/Add'
 import RemoveIcon from '@material-ui/icons/Remove'
+import { DatePicker, DateTimePicker } from '@material-ui/pickers'
+import { toggleAsbestosSampleDisplayMode } from 'actions/display'
+import { dateOf, mapsAreEqual, personnelConvert } from 'actions/helpers'
+import { addLog } from 'actions/local'
+import { hideModal, showModalSecondary } from 'actions/modal'
+import { asbestosSamplesRef, firestore } from 'config/firebase'
 import Select from 'react-select'
+import { writeSampleMoisture } from 'utils/asbestosLab/getters'
+import { analyticalCriteraOK, getSampleColors, getWATotalDetails, traceAnalysisRequired, writeDescription, writeSampleDimensions, writeSoilDetails } from 'utils/asbestosLab/helpers'
+import { recordAnalysis, updateResultMap } from 'utils/asbestosLab/recordAnalysis'
+import { handleSampleChange, overrideResult } from 'utils/asbestosLab/sampleEdit'
+import { verifySample } from 'utils/asbestosLab/verify'
+import NumberSpinner from 'widgets/NumberSpinner'
+import SuggestionField from 'widgets/SuggestionField'
 import AsbestosSampleEditBasicResultRow from '../components/AsbestosSampleEditBasicResultRow'
-import AsbestosSampleEditLayerRow from '../components/AsbestosSampleEditLayerRow'
 import AsbestosSampleEditConfirmRow from '../components/AsbestosSampleEditConfirmRow'
+import AsbestosSampleEditLayerRow from '../components/AsbestosSampleEditLayerRow'
 import AsbestosSampleWAFraction from '../components/AsbestosSampleWAFraction'
 import AsbestosSampleWASummary from '../components/AsbestosSampleWASummary'
-import { DatePicker, DateTimePicker } from '@material-ui/pickers'
-import SuggestionField from '../../../widgets/SuggestionField'
-import NumberSpinner from '../../../widgets/NumberSpinner'
-import { hideModal, showModalSecondary } from '../../../actions/modal'
-import { toggleAsbestosSampleDisplayMode } from '../../../actions/display'
-import { addLog } from '../../../actions/local'
-import { mapsAreEqual, dateOf, personnelConvert } from '../../../actions/helpers'
-import {
-  handleSampleChange,
-  writeSoilDetails,
-  getSampleColors,
-  analyticalCriteraOK,
-  traceAnalysisRequired,
-  recordAnalysis,
-  verifySample,
-  updateResultMap,
-  writeDescription,
-  writeSampleDimensions,
-  writeSampleMoisture,
-  getWATotalDetails,
-  overrideResult
-} from '../../../actions/asbestosLab'
-import { asbestosSamplesRef, firestore } from '../../../config/firebase'
 
 const layerNum = 3
 const waLayerNum = 3

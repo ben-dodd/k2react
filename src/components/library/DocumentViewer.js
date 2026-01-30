@@ -2,23 +2,23 @@ import React from 'react'
 import { connect } from 'react-redux'
 // import { Document, Page } from 'react-pdf';
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../config/styles'
-import { DOCUMENT } from '../../constants/modal-types'
+import { styles } from 'config/styles'
+import { DOCUMENT } from 'constants/modal-types'
 
-import Typography from '@material-ui/core/Typography'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
 import CardContent from '@material-ui/core/CardContent'
-import Button from '@material-ui/core/Button'
-import Stepper from '@material-ui/core/Stepper'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Step from '@material-ui/core/Step'
 import StepButton from '@material-ui/core/StepButton'
+import Stepper from '@material-ui/core/Stepper'
+import Typography from '@material-ui/core/Typography'
 
-import { auth, docsRef, usersRef } from '../../config/firebase'
-import { showModal } from '../../actions/modal'
-import { dateOf } from '../../actions/helpers'
-import DocumentModal from './modals/DocumentModal'
+import { dateOf } from 'actions/helpers'
+import { showModal } from 'actions/modal'
+import { auth, docsRef, usersRef } from 'config/firebase'
 import moment from 'moment'
+import DocumentModal from './modals/DocumentModal'
 
 const mapStateToProps = (state) => {
   return {

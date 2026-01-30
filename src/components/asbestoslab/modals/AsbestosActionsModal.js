@@ -1,65 +1,46 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
-import classNames from 'classnames'
+import { cocsRef, firestore } from 'config/firebase'
+import { styles } from 'config/styles'
+import 'config/tags.css'
+import { ASBESTOS_ACTIONS, ASBESTOS_ACTION_DETAILS } from 'constants/modal-types'
+import React from 'react'
 import { connect } from 'react-redux'
-import store from '../../../store'
-import { ASBESTOS_ACTIONS, ASBESTOS_ACTION_DETAILS } from '../../../constants/modal-types'
-import { firestore, cocsRef } from '../../../config/firebase'
-import '../../../config/tags.css'
 
+import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
-import RadioGroup from '@material-ui/core/RadioGroup'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Radio from '@material-ui/core/Radio'
-import FormHelperText from '@material-ui/core/FormHelperText'
 import Card from '@material-ui/core/Card'
+import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
 import CardHeader from '@material-ui/core/CardHeader'
-import Grid from '@material-ui/core/Grid'
-import Divider from '@material-ui/core/Divider'
-import Avatar from '@material-ui/core/Avatar'
-import CardActions from '@material-ui/core/CardActions'
+import Checkbox from '@material-ui/core/Checkbox'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import FormControl from '@material-ui/core/FormControl'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import Grid from '@material-ui/core/Grid'
+import Radio from '@material-ui/core/Radio'
+import RadioGroup from '@material-ui/core/RadioGroup'
 import TextField from '@material-ui/core/TextField'
 import Tooltip from '@material-ui/core/Tooltip'
-import FormControl from '@material-ui/core/FormControl'
-import Checkbox from '@material-ui/core/Checkbox'
-import ReceiveIcon from '@material-ui/icons/Inbox'
-import StartAnalysisIcon from '@material-ui/icons/Colorize'
 import CancelActionIcon from '@material-ui/icons/Block'
-import ProceedActionIcon from '@material-ui/icons/Forward'
-import UnresolvedActionIcon from '@material-ui/icons/Report'
 import VerifyIcon from '@material-ui/icons/CheckCircleOutline'
+import StartAnalysisIcon from '@material-ui/icons/Colorize'
+import ProceedActionIcon from '@material-ui/icons/Forward'
 import WAIcon from '@material-ui/icons/GroupWork'
-import { dateOf, writeDates } from '../../../actions/helpers'
-import { toggleDoNotRender } from '../../../actions/display'
-import { hideModal, showModalSecondary } from '../../../actions/modal'
-import {
-  writeDescription,
-  receiveSample,
-  receiveSamples,
-  startAnalysis,
-  startAnalyses,
-  getWATotalDetails,
-  verifySample,
-  verifySamples,
-  verifySubsample,
-  verifySubsamples,
-  writeShorthandResult,
-  writeCocDescription,
-  getBasicResult,
-  checkTestCertificateIssue,
-  issueTestCertificate,
-  getPersonnel,
-  getWASubsampleList,
-  undoIssues
-} from '../../../actions/asbestosLab'
-import _ from 'lodash'
+import ReceiveIcon from '@material-ui/icons/Inbox'
+import UnresolvedActionIcon from '@material-ui/icons/Report'
+import { toggleDoNotRender } from 'actions/display'
+import { dateOf, writeDates } from 'actions/helpers'
+import { hideModal, showModalSecondary } from 'actions/modal'
 import moment from 'moment'
+import { getWASubsampleList } from 'utils/asbestosLab/getters'
+import { getBasicResult, getWATotalDetails, writeDescription, writeShorthandResult } from 'utils/asbestosLab/helpers'
+import { checkTestCertificateIssue, getPersonnel, issueTestCertificate } from 'utils/asbestosLab/issue'
+import { receiveSample, receiveSamples, startAnalyses, undoIssues } from 'utils/asbestosLab/sampleChanges'
+import { verifySample, verifySamples, verifySubsample, verifySubsamples } from 'utils/asbestosLab/verify'
 
 const waMap = {
   gt7: '>7',

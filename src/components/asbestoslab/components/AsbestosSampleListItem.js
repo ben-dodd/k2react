@@ -1,39 +1,33 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
-import { connect } from 'react-redux'
+import { toggleAsbestosSampleDisplayMode } from 'actions/display'
+import { showModal } from 'actions/modal'
+import { styles } from 'config/styles'
 import {
-  writeDescription,
-  getBasicResult,
-  holdSample,
-  writeShorthandResult,
-  getConfirmColor,
-  getSampleStatusCode
-} from '../../../actions/asbestosLab'
-import { AsbestosSampleStatus } from '../../../widgets/DisplayWidgets'
-import { showModal } from '../../../actions/modal'
-import { toggleAsbestosSampleDisplayMode } from '../../../actions/display'
-import {
-  ASBESTOS_SAMPLE_EDIT,
   ASBESTOS_COC_EDIT,
+  ASBESTOS_SAMPLE_DETAILS,
+  ASBESTOS_SAMPLE_EDIT,
   ASBESTOS_SAMPLE_LOG,
-  CONFIRM_RESULT,
-  ASBESTOS_SAMPLE_DETAILS
-} from '../../../constants/modal-types'
+  CONFIRM_RESULT
+} from 'constants/modal-types'
+import React from 'react'
+import { connect } from 'react-redux'
+import { getBasicResult, getConfirmColor, getSampleStatusCode, writeDescription, writeShorthandResult } from 'utils/asbestosLab/helpers'
+import { holdSample } from 'utils/asbestosLab/sampleChanges'
+import { AsbestosSampleStatus } from 'widgets/DisplayWidgets'
 
 import Grid from '@material-ui/core/Grid'
-import ListItem from '@material-ui/core/ListItem'
 import IconButton from '@material-ui/core/IconButton'
+import ListItem from '@material-ui/core/ListItem'
 import Tooltip from '@material-ui/core/Tooltip'
 
-import EditIcon from '@material-ui/icons/Edit'
-import CameraIcon from '@material-ui/icons/CameraAlt'
-import WAIcon from '@material-ui/icons/GroupWork'
 import SampleLogIcon from '@material-ui/icons/Ballot'
+import CameraIcon from '@material-ui/icons/CameraAlt'
 import SampleDetailsIcon from '@material-ui/icons/Description'
+import EditIcon from '@material-ui/icons/Edit'
+import WAIcon from '@material-ui/icons/GroupWork'
 import HoldIcon from '@material-ui/icons/PauseCircleOutline'
-import ConfirmIcon from '@material-ui/icons/ThumbUp'
 import ThumbsDown from '@material-ui/icons/ThumbDown'
+import ConfirmIcon from '@material-ui/icons/ThumbUp'
 
 import Popup from 'reactjs-popup'
 

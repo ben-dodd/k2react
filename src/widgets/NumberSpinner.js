@@ -1,10 +1,10 @@
-import React from 'react'
+import IconButton from '@material-ui/core/IconButton'
+import Input from '@material-ui/core/Input'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../config/styles'
 import Increase from '@material-ui/icons/Add'
 import Decrease from '@material-ui/icons/Remove'
-import Input from '@material-ui/core/Input'
-import IconButton from '@material-ui/core/IconButton'
+import { styles } from 'config/styles'
+import React from 'react'
 
 class NumberSpinner extends React.PureComponent {
   state = {}

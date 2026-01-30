@@ -1,19 +1,12 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../config/styles'
+import { fetchCocs, setAnalysisMode, setAnalyst } from 'actions/asbestosLab'
+import { styles } from 'config/styles'
+import React from 'react'
 import { connect } from 'react-redux'
-import { fetchCocs, setAnalyst, setAnalysisMode } from '../../actions/asbestosLab'
 
 //Modals
-import { COC } from '../../constants/modal-types'
-import { showModal } from '../../actions/modal'
+import { showModal } from 'actions/modal'
 
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Button from '@material-ui/core/Button'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import Input from '@material-ui/core/Input'
-import Select from '@material-ui/core/Select'
 
 const mapStateToProps = (state) => {
   return {

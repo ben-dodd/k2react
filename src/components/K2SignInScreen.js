@@ -1,14 +1,13 @@
-import React, { Component } from 'react'
-import FirebaseAuth from 'react-firebaseui/FirebaseAuth'
-import firebase, { auth } from '../config/firebase.js'
 import Button from '@material-ui/core/Button'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../config/styles'
+import firebase, { auth } from 'config/firebase'
+import { styles } from 'config/styles'
+import { Component } from 'react'
+import FirebaseAuth from 'react-firebaseui/FirebaseAuth'
 // import "../App.css";
-import img_Logo from '../images/logo.png'
-import ApiCalendar from 'react-google-calendar-api'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { sendSlackMessage } from '../actions/local'
+import img_Logo from 'images/logo.png'
+import ApiCalendar from 'react-google-calendar-api'
 
 class K2SignInScreen extends Component {
   constructor(props) {

@@ -1,8 +1,7 @@
-import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../../config/styles'
-import { connect } from 'react-redux'
-import { writeShorthandResult } from '../../../actions/asbestosLab'
+import { writeShorthandResult } from 'actions/asbestosLab'
+import { styles } from 'config/styles'
+import React from 'react'
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'

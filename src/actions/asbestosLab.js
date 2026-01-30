@@ -1,38 +1,29 @@
 import {
+  asbestosAnalysisLogRef,
+  asbestosCheckLogRef,
+  asbestosMicroscopeCalibrationsRef,
+  asbestosSampleIssueLogRef,
+  asbestosSamplesRef,
+  auth,
+  cocsRef,
+  stateRef
+} from 'config/firebase'
+import {
   EDIT_MODAL_DOC,
-  EDIT_MODAL_SAMPLE,
-  DELETE_COC,
-  GET_ASBESTOS_SAMPLE_ISSUE_LOGS,
   GET_ASBESTOS_ANALYSIS_LOGS,
   GET_ASBESTOS_CHECK_LOGS,
   GET_ASBESTOS_MICROSCOPE_CALIBRATIONS,
+  GET_ASBESTOS_SAMPLE_ISSUE_LOGS,
   GET_COCS,
   GET_SAMPLES,
   RESET_ASBESTOS_LAB,
   SET_ANALYSIS_MODE,
-  SET_ANALYST,
   SET_ANALYSIS_SESSION_ID,
+  SET_ANALYST,
   SET_VIEW_SAMPLE_DETAIL
-} from '../constants/action-types'
-import { DOWNLOAD_LAB_CERTIFICATE } from '../constants/modal-types'
-import { styles } from '../config/styles'
-import { addLog } from './local'
-import { sendSlackMessage, writeDates, andList, dateOf, milliToDHM, writeMeasurement } from './helpers'
-import { getDefaultLetterAddress } from './jobs'
+} from 'constants/action-types'
 import moment from 'moment'
-import {
-  asbestosSamplesRef,
-  asbestosAnalysisLogRef,
-  asbestosSampleIssueLogRef,
-  asbestosCheckLogRef,
-  asbestosMicroscopeCalibrationsRef,
-  cocsRef,
-  stateRef,
-  firebase,
-  firestore,
-  auth
-} from '../config/firebase'
-import React from 'react'
+import { sendSlackMessage } from './helpers'
 const defaultLimit = 19
 
 export const resetAsbestosLab = () => (dispatch) => {

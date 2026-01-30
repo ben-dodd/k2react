@@ -2,34 +2,34 @@ import React from 'react'
 // import ReactDOM from 'react-dom';
 
 import { withStyles } from '@material-ui/core/styles'
-import { styles } from '../../config/styles'
+import { styles } from 'config/styles'
 import { connect } from 'react-redux'
-// import store from '../../store';
-import { UPDATE_DATA } from '../../constants/modal-types'
-import '../../config/tags.css'
+// import store from 'store';
+import 'config/tags.css'
+import { UPDATE_DATA } from 'constants/modal-types'
 
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import DialogContent from '@material-ui/core/DialogContent'
 import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
 import { CSVLink } from 'react-csv'
 
+import { fetchCocs } from 'actions/asbestosLab'
+import { analyseJobHistory } from 'actions/jobs'
 import {
-  fetchDocuments,
-  fetchMethods,
-  fetchNotices,
-  fetchQuestions,
-  fetchQuizzes,
-  fetchStaff,
-  fetchTools,
-  fetchTrainingPaths,
-  fetchVehicles
-} from '../../actions/local'
-import { analyseJobHistory } from '../../actions/jobs'
-import { grabJobData, grabLabData } from '../../actions/temp'
-import { fetchCocs } from '../../actions/asbestosLab'
-import { hideModal } from '../../actions/modal'
+    fetchDocuments,
+    fetchMethods,
+    fetchNotices,
+    fetchQuestions,
+    fetchQuizzes,
+    fetchStaff,
+    fetchTools,
+    fetchTrainingPaths,
+    fetchVehicles
+} from 'actions/local'
+import { hideModal } from 'actions/modal'
+import { grabJobData, grabLabData } from 'actions/temp'
 
 const mapStateToProps = (state) => {
   return {
