@@ -1,20 +1,20 @@
 import {
-    DELETE_COC,
-    GET_AIR_ANALYSTS,
-    GET_ASBESTOS_ANALYSIS_LOGS,
-    GET_ASBESTOS_CHECK_LOGS,
-    GET_ASBESTOS_MICROSCOPE_CALIBRATIONS,
-    GET_ASBESTOS_SAMPLES,
-    GET_ASBESTOS_SAMPLE_ISSUE_LOGS,
-    GET_BULK_ANALYSTS,
-    GET_COCS,
-    GET_SAMPLES,
-    GET_SAMPLE_LOG,
-    RESET_ASBESTOS_LAB,
-    SET_ANALYSIS_MODE,
-    SET_ANALYSIS_SESSION_ID,
-    SET_ANALYST,
-    SET_VIEW_SAMPLE_DETAIL
+  DELETE_COC,
+  GET_AIR_ANALYSTS,
+  GET_ASBESTOS_ANALYSIS_LOGS,
+  GET_ASBESTOS_CHECK_LOGS,
+  GET_ASBESTOS_MICROSCOPE_CALIBRATIONS,
+  GET_ASBESTOS_SAMPLES,
+  GET_ASBESTOS_SAMPLE_ISSUE_LOGS,
+  GET_BULK_ANALYSTS,
+  GET_COCS,
+  GET_SAMPLES,
+  GET_SAMPLE_LOG,
+  RESET_ASBESTOS_LAB,
+  SET_ANALYSIS_MODE,
+  SET_ANALYSIS_SESSION_ID,
+  SET_ANALYST,
+  SET_VIEW_SAMPLE_DETAIL
 } from 'constants/action-types'
 
 import { stateRef } from 'config/firebase'
@@ -61,7 +61,7 @@ export default function asbestosLabReducer(state = asbestosLabInit, action) {
         }
       }
     case DELETE_COC:
-      let newCocs = state.cocs
+      const newCocs = state.cocs
       delete newCocs[action.payload]
       //console.log(newCocs);
       return { ...state, cocs: { ...state.cocs } }

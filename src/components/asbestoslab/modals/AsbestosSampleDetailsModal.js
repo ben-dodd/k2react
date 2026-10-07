@@ -18,8 +18,17 @@ import { resetSampleView } from 'actions/asbestosLab'
 import { dateOf, milliToDHM } from 'actions/helpers'
 import { handleModalChange, hideModal, hideModalSecondary } from 'actions/modal'
 import moment from 'moment'
-import { writeSampleConditioningList, writeSampleMoisture } from 'utils/asbestosLab/getters'
-import { analyticalCriteraOK, collateLayeredResults, compareAsbestosResult, getSampleColors, writeSampleDimensions, writeShorthandResult, writeSoilDetails } from 'utils/asbestosLab/helpers'
+import { connect } from 'react-redux'
+import { getSampleStatus, writeSampleConditioningList, writeSampleMoisture } from 'utils/asbestosLab/getters'
+import {
+  analyticalCriteraOK,
+  collateLayeredResults,
+  compareAsbestosResult,
+  getSampleColors,
+  writeSampleDimensions,
+  writeShorthandResult,
+  writeSoilDetails
+} from 'utils/asbestosLab/helpers'
 import AsbestosSampleWASummary from '../components/AsbestosSampleWASummary'
 
 const mapStateToProps = (state) => {

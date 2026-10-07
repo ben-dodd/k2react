@@ -18,7 +18,6 @@ import AppBar from '@material-ui/core/AppBar'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Collapse from '@material-ui/core/Collapse'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
@@ -65,8 +64,6 @@ import UpdatesIcon from '@material-ui/icons/Update'
 import JobsIcon from '@material-ui/icons/Work'
 
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import ExpandLess from '@material-ui/icons/ExpandLess'
-import ExpandMore from '@material-ui/icons/ExpandMore'
 import MenuIcon from '@material-ui/icons/Menu'
 import SearchIcon from '@material-ui/icons/Search'
 
@@ -78,8 +75,8 @@ import store from 'store'
 import { initConstants } from 'actions/const'
 import { resetDisplay } from 'actions/display'
 import { dateOf, sendSlackMessage } from 'actions/helpers'
-import { authoriseWFM, fetchGeocodes, fetchWFMAuth, fetchWFMClients, fetchWFMStaff } from 'actions/jobs'
-import { copyStaff, fetchAssets, fetchMe, fetchStaff, onCatChange, onSearchChange, resetLocal } from 'actions/local'
+import { authoriseWFM, fetchWFMAuth, fetchWFMClients, fetchWFMStaff } from 'actions/jobs'
+import { copyStaff, fetchMe, fetchStaff, onCatChange, onSearchChange, resetLocal } from 'actions/local'
 import { resetModal, showModal } from 'actions/modal'
 
 // Pages
@@ -90,32 +87,10 @@ const AsbestosLog = lazy(() => import('./asbestoslab/AsbestosLog'))
 const AsbestosQualityControl = lazy(() => import('./asbestoslab/AsbestosQualityControl'))
 const AsbestosStats = lazy(() => import('./asbestoslab/AsbestosStats'))
 
-const JobMap = lazy(() => import('./jobs/JobMap'))
-const JobsTable = lazy(() => import('./jobs/JobsTable'))
-const Leads = lazy(() => import('./jobs/Leads'))
-const JobStats = lazy(() => import('./jobs/JobStats'))
-const Jobs = lazy(() => import('./jobs/Jobs'))
-const Site = lazy(() => import('./jobs/Site'))
-const Sites = lazy(() => import('./jobs/Sites'))
-
 const Staff = lazy(() => import('./personnel/Staff'))
 
 const MyDetails = lazy(() => import('./personnel/MyDetails'))
 
-const Inventory = lazy(() => import('./inventory/Inventory'))
-
-const TrainingOverview = lazy(() => import('./training/TrainingOverview'))
-const TrainingPaths = lazy(() => import('./training/TrainingPaths'))
-const TrainingReadingLog = lazy(() => import('./training/TrainingReadingLog'))
-
-const TrainingPath = lazy(() => import('./training/TrainingPath'))
-
-const Quizzes = lazy(() => import('./training/quizzes/Quizzes'))
-const Questions = lazy(() => import('./training/quizzes/Questions'))
-const Quiz = lazy(() => import('./training/quizzes/Quiz'))
-
-const Library = lazy(() => import('./library/Library'))
-const DocumentViewer = lazy(() => import('./library/DocumentViewer'))
 const K2SignInScreen = lazy(() => import('./K2SignInScreen'))
 
 const mapStateToProps = (state) => {
@@ -136,7 +111,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchMe: () => dispatch(fetchMe()),
-    fetchGeocodes: () => dispatch(fetchGeocodes()),
     resetLocal: () => dispatch(resetLocal()),
     resetModal: () => dispatch(resetModal()),
     resetDisplay: () => dispatch(resetDisplay()),
@@ -148,7 +122,6 @@ const mapDispatchToProps = (dispatch) => {
     initConstants: () => dispatch(initConstants()),
     showModal: (modal) => dispatch(showModal(modal)),
     fetchStaff: () => dispatch(fetchStaff()),
-    fetchAssets: (update) => dispatch(fetchAssets(update)),
     authoriseWFM: (params) => dispatch(authoriseWFM(params))
     // fixIds: () => dispatch(fixIds())
   }
@@ -180,7 +153,7 @@ class MainScreen extends React.PureComponent {
     // if (!this.props.wfmAccessToken) this.props.authoriseWFM();
     if (this.props.me && this.props.me.uid === undefined) this.props.fetchMe()
     if (this.props.menuItems === undefined) this.props.initConstants()
-    this.props.fetchGeocodes()
+    // this.props.fetchGeocodes()
     // this.props.fetchAssets();
     // splitWFMStates();
     if (this.props.staff && Object.keys(this.props.staff).length === 0) this.props.fetchStaff()
@@ -443,91 +416,6 @@ class MainScreen extends React.PureComponent {
               <Divider />
             </div>
           )}
-          {menuItems.includes('Jobs') && (
-            <div>
-              <ListItem button component={Link} to='/jobs'>
-                <ListItemIcon>
-                  <JobsIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary='Jobs' />
-              </ListItem>
-              <ListItem button component={Link} to='/sites'>
-                <ListItemIcon>
-                  <SitesIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary='Sites' />
-              </ListItem>
-              <Divider />
-            </div>
-          )}
-          {/*<div>
-          <ListItem button onClick={this.handleJobsClick}>
-          <ListItemIcon>
-            <JobsIcon className={classes.colorAccent} />
-          </ListItemIcon>
-          <ListItemText primary="Jobs" />
-            {this.state.openJobs ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={this.state.openJobs} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem
-                button
-                component={Link}
-                to="/jobs/current"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <CurrentJobsIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Current Jobs" />
-              </ListItem>
-              <ListItem
-                button
-                component={Link}
-                to="/jobs/leads"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <LeadsIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Leads" />
-              </ListItem>
-              <ListItem
-                button
-                component={Link}
-                to="/jobs/sites"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <SitesIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Sites" />
-              </ListItem>
-              <ListItem
-                button
-                component={Link}
-                to="/jobs/map"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <MapIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Job Map" />
-              </ListItem>
-              <ListItem
-                button
-                component={Link}
-                to="/jobs/stats"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <StatsIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Job Stats" />
-              </ListItem>
-            </List>
-          </Collapse>
-        </div>}*/}
           {menuItems.includes('Asbestos Lab') && (
             <div>
               <ListItem button component={Link} to='/asbestoslab'>
@@ -540,122 +428,7 @@ class MainScreen extends React.PureComponent {
               <Divider />
             </div>
           )}
-          {/*{menuItems.includes('Asbestos Lab') && <div><ListItem button onClick={this.handleAsbestosClick}>
-            <ListItemIcon>
-              <LabIcon className={classes.colorAccent} />
-            </ListItemIcon>
-            <ListItemText primary="Asbestos Lab" />
-            {this.state.openAsbestos ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={this.state.openAsbestos} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem
-                button
-                component={Link}
-                to="/asbestoslab"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <CocIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Jobs" />
-              </ListItem>
-              <ListItem
-                button
-                component={Link}
-                to="/asbestossamplelog"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <LogIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Sample Log" />
-              </ListItem>
-              <ListItem
-                button
-                component={Link}
-                to="/asbestosqc"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <QCIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Quality Control" />
-              </ListItem>
-              <ListItem
-                button
-                component={Link}
-                to="/asbestosstats"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <StatsIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Stats" />
-              </ListItem>
-            </List>
-          </Collapse>*/}
-          {/*<Divider />
-        <ListItem button component={Link} to="/inventory">
-          <ListItemIcon>
-            <InventoryIcon className={classes.colorAccent} />
-          </ListItemIcon>
-          <ListItemText primary="Inventory" />
-        </ListItem>*/}
-
-          {menuItems.includes('Training') && (
-            <div>
-              <ListItem button onClick={this.handleTrainingClick}>
-                <ListItemIcon>
-                  <TrainingIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary='Training' />
-                {this.state.openTraining ? <ExpandLess /> : <ExpandMore />}
-              </ListItem>
-              <Collapse in={this.state.openTraining} timeout='auto' unmountOnExit>
-                <List component='div' disablePadding>
-                  <ListItem button component={Link} to='/training/overview' className={classes.drawerNested}>
-                    <ListItemIcon>
-                      <TrainingOverviewIcon className={classes.colorAccent} />
-                    </ListItemIcon>
-                    <ListItemText primary='Overview' />
-                  </ListItem>
-                  <ListItem button component={Link} to='/training/paths' className={classes.drawerNested}>
-                    <ListItemIcon>
-                      <TrainingPathIcon className={classes.colorAccent} />
-                    </ListItemIcon>
-                    <ListItemText primary='Training Paths' />
-                  </ListItem>
-                </List>
-                <ListItem button component={Link} to='/quizzes' className={classes.drawerNested}>
-                  <ListItemIcon>
-                    <QuizIcon className={classes.colorAccent} />
-                  </ListItemIcon>
-                  <ListItemText primary='Quizzes' />
-                </ListItem>
-                <ListItem button component={Link} to='/training/readinglog' className={classes.drawerNested}>
-                  <ListItemIcon>
-                    <ReadingLogIcon className={classes.colorAccent} />
-                  </ListItemIcon>
-                  <ListItemText primary='Reading Log' className={classes.mainMenuText} />
-                </ListItem>
-              </Collapse>
-              <Divider />
-            </div>
-          )}
-
-          {menuItems.includes('Library') && (
-            <div>
-              <ListItem button component={Link} to='/library'>
-                <ListItemIcon>
-                  <LibraryIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary='Library' />
-              </ListItem>
-              <Divider />
-            </div>
-          )}
-
+          
           {this.props.me.auth && this.props.me.auth['Admin'] && (
             <div>
               <Divider />
@@ -691,101 +464,6 @@ class MainScreen extends React.PureComponent {
               ? `Your version is up to date.`
               : `You are using an old version of MyK2. Hold the shift key and press F5 to force your browser to use the latest version (v${latestVersion})`}
           </div>
-          {/*<Divider />
-          <ListItem button onClick={this.handleDevClick}>
-            <ListItemIcon>
-              <DevIcon className={classes.colorAccent} />
-            </ListItemIcon>
-            <ListItemText primary="In Development" />
-            {this.state.openDev ? <ExpandLess /> : <ExpandMore />}
-          </ListItem>
-          <Collapse in={this.state.openDev} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItem
-                button
-                component={Link}
-                to="/vehicles"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <VehiclesIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Vehicles" className={classes.subitem} />
-              </ListItem>*/}
-
-          {/*<ListItem
-                button
-                component={Link}
-                to="/jobs"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <JobsIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Jobs" />
-              </ListItem>
-
-              <ListItem
-                button
-                component={Link}
-                to="/incidents"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <IncidentIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Incidents" />
-              </ListItem>*/}
-
-          {/*<ListItem button component={Link} to="/mydetails/training" className={classes.drawerNested}>
-                  <ListItemIcon>
-                    <MyDetailsIcon className={classes.colorAccent} />
-                  </ListItemIcon>
-                  <ListItemText primary="Training" className={classes.subitem} />
-                </ListItem>
-                <ListItem button component={Link} to="/mydetails/jobs" className={classes.drawerNested}>
-                  <ListItemIcon>
-                    <MyDetailsIcon className={classes.colorAccent} />
-                  </ListItemIcon>
-                  <ListItemText primary="Job History" className={classes.subitem} />
-                </ListItem>
-
-              <ListItem
-                button
-                component={Link}
-                to="/tools"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <ToolsIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Tools" />
-              </ListItem>
-
-              <ListItem
-                button
-                component={Link}
-                to="/help"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <HelpIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Help" />
-              </ListItem>
-              {/*<ListItem
-                button
-                component={Link}
-                to="/updates"
-                className={classes.drawerNested}
-              >
-                <ListItemIcon>
-                  <UpdatesIcon className={classes.colorAccent} />
-                </ListItemIcon>
-                <ListItemText primary="Version Updates" />
-              </ListItem>
-            </List>
-          </Collapse>*/}
         </List>
       </Drawer>
     )
@@ -1188,62 +866,11 @@ class MainScreen extends React.PureComponent {
                       <Route exact path='/mydetails' render={(props) => <MyDetails {...props} />} key='mydetails' />
                       <Route exact path='/' render={(props) => <Noticeboard {...props} />} key='noticeboard' />
                       <Route exact path='/staff/details/:user' render={(props) => <MyDetails {...props} />} key='staffdetails' />
-                      {/*<Route exact path="/vehicles" component={Vehicles} />*/}
-                      {/* <Route path="/help" component={Help} />*/}
-                      {/*<Route path="/updates" component={Updates} />*/}
-                      {/*<Route path="/dashboard" component={Dashboard} />*/}
                       <Route path='/noticeboard' render={(props) => <Noticeboard {...props} />} />
-                      {/*<Route path="/incidents" component={Incidents} />*/}
-                      {/*<Route exact path="/jobs" component={Jobs} />*/}
-                      <Route path='/inventory' render={(props) => <Inventory {...props} />} />
-                      <Route exact path='/jobs' render={(props) => <Jobs {...props} />} />
-                      <Route
-                        exact
-                        path='/site/:site'
-                        render={(props) => <Site {...props} handleDrawerClose={this.handleDrawerClose} />}
-                        key='site'
-                      />
-                      <Route exact path='/sites' render={(props) => <Sites {...props} />} />
                       <Route path='/asbestoslab' render={(props) => <AsbestosLab {...props} />} />
                       <Route path='/asbestossamplelog' render={(props) => <AsbestosLog {...props} />} />
                       <Route path='/asbestosqc' render={(props) => <AsbestosQualityControl {...props} />} />
                       <Route path='/asbestosstats' render={(props) => <AsbestosStats {...props} />} />
-                      {/*<Route
-                        exact
-                        path="/staff/training/:user"
-                        component={UserTraining}
-                        key="stafftraining"
-                      />
-                      <Route
-                        exact
-                        path="/staff/readinglog/:user"
-                        component={UserReadingLog}
-                        key="staffreadinglog"
-                      />
-                      <Route
-                        exact
-                        path="/mydetails/training"
-                        component={UserTraining}
-                        key="mytraining"
-                      />*/}
-                      <Route exact path='/training' render={(props) => <TrainingPaths {...props} />} />
-                      <Route exact path='/training/overview' render={(props) => <TrainingOverview {...props} />} />
-                      <Route exact path='/training/paths' render={(props) => <TrainingPaths {...props} />} />
-                      <Route path='/training/path/:uid' render={(props) => <TrainingPath {...props} />} />
-                      {/*<Route path="/method/:uid" component={Method} />*/}
-                      <Route exact path='/quizzes' render={(props) => <Quizzes {...props} />} />
-                      <Route exact path='/training/readinglog' render={(props) => <TrainingReadingLog {...props} />} key='myreadinglog' />
-                      <Route
-                        exact
-                        path='/training/readinglog/:user'
-                        render={(props) => <TrainingReadingLog {...props} />}
-                        key='staffreadinglog'
-                      />
-                      <Route exact path='/questions' render={(props) => <Questions {...props} />} />
-                      <Route path='/quiz/:quiz' render={(props) => <Quiz {...props} />} />
-                      {/*<Route path="/tools" component={Tools} />*/}
-                      <Route path='/library' render={(props) => <Library {...props} />} />
-                      <Route path='/document/:uid' render={(props) => <DocumentViewer {...props} />} />
                     </Switch>
                   </Suspense>
                 </main>
@@ -1259,9 +886,5 @@ class MainScreen extends React.PureComponent {
     )
   }
 }
-
-// MainScreen.propTypes = {
-//   classes: PropTypes.object.isRequired,
-// };
 
 export default withRouter(withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(MainScreen)))

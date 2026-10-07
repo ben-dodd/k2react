@@ -39,7 +39,7 @@ import moment from 'moment'
 import { getWASubsampleList } from 'utils/asbestosLab/getters'
 import { getBasicResult, getWATotalDetails, writeDescription, writeShorthandResult } from 'utils/asbestosLab/helpers'
 import { checkTestCertificateIssue, getPersonnel, issueTestCertificate } from 'utils/asbestosLab/issue'
-import { receiveSample, receiveSamples, startAnalyses, undoIssues } from 'utils/asbestosLab/sampleChanges'
+import { receiveSample, receiveSamples, startAnalyses, startAnalysis, undoIssues } from 'utils/asbestosLab/sampleChanges'
 import { verifySample, verifySamples, verifySubsample, verifySubsamples } from 'utils/asbestosLab/verify'
 
 const waMap = {

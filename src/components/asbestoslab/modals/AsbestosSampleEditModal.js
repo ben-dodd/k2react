@@ -28,7 +28,15 @@ import { hideModal, showModalSecondary } from 'actions/modal'
 import { asbestosSamplesRef, firestore } from 'config/firebase'
 import Select from 'react-select'
 import { writeSampleMoisture } from 'utils/asbestosLab/getters'
-import { analyticalCriteraOK, getSampleColors, getWATotalDetails, traceAnalysisRequired, writeDescription, writeSampleDimensions, writeSoilDetails } from 'utils/asbestosLab/helpers'
+import {
+  analyticalCriteraOK,
+  getSampleColors,
+  getWATotalDetails,
+  traceAnalysisRequired,
+  writeDescription,
+  writeSampleDimensions,
+  writeSoilDetails
+} from 'utils/asbestosLab/helpers'
 import { recordAnalysis, updateResultMap } from 'utils/asbestosLab/recordAnalysis'
 import { handleSampleChange, overrideResult } from 'utils/asbestosLab/sampleEdit'
 import { verifySample } from 'utils/asbestosLab/verify'

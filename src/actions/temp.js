@@ -1,18 +1,18 @@
 import { dateOf } from 'actions/helpers'
 import {
-    asbestosAnalysisLogRef,
-    asbestosCheckLogRef,
-    asbestosSampleIssueLogRef,
-    asbestosSampleLogRef,
-    asbestosSamplesRef,
-    docsRef,
-    firebase,
-    firestore,
-    logsRef,
-    noticeReadsRef,
-    noticesRef,
-    stateRef,
-    usersRef
+  asbestosAnalysisLogRef,
+  asbestosCheckLogRef,
+  asbestosSampleIssueLogRef,
+  asbestosSampleLogRef,
+  asbestosSamplesRef,
+  docsRef,
+  firebase,
+  firestore,
+  logsRef,
+  noticeReadsRef,
+  noticesRef,
+  stateRef,
+  usersRef
 } from 'config/firebase'
 import { GRAB_JOB_DATA } from 'constants/action-types'
 import moment from 'moment'
@@ -227,8 +227,7 @@ export const restructureAnalysisLog = () => {
           sessionID: logDoc.data().sessionID,
           weightReceived: logDoc.data().weightReceived,
           result: logDoc.data().result,
-          cocUid: logDoc.data().cocUID,
-          sessionID: logDoc.data().sessionID
+          cocUid: logDoc.data().cocUID
         }
         let uid = `${logDoc.data().sampleUID}-${logDoc.data().sessionID}`
         let sample = {}

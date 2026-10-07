@@ -1,9 +1,5 @@
 import { withStyles } from '@material-ui/core/styles'
-import {
-  fetchCocs,
-  fetchSamples,
-  setSessionID,
-} from 'actions/asbestosLab'
+import { fetchCocs, fetchSamples, setSessionID } from 'actions/asbestosLab'
 import { setAsbestosLabExpanded, toggleAsbestosSampleDisplayMode } from 'actions/display'
 import { getDetailedWFMJob } from 'actions/jobs'
 import { addLog } from 'actions/local'

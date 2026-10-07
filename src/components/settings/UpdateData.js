@@ -16,17 +16,9 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import { CSVLink } from 'react-csv'
 
 import { fetchCocs } from 'actions/asbestosLab'
-import { analyseJobHistory } from 'actions/jobs'
 import {
-    fetchDocuments,
-    fetchMethods,
-    fetchNotices,
-    fetchQuestions,
-    fetchQuizzes,
-    fetchStaff,
-    fetchTools,
-    fetchTrainingPaths,
-    fetchVehicles
+  fetchNotices,
+  fetchStaff
 } from 'actions/local'
 import { hideModal } from 'actions/modal'
 import { grabJobData, grabLabData } from 'actions/temp'
@@ -43,15 +35,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchCocs: () => dispatch(fetchCocs(true)),
-    fetchDocuments: () => dispatch(fetchDocuments(true)),
-    fetchMethods: () => dispatch(fetchMethods(true)),
     fetchNotices: () => dispatch(fetchNotices(true)),
-    fetchQuestions: () => dispatch(fetchQuestions(true)),
-    fetchQuizzes: () => dispatch(fetchQuizzes(true)),
     fetchStaff: () => dispatch(fetchStaff(true)),
-    fetchTools: () => dispatch(fetchTools(true)),
-    fetchTrainingPaths: () => dispatch(fetchTrainingPaths(true)),
-    fetchVehicles: () => dispatch(fetchVehicles(true)),
     hideModal: (modal) => dispatch(hideModal(modal)),
     grabJobData: () => dispatch(grabJobData()),
     grabLabData: () => dispatch(grabLabData())
@@ -70,44 +55,12 @@ class UpdateData extends React.Component {
         title: 'Chains of Custody'
       },
       {
-        event: this.props.fetchDocuments,
-        title: 'Documents'
-      },
-      {
-        event: this.props.fetchMethods,
-        title: 'Methods'
-      },
-      {
         event: this.props.fetchNotices,
         title: 'Notices'
       },
       {
-        event: this.props.fetchQuestions,
-        title: 'Questions'
-      },
-      {
-        event: this.props.fetchQuizzes,
-        title: 'Quizzes'
-      },
-      {
         event: this.props.fetchStaff,
         title: 'Staff'
-      },
-      {
-        event: this.props.fetchTools,
-        title: 'Tools'
-      },
-      {
-        event: this.props.fetchTrainingPaths,
-        title: 'Training Paths'
-      },
-      {
-        event: this.props.fetchVehicles,
-        title: 'Vehicles'
-      },
-      {
-        event: analyseJobHistory,
-        title: 'Jobs'
       }
     ]
     return (

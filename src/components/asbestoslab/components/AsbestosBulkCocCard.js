@@ -1,9 +1,5 @@
 import { withStyles } from '@material-ui/core/styles'
-import {
-  fetchCocs,
-  fetchSamples,
-  setSessionID,
-} from 'actions/asbestosLab'
+import { fetchCocs, fetchSamples, setSessionID } from 'actions/asbestosLab'
 import { setAsbestosLabExpanded, toggleAsbestosSampleDisplayMode } from 'actions/display'
 import { getDetailedWFMJob } from 'actions/jobs'
 import { addLog } from 'actions/local'
@@ -18,13 +14,7 @@ import { getJobStatus, getSampleData, getSubsampleData } from 'utils/asbestosLab
 import { printCocBulk, printLabReport } from 'utils/asbestosLab/issue'
 import { verifySamples } from 'utils/asbestosLab/verify'
 
-import {
-  ASBESTOS_ACTIONS,
-  ASBESTOS_COC_EDIT,
-  ASBESTOS_SAMPLE_EDIT,
-  ASBESTOS_SOIL_SUBSAMPLE_WEIGHTS,
-  COC_LOG
-} from 'constants/modal-types'
+import { ASBESTOS_ACTIONS, ASBESTOS_COC_EDIT, ASBESTOS_SAMPLE_EDIT, ASBESTOS_SOIL_SUBSAMPLE_WEIGHTS, COC_LOG } from 'constants/modal-types'
 import { logSample } from 'utils/asbestosLab/sampleEdit'
 
 import AsbestosCocSummary from './AsbestosCocSummary'

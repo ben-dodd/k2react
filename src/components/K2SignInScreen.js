@@ -7,7 +7,7 @@ import FirebaseAuth from 'react-firebaseui/FirebaseAuth'
 // import "../App.css";
 import CircularProgress from '@material-ui/core/CircularProgress'
 import img_Logo from 'images/logo.png'
-import ApiCalendar from 'react-google-calendar-api'
+// import ApiCalendar from 'react-google-calendar-api'
 
 class K2SignInScreen extends Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class K2SignInScreen extends Component {
       callbacks: {
         signInSuccessWithAuthResult: (authResult, redirectUrl) => {
           this.props.app.logIn()
-          ApiCalendar.handleAuthClick()
+          // ApiCalendar.handleAuthClick()
           return false
         },
         signInFailure: (error) => {

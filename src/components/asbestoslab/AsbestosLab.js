@@ -1,17 +1,11 @@
 import { withStyles } from '@material-ui/core/styles'
 import { fetchCocs, fetchCocsByJobNumber, fetchCocsBySearch, setAnalysisMode, setAnalyst } from 'actions/asbestosLab'
 import {
-  collateJobsList,
-  fetchCurrentJobState,
-  fetchGeocodes,
   fetchWFMClients,
   fetchWFMJobs,
   fetchWFMLeads,
-  saveCurrentJobState,
-  saveGeocodes,
   saveStats,
-  saveWFMItems,
-  updateGeocodes
+  saveWFMItems
 } from 'actions/jobs'
 import { fetchStaff } from 'actions/local'
 import { styles } from 'config/styles'
@@ -78,12 +72,8 @@ const mapStateToProps = (state) => {
     wfmJobs: state.jobs.wfmJobs,
     wfmLeads: state.jobs.wfmLeads,
     wfmClients: state.jobs.wfmClients,
-    currentJobState: state.jobs.currentJobState,
-    geocodes: state.jobs.geocodes,
     wfmItems: state.jobs.wfmItems,
     wfmStats: state.jobs.wfmStats,
-    jobList: state.jobs.jobList,
-    search: state.local.search,
     filter: state.display.filterMap,
     wfmAccessToken: state.local.wfmAccessToken
   }
@@ -101,15 +91,8 @@ const mapDispatchToProps = (dispatch) => {
     fetchWFMJobs: (accessToken, refreshToken) => dispatch(fetchWFMJobs(accessToken, refreshToken)),
     fetchWFMLeads: (accessToken, refreshToken) => dispatch(fetchWFMLeads(accessToken, refreshToken)),
     fetchWFMClients: (accessToken, refreshToken) => dispatch(fetchWFMClients(accessToken, refreshToken)),
-    fetchCurrentJobState: (ignoreCompleted) => dispatch(fetchCurrentJobState(ignoreCompleted)),
-    saveCurrentJobState: (state) => dispatch(saveCurrentJobState(state)),
-    saveGeocodes: (g) => dispatch(saveGeocodes(g)),
-    fetchGeocodes: () => dispatch(fetchGeocodes()),
-    updateGeocodes: (g) => dispatch(updateGeocodes(g)),
     saveWFMItems: (items) => dispatch(saveWFMItems(items)),
-    saveStats: (stats) => dispatch(saveStats(stats)),
-    collateJobsList: (wfmJobs, wfmLeads, currentJobState, wfmClients, geocodes) =>
-      dispatch(collateJobsList(wfmJobs, wfmLeads, currentJobState, wfmClients, geocodes))
+    saveStats: (stats) => dispatch(saveStats(stats))
   }
 }
 
@@ -185,7 +168,7 @@ class AsbestosLab extends React.Component {
   // }
 
   render() {
-    const { cocs, classes, modalType, modalTypeSecondary, wfmJobs, wfmLeads, wfmClients, currentJobState, jobList, geocodes } = this.props
+    const { cocs, classes, modalType, modalTypeSecondary } = this.props
     // if (
     //   wfmJobs.length > 0 &&
     //   wfmLeads.length > 0 &&

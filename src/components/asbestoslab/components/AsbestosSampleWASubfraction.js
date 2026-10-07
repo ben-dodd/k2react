@@ -207,7 +207,7 @@ class AsbestosSampleWASubfraction extends React.Component {
       }
     })
   }
-  
+
   toggleLayerRes = (res, num, fraction, sample, that) => {
     let newMap = updateResultMap(res, sample.waSoilAnalysis[`subfraction${fraction}-${num}`].result)
     this.setLayerVar('result', num, fraction, newMap, that)

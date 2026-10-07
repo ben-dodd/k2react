@@ -1,3 +1,14 @@
+import { dateOf, milliToDHM } from 'actions/helpers'
+import { cocsRef } from 'config/firebase'
+import moment from 'moment'
+import { getAllConfirmResult, getBasicResult, writeShorthandResult, writeSoilDetails } from './helpers'
+
+const fractionMap = {
+  gt7: '>7mm',
+  to7: '2-7mm',
+  lt2: '<2mm'
+}
+
 export const getSampleData = (samples, job) => {
   let dataArray = []
   let subSampleMap = getWASubsampleList(samples)

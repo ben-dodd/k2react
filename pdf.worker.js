@@ -8389,7 +8389,6 @@
       /* 129 */
       /***/ function (module, exports, __w_pdfjs_require__) {
         'use strict'
-
         ;(function URLConstructorClosure() {
           'use strict'
 
@@ -9421,7 +9420,8 @@
       /* 133 */
       /***/ function (module, exports, __w_pdfjs_require__) {
         'use strict'
-        /* WEBPACK VAR INJECTION */ ;(function (module) {
+        /* WEBPACK VAR INJECTION */
+        ;(function (module) {
           var _typeof =
             typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol'
               ? function (obj) {

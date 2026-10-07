@@ -1,3 +1,10 @@
+import { dateOf } from 'actions/helpers'
+import { addLog } from 'actions/local'
+import { asbestosAnalysisLogRef, asbestosSamplesRef, cocsRef, firestore } from 'config/firebase'
+import moment from 'moment'
+import { writeDescription, writeResult, writeShorthandResult } from './helpers'
+import { startAnalysis } from './sampleChanges'
+
 export const updateResultMap = (result, map) => {
   let updatedMap = {}
 
@@ -160,12 +167,12 @@ export const recordAnalysis = (
   } else {
     batch.delete(asbestosAnalysisLogRef.doc(`${sessionID}-${sample.uid}`))
     batch.update(asbestosSamplesRef.doc(sample.uid), {
-      result: firebase.firestore.FieldValue.delete(),
-      analysisDate: firebase.firestore.FieldValue.delete(),
-      analysisRecordedBy: firebase.firestore.FieldValue.delete(),
-      sessionID: firebase.firestore.FieldValue.delete(),
-      analysisTime: firebase.firestore.FieldValue.delete(),
-      analyst: firebase.firestore.FieldValue.delete(),
+      result: firestore.FieldValue.delete(),
+      analysisDate: firestore.FieldValue.delete(),
+      analysisRecordedBy: firestore.FieldValue.delete(),
+      sessionID: firestore.FieldValue.delete(),
+      analysisTime: firestore.FieldValue.delete(),
+      analyst: firestore.FieldValue.delete(),
       weightReceived: sample.weightReceived ? sample.weightReceived : null
     })
   }
@@ -186,9 +193,9 @@ export const removeResult = (batch, sample, sessionID, me) => {
   })
   batch.delete(asbestosAnalysisLogRef.doc(`${sessionID}-${sample.uid}`))
   batch.update(asbestosSamplesRef.doc(sample.uid), {
-    result: firebase.firestore.FieldValue.delete(),
-    analysisDate: firebase.firestore.FieldValue.delete(),
-    analysisRecordedBy: firebase.firestore.FieldValue.delete(),
-    sessionID: firebase.firestore.FieldValue.delete()
+    result: firestore.FieldValue.delete(),
+    analysisDate: firestore.FieldValue.delete(),
+    analysisRecordedBy: firestore.FieldValue.delete(),
+    sessionID: firestore.FieldValue.delete()
   })
 }

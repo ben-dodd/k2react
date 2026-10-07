@@ -1,56 +1,37 @@
 import {
-    assetsRef,
-    auth,
-    docsRef,
-    firestore,
-    helpRef,
-    incidentsRef,
-    logsRef,
-    methodsRef,
-    noticesRef,
-    questionsRef,
-    quizzesRef,
-    stateRef,
-    toolsRef,
-    trainingPathsRef,
-    updateRef,
-    usersRef,
-    vehiclesRef
+  auth,
+  docsRef,
+  firestore,
+  incidentsRef,
+  logsRef,
+  noticesRef,
+  stateRef,
+  updateRef,
+  usersRef
 } from 'config/firebase'
 import {
-    APP_HAS_LOADED,
-    CAT_CHANGE,
-    CLEAR_EDIT_STAFF,
-    CLEAR_LOG,
-    GET_AIR_ANALYSTS,
-    GET_ASSETS,
-    GET_BULK_ANALYSTS,
-    GET_DOCUMENTS,
-    GET_EDIT_STAFF,
-    GET_FIRESTORE_COLLECTION,
-    GET_HELP,
-    GET_INCIDENTS,
-    GET_LOGS,
-    GET_ME,
-    GET_METHODLOG,
-    GET_METHODS,
-    GET_NOTICES,
-    GET_NOTICE_READS,
-    GET_QUESTIONS,
-    GET_QUIZLOG,
-    GET_QUIZZES,
-    GET_READINGLOG,
-    GET_STAFF,
-    GET_TOOLS,
-    GET_TRAININGS,
-    GET_UPDATES,
-    GET_USER,
-    GET_VEHICLES,
-    RESET_LOCAL,
-    SEARCH_CHANGE,
-    SET_ANALYST,
-    SET_STEPPER,
-    UPDATE_STAFF
+  APP_HAS_LOADED,
+  CAT_CHANGE,
+  CLEAR_EDIT_STAFF,
+  CLEAR_LOG,
+  GET_AIR_ANALYSTS,
+  GET_BULK_ANALYSTS,
+  GET_DOCUMENTS,
+  GET_EDIT_STAFF,
+  GET_FIRESTORE_COLLECTION,
+  GET_INCIDENTS,
+  GET_LOGS,
+  GET_ME,
+  GET_NOTICES,
+  GET_NOTICE_READS,
+  GET_STAFF,
+  GET_UPDATES,
+  GET_USER,
+  RESET_LOCAL,
+  SEARCH_CHANGE,
+  SET_ANALYST,
+  SET_STEPPER,
+  UPDATE_STAFF
 } from 'constants/action-types'
 import moment from 'moment'
 import { sendSlackMessage } from './helpers'
@@ -435,38 +416,6 @@ export const fetchDocuments = (update) => async (dispatch) => {
   }
 }
 
-export const fetchMethods = (update) => async (dispatch) => {
-  if (update) {
-    methodsRef
-      .orderBy('title')
-      .get()
-      .then((querySnapshot) => {
-        var methods = []
-        querySnapshot.forEach((doc) => {
-          let method = doc.data()
-          method.uid = doc.id
-          methods.push(method)
-        })
-        dispatch({
-          type: GET_METHODS,
-          payload: methods,
-          update: true
-        })
-      })
-  } else {
-    stateRef
-      .doc('methods')
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          dispatch({ type: GET_METHODS, payload: doc.data().payload })
-        } else {
-          //console.log("Methods doesn't exist");
-        }
-      })
-  }
-}
-
 export const fetchNotices = (update) => async (dispatch) => {
   if (update) {
     noticesRef
@@ -612,294 +561,6 @@ export const fetchIncidents = (update) => async (dispatch) => {
       }
     })
   }
-}
-
-export const fetchQuestions = (update) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchQuestions`)
-  if (update) {
-    questionsRef
-      .orderBy('question')
-      .get()
-      .then((querySnapshot) => {
-        var questions = []
-        querySnapshot.forEach((doc) => {
-          let question = doc.data()
-          question.uid = doc.id
-          questions.push(question)
-        })
-        dispatch({
-          type: GET_QUESTIONS,
-          payload: questions,
-          update: true
-        })
-      })
-  } else {
-    stateRef.doc('questions').onSnapshot((doc) => {
-      if (doc.exists) {
-        dispatch({ type: GET_QUESTIONS, payload: doc.data().payload })
-      } else {
-        //console.log("Questions doesn't exist");
-      }
-    })
-  }
-}
-
-export const fetchQuizzes = (update) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchQuizzes`)
-  if (update) {
-    quizzesRef
-      .orderBy('title')
-      .get()
-      .then((querySnapshot) => {
-        var quizzes = []
-        querySnapshot.forEach((doc) => {
-          let quiz = doc.data()
-          quiz.uid = doc.id
-          quizzes.push(quiz)
-        })
-        dispatch({
-          type: GET_QUIZZES,
-          payload: quizzes,
-          update: true
-        })
-      })
-  } else {
-    stateRef.doc('quizzes').onSnapshot((doc) => {
-      if (doc.exists) {
-        dispatch({ type: GET_QUIZZES, payload: doc.data().payload })
-      } else {
-        //console.log("Quizzes doesn't exist");
-      }
-    })
-  }
-}
-
-export const fetchTools = (update) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchTools`)
-  if (update) {
-    toolsRef
-      .orderBy('title')
-      .get()
-      .then((querySnapshot) => {
-        var tools = []
-        querySnapshot.forEach((doc) => {
-          let tool = doc.data()
-          tool.uid = doc.id
-          tools.push(tool)
-        })
-        dispatch({
-          type: GET_TOOLS,
-          payload: tools,
-          update: true
-        })
-      })
-  } else {
-    stateRef.doc('tools').onSnapshot((doc) => {
-      if (doc.exists) {
-        dispatch({ type: GET_TOOLS, payload: doc.data().payload })
-      } else {
-        //console.log("Tools doesn't exist");
-      }
-    })
-  }
-}
-
-export const fetchTrainingPaths = (update) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchTrainingPaths`)
-  if (update) {
-    trainingPathsRef
-      .orderBy('title')
-      .get()
-      .then((querySnapshot) => {
-        var trainings = []
-        querySnapshot.forEach((doc) => {
-          let training = doc.data()
-          training.uid = doc.id
-          trainings.push(training)
-        })
-        dispatch({
-          type: GET_TRAININGS,
-          payload: trainings,
-          update: true
-        })
-      })
-  } else {
-    stateRef.doc('trainings').onSnapshot((doc) => {
-      if (doc.exists) {
-        dispatch({ type: GET_TRAININGS, payload: doc.data().payload })
-      } else {
-        //console.log("Trainings doesn't exist");
-      }
-    })
-  }
-}
-
-export const fetchVehicles = (update) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchVehicles`)
-  if (update) {
-    vehiclesRef.get().then((querySnapshot) => {
-      var vehicles = []
-      querySnapshot.forEach((doc) => {
-        var vehicle = doc.data()
-        vehicle.number = doc.id
-        vehicles.push(vehicle)
-      })
-      dispatch({
-        type: GET_VEHICLES,
-        payload: vehicles,
-        update: true
-      })
-    })
-  } else {
-    stateRef.doc('vehicles').onSnapshot((doc) => {
-      if (doc.exists) {
-        dispatch({ type: GET_VEHICLES, payload: doc.data().payload })
-      } else {
-        //console.log("Vehicles doesn't exist");
-      }
-    })
-  }
-}
-
-export const fetchAssets = (update) => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchAssets`)
-  if (update) {
-    assetsRef.get().then((querySnapshot) => {
-      var assets = []
-      querySnapshot.forEach((doc) => {
-        assets.push(doc.data())
-      })
-      dispatch({
-        type: GET_ASSETS,
-        payload: assets,
-        update: true
-      })
-    })
-  } else {
-    stateRef.doc('assets').onSnapshot((doc) => {
-      if (doc.exists) {
-        let assets = []
-        Object.keys(doc.data()).forEach((bucket) => {
-          assets.push(...doc.data()[bucket])
-        })
-        dispatch({ type: GET_ASSETS, payload: assets })
-      } else {
-        //console.log("Assets doesn't exist");
-      }
-    })
-  }
-}
-
-export const fetchReadingLog = () => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchReadingLogs`)
-  usersRef
-    .doc(auth.currentUser.uid)
-    .collection('readinglog')
-    .orderBy('date', 'desc')
-    .get()
-    .then((querySnapshot) => {
-      var logs = []
-      querySnapshot.forEach((doc) => {
-        let log = doc.data()
-        //console.log(log);
-        log.uid = doc.id
-        docsRef
-          .doc(doc.id)
-          .get()
-          .then((doc2) => {
-            log.title = doc2.data().title
-            log.updatedate = doc2.data().updatedate ? doc2.data().updatedate : doc2.data().date
-            logs.push(log)
-            //console.log(log);
-            dispatch({
-              type: GET_READINGLOG,
-              payload: logs
-            })
-          })
-      })
-    })
-}
-
-export const fetchQuizLog = () => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchQuizLog`)
-  usersRef
-    .doc(auth.currentUser.uid)
-    .collection('quizlog')
-    .orderBy('latestSubmit', 'desc')
-    .get()
-    .then((querySnapshot) => {
-      var logs = []
-      querySnapshot.forEach((doc) => {
-        let log = doc.data()
-        log.uid = doc.id
-        quizzesRef
-          .doc(doc.id)
-          .get()
-          .then((doc2) => {
-            if (doc2.exists) {
-              log.title = doc2.data().title
-              logs.push(log)
-              dispatch({
-                type: GET_QUIZLOG,
-                payload: logs
-              })
-            } else {
-              usersRef.doc(auth.currentUser.uid).collection('quizlog').doc(doc.id).delete()
-            }
-          })
-      })
-    })
-}
-
-export const fetchMethodLog = () => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchMethodLog`)
-  usersRef
-    .doc(auth.currentUser.uid)
-    .collection('methodlog')
-    .orderBy('methodCompleted', 'desc')
-    .get()
-    .then((querySnapshot) => {
-      var logs = []
-      querySnapshot.forEach((doc) => {
-        let log = doc.data()
-        log.uid = doc.id
-        methodsRef
-          .doc(doc.id)
-          .get()
-          .then((doc2) => {
-            if (doc2.exists) {
-              log.title = doc2.data().title
-              log.subtitle = doc2.data().subtitle
-              log.sectionlength = doc2.data().sections.length
-              log.updatedate = doc2.data().updateDate
-              logs.push(log)
-            } else {
-              usersRef.doc(auth.currentUser.uid).collection('methodlog').doc(doc.id).delete()
-            }
-          })
-      })
-      dispatch({
-        type: GET_METHODLOG,
-        payload: logs
-      })
-    })
-}
-
-export const fetchHelp = () => async (dispatch) => {
-  sendSlackMessage(`${auth.currentUser.displayName} ran fetchHelp`)
-  helpRef
-    .orderBy('date', 'desc')
-    .get()
-    .then((querySnapshot) => {
-      var helps = []
-      querySnapshot.forEach((doc) => {
-        helps.push(doc.data())
-      })
-      dispatch({
-        type: GET_HELP,
-        payload: helps
-      })
-    })
 }
 
 export const fetchUpdates = () => async (dispatch) => {

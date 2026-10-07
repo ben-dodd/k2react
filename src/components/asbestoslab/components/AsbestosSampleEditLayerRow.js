@@ -9,7 +9,6 @@ import { updateResultMap } from 'utils/asbestosLab/recordAnalysis'
 import { AsbButton } from 'widgets/FormWidgets'
 import SuggestionField from 'widgets/SuggestionField'
 
-
 const defaultColor = {
   r: '150',
   g: '150',

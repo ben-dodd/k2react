@@ -13,7 +13,6 @@ import RemoveIcon from '@material-ui/icons/Remove'
 import TextyBox from 'widgets/TextyBox'
 import AsbestosSampleWASubfraction from './AsbestosSampleWASubfraction'
 
-
 const waLayerNum = 1
 const waMap = {
   gt7: '>7',

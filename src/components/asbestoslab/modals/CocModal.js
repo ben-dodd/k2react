@@ -36,15 +36,7 @@ import { fetchSamples } from 'actions/asbestosLab'
 import { dateOf, personnelConvert } from 'actions/helpers'
 import { getDefaultLetterAddress, getDetailedWFMJob, resetWfmJob } from 'actions/jobs'
 import { addLog, fetchStaff } from 'actions/local'
-import {
-  handleModalChange,
-  handleModalSubmit,
-  hideModal,
-  onUploadFile,
-  resetModal,
-  setModalError,
-  showModalSecondary
-} from 'actions/modal'
+import { handleModalChange, handleModalSubmit, hideModal, onUploadFile, resetModal, setModalError, showModalSecondary } from 'actions/modal'
 import _ from 'lodash'
 import { handleCocSubmit } from 'utils/asbestosLab/coc'
 import { updateResultMap } from 'utils/asbestosLab/recordAnalysis'

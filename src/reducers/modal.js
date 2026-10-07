@@ -1,20 +1,20 @@
 import {
-    ADD_TAG,
-    DELETE_TAG,
-    EDIT_MODAL,
-    EDIT_MODAL_DOC,
-    EDIT_MODAL_DOC_COMMENT,
-    EDIT_MODAL_DOC_SAMPLES,
-    EDIT_MODAL_DOC_STEPS,
-    EDIT_MODAL_GLOSSARY,
-    EDIT_MODAL_SAMPLE,
-    HIDE_MODAL,
-    HIDE_MODAL_SECONDARY,
-    RESET_MODAL,
-    RESET_MODAL_SECONDARY,
-    SET_MODAL_ERROR,
-    SHOW_MODAL,
-    SHOW_MODAL_SECONDARY
+  ADD_TAG,
+  DELETE_TAG,
+  EDIT_MODAL,
+  EDIT_MODAL_DOC,
+  EDIT_MODAL_DOC_COMMENT,
+  EDIT_MODAL_DOC_SAMPLES,
+  EDIT_MODAL_DOC_STEPS,
+  EDIT_MODAL_GLOSSARY,
+  EDIT_MODAL_SAMPLE,
+  HIDE_MODAL,
+  HIDE_MODAL_SECONDARY,
+  RESET_MODAL,
+  RESET_MODAL_SECONDARY,
+  SET_MODAL_ERROR,
+  SHOW_MODAL,
+  SHOW_MODAL_SECONDARY
 } from 'constants/action-types'
 
 const modalInit = {
@@ -157,34 +157,6 @@ export default function modalReducer(state = modalInit, action) {
                 [action.payload.type]: action.payload.value
               }
             }
-          }
-        }
-      }
-    case EDIT_MODAL_SAMPLE:
-      return {
-        ...state,
-        modalProps: {
-          ...state.modalProps,
-          doc: {
-            ...state.modalProps.doc,
-            samples: {
-              ...state.modalProps.doc.samples,
-              [action.payload.number]: {
-                ...state.modalProps.doc.samples[action.payload.number],
-                ...action.payload.changes
-              }
-            }
-          }
-        }
-      }
-    case EDIT_MODAL_DOC_SAMPLES:
-      return {
-        ...state,
-        modalProps: {
-          ...state.modalProps,
-          doc: {
-            ...state.modalProps.doc,
-            samples: action.payload
           }
         }
       }

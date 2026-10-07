@@ -28,7 +28,7 @@ import LocalHospital from '@material-ui/icons/LocalHospital'
 import LocationCity from '@material-ui/icons/LocationCity'
 import School from '@material-ui/icons/School'
 
-import ApiCalendar from 'react-google-calendar-api'
+// import ApiCalendar from 'react-google-calendar-api'
 import 'react-table/react-table.css'
 import Popup from 'reactjs-popup'
 
@@ -153,24 +153,24 @@ class Staff extends React.Component {
     this.props.tabStaff(value)
   }
 
-  getEvents = (expanded, calendarid) => {
-    if (expanded && calendarid) {
-      if (ApiCalendar.sign && !this.state.events[calendarid]) {
-        //console.log("Api calendar is signed");
-        ApiCalendar.listUpcomingEvents(7, calendarid).then(({ result }) => {
-          // Possible error here
-          //console.log("Results in");
-          this.setState({
-            events: {
-              ...this.state.events,
-              [calendarid]: result.items
-            }
-          })
-          //console.log(result.items);
-        })
-      }
-    }
-  }
+  // getEvents = (expanded, calendarid) => {
+  //   if (expanded && calendarid) {
+  //     // if (ApiCalendar.sign && !this.state.events[calendarid]) {
+  //       //console.log("Api calendar is signed");
+  //       // ApiCalendar.listUpcomingEvents(7, calendarid).then(({ result }) => {
+  //         // Possible error here
+  //         //console.log("Results in");
+  //         this.setState({
+  //           events: {
+  //             ...this.state.events,
+  //             [calendarid]: result.items
+  //           }
+  //         })
+  //         //console.log(result.items);
+  //       })
+  //     }
+  //   }
+  // }
 
   updateAllStaff = () => {
     //console.log("Updating all staff");
@@ -338,7 +338,8 @@ class Staff extends React.Component {
                         <ExpansionPanel
                           key={user.name}
                           onChange={(event, ex) => {
-                            this.getEvents(ex, user.gmail)
+                            return null
+                            // this.getEvents(ex, user.gmail)
                           }}
                         >
                           <ExpansionPanelSummary expandIcon={<ExpandMore />}>

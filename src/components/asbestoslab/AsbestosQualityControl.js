@@ -7,7 +7,6 @@ import { connect } from 'react-redux'
 //Modals
 import { showModal } from 'actions/modal'
 
-
 const mapStateToProps = (state) => {
   return {
     search: state.local.search,

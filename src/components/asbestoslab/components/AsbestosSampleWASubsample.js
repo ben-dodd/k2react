@@ -10,7 +10,6 @@ import TextField from '@material-ui/core/TextField'
 import Select from 'react-select'
 import { AsbButton } from 'widgets/FormWidgets'
 
-
 const mapStateToProps = (state) => {
   return {
     asbestosInSoilForms: state.const.asbestosInSoilForms,

@@ -1,3 +1,9 @@
+import { dateOf } from 'actions/helpers'
+import { addLog } from 'actions/local'
+import { asbestosSamplesRef, cocsRef, firestore } from 'config/firebase'
+import { writeDescription } from './helpers'
+import { removeResult } from './recordAnalysis'
+import { verifySample } from './verify'
 //
 // SAMPLE PROGRESS CHANGES
 //
@@ -50,8 +56,8 @@ export const receiveSample = (batch, sample, job, samples, sessionID, me, startD
   } else {
     batch.update(asbestosSamplesRef.doc(sample.uid), {
       receivedByLab: false,
-      receivedBy: firebase.firestore.FieldValue.delete(),
-      receivedDate: firebase.firestore.FieldValue.delete()
+      receivedBy: firestore.FieldValue.delete(),
+      receivedDate: firestore.FieldValue.delete()
     })
   }
 }
@@ -129,8 +135,8 @@ export const startAnalysis = (batch, sample, job, samples, sessionID, me, startD
   } else {
     batch.update(asbestosSamplesRef.doc(sample.uid), {
       analysisStarted: false,
-      analysisStartedBy: firebase.firestore.FieldValue.delete(),
-      analysisStartDate: firebase.firestore.FieldValue.delete()
+      analysisStartedBy: firestore.FieldValue.delete(),
+      analysisStartDate: firestore.FieldValue.delete()
     })
   }
 }
@@ -220,16 +226,16 @@ export const undoIssues = (job, samples, me) => {
   samples &&
     Object.values(samples).forEach((sample) => {
       let update = {
-        issueDate: firebase.firestore.FieldValue.delete(),
-        issuedBy: firebase.firestore.FieldValue.delete(),
-        issueVersion: firebase.firestore.FieldValue.delete()
+        issueDate: firestore.FieldValue.delete(),
+        issuedBy: firestore.FieldValue.delete(),
+        issueVersion: firestore.FieldValue.delete()
       }
       batch.update(asbestosSamplesRef.doc(sample.uid), update)
     })
   let cocUpdate = {
     lastModified: new Date(),
-    currentVersion: firebase.firestore.FieldValue.delete(),
-    versionHistory: firebase.firestore.FieldValue.delete(),
+    currentVersion: firestore.FieldValue.delete(),
+    versionHistory: firestore.FieldValue.delete(),
     versionUpToDate: false
   }
   batch.update(cocsRef.doc(job.uid), cocUpdate)

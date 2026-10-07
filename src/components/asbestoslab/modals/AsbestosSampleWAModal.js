@@ -26,17 +26,17 @@ import ThumbsDown from '@material-ui/icons/ThumbDown'
 import ConfirmIcon from '@material-ui/icons/ThumbUp'
 import { DatePicker, DateTimePicker } from '@material-ui/pickers'
 import {
-    analyticalCriteraOK,
-    compareAsbestosResult,
-    getSampleColors,
-    handleSampleChange,
-    recordAnalysis,
-    traceAnalysisRequired,
-    updateResultMap,
-    writeDescription,
-    writeSampleDimensions,
-    writeSampleMoisture,
-    writeSoilDetails
+  analyticalCriteraOK,
+  compareAsbestosResult,
+  getSampleColors,
+  handleSampleChange,
+  recordAnalysis,
+  traceAnalysisRequired,
+  updateResultMap,
+  writeDescription,
+  writeSampleDimensions,
+  writeSampleMoisture,
+  writeSoilDetails
 } from 'actions/asbestosLab'
 import { toggleAsbestosSampleDisplayMode } from 'actions/display'
 import { addLog, dateOf, personnelConvert } from 'actions/local'

@@ -1,11 +1,9 @@
-import React, { Component } from 'react'
-import MainScreen from './components/MainScreen'
-import K2SignInScreen from './components/K2SignInScreen'
-import { auth } from './config/firebase'
+import { Component } from 'react'
 import { withRouter } from 'react-router-dom'
+import K2SignInScreen from './components/K2SignInScreen'
+import MainScreen from './components/MainScreen'
+import { auth } from './config/firebase'
 import * as serviceWorker from './registerServiceWorker'
-
-require('dotenv').config()
 
 class App extends Component {
   constructor() {
@@ -30,12 +28,16 @@ class App extends Component {
     })
   }
 
-  UNSAFE_componentWillMount() {
-    auth.onAuthStateChanged((user) => {
+  componentDidMount() {
+    this.unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         this.setState({ user })
       }
     })
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribe) this.unsubscribe()
   }
 
   render() {
